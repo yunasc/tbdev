@@ -33,11 +33,11 @@ gzip();
 
 foreach (array('passkey','info_hash','peer_id','event','ip','localip') as $x) {
 	if(isset($_GET[$x]))
-		$GLOBALS[$x] = '' . $_GET[$x];
+		$GLOBALS[$x] = (string) $_GET[$x];
 }
 
 foreach (array('port','downloaded','uploaded','left') as $x)
-	$GLOBALS[$x] = 0 + $_GET[$x];
+	$GLOBALS[$x] = (int) $_GET[$x];
 
 if (get_magic_quotes_gpc()) {
     $info_hash = stripslashes($info_hash);
@@ -57,7 +57,7 @@ $rsize = 50;
 foreach(array('num want', 'numwant', 'num_want') as $k) {
 	if (isset($_GET[$k]))
 	{
-		$rsize = 0 + $_GET[$k];
+		$rsize = (int) $_GET[$k];
 		break;
 	}
 }
@@ -82,8 +82,6 @@ if(substr($peer_id, 0, 4) == "FUTB") err("FUTB? Fuck You Too."); //patched versi
 if(substr($peer_id, 1, 2) == 'BC' && substr($peer_id, 5, 2) != 70 && substr($peer_id, 5, 2) != 63 && substr($peer_id, 5, 2) != 77 && substr($peer_id, 5, 2) >= 59/* && substr($peer_id, 5, 2) <= 88*/) err("BitComet ".substr($peer_id, 5, 2)." is banned. Use only 0.70 or switch to uTorrent 1.6.1.");
 if(substr($peer_id, 1, 2) == 'UT' && substr($peer_id, 3, 3) >= 170 && substr($peer_id, 3, 3) <= 174) err("uTorrent ".substr($peer_id, 3, 3)." is banned. Downgrade to 1.6.1 or use 1.7.5 or higher.");
 if(substr($peer_id, 0, 4) == "FUTB") err("FUTB? Fuck You Too.");
-if(substr($peer_id, 0, 7) == "exbc\0L") err("BitLord 1.0 is Banned.");
-if(substr($peer_id, 0, 7) == "exbcL") err("BitLord 1.1 is Banned.");
 if(substr($peer_id, 0, 3) == "-TS") err("TorrentStorm is Banned.");
 if(substr($peer_id, 0, 5) == "Mbrst") err("Burst! is Banned.");
 if(substr($peer_id, 0, 3) == "-BB") err("BitBuddy is Banned.");
@@ -99,10 +97,8 @@ if(substr($peer_id, 0, 8 ) == "-XX0025-") err("Transmission/0.6 is Banned.");
 if(substr($peer_id, 0, 1 ) == ",") err ("RAZA is banned.");
 if(substr($peer_id, 0, 3 ) == "-AG") err("This is a banned client. We recommend uTorrent or Azureus.");
 if(substr($peer_id, 0, 3 ) == "R34") err("BTuga/Revolution-3.4 is not an acceptalbe client. Please read the FAQ on recommended clients.");
-if(preg_match("/MLDonkey\/([0-9]+).([0-9]+).([0-9]+)*/", $agent, $matches)) err("MLDonkey is not a BT client.");
-if(preg_match("/ed2k_plugin v([0-9]+\\.[0-9]+).*/", $agent, $matches)) err("eDonkey is not a BT client.");
 if(substr($peer_id, 0, 4) == "exbc") err("This version of BitComet is banned! You can thank DHT for this ban!");
-if (substr($peer_id, 0, 3) == '-FG') err("FlashGet is banned!");
+if(substr($peer_id, 0, 3) == '-FG') err("FlashGet is banned!");
 
 dbconn();
 mysql_query("SELECT id FROM users WHERE passkey = " . sqlesc($passkey)) or err(mysql_error());
