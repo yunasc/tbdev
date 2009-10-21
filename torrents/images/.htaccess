@@ -1,0 +1,8 @@
+Order deny,allow
+Allow from all
+Deny from none
+
+# deny PHP in this folder
+<FilesMatch "\.(php|phtml|php4|php5)$">
+	Deny from all
+</FilesMatch>
