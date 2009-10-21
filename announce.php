@@ -33,11 +33,11 @@ gzip();
 
 foreach (array('passkey','info_hash','peer_id','event','ip','localip') as $x) {
 	if(isset($_GET[$x]))
-		$GLOBALS[$x] = (string) $_GET[$x];
+		$GLOBALS[$x] = '' . $_GET[$x];
 }
 
 foreach (array('port','downloaded','uploaded','left') as $x)
-	$GLOBALS[$x] = (int) $_GET[$x];
+	$GLOBALS[$x] = 0 + $_GET[$x];
 
 if (get_magic_quotes_gpc()) {
     $info_hash = stripslashes($info_hash);
@@ -57,7 +57,7 @@ $rsize = 50;
 foreach(array('num want', 'numwant', 'num_want') as $k) {
 	if (isset($_GET[$k]))
 	{
-		$rsize = (int) $_GET[$k];
+		$rsize = 0 + $_GET[$k];
 		break;
 	}
 }
