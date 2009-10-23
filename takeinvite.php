@@ -12,7 +12,7 @@ function bark($msg) {
 	die;
 }
 
-$id = 0 + $_GET["id"];
+$id = intval($_GET["id"]);
 
 if ($id == 0) {
 	$id = $CURUSER["id"];

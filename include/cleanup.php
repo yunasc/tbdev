@@ -236,7 +236,7 @@ function docleanup() {
 			sql_query("DELETE FROM files WHERE torrent=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM ratings WHERE torrent=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM checkcomm WHERE checkid=$arr[id] AND torrent = 1") or sqlerr(__FILE__,__LINE__);
-			sql_query("DELETE FROM bookmarks WHERE id=$arr[id]") or sqlerr(__FILE__,__LINE__);
+			sql_query("DELETE FROM bookmarks WHERE torrentid=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			write_log("Торрент $arr[id] ($arr[name]) был удален системой (старше чем $ttl_days дней)","","torrent");
 		}
 	}

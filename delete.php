@@ -39,7 +39,7 @@ function bark($msg) {
 if (!mkglobal("id"))
 	bark("Нехватает данных");
 
-$id = 0 + $id;
+$id = intval($id);
 if (!$id)
 	die();
 
@@ -55,7 +55,7 @@ if (!$row)
 if ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)
 	bark("Вы не владелец! Как такое могло произойти?\n");
 
-$rt = 0 + $_POST["reasontype"];
+$rt = intval($_POST["reasontype"]);
 
 if (!is_int($rt) || $rt < 1 || $rt > 5)
 	bark("Неверная причина $rt.");

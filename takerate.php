@@ -40,11 +40,11 @@ if (!isset($CURUSER))
 if (!mkglobal("rating:id"))
 	bark("missing form data");
 
-$id = 0 + $id;
+$id = intval($id);
 if (!$id)
 	bark("invalid id");
 
-$rating = 0 + $rating;
+$rating = intval($rating);
 if ($rating <= 0 || $rating > 5)
 	bark("invalid rating");
 

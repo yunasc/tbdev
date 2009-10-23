@@ -4,7 +4,7 @@ require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
 
-$id = 0 + $_GET["id"];
+$id = intval($_GET["id"]);
 if (!is_valid_id($id))
 	stderr("Ошибка", "А вот этого лучше не делать...");
 if (isset($_POST["conusr"]))

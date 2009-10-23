@@ -265,7 +265,10 @@ if ($update_torrent) {
 
 	$updateset[] = "info_hash = " . sqlesc($infohash);
 	$updateset[] = "filename = " . sqlesc($fname);
-	$updatesetp[] = "save_as = " . sqlesc($dname);
+	$updateset[] = "save_as = " . sqlesc($dname);
+	$updateset[] = "size = " . sqlesc($totallen);
+	$updateset[] = "type = " . sqlesc($torrent_type);
+	$updateset[] = "numfiles = " . count($filelist);
 
 	@sql_query("DELETE FROM files WHERE torrent = $id");
 	foreach ($filelist as $file) {

@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `bonus`;
 CREATE TABLE `bonus` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
-  `points` decimal(5,2) NOT NULL default '0.00',
+  `points` decimal(7,2) NOT NULL default '0.00',
   `description` text NOT NULL,
   `type` varchar(10) NOT NULL default 'traffic',
   `quanity` bigint(20) unsigned NOT NULL default '0',
@@ -629,7 +629,7 @@ CREATE TABLE `users` (
   `website` varchar(50) NOT NULL default '',
   `uploaded` bigint(20) unsigned NOT NULL default '0',
   `downloaded` bigint(20) unsigned NOT NULL default '0',
-  `bonus` decimal(5,2) NOT NULL default '0.00',
+  `bonus` decimal(7,2) NOT NULL default '0.00',
   `title` varchar(30) NOT NULL default '',
   `country` int(10) unsigned NOT NULL default '0',
   `notifs` varchar(100) NOT NULL default '',

@@ -77,7 +77,7 @@ elseif($_GET)
 //	$id = 0 + $matches[1];
 //	$md5 = $matches[2];
 
-	$id = 0 + $_GET["id"];
+	$id = intval($_GET["id"]);
   $md5 = $_GET["secret"];
 
 	if (!$id)

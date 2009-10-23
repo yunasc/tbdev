@@ -53,7 +53,7 @@ if (!isset($name))
 if (!$id)
 	httperr();*/
 
-$res = sql_query("SELECT name FROM torrents WHERE id = ".sqlesc($id)) or sqlerr(__FILE__, __LINE__);
+$res = sql_query("SELECT name, owner, banned FROM torrents WHERE id = ".sqlesc($id)) or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_assoc($res);
 if (!$row)
 	stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
@@ -63,7 +63,12 @@ $fn = "$torrent_dir/$id.torrent";
 if (!$row || !is_file($fn) || !is_readable($fn))
 	stderr($tracker_lang['error'], $tracker_lang['unable_to_read_torrent']);
 
+if ($row['banned'] == 'yes' && $row['owner'] != $CURUSER['id'] && get_user_class() < UC_MODERATOR)
+	stderr($tracker_lang['error'], '”пс, а торрентик-то забанен!');
+
 sql_query("UPDATE torrents SET hits = hits + 1 WHERE id = ".sqlesc($id));
+
+$name = str_replace(array(',', ';'), '', $name);
 
 require_once "include/benc.php";
 

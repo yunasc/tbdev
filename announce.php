@@ -57,7 +57,7 @@ $rsize = 50;
 foreach(array('num want', 'numwant', 'num_want') as $k) {
 	if (isset($_GET[$k]))
 	{
-		$rsize = 0 + $_GET[$k];
+		$rsize = (int) $_GET[$k];
 		break;
 	}
 }

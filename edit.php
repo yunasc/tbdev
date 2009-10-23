@@ -31,7 +31,7 @@ require_once("include/bittorrent.php");
 if (!mkglobal("id"))
 	die();
 
-$id = 0 + $id;
+$id = intval($id);
 if (!$id)
 	die();
 
