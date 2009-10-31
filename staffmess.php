@@ -44,7 +44,7 @@ stdhead("Общее сообщение", false);
 if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 {
 ?>
-<input type=hidden name=returnto value=<?=$_GET["returnto"] ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
+<input type=hidden name=returnto value=<?=$_GET["returnto"] ? urlencode($_GET["returnto"]) : urlencode($_SERVER["HTTP_REFERER"])?>>
 <?
 }
 ?>
