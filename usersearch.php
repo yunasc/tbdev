@@ -28,8 +28,6 @@
 
 require "include/bittorrent.php";
 
-gzip();
-
 // 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
 $DEBUG_MODE = 0;
 /*

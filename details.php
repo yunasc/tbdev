@@ -28,8 +28,6 @@
 
 require_once("include/bittorrent.php");
 
-gzip();
-
 function getagent($httpagent, $peer_id = "") {
         if (preg_match("/^Azureus ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]\_B([0-9][0-9|*])(.+)$)/", $httpagent, $matches))
         return "Azureus/$matches[1]";

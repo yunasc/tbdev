@@ -28,8 +28,6 @@
 
 require "include/bittorrent.php";
 
-gzip();
-
 dbconn(false);
 
 loggedinorreturn();

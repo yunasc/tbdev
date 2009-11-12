@@ -8,6 +8,8 @@ if (!defined('UC_SYSOP'))
 <link rel="stylesheet" href="./themes/<?=$ss_uri."/".$ss_uri?>.css" type="text/css">
 <script language="javascript" type="text/javascript" src="js/resizer.js"></script>
 <script language="javascript" type="text/javascript" src="js/tooltips.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="js/blocks.js"></script>
 <link rel="alternate" type="application/rss+xml" title="Последние торренты" href="<?=$DEFAULTBASEURL?>/rss.php">
 <link rel="shortcut icon" href="<?=$DEFAULTBASEURL;?>/favicon.ico" type="image/x-icon" />
 </head>

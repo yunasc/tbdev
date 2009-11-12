@@ -79,8 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR
 	die;
 }
 
-gzip();
-
 $res = sql_query("SELECT * FROM bans ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
 
 stdhead($tracker_lang['bans']);
