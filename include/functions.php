@@ -161,12 +161,12 @@ function get_server_load() {
 		$serverload[0] = round($serverload[0], 4);
 		if(!$serverload) {
 			$load = @exec("uptime");
-			$load = split("load averages?: ", $load);
+			$load = @split("load averages?: ", $load);
 			$serverload = explode(",", $load[1]);
 		}
 	} else {
 		$load = @exec("uptime");
-		$load = split("load averages?: ", $load);
+		$load = @split("load averages?: ", $load);
 		$serverload = explode(",", $load[1]);
 	}
 	$returnload = trim($serverload[0]);
@@ -596,7 +596,7 @@ function gmtime() {
 
 function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff) {
 
-	$subnet = split('.', getip());
+	$subnet = explode('.', getip());
 	$subnet[2] = $subnet[3] = 0;
 	$subnet = implode('.', $subnet); // 255.255.0.0
 
