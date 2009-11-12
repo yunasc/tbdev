@@ -313,6 +313,7 @@ CREATE TABLE `orbital_blocks` (
   `expire` varchar(14) NOT NULL default '0',
   `action` char(1) NOT NULL default '',
   `which` varchar(255) NOT NULL default '',
+  `allow_hide` enum('yes','no') NOT NULL default 'yes',
   PRIMARY KEY  (`bid`),
   KEY `title` (`title`),
   KEY `weight` (`weight`),

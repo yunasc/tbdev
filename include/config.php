@@ -76,7 +76,8 @@ $use_blocks = 1; // Использовать систему блоков. 1 - да, 0 - нет. Если ее отключ
 $use_gzip = 1; // Использовать сжатие GZip на страницах.
 $use_ipbans = 1; // Использовать функцию блокирования IP-адресов. 0 - нет, 1 - да.
 $use_sessions = 1; // Использовать сессии. 0 - нет, 1 - да.
-$smtptype = "advanced";
+$smtptype = "advanced"; // Тип отправки почты, по умолчанию advanced, лучше не менять
+$allow_block_hide = true; // Разрешить сворачивание блоков
 // [END] Custom variables from Yuna Scatari
 
 ?>

@@ -4,8 +4,8 @@
 if(!defined('IN_TRACKER'))
   die('Hacking attempt!');
 
-	function render_blocks($side, $blockfile, $blocktitle, $content, $bid, $bposition) {
-	global $showbanners;
+	function render_blocks($side, $blockfile, $blocktitle, $content, $bid, $bposition, $allow_hide) {
+	global $showbanners, $allow_block_hide;
 	global $foot;
 		if ($blockfile != "") {
 			if (file_exists ("blocks/".$blockfile."")) {
@@ -39,6 +39,20 @@ if(!defined('IN_TRACKER'))
 		case 'o':
 			return "$blocktitle - $content";
 	  }
+
+		if ($allow_block_hide && ($allow_hide || get_user_class() >= UC_ADMINISTRATOR)) {
+			$hidden_blocks = ($_COOKIE['hb'] ? unserialize($_COOKIE['hb']) : array());
+			$display = 'block';
+			$picture = 'minus';
+			$alt = 'Скрыть';
+			if (in_array($bid, $hidden_blocks)) {
+				$display = 'none';
+				$picture = 'plus';
+				$alt = 'Показать';
+			}
+			$blocktitle = $blocktitle . '&nbsp;<span style="cursor: pointer;" onclick="javascript: block_switch(\''.$bid.'\');"><img border="0" src="pic/'.$picture.'.gif" id="picb'.$bid.'" title="'.$alt.'"></span>';
+			$content = '<span id="sb'.$bid.'" style="display: '.$display.';">' . $content . '</span>';
+		}
 
 		themesidebox($blocktitle, $content, $bposition);
 		return null;
@@ -149,6 +163,7 @@ $orbital_blocks = array();
 
 function show_blocks($position) {
 	global $CURUSER, $use_blocks, $already_used, $orbital_blocks;
+	static $showed_show_hide;
 
 	if ($use_blocks) {
 
@@ -162,11 +177,15 @@ function show_blocks($position) {
 		}
 
 		foreach ($orbital_blocks as $block) {
+			if (!$showed_show_hide)
+				echo '<script language="javascript" type="text/javascript" src="js/show_hide.js"></script>';
+			$showed_show_hide = true;
 			$bid = $block["bid"];
 			$content = $block["content"];
 			$title = $block["title"];
 			$blockfile = $block["blockfile"];
 			$bposition = $block["bposition"];
+			$allow_hide = $block["allow_hide"] == 'yes';
 			if ($position != $bposition)
 				continue;
 			$view = $block["view"];
@@ -176,13 +195,13 @@ function show_blocks($position) {
 				continue;
 			}
 			if ($view == 0) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition);
+				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 1 && $CURUSER) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition);
+				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 2 && (get_user_class() >= UC_MODERATOR)) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition);
+				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 3 && (!$CURUSER || get_user_class() >= UC_MODERATOR)) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition);
+				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			}
 		}
 	}

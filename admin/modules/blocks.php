@@ -151,6 +151,7 @@ function BlocksNew() {
 		}
 	}
 	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"></td><td><b>Во всех модулях</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"></td><td><b>Только на главной</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"></td><td><b>Свободный блок</b></td></tr></table></td></tr>";
+	echo "<tr><td>Скрывать?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" checked>Да &nbsp;&nbsp; <input type=\"radio\" name=\"hide\" value=\"no\">Нет</td></tr>";
 	echo "<tr><td>Включить?</td><td><input type=\"radio\" name=\"active\" value=\"1\" checked>Да &nbsp;&nbsp; <input type=\"radio\" name=\"active\" value=\"0\">Нет</td></tr>"
 	."<tr><td>Время работы, в днях:</td><td><input type=\"text\" name=\"expire\" maxlength=\"3\" value=\"0\" size=\"65\" style=\"width:400px\"></td></tr>"
 	."<tr><td>После истечения:</td><td><select name=\"action\" style=\"width:400px\">"
@@ -213,7 +214,7 @@ function BlocksFixweight() {
 	Header("Location: ".$admin_file.".php?op=BlocksAdmin");
 }
 
-function BlocksAdd($title, $content, $bposition, $active, $blockfile, $view, $expire, $action) {
+function BlocksAdd($title, $content, $bposition, $active, $hide, $blockfile, $view, $expire, $action) {
 	global $prefix, $admin_file;
 	list($weight) = mysql_fetch_row(sql_query("SELECT weight FROM ".$prefix."_blocks WHERE bposition=".sqlesc($bposition)." ORDER BY weight DESC"));
 	$weight++;
@@ -247,7 +248,7 @@ function BlocksAdd($title, $content, $bposition, $active, $blockfile, $view, $ex
 				}
 			}
 		}
-		sql_query("INSERT INTO ".$prefix."_blocks VALUES (NULL, ".implode(", ", array_map("sqlesc", array($bkey, $title, $content, $bposition, $weight, $active, $btime, $blockfile, $view, $expire, $action, $which))).")") or sqlerr(__FILE__,__LINE__);
+		sql_query("INSERT INTO ".$prefix."_blocks VALUES (NULL, ".implode(", ", array_map("sqlesc", array($bkey, $title, $content, $bposition, $weight, $active, $btime, $blockfile, $view, $expire, $action, $which, $hide))).")") or sqlerr(__FILE__,__LINE__);
 		Header("Location: ".$admin_file.".php?op=BlocksAdmin");
 	}
 }
@@ -256,7 +257,7 @@ function BlocksEdit($bid) {
 	global $prefix, $admin_file;
 	BlocksNavi();
 	$bid = intval($bid);
-	list($bkey, $title, $content, $bposition, $weight, $active, $blockfile, $view, $expire, $action, $which) = mysql_fetch_row(sql_query("SELECT bkey, title, content, bposition, weight, active, blockfile, view, expire, action, which FROM ".$prefix."_blocks WHERE bid='$bid'"));
+	list($bkey, $title, $content, $bposition, $weight, $active, $hide, $blockfile, $view, $expire, $action, $which) = mysql_fetch_row(sql_query("SELECT bkey, title, content, bposition, weight, active, allow_hide, blockfile, view, expire, action, which FROM ".$prefix."_blocks WHERE bid='$bid'"));
 	if ($blockfile != "") {
 		$type = "(Файловый блок)";
 	} else {
@@ -334,6 +335,8 @@ function BlocksEdit($bid) {
 	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"$cel></td><td><b>Во всех модулях</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"$hel></td><td><b>Только на главной</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"$fel></td><td><b>Свободный блок</b></td></tr></table></td></tr>";
 	$sel1 = ($active == 1) ? "checked" : "";
 	$sel2 = ($active == 0) ? "checked" : "";
+	$hide1 = ($hide == 'yes') ? "checked" : "";
+	$hide2 = ($hide == 'no') ? "checked" : "";
 	if ($expire != 0) {
 		$newexpire = 0;
 		$oldexpire = $expire;
@@ -346,6 +349,8 @@ function BlocksEdit($bid) {
 	}
 	$selact1 = ($action == "d") ? "selected" : "";
 	$selact2 = ($action == "r") ? "selected" : "";
+	echo "<tr><td>Сворачивать?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" $hide1>Да &nbsp;&nbsp;"
+	."<input type=\"radio\" name=\"hide\" value=\"no\" $hide2>Нет</td></tr>";
 	echo "<tr><td>Включить?</td><td><input type=\"radio\" name=\"active\" value=\"1\" $sel1>Да &nbsp;&nbsp;"
 	."<input type=\"radio\" name=\"active\" value=\"0\" $sel2>Нет</td></tr>"
 	."<tr><td>Время работы, в днях:</td><td>$expire_text</td></tr>"
@@ -370,7 +375,7 @@ function BlocksEdit($bid) {
 	."<input type=\"submit\" value=\"Сохранить\"></form></center>";
 }
 
-function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition, $bposition, $active, $weight, $blockfile, $view, $expire, $action) {
+function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition, $bposition, $active, $hide, $weight, $blockfile, $view, $expire, $action) {
 	global $prefix, $db, $admin_file;
 	if (isset($_POST['blockwhere'])) {
 		$blockwhere = $_POST['blockwhere'];
@@ -403,14 +408,14 @@ function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition,
 			list($lastw) = mysql_fetch_row(sql_query("SELECT weight FROM ".$prefix."_blocks WHERE bposition=".sqlesc($bposition)." ORDER BY weight DESC LIMIT 0,1"));
 			if ($lastw <= $fweight) {
 				$lastw++;
-				sql_query("UPDATE ".$prefix."_blocks SET title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($lastw).", active=".sqlesc($active).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
+				sql_query("UPDATE ".$prefix."_blocks SET title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($lastw).", active=".sqlesc($active).", allow_hide=".sqlesc($hide).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
 			} else {
-				sql_query("UPDATE ".$prefix."_blocks SET title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($fweight).", active=".sqlesc($active).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
+				sql_query("UPDATE ".$prefix."_blocks SET title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($fweight).", active=".sqlesc($active).", allow_hide=".sqlesc($hide).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
 			}
 		} else {
 			if ($expire == "") $expire = 0;
 			if ($newexpire == 1 && $expire != 0) $expire = time() + ($expire * 86400);
-			$result8 = sql_query("UPDATE ".$prefix."_blocks SET bkey=".sqlesc($bkey).", title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($weight).", active=".sqlesc($active).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view).", expire=".sqlesc($expire).", action=".sqlesc($action)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
+			$result8 = sql_query("UPDATE ".$prefix."_blocks SET bkey=".sqlesc($bkey).", title=".sqlesc($title).", content=".sqlesc($content).", bposition=".sqlesc($bposition).", weight=".sqlesc($weight).", active=".sqlesc($active).", allow_hide=".sqlesc($hide).", blockfile=".sqlesc($blockfile).", view=".sqlesc($view).", expire=".sqlesc($expire).", action=".sqlesc($action)." WHERE bid=".sqlesc($bid)) or sqlerr(__FILE__,__LINE__);
 		}
 		Header("Location: ".$admin_file.".php?op=BlocksAdmin");
 }
@@ -553,7 +558,7 @@ switch($op) {
 	break;
 	
 	case "BlocksAdd":
-	BlocksAdd($title, $content, $bposition, $active, $blockfile, $view, $expire, $action);
+	BlocksAdd($title, $content, $bposition, $active, $hide, $blockfile, $view, $expire, $action);
 	break;
 	
 	case "BlocksEdit":
@@ -561,7 +566,7 @@ switch($op) {
 	break;
 	
 	case "BlocksEditSave":
-	BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition, $bposition, $active, $weight, $blockfile, $view, $expire, $action);
+	BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition, $bposition, $active, $hide, $weight, $blockfile, $view, $expire, $action);
 	break;
 	
 	case "BlocksChange":
