@@ -126,7 +126,7 @@ function userlogin($lightmode = false) {
 		return;
 	}
 
-	$subnet = split('.', getip());
+	$subnet = explode('.', getip());
 	$subnet[2] = $subnet[3] = 0;
 	$subnet = implode('.', $subnet); // 255.255.0.0
 	if ($c_pass !== md5($row["passhash"] . COOKIE_SALT . $subnet)) {
@@ -1237,7 +1237,7 @@ define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blan
 function mysql_modified_rows () {
 	$info_str = mysql_info();
 	$a_rows = mysql_affected_rows();
-	ereg("Rows matched: ([0-9]*)", $info_str, $r_matched);
+	@ereg("Rows matched: ([0-9]*)", $info_str, $r_matched);
 	return ($a_rows < 1)?($r_matched[1]?$r_matched[1]:0):$a_rows;
 }
 
