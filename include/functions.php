@@ -1232,7 +1232,7 @@ function parked() {
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
 define ("VERSION", "Pre 6 RC 0");
-define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v2.1.5-r2 <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
+define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v2.1.7 <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
 
 function mysql_modified_rows () {
 	$info_str = mysql_info();
