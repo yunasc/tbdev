@@ -51,7 +51,7 @@ $announce_urls = array();
 $announce_urls[] = "$DEFAULTBASEURL/announce.php";
 
 // SECURITY
-define ('COOKIE_SALT', ''); // «аполните эту переменную любым мусором, сиволом эдак 32 - нужно дл€ соли кукисов
+define ('COOKIE_SALT', 'default'); // «аполните эту переменную любым мусором, сиволом эдак 32 - нужно дл€ соли кукисов
 
 // DEFINE TRACKER GROUPS
 define ("UC_USER", 0);

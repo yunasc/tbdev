@@ -83,7 +83,7 @@ function userlogin($lightmode = false) {
 	global $SITE_ONLINE, $default_language, $tracker_lang, $use_lang, $use_ipbans;
 	unset($GLOBALS["CURUSER"]);
 
-	if (COOKIE_SALT == '')
+	if (COOKIE_SALT == '' || (COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR']))
 		die('Скрипт заблокирован! Измените значение переменной COOKIE_SALT в файле include/init.php на случайное');
 
 	$ip = getip();
