@@ -205,6 +205,8 @@ if ($event == 'stopped') {
 		$updateset[] = 'times_completed = times_completed + 1';
 	}
 	if (isset($self)) {
+		$downloaded2 = max(0, $downloaded - $self['downloaded']);
+		$uploaded2 = max(0, $uploaded - $self['uploaded']);
 		if ($downloaded2 > 0 || $uploaded2 > 0) {
 			$snatch_updateset[] = "uploaded = uploaded + $uploaded2";
 			$snatch_updateset[] = "downloaded = downloaded + $downloaded2";
