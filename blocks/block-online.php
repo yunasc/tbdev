@@ -23,18 +23,24 @@ else
 	$result = sql_query("SELECT u.id, u.username, u.class FROM users AS u WHERE u.last_access > ".sqlesc(get_date_time(time() - 300))." ORDER BY u.class DESC");
 while (list($uid, $uname, $class) = mysql_fetch_row($result)) {
 
-    if (!empty($uname)) {
+	$parsed = array();
+	$parsed_id = array();
+
+    if (!empty($uname) && !in_array($uname, $parsed)) {
+    	$parsed[] = $uname;
     	$title_who[] = "<a href=\"userdetails.php?id=".$uid."\" class=\"online\">".get_user_class_color($class, $uname)."</a>";
     }
 
-    if ($class >= UC_MODERATOR) {
+    if ($class >= UC_MODERATOR && !in_array($uid, $parsed_id)) {
     	$staff++;
 	} elseif (empty($uname)) {
     	$guests++;
-    } elseif ($class < UC_MODERATOR) {
+    } elseif ($class < UC_MODERATOR && !in_array($uid, $parsed_id)) {
     	$users++;
     }
 
+	if (!in_array($uid, $parsed_id))
+		$parsed_id[] = $uid;
     $total++;
 
 	if (empty($uname))
