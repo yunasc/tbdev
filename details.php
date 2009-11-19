@@ -27,6 +27,8 @@
 */
 
 require_once("include/bittorrent.php");
+dbconn(false);
+loggedinorreturn();
 
 function getagent($httpagent, $peer_id = "") {
         if (preg_match("/^Azureus ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]\_B([0-9][0-9|*])(.+)$)/", $httpagent, $matches))
@@ -183,10 +185,6 @@ function dltable($name, $arr, $torrent)
         $s .= "</table>\n";
         return $s;
 }
-
-dbconn(false);
-
-loggedinorreturn();
 
 $id = intval($_GET["id"]);
 
