@@ -76,8 +76,10 @@ if ($action == 'add') {
                 sql_query('UPDATE users SET simpaty = simpaty - 1 WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         }
         // mod by StirolXXX (Yuna Scatari)
-		$msg = sqlesc("Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars($_POST["description"]) . "[/quote]"); 
-		sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) VALUES (0, $targetid, NOW(), $msg, 0, \"Уведомление об изменении репутации\")");
+		$msg = "Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars($_POST["description"]) . "[/quote]";
+		$subject = "Уведомление об изменении репутации";
+		send_pm(0, $targetid, get_date_time(), $subject, $msg);
+		//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0, $targetid, NOW(), $msg, \"Уведомление об изменении репутации\")");
         // mod by StirolXXX (Yuna Scatari)
 		if (isset($_POST["returnto"])) {
 			$returl = $_POST["returnto"];

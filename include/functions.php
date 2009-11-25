@@ -410,6 +410,10 @@ function validemail($email) {
 		return false;
 }
 
+function send_pm($sender, $receiver, $added, $subject, $msg) {
+	sql_query('INSERT INTO messages (sender, receiver, added, subject, msg) VALUES ('.implode(', ', array_map('sqlesc', array($sender, $receiver, $added, $subject, $msg))).')') or sqlerr(__FILE__,__LINE__);
+}
+
 function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$multiplemail='') {
 	global $SITENAME,$SITEEMAIL,$smtptype,$smtp,$smtp_host,$smtp_port,$smtp_from,$smtpaddress,$accountname,$accountpassword,$rootpath;
 	# Sent Mail Function v.05 by xam (This function to help avoid spam-filters.)

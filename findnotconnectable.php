@@ -78,7 +78,8 @@ stderr($tracker_lang['error'],"¬ведите текст сообщени€");
 $query = sql_query("SELECT distinct userid FROM peers WHERE connectable='no'");
 while($dat=mysql_fetch_assoc($query)){
 $subject = sqlesc("“рекер определил вас несоедин€бельного");
-sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0,$dat[userid] , '" . get_date_time() . "', " . sqlesc($msg) . ", " . $subject .")") or sqlerr(__FILE__,__LINE__);
+send_pm(0, $dat['userid'], get_date_time(), $subject, $msg);
+//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0,$dat[userid] , '" . get_date_time() . "', " . sqlesc($msg) . ", " . $subject .")") or sqlerr(__FILE__,__LINE__);
 }
 sql_query("INSERT INTO notconnectablepmlog ( user , date ) VALUES ( $CURUSER[id], $dt)") or sqlerr(__FILE__,__LINE__);
 header("Refresh: 0; url=findnotconnectable.php");

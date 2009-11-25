@@ -119,10 +119,10 @@ if ($action == "edituser") {
 	if ($curclass != $class) {
 		// Notify user
 		$what = ($class > $curclass ? "повышены" : "понижены");
-		$msg = sqlesc("Вы были $what до класса \"" . get_user_class_name($class) . "\" пользователем $CURUSER[username].");
-		$added = sqlesc(get_date_time());
-		$subject = sqlesc("Вы были $what");
-		sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES(0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
+		$msg = "Вы были $what до класса \"" . get_user_class_name($class) . "\" пользователем $CURUSER[username].";
+		$subject = "Вы были $what";
+		send_pm(0, $userid, get_date_time(), $subject, $msg);
+		//sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES(0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
 		$updateset[] = "class = $class";
 		$what = ($class > $curclass ? "Повышен" : "Пониженен");
  		$modcomment = date("Y-m-d") . " - $what до класса \"" . get_user_class_name($class) . "\" пользователем $CURUSER[username].\n". $modcomment;
@@ -134,30 +134,30 @@ if ($action == "edituser") {
 	if ($warned && $curwarned != $warned) {
 		$updateset[] = "warned = " . sqlesc($warned);
 		$updateset[] = "warneduntil = '0000-00-00 00:00:00'";
-		$subject = sqlesc("Ваше предупреждение снято");
+		$subject = "Ваше предупреждение снято";
 		if ($warned == 'no')
 		{
 			$modcomment = date("Y-m-d") . " - Предупреждение снял пользователь " . $CURUSER['username'] . ".\n". $modcomment;
-			$msg = sqlesc("Ваше предупреждение снял пользователь " . $CURUSER['username'] . ".");
+			$msg = "Ваше предупреждение снял пользователь " . $CURUSER['username'] . ".";
 		}
-		$added = sqlesc(get_date_time());
-		sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES (0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
+		send_pm(0, $userid, get_date_time(), $subject, $msg);
+		//sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES (0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
 	} elseif ($warnlength) {
 		if (strlen($warnpm) == 0)
 			stderr($tracker_lang['error'], "Вы должны указать причину по которой ставите предупреждение!");
 		if ($warnlength == 255) {
 			$modcomment = date("Y-m-d") . " - Предупрежден пользователем " . $CURUSER['username'] . ".\nПричина: $warnpm\n" . $modcomment;
-			$msg = sqlesc("Вы получили [url=rules.php#warning]предупреждение[/url] на неограниченый срок от $CURUSER[username]" . ($warnpm ? "\n\nПричина: $warnpm" : ""));
+			$msg = "Вы получили [url=rules.php#warning]предупреждение[/url] на неограниченый срок от $CURUSER[username]" . ($warnpm ? "\n\nПричина: $warnpm" : "");
 			$updateset[] = "warneduntil = '0000-00-00 00:00:00'";
 		} else {
 			$warneduntil = get_date_time(gmtime() + $warnlength * 604800);
 			$dur = $warnlength . " недел" . ($warnlength > 1 ? "и" : "ю");
-			$msg = sqlesc("Вы получили [url=rules.php#warning]предупреждение[/url] на $dur от пользователя " . $CURUSER['username'] . ($warnpm ? "\n\nПричина: $warnpm" : ""));
+			$msg = "Вы получили [url=rules.php#warning]предупреждение[/url] на $dur от пользователя " . $CURUSER['username'] . ($warnpm ? "\n\nПричина: $warnpm" : "");
 			$modcomment = date("Y-m-d") . " - Предупрежден на $dur пользователем " . $CURUSER['username'] .	".\nПричина: $warnpm\n" . $modcomment;
 			$updateset[] = "warneduntil = '$warneduntil'";
 		}
- 		$added = sqlesc(get_date_time());
- 		$subject = sqlesc("Вы получили предупреждение");
+ 		$subject = "Вы получили предупреждение";
+ 		send_pm(0, $userid, get_date_time(), $subject, $msg);
 		sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES (0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
 		$updateset[] = "warned = 'yes'";
 	}
