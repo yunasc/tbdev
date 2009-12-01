@@ -203,7 +203,7 @@ function docleanup() {
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster) SELECT 0, id, $now, $msg, 0 FROM users WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET warned='no', warneduntil = '0000-00-00 00:00:00', modcomment = CONCAT($modcomment, modcomment) WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 
-	// promote power users
+	// promote to power users
 	$limit = 25*1024*1024*1024;
 	$minratio = 1.05;
 	$maxdt = sqlesc(get_date_time(gmtime() - 86400*28));
@@ -211,16 +211,16 @@ function docleanup() {
 	$msg = sqlesc("Наши поздравления, вы были авто-повышены до ранга [b]Опытный пользовать[/b].");
 	$subject = sqlesc("Вы были повышены");
 	$modcomment = sqlesc(date("Y-m-d") . " - Повышен до уровня \"".$tracker_lang["class_power_user"]."\" системой.\n");
-	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = 0 AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__,__LINE__);
+	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = ".UC_USER." AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET class = ".UC_POWER_USER.", modcomment = CONCAT($modcomment, modcomment) WHERE class = ".UC_USER." AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__,__LINE__);
 
-	// demote power users
+	// demote from power users
 	$minratio = 0.95;
 	$now = sqlesc(get_date_time());
 	$msg = sqlesc("Вы были авто-понижены с ранга [b]Опытный пользователь[/b] до ранга [b]Пользователь[/b] потому-что ваш рейтинг упал ниже [b]{$minratio}[/b].");
 	$subject = sqlesc("Вы были понижены");
 	$modcomment = sqlesc(date("Y-m-d") . " - Понижен до уровня \"".$tracker_lang["class_user"]."\" системой.\n");
-	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = 1 AND uploaded / downloaded < $minratio") or sqlerr(__FILE__,__LINE__);
+	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = ".UC_POWER_USER." AND uploaded / downloaded < $minratio") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET class = ".UC_USER.", modcomment = CONCAT($modcomment, modcomment) WHERE class = ".UC_POWER_USER." AND uploaded / downloaded < $minratio") or sqlerr(__FILE__,__LINE__);
 
 	// delete old torrents
