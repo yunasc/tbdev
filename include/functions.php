@@ -232,11 +232,11 @@ function unesc($x) {
 function gzip() {
 	global $use_gzip;
 	static $already_loaded;
-	$already_loaded = true;
 	if (extension_loaded('zlib') && ini_get('zlib.output_compression') != '1' && ini_get('output_handler') != 'ob_gzhandler' && $use_gzip && !$already_loaded) {
 		@ob_start('ob_gzhandler');
 	} else
 		@ob_start();
+	$already_loaded = true;
 }
 
 // IP Validation
