@@ -1,3 +1,25 @@
+/* Spoiler hack */
+
+.spoiler-head {
+	font-size: 11px; padding: 1px 14px 3px; margin-left: 6px; line-height: 15px;
+}
+
+.spoiler-body {
+	padding: 1px 6px 2px; display: none;
+	border-top: 1px solid #C3CBD1; background: #F5F5F5;border-bottom: 1px solid #C3CBD1;
+}
+
+.spoiler-wrap {
+	width: 95%; margin: 6px auto; clear: both; background: #E9E9E6;
+	border: solid #C3CBD1; border-width: 1px 1px 1px 2px;
+}
+
+.clickable { cursor: pointer; }
+.folded    { background: transparent url(images/icon_plus.gif) no-repeat left center; padding-left: 14px; }
+.unfolded  { background: transparent url(images/icon_minus.gif) no-repeat left center; padding-left: 14px; }
+
+/* Spoiler hack */
+
 body {
 	font-family: "tahoma";
 	font-size: 8pt;

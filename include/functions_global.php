@@ -805,6 +805,10 @@ function format_comment($text, $strip_html = true) {
 	$html[] = "<li>";
 	$bb[] = "#\[hr\]#si";
 	$html[] = "<hr>";
+	$bb[] = "/\[hide\]\s*((\s|.)+?)\s*\[\/hide\]\s*/i";
+	$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
+	$bb[] = "/\[hide=\s*((\s|.)+?)\s*\]((\s|.)+?)\[\/hide\]/i";
+	$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">\\1</div><div class=\"spoiler-body\"><textarea>\\3</textarea></div></div>";
 
 	$s = preg_replace($bb, $html, $s);
 

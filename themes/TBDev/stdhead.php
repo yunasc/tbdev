@@ -10,6 +10,33 @@ if (!defined('UC_SYSOP'))
 <script language="javascript" type="text/javascript" src="js/tooltips.js"></script>
 <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 <script language="javascript" type="text/javascript" src="js/blocks.js"></script>
+<script type="text/javascript">
+<!--
+
+var ExternalLinks_InNewWindow = '1';
+
+function initSpoilers(context) {
+	var context = context || 'body';
+	$('div.spoiler-head', $(context))
+		.click(function(){
+		    var ctx = $(this).next('div.spoiler-body');
+			var code = ctx.children('textarea').text();
+			if (code) {
+			    ctx.children('textarea').replaceWith(code);
+			    initSpoilers(ctx);
+			}
+			$(this).toggleClass('unfolded');
+            $(this).next('div.spoiler-body').slideToggle('fast');
+            $(this).next('div.spoiler-body').next().slideToggle('fast');
+		});
+}
+
+$(document).ready(function(){
+	initSpoilers('body');
+});
+
+//-->
+</script>
 <link rel="alternate" type="application/rss+xml" title="Последние торренты" href="<?=$DEFAULTBASEURL?>/rss.php">
 <link rel="shortcut icon" href="<?=$DEFAULTBASEURL;?>/favicon.ico" type="image/x-icon" />
 </head>
