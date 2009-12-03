@@ -234,7 +234,7 @@ function gzip() {
 	static $already_loaded;
 	if (extension_loaded('zlib') && ini_get('zlib.output_compression') != '1' && ini_get('output_handler') != 'ob_gzhandler' && $use_gzip && !$already_loaded) {
 		@ob_start('ob_gzhandler');
-	} else
+	} elseif (!$already_loaded)
 		@ob_start();
 	$already_loaded = true;
 }
