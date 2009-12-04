@@ -138,7 +138,7 @@ $id = intval($id);
 if (!$id)
 	die();
 
-$res = sql_query("SELECT owner, filename, save_as, image1, image2 FROM torrents WHERE id = $id");
+$res = sql_query("SELECT owner, filename, save_as, image1, image2, image3, image4, image5 FROM torrents WHERE id = $id");
 $row = mysql_fetch_array($res);
 if (!$row)
 	die();
@@ -154,24 +154,36 @@ $shortfname = $matches[1];
 $dname = $row["save_as"];
 
 // picturemod
-$img1action = $_POST['img1action'];
-if ($img1action == "update")
-	$updateset[] = "image1 = " .sqlesc(uploadimage(0, $row[image1], $id));
-if ($img1action == "delete") {
-	if ($row[image1]) {
-		$del = unlink("torrents/images/$row[image1]");
-		$updateset[] = "image1 = ''";
+for ($x=1; $x <= 5; $x++) {
+	$_GLOBALS['img'.$x.'action'] = $_POST['img'.$x.'action'];
+	if ($_GLOBALS['img'.$x.'action'] == 'update')
+		$updateset[] = 'image' . $x . ' = ' .sqlesc(uploadimage($x - 1, $row['image' . $x], $id));
+	if ($_GLOBALS['img'.$x.'action'] == 'delete') {
+		if ($row['image' . $x]) {
+			$del = unlink('torrents/images/' . $row['image' . $x]);
+			$updateset[] = 'image' . $x . ' = ""';
+		}
 	}
-}
 
-$img2action = $_POST['img2action'];
-if ($img2action == "update")
-	$updateset[] = "image2 = " .sqlesc(uploadimage(1, $row[image2], $id));
-if ($img2action == "delete") {
-	if ($row[image2]) {
-		$del = unlink("torrents/images/$row[image2]");
-		$updateset[] = "image2 = ''";
+	/*$img1action = $_POST['img1action'];
+	if ($img1action == "update")
+		$updateset[] = "image1 = " .sqlesc(uploadimage(0, $row[image1], $id));
+	if ($img1action == "delete") {
+		if ($row[image1]) {
+			$del = unlink("torrents/images/$row[image1]");
+			$updateset[] = "image1 = ''";
+		}
 	}
+
+	$img2action = $_POST['img2action'];
+	if ($img2action == "update")
+		$updateset[] = "image2 = " .sqlesc(uploadimage(1, $row[image2], $id));
+	if ($img2action == "delete") {
+		if ($row[image2]) {
+			$del = unlink("torrents/images/$row[image2]");
+			$updateset[] = "image2 = ''";
+		}
+	}*/
 }
 // picturemod
 

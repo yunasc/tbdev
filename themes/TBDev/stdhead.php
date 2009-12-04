@@ -10,6 +10,7 @@ if (!defined('UC_SYSOP'))
 <script language="javascript" type="text/javascript" src="js/tooltips.js"></script>
 <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 <script language="javascript" type="text/javascript" src="js/blocks.js"></script>
+<script language="javascript" type="text/javascript" src="js/lightbox.js"></script>
 <script type="text/javascript">
 <!--
 
@@ -33,6 +34,7 @@ function initSpoilers(context) {
 
 $(document).ready(function(){
 	initSpoilers('body');
+	$(function() {$('a[@rel*=lightbox]').lightBox();});
 });
 
 //-->

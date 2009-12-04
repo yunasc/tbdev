@@ -191,7 +191,7 @@ $id = intval($_GET["id"]);
 if (!isset($id) || !$id)
         die();
 
-$res = sql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(torrents.last_action) AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, torrents.image1, torrents.image2, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
+$res = sql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(torrents.last_action) AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, torrents.image1, torrents.image2, torrents.image3, torrents.image4, torrents.image5, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
         or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_array($res);
 
@@ -257,16 +257,25 @@ else {
 
                 tr($tracker_lang['info_hash'], $row["info_hash"]);
 
-                if ($row["image1"] != "" OR $row["image2"] != "") {
-                  if ($row["image1"] != "")
-                    $img1 = "<a href='viewimage.php?pic=$row[image1]'><img border='0' src='thumbnail.php?$row[image1]' /></a>";
-                  if ($row["image2"] != "")
-                    $img2 = "<a href='viewimage.php?pic=$row[image2]'><img border='0' src='thumbnail.php?$row[image2]' /></a>";
-                  tr($tracker_lang['images'], $img1 . "&nbsp&nbsp" . $img2, 1);
- }
+				if ($row["image1"] != "") {
+					if ($row["image1"] != "")
+						$img1 = "<a href='viewimage.php?pic=$row[image1]'><img border='0' src='thumbnail.php?$row[image1]' /></a>";
+					tr('Постер', $img1, 1);
+				}
 
                 if (!empty($row["descr"]))
-                 tr($tracker_lang['description'], format_comment($row["descr"]), 1, 1);
+					tr($tracker_lang['description'], format_comment($row["descr"]), 1, 1);
+                if ($row['image2'] != '' || $row['image3'] != '' || $row['image4'] != '' || $row['image5'] != '') {
+					if ($row['image2'] != '')
+						$img2 = '<a href="torrents/images/' . $row['image2'] . '" rel="lightbox" title="Скриншот №1"><img title="Скриншот №1" border="0" src="screenshot.php?' . $row['image2'] . '" /></a>';
+					if ($row['image3'] != '')
+						$img3 = '<a href="torrents/images/' . $row['image3'] . '" rel="lightbox" title="Скриншот №2"><img title="Скриншот №2" border="0" src="screenshot.php?' . $row['image3'] . '" /></a>';
+					if ($row['image4'] != '')
+						$img4 = '<a href="torrents/images/' . $row['image4'] . '" rel="lightbox" title="Скриншот №3"><img title="Скриншот №3" border="0" src="screenshot.php?' . $row['image4'] . '" /></a>';
+					if ($row['image5'] != '')
+						$img5 = '<a href="torrents/images/' . $row['image5'] . '" rel="lightbox" title="Скриншот №4"><img title="Скриншот №4" border="0" src="screenshot.php?' . $row['image5'] . '" /></a>';
+					tr($tracker_lang['images'], $img2 . '&nbsp; ' . $img3 . '&nbsp; ' . $img4 . '&nbsp; ' . $img5, 1);
+                }
                 if ($row["visible"] == "no")
                         tr($tracker_lang['visible'], "<b>".$tracker_lang['no']."</b> (".$tracker_lang['dead'].")", 1);
                 if ($moderator)

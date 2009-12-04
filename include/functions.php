@@ -626,12 +626,19 @@ function loggedinorreturn($nowarn = false) {
 
 function deletetorrent($id) {
 	global $torrent_dir;
+	$images = mysql_fetch_array(sql_query('SELECT image1, image2, image3, image4, image5 FROM torrents WHERE id = '.$id));
+	if ($images) {
+		for ($x=1; $x <= 5; $x++) {
+			if ($images['image' . $x] != "")
+				unlink('torrents/images/' . $images['image' . $x]);
+		}
+	}
 	sql_query("DELETE FROM torrents WHERE id = $id");
 	sql_query("DELETE FROM bookmarks WHERE id = $id");
 	sql_query("DELETE FROM snatched WHERE torrent = $id");
 	foreach(explode(".","peers.files.comments.ratings") as $x)
 		sql_query("DELETE FROM $x WHERE torrent = $id");
-	@unlink("$torrent_dir/$id.torrent");
+	unlink("$torrent_dir/$id.torrent");
 }
 
 function pager($rpp, $count, $href, $opts = array()) {

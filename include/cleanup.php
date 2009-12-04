@@ -226,9 +226,13 @@ function docleanup() {
 	// delete old torrents
 	if ($use_ttl) {
 		$dt = sqlesc(get_date_time(gmtime() - ($ttl_days * 86400)));
-		$res = sql_query("SELECT id, name FROM torrents WHERE added < $dt") or sqlerr(__FILE__,__LINE__);
+		$res = sql_query("SELECT id, name, image1, image2, image3, image4, image5 FROM torrents WHERE added < $dt") or sqlerr(__FILE__,__LINE__);
 		while ($arr = mysql_fetch_assoc($res)) {
-			@unlink("$torrent_dir/$arr[id].torrent");
+			unlink("$torrent_dir/$arr[id].torrent");
+			for ($x=1; $x <= 5; $x++) {
+				if ($arr['image' . $x] != "")
+					unlink('torrents/images/' . $arr['image' . $x]);
+			}
 			sql_query("DELETE FROM torrents WHERE id=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM snatched WHERE torrent=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM peers WHERE torrent=$arr[id]") or sqlerr(__FILE__,__LINE__);

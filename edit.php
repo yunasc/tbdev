@@ -57,7 +57,12 @@ if (!isset($CURUSER) || ($CURUSER["id"] != $row["owner"] && get_user_class() < U
 	print("<tr><td class=\"colhead\" colspan=\"2\">Редактировать торрент</td></tr>");
 	tr($tracker_lang['torrent_file'], "<input type=file name=tfile size=80>\n", 1);
 	tr($tracker_lang['torrent_name'], "<input type=\"text\" name=\"name\" value=\"" . $row["name"] . "\" size=\"80\" />", 1);
-	tr($tracker_lang['images'], "<input type=radio name=img1action value='keep' checked>Оставить картинку №1&nbsp&nbsp"."<input type=radio name=img1action value='delete'>Удалить картинку №1&nbsp&nbsp"."<input type=radio name=img1action value='update'>Обновить картинку №1<br /><b>Картинка №1:</b>&nbsp&nbsp<input type=file name=image0 size=80> <br /><br /> <input type=radio name=img2action value='keep' checked>Оставить картинку №2&nbsp&nbsp"."<input type=radio name=img2action value='delete'>Удалить картинку №2&nbsp&nbsp"."<input type=radio name=img2action value='update'>Обновить картинку №2<br /><b>Картинка №2:</b>&nbsp&nbsp<input type=file name=image1 size=80>", 1);
+	tr($tracker_lang['img_poster'], "<input type=radio name=img1action value='keep' checked>Оставить постер&nbsp&nbsp"."<input type=radio name=img1action value='delete'>Удалить постер&nbsp&nbsp"."<input type=radio name=img1action value='update'>Обновить постер<br /><b>Постер:</b>&nbsp&nbsp<input type=file name=image0 size=80>", 1);
+	tr($tracker_lang['images'],
+		"<input type=radio name=img2action value='keep' checked>Оставить скриншот №1&nbsp&nbsp"."<input type=radio name=img2action value='delete'>Удалить скриншот №1&nbsp&nbsp"."<input type=radio name=img2action value='update'>Обновить скриншот №1<br /><b>Картинка №2:</b>&nbsp&nbsp<input type=file name=image1 size=80><br /><br />".
+		"<input type=radio name=img3action value='keep' checked>Оставить скриншот №2&nbsp&nbsp"."<input type=radio name=img3action value='delete'>Удалить скриншот №2&nbsp&nbsp"."<input type=radio name=img3action value='update'>Обновить скриншот №2<br /><b>Картинка №3:</b>&nbsp&nbsp<input type=file name=image2 size=80><br /><br />".
+		"<input type=radio name=img4action value='keep' checked>Оставить скриншот №3&nbsp&nbsp"."<input type=radio name=img4action value='delete'>Удалить скриншот №3&nbsp&nbsp"."<input type=radio name=img4action value='update'>Обновить скриншот №3<br /><b>Картинка №4:</b>&nbsp&nbsp<input type=file name=image3 size=80><br /><br />".
+		"<input type=radio name=img5action value='keep' checked>Оставить скриншот №4&nbsp&nbsp"."<input type=radio name=img5action value='delete'>Удалить скриншот №4&nbsp&nbsp"."<input type=radio name=img5action value='update'>Обновить скриншот №4<br /><b>Картинка №5:</b>&nbsp&nbsp<input type=file name=image4 size=80>", 1);
 if ((strpos($row["ori_descr"], "<") === false) || (strpos($row["ori_descr"], "&lt;") !== false))
   $c = "";
 else
@@ -79,7 +84,9 @@ else
 
 	$s .= "</select>\n";
 	tr("Тип", $s, 1);
-	tr("Видимый", "<input type=\"checkbox\" name=\"visible\"" . (($row["visible"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Видимый в торрентах<br /><table border=0 cellspacing=0 cellpadding=0 width=420><tr><td class=embedded>Обратите внимание, что торрент автоматически станет видимым когда появиться раздающий и автоматически перестанет быть видимым (станет мертвяком) когда не будет раздающего некоторое время. Используйте этот переключатель для ускорения процеса. Также учтите что невидимые торренты (мертвяки) все-равно могут быть просмотрены и найдены, это просто не по-умолчанию.</td></tr></table>", 1);
+	tr("Видимый", "<input type=\"checkbox\" name=\"visible\"" . (($row["visible"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" />
+					Видимый в торрентах<br /><table border=0 cellspacing=0 cellpadding=0 width=420><tr><td class=embedded>Обратите внимание, что торрент автоматически станет видимым когда появиться раздающий и автоматически перестанет быть видимым (станет мертвяком) когда не будет раздающего некоторое время.
+					Используйте этот переключатель для ускорения процеса. Также учтите что невидимые торренты (мертвяки) все-равно могут быть просмотрены и найдены, это просто не по-умолчанию.</td></tr></table>", 1);
 	if(get_user_class() >= UC_ADMINISTRATOR)
 		tr("Забанен", "<input type=\"checkbox\" name=\"banned\"" . (($row["banned"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" />", 1);
     if(get_user_class() >= UC_ADMINISTRATOR)
