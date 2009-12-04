@@ -5,7 +5,7 @@ if (!defined('BLOCK_FILE')) {
 }
 $count = get_row_count("indexreleases");
 $blocktitle = "Релизы".(get_user_class() >= UC_MODERATOR ? "<font class=\"small\"> - [<a class=\"altlink\" href=\"indexadd.php\"><b>Новый</b></a>]</font>" : "");
-//$content .= "<table cellspacing=\"0\" cellpadding=\"5\" width=\"100%\"><tr><td>";
+$content .= "<table cellspacing=\"0\" cellpadding=\"5\" width=\"100%\"><tr><td>";
 if (!$count) {
 	$content .= "Нет релизов на трекере...";
 } else {
@@ -32,5 +32,5 @@ if (!$count) {
 	$content .= $pagerbottom;
 	$content .= "</td></tr>";
 }
-//$content .= "</table>";
+$content .= "</table>";
 ?>
