@@ -58,7 +58,7 @@ sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 //tr($tracker_lang['announce_url'], $announce_urls[0], 1);
 tr($tracker_lang['torrent_file'], "<input type=file name=tfile size=80>\n", 1);
 tr($tracker_lang['torrent_name'], "<input type=\"text\" name=\"name\" size=\"80\" /><br />(".$tracker_lang['taken_from_torrent'].")\n", 1);
-tr($tracker_lang['img_poster'], $tracker_lang['max_file_size'].": 500kb<br />".$tracker_lang['avialable_formats'].": .gif .jpg .png<br /><b>Постер:</b>&nbsp&nbsp<input type=file name=image0 size=80>\n", 1);
+tr($tracker_lang['img_poster'], $tracker_lang['max_file_size'].": 500kb<br />".$tracker_lang['avialable_formats'].": .gif .jpg .png<br /><input type=file name=image0 size=80>\n", 1);
 tr($tracker_lang['images'], $tracker_lang['max_file_size'].": 500kb<br />".$tracker_lang['avialable_formats'].": .gif .jpg .png<br />".
 		"<b>".$tracker_lang['image']." №1:</b>&nbsp&nbsp<input type=file name=image1 size=80><br />".
 		"<b>".$tracker_lang['image']." №2:</b>&nbsp&nbsp<input type=file name=image2 size=80><br />".
