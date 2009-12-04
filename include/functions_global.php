@@ -663,6 +663,20 @@ function encode_quote_from($text) {
 	return $text;
 }
 
+// Format spoiler
+function encode_spoiler($text) {
+	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
+	$text = preg_replace("#\[hide\](.*?)\[/hide\]#si", $replace, $text);
+	return $text;
+}
+
+// Format spoiler from
+function encode_spoiler_from($text) {
+	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">\\1</div><div class=\"spoiler-body\"><textarea>\\2</textarea></div></div>";
+	$text = preg_replace("#\[hide=(.+?)\](.*?)\[/hide\]#si", "".$replace, $text);
+	return $text;
+}
+
 // Format code
 function encode_code($text) {
 	$start_html = "<div align=\"center\"><div style=\"width: 85%; overflow: auto\">"
@@ -805,10 +819,10 @@ function format_comment($text, $strip_html = true) {
 	$html[] = "<li>";
 	$bb[] = "#\[hr\]#si";
 	$html[] = "<hr>";
-	$bb[] = "/\[hide\]\s*((\s|.)+?)\s*\[\/hide\]\s*/i";
-	$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
-	$bb[] = "/\[hide=\s*((\s|.)+?)\s*\]((\s|.)+?)\[\/hide\]/i";
-	$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">\\1</div><div class=\"spoiler-body\"><textarea>\\3</textarea></div></div>";
+	//$bb[] = "/\[hide\]\s*((\s|.)+?)\s*\[\/hide\]\s*/i";
+	//$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
+	//$bb[] = "/\[hide=\s*((\s|.)+?)\s*\]((\s|.)+?)\[\/hide\]/i";
+	//$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">\\1</div><div class=\"spoiler-body\"><textarea>\\3</textarea></div></div>";
 
 	$s = preg_replace($bb, $html, $s);
 
@@ -817,6 +831,8 @@ function format_comment($text, $strip_html = true) {
 
 	while (preg_match("#\[quote\](.*?)\[/quote\]#si", $s)) $s = encode_quote($s);
 	while (preg_match("#\[quote=(.+?)\](.*?)\[/quote\]#si", $s)) $s = encode_quote_from($s);
+	while (preg_match("#\[hide\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler($s);
+	while (preg_match("#\[hide=(.+?)\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler_from($s);
 	if (preg_match("#\[code\](.*?)\[/code\]#si", $s)) $s = encode_code($s);
 	if (preg_match("#\[php\](.*?)\[/php\]#si", $s)) $s = encode_php($s);
 
