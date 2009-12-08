@@ -206,14 +206,17 @@ email address had the IP address {$_SERVER["REMOTE_ADDR"]}. Please do not reply.
 
 To complete the update of your user profile, please follow this link:
 
-http://$thishost/confirmemail.php/{$CURUSER["id"]}/$hash/$obemail
+http://$thishost/confirmemail.php?id={$CURUSER["id"]}&hash=$hash&email=$obemail
+
+If you have AOL browser, please click the following link:
+<a href="http://$thishost/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail">http://$thishost/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail</a>
 
 Your new email address will appear in your profile after you do this. Otherwise
 your profile will remain unchanged.
 EOD;
 
-	mail($email, "$thisdomain profile change confirmation", $body, "From: $SITEEMAIL");
-
+	sent_mail($email, $SITENAME, $SITEEMAIL, "Изменение настроек профиля на $thisdomain", $body, false);
+//	mail($email, "$thisdomain profile change confirmation", $body, "From: $SITEEMAIL");
 	$urladd .= "&mailsent=1";
 }
 

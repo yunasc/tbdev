@@ -279,7 +279,7 @@ elseif ($action == "delete")
 
 	list($commentid) = mysql_fetch_row(sql_query("SELECT id FROM comments WHERE torrent = $torrentid ORDER BY added DESC LIMIT 1"));
 
-	$returnto = "details.php?id=$torrentid&amp;viewcomm=$commentid#comm$commentid";
+	$returnto = "details.php?id=$torrentid&viewcomm=$commentid#comm$commentid";
 
 	if ($returnto)
 	  header("Location: $returnto");
