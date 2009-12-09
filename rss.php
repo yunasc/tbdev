@@ -29,7 +29,7 @@
 require "include/bittorrent.php";
 dbconn();
 
-$passkey = $_GET["passkey"];
+$passkey = (string) $_GET["passkey"];
 if ($passkey) {
 $user = mysql_fetch_row(sql_query("SELECT COUNT(*) FROM users WHERE passkey = ".sqlesc($passkey)));
 if ($user[0] != 1)

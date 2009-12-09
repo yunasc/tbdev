@@ -41,7 +41,7 @@ $link = "$DEFAULTBASEURL/rss.php";
 if ($_POST['feed'] == "dl")
 $query[] = "feed=dl";
 if (isset($_POST['cat']))
-$query[] = "cat=".implode(',', $_POST['cat']);
+$query[] = "cat=".@implode(',', $_POST['cat']);
 else {
 /*stdmsg($tracker_lang['error'],"Вы должны выбрать категорию!");
 stdfoot();
@@ -49,7 +49,7 @@ die();*/
 }
 if ($_POST['login'] == "passkey")
 $query[] = "passkey=$CURUSER[passkey]";
-$queries = implode("&", $query);
+$queries = @implode("&", $query);
 if ($queries)
 $link .= "?$queries";
 
