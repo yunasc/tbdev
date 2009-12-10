@@ -216,7 +216,7 @@ if (!($_FILES[image.$x]['name'] == "")) {
 
 	// Is valid filetype?
 	if (!array_key_exists($_FILES[image.$x]['type'], $allowed_types))
-		bark("Invalid file type! Image $y");
+		bark("Invalid file type! Image $y (".htmlspecialchars($_FILES[image.$x]['type']).")");
 
 	if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES[image.$x]['name']))
 		bark("Неверное имя файла (не картинка).");
