@@ -87,7 +87,7 @@ function timer() {
 
 // Additional security countermeasures
 if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
-	die('Отключите regiser_globals в php.ini/.htaccess (угроза безопасности)');
+	die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
 if (!ini_get('short_open_tag'))
 	die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
 
