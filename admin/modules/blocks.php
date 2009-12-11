@@ -141,7 +141,7 @@ function BlocksNew() {
 	$a = 1;
 	foreach ($allowed_modules as $name => $title) {
 		$i++;
-		$title = ereg_replace("_", " ", $title);
+		$title = preg_replace("/_/", " ", $title);
 		echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"".$name."\"></td><td>$title</td>";
 		if ($a == 2) {
 			echo "</tr><tr>";

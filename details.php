@@ -81,7 +81,7 @@ function getagent($httpagent, $peer_id = "") {
         return "BitsOnWheels/$matches[2]";
         elseif (preg_match("/BitTorrentPlus\/(.+)$/", $httpagent, $matches))
         return "BitTorrent Plus!/$matches[1]";
-        elseif (ereg("^Deadman Walking", $httpagent))
+        elseif (preg_match("/^Deadman Walking/", $httpagent))
         return "Deadman Walking";
         elseif (preg_match("/^eXeem( |\/)([0-9]+\\.[0-9]+).*/", $httpagent, $matches))
         return "eXeem$matches[1]$matches[2]";
@@ -113,15 +113,15 @@ function getagent($httpagent, $peer_id = "") {
         return "MooPolice";
         elseif (substr($peer_id, 0, 8) == "-SZ2210-")
         return "Shareaza/2.2.1.0";
-        elseif (ereg("^0P3R4H", $httpagent))
+        elseif (preg_match("/^0P3R4H/", $httpagent))
         return "Opera BT Client";
         elseif (substr($peer_id, 0, 6) == "A310--")
         return "ABC/3.1";
-        elseif (ereg("^XBT Client", $httpagent))
+        elseif (preg_match("/^XBT Client/", $httpagent))
         return "XBT Client";
-        elseif (ereg("^BitTorrent\/BitSpirit$", $httpagent))
+        elseif (preg_match("/^BitTorrent\/BitSpirit$/", $httpagent))
         return "BitSpirit";
-        elseif (ereg("^DansClient", $httpagent))
+        elseif (preg_match("/^DansClient/", $httpagent))
         return "XanTorrent";
         else
         return "Unknown";

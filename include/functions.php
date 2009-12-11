@@ -404,7 +404,7 @@ function validfilename($name) {
 }
 
 function validemail($email) {
-	if (ereg("^([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", $email)) 
+	if (preg_match("/^([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/", $email)) 
 		return true;
 	else
 		return false;
@@ -1248,7 +1248,7 @@ define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blan
 function mysql_modified_rows () {
 	$info_str = mysql_info();
 	$a_rows = mysql_affected_rows();
-	@ereg("Rows matched: ([0-9]*)", $info_str, $r_matched);
+	preg_match("/Rows matched: ([0-9]*)/", $info_str, $r_matched);
 	return ($a_rows < 1)?($r_matched[1]?$r_matched[1]:0):$a_rows;
 }
 
