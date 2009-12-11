@@ -32,7 +32,7 @@ dbconn(false);
 
 loggedinorreturn();
 
-stdhead($tracker_lank['bookmarks']);
+stdhead($tracker_lang['bookmarks']);
 
 $res = sql_query("SELECT COUNT(id) FROM bookmarks WHERE userid = ".sqlesc($CURUSER["id"]));
 $row = mysql_fetch_array($res);
