@@ -404,7 +404,7 @@ function validfilename($name) {
 }
 
 function validemail($email) {
-	if (preg_match("/^([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/", $email)) 
+	if (ereg("^([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", $email)) 
 		return true;
 	else
 		return false;
@@ -1243,7 +1243,7 @@ function parked() {
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
 define ("VERSION", "Pre 6 RC 0");
-define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v2.1.10pre <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
+define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v2.1.11pre <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
 
 function mysql_modified_rows () {
 	$info_str = mysql_info();
