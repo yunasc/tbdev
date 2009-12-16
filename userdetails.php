@@ -198,10 +198,10 @@ if ($user[birthday] != "0000-00-00")
 {
         //$current = date("Y-m-d", time());
         $current = date("Y-m-d", time() + $CURUSER['tzoffset'] * 60);
-        list($year2, $month2, $day2) = split('-', $current);
+        list($year2, $month2, $day2) = explode('-', $current);
         $birthday = $user["birthday"];
         $birthday = date("Y-m-d", strtotime($birthday));
-        list($year1, $month1, $day1) = split('-', $birthday);
+        list($year1, $month1, $day1) = explode('-', $birthday);
         if($month2 < $month1)
         {
                 $age = $year2 - $year1 - 1;
