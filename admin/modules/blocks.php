@@ -279,7 +279,7 @@ function BlocksEdit($bid) {
 		}
 		closedir($dir);
 	} else {
-		echo "<tr><td>Содержание:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\">$content</textarea></td></tr>";
+		echo "<tr><td>Содержание:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\">".htmlspecialchars_uni($content)."</textarea></td></tr>";
 	}
 	$oldposition = $bposition;
 	echo "<input type=\"hidden\" name=\"oldposition\" value=\"$oldposition\">";
