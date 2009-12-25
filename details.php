@@ -428,7 +428,7 @@ else {
                 }
 
 				if ($row["times_completed"] > 0) {
-                    $res = mysql_query("SELECT users.id, users.username, users.title, users.uploaded, users.downloaded, users.donor, users.enabled, users.warned, users.last_access, users.class, snatched.startdat, snatched.last_action, snatched.completedat, snatched.seeder, snatched.userid, snatched.uploaded AS sn_up, snatched.downloaded AS sn_dn FROM snatched INNER JOIN users ON snatched.userid = users.id WHERE snatched.finished='yes' AND snatched.torrent =" . sqlesc($id) . " ORDER BY users.class DESC $limit") or sqlerr(__FILE__,__LINE__);
+                    $res = sql_query("SELECT users.id, users.username, users.title, users.uploaded, users.downloaded, users.donor, users.enabled, users.warned, users.last_access, users.class, snatched.startdat, snatched.last_action, snatched.completedat, snatched.seeder, snatched.userid, snatched.uploaded AS sn_up, snatched.downloaded AS sn_dn FROM snatched INNER JOIN users ON snatched.userid = users.id WHERE snatched.finished='yes' AND snatched.torrent =" . sqlesc($id) . " ORDER BY users.class DESC $limit") or sqlerr(__FILE__,__LINE__);
 					$snatched_full = "<table width=100% class=main border=1 cellspacing=0 cellpadding=5>\n";
 					$snatched_full .= "<tr><td class=colhead>Юзер</td><td class=colhead>Раздал</td><td class=colhead>Скачал</td><td class=colhead>Рейтинг</td><td class=colhead align=center>Начал / Закончил</td><td class=colhead align=center>Действие</td><td class=colhead align=center>Сидирует</td><td class=colhead align=center>ЛС</td></tr>";
 
@@ -537,7 +537,7 @@ function send() {
 
         print("<p><a name=\"startcomments\"></a></p>\n");
 
-        $subres = mysql_query("SELECT COUNT(*) FROM comments WHERE torrent = $id");
+        $subres = sql_query("SELECT COUNT(*) FROM comments WHERE torrent = $id");
         $subrow = mysql_fetch_array($subres);
         $count = $subrow[0];
 

@@ -59,8 +59,8 @@ $msg = "Здравствуйте!
 
 Надеюсь на вашу помощь!";
 
-mysql_query("INSERT INTO messages (sender, receiver, poster, added, subject, msg) SELECT $CURUSER[id], userid, 0, NOW(), $subject, $msg FROM snatched WHERE torrent = $id AND userid != $CURUSER[id] AND finished = 'yes'") or sqlerr(__FILE__, __LINE__);
-mysql_query("UPDATE torrents SET last_reseed = NOW() WHERE id = $id") or sqlerr(__FILE__, __LINE__);
+sql_query("INSERT INTO messages (sender, receiver, poster, added, subject, msg) SELECT $CURUSER[id], userid, 0, NOW(), $subject, $msg FROM snatched WHERE torrent = $id AND userid != $CURUSER[id] AND finished = 'yes'") or sqlerr(__FILE__, __LINE__);
+sql_query("UPDATE torrents SET last_reseed = NOW() WHERE id = $id") or sqlerr(__FILE__, __LINE__);
 header("Refresh: 2; url=details.php?id=$id");
 
 stdhead("Позвать скачавших на торрент $row[name]");

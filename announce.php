@@ -150,10 +150,12 @@ $announce_wait = 10;
 if (isset($self) && ($self['prevts'] > ($self['nowts'] - $announce_wait )) )
 	err('There is a minimum announce time of ' . $announce_wait . ' seconds');
 if (!isset($self)) {
-	$rz = mysql_query('SELECT id, uploaded, downloaded, class, parked, passkey_ip FROM users WHERE passkey = '.sqlesc($passkey).' ORDER BY last_access DESC LIMIT 1') or err('Users error 1 (select)');
+	$rz = mysql_query('SELECT id, uploaded, downloaded, enabled, parked, class, passkey_ip FROM users WHERE passkey = '.sqlesc($passkey).' ORDER BY last_access DESC LIMIT 1') or err('Users error 1 (select)');
 	if (mysql_num_rows($rz) == 0)
 		err('Unknown passkey. Please redownload the torrent from '.$BASEURL.' - READ THE FAQ!');
 	$az = mysql_fetch_array($rz);
+	if ($az['enabled'] == 'no')
+		err('This account is disabled.');
 	$userid = 0 + $az['id'];
 	if ($az['class'] < UC_VIP) {
 		if ($use_wait) {
