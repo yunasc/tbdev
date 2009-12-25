@@ -784,7 +784,7 @@ INSERT INTO `countries` (`id`, `name`, `flagpic`) VALUES
   (23,'Португалия','portugal.gif'),
   (49,'Пуерто Рико','puertorico.gif'),
   (3,'Россия','russia.gif'),
-  (73,'Румуния','romania.gif'),
+  (73,'Румыния','romania.gif'),
   (93,'Северная Корея','northkorea.gif'),
   (47,'Сейшельские Острова','seychelles.gif'),
   (46,'Сербия','serbia.gif'),
@@ -813,6 +813,7 @@ INSERT INTO `countries` (`id`, `name`, `flagpic`) VALUES
   (37,'Югославия','yugoslavia.gif'),
   (28,'Южная Африка','southafrica.gif'),
   (29,'Южная Корея','southkorea.gif'),
+  (103,'Молдова','moldova.gif'),
   (38,'Южные Самоа','westernsamoa.gif');
 
 COMMIT;
