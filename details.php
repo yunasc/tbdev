@@ -274,7 +274,7 @@ else {
 						$img4 = '<a href="torrents/images/' . $row['image4'] . '" rel="lightbox" title="Ñêðèíøîò ¹3"><img title="Ñêðèíøîò ¹3" border="0" src="screenshot.php?' . $row['image4'] . '" /></a>';
 					if ($row['image5'] != '')
 						$img5 = '<a href="torrents/images/' . $row['image5'] . '" rel="lightbox" title="Ñêðèíøîò ¹4"><img title="Ñêðèíøîò ¹4" border="0" src="screenshot.php?' . $row['image5'] . '" /></a>';
-					tr($tracker_lang['images'], $img2 . '&nbsp; ' . $img3 . '&nbsp; ' . $img4 . '&nbsp; ' . $img5, 1);
+					tr($tracker_lang['images'], implode('&nbsp; ', array($img2, $img3, $img4, $img5)), 1);
                 }
                 if ($row["visible"] == "no")
                         tr($tracker_lang['visible'], "<b>".$tracker_lang['no']."</b> (".$tracker_lang['dead'].")", 1);
