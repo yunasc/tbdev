@@ -561,7 +561,7 @@ function stdfoot() {
 	require_once("themes/" . $ss_uri . "/stdfoot.php");
 	if ((DEBUG_MODE || isset($_GET["yuna"])) && count($query_stat)) {
 		foreach ($query_stat as $key => $value) {
-			print("<div>[".($key+1)."] => <b>".($value["seconds"] > 0.01 ? "<font color=\"red\" title=\"Рекомендуется оптимизировать запрос. Время исполнения превышает норму.\">".$value["seconds"]."</font>" : "<font color=\"green\" title=\"Запрос не нуждается в оптимизации. Время исполнения допустимое.\">".$value["seconds"]."</font>" )."</b> [$value[query]]</div>\n");
+			print("<div>[".($key+1)."] => <b>".($value["seconds"] > 0.01 ? "<font color=\"red\" title=\"Рекомендуется оптимизировать запрос. Время исполнения превышает норму.\">".$value["seconds"]."</font>" : "<font color=\"green\" title=\"Запрос не нуждается в оптимизации. Время исполнения допустимое.\">".$value["seconds"]."</font>" )."</b> [".htmlspecialchars_uni($value['query'])."]</div>\n");
 		}
 		print("<br />");
 	}
