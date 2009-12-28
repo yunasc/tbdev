@@ -127,6 +127,8 @@ if (strlen($wantpassword) > 40)
 if ($wantpassword == $wantusername)
 	bark("Извините, пароль не может быть такой-же как имя пользователя.");
 
+$email = trim($email);
+
 if (!validemail($email))
 	bark("Это не похоже на реальный email адрес.");
 
