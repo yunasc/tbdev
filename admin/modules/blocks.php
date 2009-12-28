@@ -426,7 +426,7 @@ function BlocksShow($bid) {
 	list($bid, $bkey, $title, $content, $bposition, $blockfile) = mysql_fetch_row(sql_query("SELECT bid, bkey, title, content, bposition, blockfile FROM ".$prefix."_blocks WHERE bid='$bid'"));
 	$bid = intval($bid);
 	echo "<p />";
-	render_blocks($bposition, $blockfile, $title, $content, $bid, 'c');
+	render_blocks($bposition, $blockfile, $title, $content, $bid, 'c', 'no');
 	echo "<h4>[ <a href=\"".$admin_file.".php?op=BlocksChange&bid=$bid\">Включить</a> | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
 	if ($bkey == "") echo " | <a href=\"".$admin_file.".php?op=BlocksDelete&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\">Удалить</a>";
 	echo " | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Главная</a> ]</h4>";
