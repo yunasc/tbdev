@@ -642,7 +642,7 @@ CREATE TABLE `users` (
   `parked` enum('yes','no') NOT NULL default 'no',
   `avatars` enum('yes','no') NOT NULL default 'yes',
   `donor` enum('yes','no') NOT NULL default 'no',
-  `simpaty` int(10) unsigned NOT NULL default '0',
+  `simpaty` int(10) NOT NULL default '0',
   `warned` enum('yes','no') NOT NULL default 'no',
   `warneduntil` datetime NOT NULL default '0000-00-00 00:00:00',
   `torrentsperpage` int(3) unsigned NOT NULL default '0',
