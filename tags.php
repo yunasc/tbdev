@@ -46,7 +46,7 @@ function insert_tag($name, $description, $syntax, $example, $remarks)
 stdhead("“еги");
 begin_main_frame();
 begin_frame("“еги");
-$test = $_POST["test"];
+$test = (string) $_POST["test"];
 ?>
 <p><?=$SITENAME?> поддерживает большое количество <i>BB тегов</i> которые вы можете использовать дл€ украшени€ ваших раздач и постов.</p>
 
