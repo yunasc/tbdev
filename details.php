@@ -265,17 +265,14 @@ else {
 
                 if (!empty($row["descr"]))
 					tr($tracker_lang['description'], format_comment($row["descr"]), 1, 1);
-                if ($row['image2'] != '' || $row['image3'] != '' || $row['image4'] != '' || $row['image5'] != '') {
-					if ($row['image2'] != '')
-						$img2 = '<a href="torrents/images/' . $row['image2'] . '" rel="lightbox" title="Ñêðèíøîò ¹1"><img title="Ñêðèíøîò ¹1" border="0" src="screenshot.php?' . $row['image2'] . '" /></a>';
-					if ($row['image3'] != '')
-						$img3 = '<a href="torrents/images/' . $row['image3'] . '" rel="lightbox" title="Ñêðèíøîò ¹2"><img title="Ñêðèíøîò ¹2" border="0" src="screenshot.php?' . $row['image3'] . '" /></a>';
-					if ($row['image4'] != '')
-						$img4 = '<a href="torrents/images/' . $row['image4'] . '" rel="lightbox" title="Ñêðèíøîò ¹3"><img title="Ñêðèíøîò ¹3" border="0" src="screenshot.php?' . $row['image4'] . '" /></a>';
-					if ($row['image5'] != '')
-						$img5 = '<a href="torrents/images/' . $row['image5'] . '" rel="lightbox" title="Ñêðèíøîò ¹4"><img title="Ñêðèíøîò ¹4" border="0" src="screenshot.php?' . $row['image5'] . '" /></a>';
-					tr($tracker_lang['images'], implode('&nbsp; ', array($img2, $img3, $img4, $img5)), 1);
-                }
+
+				for ($i = 2; $i <= 5; $i++) {
+					if ($row['image'.$i])
+						$images[] = '<a href="torrents/images/' . $row['image'.$i] . '" rel="lightbox" title="Ñêðèíøîò ¹'.($i - 1).'"><img title="Ñêðèíøîò ¹'.($i - 1).'" border="0" src="screenshot.php?' . $row['image'.$i] . '" /></a>';
+				}
+				if (count($images))
+					tr($tracker_lang['images'], implode('&nbsp; ', $images), 1);
+
                 if ($row["visible"] == "no")
                         tr($tracker_lang['visible'], "<b>".$tracker_lang['no']."</b> (".$tracker_lang['dead'].")", 1);
                 if ($moderator)
