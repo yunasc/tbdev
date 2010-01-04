@@ -63,7 +63,7 @@ print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
 "<td class=colhead align=center>ID</td><td class=colhead>Добавлен</td><td class=colhead>Вопрос</td></tr>\n");
 
 if (mysql_num_rows($sql) == 0) {
- print("<tr><td colspan=2>Извините...Нет голосовавших пользователей!</td></tr></table>");
+ print("<tr><td colspan=3>Извините...Нет голосовавших пользователей!</td></tr></table>");
  stdfoot();
  exit;
  }
