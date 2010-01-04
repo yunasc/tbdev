@@ -89,7 +89,7 @@ of the torrents in progress.</li>
 }
 else
 {
-	echo "<p align=center>(<a href='".$_SERVER["PHP_SELF"]."?h=1'>Инструкиця</a>)";
+	echo "<p align=center>(<a href='".$_SERVER["PHP_SELF"]."?h=1'>Инструкция</a>)";
 	echo "&nbsp;-&nbsp;(<a href='".$_SERVER["PHP_SELF"]."'>Сброс</a>)</p>\n";
 }
 
@@ -888,8 +888,8 @@ if (count($_GET) > 0 && !$_GET['h'])
           <td><div align=center>" . ratios($pul,$pdl) . "</div></td>" .
           "<td><div align=right>" . mksize($pul) . "</div></td>
           <td><div align=right>" . mksize($pdl) . "</div></td>".
-          "|".($n_comments?"<a href=userhistory.php?action=viewcomments&id=".$user['id'].">$n_comments</a>":$n_comments).
-          "</div></td></tr>\n";
+          "<td><div align=right>".($n_comments?"<a href=userhistory.php?action=viewcomments&id=".$user['id'].">$n_comments</a>":$n_comments)."</div></td>".
+          "</tr>\n";
     }
     echo "</table>";
     if ($count > $perpage)
