@@ -48,14 +48,15 @@ if ($mode == "delete") {
 		$reasonstr = "Старый или не подходил под правила.";
 		$text = "Торрент $row[id] ($row[name]) был удален пользователем $CURUSER[username]. Причина: $reasonstr\n";
 		write_log($text);
+		deletetorrent($row['id']);
 	}
-	sql_query("DELETE FROM torrents WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
+	/*sql_query("DELETE FROM torrents WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
 	sql_query("DELETE FROM snatched WHERE torrent IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);	
 	sql_query("DELETE FROM readtorrents WHERE torrentid IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
 	sql_query("DELETE FROM ratings WHERE torrent IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
 	sql_query("DELETE FROM checkcomm WHERE checkid IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ") AND torrent = 1") or sqlerr(__FILE__,__LINE__);
 	sql_query("DELETE FROM bookmarks WHERE torrentid IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
-	sql_query("DELETE FROM files WHERE torrent IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);
+	sql_query("DELETE FROM files WHERE torrent IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")") or sqlerr(__FILE__,__LINE__);*/
 } else
 	echo "Unknown mode...";
 

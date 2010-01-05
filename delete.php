@@ -47,7 +47,7 @@ dbconn();
 
 loggedinorreturn();
 
-$res = sql_query("SELECT name,owner,seeders,image1,image2 FROM torrents WHERE id = $id");
+$res = sql_query("SELECT name, owner, seeders FROM torrents WHERE id = $id");
 $row = mysql_fetch_array($res);
 if (!$row)
 	stderr($tracker_lang['error'],"Такого торрента не существует.");
@@ -83,15 +83,6 @@ else
 }
 
 deletetorrent($id);
-
-/*if ($row["image1"]) {
- $img1 = "torrents/images/$row[image1]";
- $del = unlink($img1);
-}
-if ($row["image2"]) {
- $img2 = "torrents/images/$row[image2]";
- $del = unlink($img2);
-}*/
 
 write_log("Торрент $id ($row[name]) был удален пользователем $CURUSER[username] ($reasonstr)\n","F25B61","torrent");
 
