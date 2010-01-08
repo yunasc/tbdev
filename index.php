@@ -61,6 +61,6 @@ stdhead($tracker_lang['homepage']);
 
 <!--</td></tr></table>-->
 
-<?
+<?php
 stdfoot();
 ?>

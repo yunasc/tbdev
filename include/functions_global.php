@@ -88,8 +88,8 @@ function RowsTextarea(n, w) {
 	return false;
 }
 
-var SelField = document.<?=$form;?>.<?=$name;?>;
-var TxtFeld  = document.<?=$form;?>.<?=$name;?>;
+var SelField = document.<?php echo $form;?>.<?php echo $name;?>;
+var TxtFeld  = document.<?php echo $form;?>.<?php echo $name;?>;
 
 var clientPC = navigator.userAgent.toLowerCase(); // Get client info
 var clientVer = parseInt(navigator.appVersion); // Get browser version
@@ -114,7 +114,7 @@ function FieldName(text, which) {
 		text.caretPos = document.selection.createRange().duplicate();
 	}
 	if (which != "") {
-		var Field = eval("document.<?=$form;?>."+which);
+		var Field = eval("document.<?php echo $form;?>."+which);
 		SelField = Field;
 		TxtFeld  = Field;
 	}
@@ -467,7 +467,7 @@ function translateAlltoCyrillic(){
 	return;
 }
 </script>
-<textarea class="editorinput" id="area" name="<?=$name;?>" cols="65" rows="10" style="width:400px" OnKeyPress="TransliteFeld(this, event)" OnSelect="FieldName(this, this.name)" OnClick="FieldName(this, this.name)" OnKeyUp="FieldName(this, this.name)"><?=$content;?></textarea>
+<textarea class="editorinput" id="area" name="<?php echo $name;?>" cols="65" rows="10" style="width:400px" OnKeyPress="TransliteFeld(this, event)" OnSelect="FieldName(this, this.name)" OnClick="FieldName(this, this.name)" OnKeyUp="FieldName(this, this.name)"><?php echo $content;?></textarea>
 <div class="editor" style="background-image: url(editor/bg.gif); background-repeat: repeat-x;">
 	<div class="editorbutton" OnClick="RowsTextarea('area',1)"><img title="Óגוכטקטעü מךםמ" src="editor/plus.gif"></div>
 	<div class="editorbutton" OnClick="RowsTextarea('area',0)"><img title="Óלוםüרטעü מךםמ" src="editor/minus.gif"></div>
@@ -497,7 +497,7 @@ function translateAlltoCyrillic(){
 	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)"><option style="color:black;" value="black">Öגוע רנטפעא</option><option style="color:silver;" value="silver">Öגוע רנטפעא</option><option style="color:gray;" value="gray">Öגוע רנטפעא</option><option style="color:white;" value="white">Öגוע רנטפעא</option><option style="color:maroon;" value="maroon">Öגוע רנטפעא</option><option style="color:red;" value="red">Öגוע רנטפעא</option><option style="color:purple;" value="purple">Öגוע רנטפעא</option><option style="color:fuchsia;" value="fuchsia">Öגוע רנטפעא</option><option style="color:green;" value="green">Öגוע רנטפעא</option><option style="color:lime;" value="lime">Öגוע רנטפעא</option><option style="color:olive;" value="olive">Öגוע רנטפעא</option><option style="color:yellow;" value="yellow">Öגוע רנטפעא</option><option style="color:navy;" value="navy">Öגוע רנטפעא</option><option style="color:blue;" value="blue">Öגוע רנטפעא</option><option style="color:teal;" value="teal">Öגוע רנטפעא</option><option style="color:aqua;" value="aqua">Öגוע רנטפעא</option></select></div>
 	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)"><option value="8">Ðאחלונ 8</option><option value="10">Ðאחלונ 10</option><option value="12">Ðאחלונ 12</option><option value="14">Ðאחלונ 14</option><option value="18">Ðאחלונ 18</option><option value="24">Ðאחלונ 24</option></select></div>
 </div>
-<?
+<?php
 }
 
 function get_row_count($table, $suffix = "")

@@ -155,10 +155,10 @@ if ($link9 == "") { $link9 = "desc"; }
 if ($link10 == "") { $link10 = "desc"; }
 
 ?>
-<td class="colhead" align="center"><?=$tracker_lang['type'];?></td>
-<td class="colhead" align="left"><a href="browse.php?<? print $oldlink; ?>sort=1&type=<? print $link1; ?>" class="altlink_white"><?=$tracker_lang['name'];?></a> / <a href="browse.php?<? print $oldlink; ?>sort=4&type=<? print $link4; ?>" class="altlink_white"><?=$tracker_lang['added'];?></a></td>
+<td class="colhead" align="center"><?php echo $tracker_lang['type'];?></td>
+<td class="colhead" align="left"><a href="browse.php?<?php print $oldlink; ?>sort=1&type=<?php print $link1; ?>" class="altlink_white"><?php echo $tracker_lang['name'];?></a> / <a href="browse.php?<?php print $oldlink; ?>sort=4&type=<?php print $link4; ?>" class="altlink_white"><?php echo $tracker_lang['added'];?></a></td>
 <!--<td class="heading" align="left">DL</td>-->
-<?
+<?php
 if ($wait)
 	print("<td class=\"colhead\" align=\"center\">".$tracker_lang['wait']."</td>\n");
 
@@ -167,21 +167,21 @@ if ($variant == "mytorrents")
 
 
 ?>
-<td class="colhead" align="center"><a href="browse.php?<? print $oldlink; ?>sort=2&type=<? print $link2; ?>" class="altlink_white"><?=$tracker_lang['files'];?></a></td>
-<td class="colhead" align="center"><a href="browse.php?<? print $oldlink; ?>sort=3&type=<? print $link3; ?>" class="altlink_white"><?=$tracker_lang['comments'];?></a></td>
-<? if ($use_ttl) {
+<td class="colhead" align="center"><a href="browse.php?<?php print $oldlink; ?>sort=2&type=<?php print $link2; ?>" class="altlink_white"><?php echo $tracker_lang['files'];?></a></td>
+<td class="colhead" align="center"><a href="browse.php?<?php print $oldlink; ?>sort=3&type=<?php print $link3; ?>" class="altlink_white"><?php echo $tracker_lang['comments'];?></a></td>
+<?php if ($use_ttl) {
 ?>
-	<td class="colhead" align="center"><?=$tracker_lang['ttl'];?></td>
-<?
+	<td class="colhead" align="center"><?php echo $tracker_lang['ttl'];?></td>
+<?php
 }
 ?>
-<td class="colhead" align="center"><a href="browse.php?<? print $oldlink; ?>sort=5&type=<? print $link5; ?>" class="altlink_white"><?=$tracker_lang['size'];?></a></td>
+<td class="colhead" align="center"><a href="browse.php?<?php print $oldlink; ?>sort=5&type=<?php print $link5; ?>" class="altlink_white"><?php echo $tracker_lang['size'];?></a></td>
 <!--
 <td class="colhead" align="right">Views</td>
 <td class="colhead" align="right">Hits</td>
 -->
-<td class="colhead" align="center"><a href="browse.php?<? print $oldlink; ?>sort=7&type=<? print $link7; ?>" class="altlink_white"><?=$tracker_lang['seeds'];?></a>|<a href="browse.php?<? print $oldlink; ?>sort=8&type=<? print $link8; ?>" class="altlink_white"><?=$tracker_lang['leechers'];?></a></td>
-<?
+<td class="colhead" align="center"><a href="browse.php?<?php print $oldlink; ?>sort=7&type=<?php print $link7; ?>" class="altlink_white"><?php echo $tracker_lang['seeds'];?></a>|<a href="browse.php?<?php print $oldlink; ?>sort=8&type=<?php print $link8; ?>" class="altlink_white"><?php echo $tracker_lang['leechers'];?></a></td>
+<?php
 
 if ($variant == "index" || $variant == "bookmarks")
 	print("<td class=\"colhead\" align=\"center\"><a href=\"browse.php?{$oldlink}sort=9&type={$link9}\" class=\"altlink_white\">".$tracker_lang['uploadeder']."</a></td>\n");

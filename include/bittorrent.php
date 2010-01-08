@@ -102,4 +102,5 @@ if (empty($rootpath))
 	$rootpath = ROOT_PATH;
 
 require_once($rootpath . 'include/core.php');
+
 ?>
