@@ -158,7 +158,7 @@ if ($action == "edituser") {
 		}
  		$subject = "Вы получили предупреждение";
  		send_pm(0, $userid, get_date_time(), $subject, $msg);
-		sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES (0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
+		//sql_query("INSERT INTO messages (sender, receiver, msg, added, subject) VALUES (0, $userid, $msg, $added, $subject)") or sqlerr(__FILE__, __LINE__);
 		$updateset[] = "warned = 'yes'";
 	}
 
