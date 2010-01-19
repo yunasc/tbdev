@@ -284,9 +284,7 @@ if ($lastrowcols != 0)
         </table>
 </td>
 </tr>
-</form>
 <tr><td class="embedded">
-<form method="get" action="browse.php">
 <center>
 <?=$tracker_lang['search'];?>:
 <input type="text" id="searchinput" name="search" size="40" autocomplete="off" ondblclick="suggest(event.keyCode,this.value);" onkeyup="suggest(event.keyCode,this.value);" onkeypress="return noenter(event.keyCode);" value="<?= htmlspecialchars($searchstr) ?>" />
