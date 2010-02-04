@@ -37,7 +37,7 @@ if ($CURUSER['class'] >= UC_MODERATOR)
 
 {
 
-$query = "SELECT id, username, added, uploaded, downloaded, donor, warned FROM users WHERE class = 3";
+$query = "SELECT id, username, added, uploaded, downloaded, donor, warned FROM users WHERE class = ".UC_UPLOADER;
 $result = sql_query($query);
 $num = mysql_num_rows($result); // how many uploaders
 echo "<h2>Информация о аплоадерах</h2>";
