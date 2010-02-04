@@ -163,7 +163,7 @@ tr($tracker_lang['my_gender'],
 ///////////////// BIRTHDAY MOD /////////////////////
 $birthday = $CURUSER["birthday"];
 $birthday = date("Y-m-d", strtotime($birthday));
-list($year1, $month1, $day1) = split('-', $birthday);
+list($year1, $month1, $day1) = explode('-', $birthday);
 if ($CURUSER[birthday] == "0000-00-00") {
         $year .= "<select name=year><option value=\"0000\">".$tracker_lang['my_year']."</option>\n";
         $i = "1920";

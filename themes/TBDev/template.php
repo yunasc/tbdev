@@ -86,16 +86,10 @@
 
 function blok_menu($title, $content , $width="155") {
 	global $ss_uri;
-	print('<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td class="block">
-	<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-	<td class="block" width="14" align="left"><img src="themes/'.$ss_uri.'/images/cellpic_left.gif" width="14" height="24"></td>
-	<td class="block" width="100%" align="center" valign="middle" background="themes/'.$ss_uri.'/images/cellpic3.gif"><nobr><font class="block-title" valign="bottom"><strong>'.$title.'</strong></font></nobr></td>
-	<td class="block" width="14" align="right"><img src="themes/'.$ss_uri.'/images/cellpic_right.gif" width="14" height="24"></td>
-	</tr></table>
-	<table width="100%" border="0" cellspacing="1" cellpadding="3"><tr>
-	<td align="left">'.$content.'</td>
-	</tr></table>
-</td></tr></table><br>');
+	$thefile = addslashes(file_get_contents('themes/'.$ss_uri.'/html/block-left.html'));
+	$thefile = "\$r_file=\"".$thefile."\";";
+	eval($thefile);
+	echo $r_file;
 }
 
 ?>

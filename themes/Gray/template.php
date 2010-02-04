@@ -85,10 +85,11 @@
   // Print out menu block!
 
 function blok_menu($title, $content , $width="155") {
-	print("<center><table class=\"blok\" border=\"1\" width=\"". $width ."\">\n"
-	."<tr><td class=\"colhead\">". $title ."</td></tr>\n"
-	."<tr><td>". $content ."</td></tr>\n"
-	."</table></center>\n");
+	global $ss_uri;
+	$thefile = addslashes(file_get_contents('themes/'.$ss_uri.'/html/block-left.html'));
+	$thefile = "\$r_file=\"".$thefile."\";";
+	eval($thefile);
+	echo $r_file;
 }
 
 ?>

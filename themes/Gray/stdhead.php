@@ -321,7 +321,7 @@ if ($CURUSER['override_class'] != 255) $usrclass = "&nbsp;<img src=\"pic/warning
 
 elseif(get_user_class() >= UC_MODERATOR) $usrclass = "&nbsp;<a href=\"setclass.php\"><img src=\"pic/warning.gif\" title=\"".get_user_class_name($CURUSER['class'])."\" alt=\"".get_user_class_name($CURUSER['class'])."\" border=\"0\"></a>&nbsp;";
 
-	blok_menu("<center>".$tracker_lang['welcome_back'].( $CURUSER ? "<a href=\"$DEFAULTBASEURL/userdetails.php?id=" . $CURUSER["id"] . "\">" . $CURUSER["username"] . "</a>&nbsp;".$usrclass."&nbsp;" : "гость" ) . $medaldon . $warn , $userbar , "155");
+	blok_menu($tracker_lang['welcome_back'].($CURUSER ? "<a href=\"$DEFAULTBASEURL/userdetails.php?id=" . $CURUSER["id"] . "\">" . $CURUSER["username"] . "</a>&nbsp;".$usrclass."&nbsp;" : "гость" ) . $medaldon . $warn, $userbar , "155");
 	echo "<br />";
 
 	$mainmenu = "<a class=\"menu\" href=\"index.php\">&nbsp;".$tracker_lang['homepage']."</a>"
@@ -332,7 +332,7 @@ elseif(get_user_class() >= UC_MODERATOR) $usrclass = "&nbsp;<a href=\"setclass.p
            ."<a class=\"menu\" href=\"topten.php\">&nbsp;".$tracker_lang['topten']."</a>"
            ."<a class=\"menu\" href=\"formats.php\">&nbsp;".$tracker_lang['formats']."</a>";
 
-	blok_menu("<center>".$tracker_lang['main_menu']."</center>", $mainmenu , "155");
+	blok_menu($tracker_lang['main_menu'], $mainmenu, "155");
 	echo "<br />";
 
 if ($CURUSER) {
@@ -348,13 +348,13 @@ if ($CURUSER) {
            ."<a class=\"menu\" href=\"mytorrents.php\">&nbsp;".$tracker_lang['my_torrents']."</a>"
            ."<a class=\"menu\" href=\"logout.php\">&nbsp;".$tracker_lang['logout']."!</a>";
 
-	blok_menu("<center>".$tracker_lang['user_menu']."</center>", $usermenu , "155");
+	blok_menu($tracker_lang['user_menu'], $usermenu, "155");
 	echo "<br />";
 
 	$messages = "<a class=\"menu\" href=\"message.php\">&nbsp;".$tracker_lang['inbox']."</a>"
            ."<a class=\"menu\" href=\"message.php?action=viewmailbox&box=-1\">&nbsp;".$tracker_lang['outbox']."</a>";
 
-	blok_menu("<center>".$tracker_lang['messages']."</center>", $messages , "155");
+	blok_menu($tracker_lang['messages'], $messages, "155");
 	echo "<br />";
 
 }
@@ -369,7 +369,7 @@ if ($CURUSER) {
   			.'<hr width=100% color=#ffc58c size=1>'
 			.'<font class=small color=red>&nbsp;&nbsp;'.$tracker_lang['clients_recomened_by_us'].'</font>';
 
-	blok_menu("<center>".$tracker_lang['torrent_clients']."</center>", $bt_clients , "155");
+	blok_menu($tracker_lang['torrent_clients'], $bt_clients, "155");
 	echo "<br />";
 
 ?>
