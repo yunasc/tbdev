@@ -35,7 +35,7 @@ parked();
 
 $cats = genrelist();
 
-$searchstr = unesc($_GET["search"]);
+$searchstr = (string) unesc($_GET["search"]);
 $cleansearchstr = htmlspecialchars($searchstr);
 if (empty($cleansearchstr))
 unset($cleansearchstr);
