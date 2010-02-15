@@ -19,7 +19,7 @@ if (mysql_num_rows($resource)) {
 			$content .=
 			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/minus.gif\" id=\"pics".$array["id"]."\" title=\"Скрыть\"></span>&nbsp;"
 			."<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\">".date("d.m.Y",strtotime($array['added']))." - \n"
-			."<b>".$array['subject']."</b></span>\n"
+			."<b>".htmlspecialchars($array['subject'])."</b></span>\n"
 			."<span id=\"ss".$array["id"]."\" style=\"display: block;\">".format_comment($array['body'])."</span>";
 	    	if (get_user_class() >= UC_ADMINISTRATOR) {
 	            $content .= " <font size=\"-2\">[<a class=\"altlink\" href=\"news.php?action=edit&newsid=" . $array['id'] . "&returnto=" . urlencode($_SERVER['PHP_SELF']) . "\"><b>E</b></a>]</font>";
@@ -31,7 +31,7 @@ if (mysql_num_rows($resource)) {
 		$content .=
 			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics".$array["id"]."\" title=\"Показать\"></span>&nbsp;"
 			."<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\">".date("d.m.Y",strtotime($array['added']))." - \n"
-			."<b>".$array['subject']."</b></span>\n"
+			."<b>".htmlspecialchars($array['subject'])."</b></span>\n"
 			."<span id=\"ss".$array["id"]."\" style=\"display: none;\">".format_comment($array['body'])."</span>";
 			if (get_user_class() >= UC_ADMINISTRATOR) {
 		        $content .= " <font size=\"-2\">[<a class=\"altlink\" href=\"news.php?action=edit&newsid=" . $array['id'] . "&returnto=" . urlencode($_SERVER['PHP_SELF']) . "\"><b>E</b></a>]</font>";

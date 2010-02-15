@@ -200,7 +200,7 @@ if (mysql_num_rows($res) > 0)
     print("</td></tr></table></p>\n");
 
 	  begin_table(true);
-      print("<tr valign=top><td><b>".$subject."</b></td></tr>\n");
+      print("<tr valign=top><td><b>".htmlspecialchars($subject)."</b></td></tr>\n");
 	  print("<tr valign=top><td class=comment>".format_comment($body)."</td></tr>\n");
 	  end_table();
 	}
