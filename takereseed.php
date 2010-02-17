@@ -50,14 +50,14 @@ $dt = time() - 24*3600;
 if ($row["lr"] > $dt && get_date_time($row["lr"]) != "0000-00-00 00:00:00")
 	stderr($tracker_lang['error'], "Извините, но еще не прошли сутки с прошлого запроса вернутся на раздачу.");
 
-$subject = "Помогите раздать {$row["name"]}";
+$subject = sqlesc("Помогите раздать {$row["name"]}");
 
-$msg = "Здравствуйте!
+$msg = sqlesc("Здравствуйте!
 
 Ваша помощь необходима в раздаче [url=details.php?id={$id}]{$row["cat_name"]} :: {$row["name"]}[/url]
 Если вы решили помочь, но уже удалили торрент-файл, можете скачать его [url=download.php?id=$id&name=" . rawurlencode($row["filename"]) . "]здесь[/url].
 
-Надеюсь на вашу помощь!";
+Надеюсь на вашу помощь!");
 
 sql_query("INSERT INTO messages (sender, receiver, poster, added, subject, msg) SELECT $CURUSER[id], userid, 0, NOW(), $subject, $msg FROM snatched WHERE torrent = $id AND userid != $CURUSER[id] AND finished = 'yes'") or sqlerr(__FILE__, __LINE__);
 sql_query("UPDATE torrents SET last_reseed = NOW() WHERE id = $id") or sqlerr(__FILE__, __LINE__);
