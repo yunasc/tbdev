@@ -460,7 +460,7 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 	} elseif ($smtptype == 'external') {
 		require_once($rootpath . 'include/smtp/smtp.lib.php');
 		$mail = new smtp;
-		$mail->debug(true);
+		$mail->debug(false);
 		$mail->open($smtp_host, $smtp_port);
 		if (!empty($accountname) && !empty($accountpassword))
 			$mail->auth($accountname, $accountpassword);
