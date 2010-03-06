@@ -28,79 +28,86 @@
 
 # IMPORTANT: Do not edit below unless you know what you are doing!
 
-// DEFINE IMPORTANT CONSTANTS
-define('IN_TRACKER', true);
+/* 
+ * Защита от двойного инклуда ядра
+ * Protection from double including the core
+*/
 
-$allowed_referrers = <<<REF
+if (!defined('IN_TRACKER')) {
+	// DEFINE IMPORTANT CONSTANTS
+	define('IN_TRACKER', true);
 
-REF;
+	$allowed_referrers = <<<REF
 
-// referrer check for POSTs; this is simply designed to prevent self-submitting
-// forms on foreign hosts from doing nasty things
-if (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' AND !defined('SKIP_REFERRER_CHECK')) {
-	if ($_SERVER['HTTP_HOST'] OR $_ENV['HTTP_HOST']) {
-		$http_host = ($_SERVER['HTTP_HOST'] ? $_SERVER['HTTP_HOST'] : $_ENV['HTTP_HOST']);
-	} else if ($_SERVER['SERVER_NAME'] OR $_ENV['SERVER_NAME']) {
-		$http_host = ($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : $_ENV['SERVER_NAME']);
-	}
+	REF;
 
-	if ($http_host AND $_SERVER['HTTP_REFERER']) {
-		$http_host = preg_replace('#:80$#', '', trim($http_host));
-		$referrer_parts = @parse_url($_SERVER['HTTP_REFERER']);
-		$ref_port = intval($referrer_parts['port']);
-		$ref_host = $referrer_parts['host'] . ((!empty($ref_port) AND $ref_port != '80') ? ":$ref_port" : '');
-
-		$allowed = preg_split('#\s+#', $allowed_referrers, -1, PREG_SPLIT_NO_EMPTY);
-		$allowed[] = preg_replace('#^www\.#i', '', $http_host);
-		$allowed[] = '.paypal.com';
-
-		$pass_ref_check = false;
-		foreach ($allowed AS $host) {
-			if (preg_match('#' . preg_quote($host, '#') . '$#siU', $ref_host)) {
-				$pass_ref_check = true;
-				break;
-			}
+	// referrer check for POSTs; this is simply designed to prevent self-submitting
+	// forms on foreign hosts from doing nasty things
+	if (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' AND !defined('SKIP_REFERRER_CHECK')) {
+		if ($_SERVER['HTTP_HOST'] OR $_ENV['HTTP_HOST']) {
+			$http_host = ($_SERVER['HTTP_HOST'] ? $_SERVER['HTTP_HOST'] : $_ENV['HTTP_HOST']);
+		} else if ($_SERVER['SERVER_NAME'] OR $_ENV['SERVER_NAME']) {
+			$http_host = ($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : $_ENV['SERVER_NAME']);
 		}
-		unset($allowed);
 
-		if ($pass_ref_check == false)
-			die('In order to accept POST request originating from this domain, the admin must add this domain to the whitelist.');
+		if ($http_host AND $_SERVER['HTTP_REFERER']) {
+			$http_host = preg_replace('#:80$#', '', trim($http_host));
+			$referrer_parts = @parse_url($_SERVER['HTTP_REFERER']);
+			$ref_port = intval($referrer_parts['port']);
+			$ref_host = $referrer_parts['host'] . ((!empty($ref_port) AND $ref_port != '80') ? ":$ref_port" : '');
+
+			$allowed = preg_split('#\s+#', $allowed_referrers, -1, PREG_SPLIT_NO_EMPTY);
+			$allowed[] = preg_replace('#^www\.#i', '', $http_host);
+			$allowed[] = '.paypal.com';
+
+			$pass_ref_check = false;
+			foreach ($allowed AS $host) {
+				if (preg_match('#' . preg_quote($host, '#') . '$#siU', $ref_host)) {
+					$pass_ref_check = true;
+					break;
+				}
+			}
+			unset($allowed);
+
+			if ($pass_ref_check == false)
+				die('In order to accept POST request originating from this domain, the admin must add this domain to the whitelist.');
+		}
 	}
+
+	// SET PHP ENVIRONMENT
+	@error_reporting(E_ALL & ~E_NOTICE);
+	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
+	@ini_set('display_errors', '1');
+	@ini_set('display_startup_errors', '0');
+	@ini_set('ignore_repeated_errors', '1');
+	@ignore_user_abort(1);
+	@set_time_limit(0);
+	@set_magic_quotes_runtime(0);
+	@session_start();
+	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
+
+	function timer() {
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
+	}
+
+	// Additional security countermeasures
+	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
+		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
+	if (ini_get('short_open_tag') == '0' || strtolower(ini_get('short_open_tag')) == 'off')
+		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
+
+	if (!interface_exists('ArrayAccess'))
+		die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
+
+	// Variables for Start Time
+	$tstart = timer(); // Start time
+
+	// INCLUDE BACK-END
+	if (empty($rootpath))
+		$rootpath = ROOT_PATH;
+
+	require_once($rootpath . 'include/core.php');
 }
-
-// SET PHP ENVIRONMENT
-@error_reporting(E_ALL & ~E_NOTICE);
-@ini_set('error_reporting', E_ALL & ~E_NOTICE);
-@ini_set('display_errors', '1');
-@ini_set('display_startup_errors', '0');
-@ini_set('ignore_repeated_errors', '1');
-@ignore_user_abort(1);
-@set_time_limit(0);
-@set_magic_quotes_runtime(0);
-@session_start();
-define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
-
-function timer() {
-	list($usec, $sec) = explode(" ", microtime());
-	return ((float)$usec + (float)$sec);
-}
-
-// Additional security countermeasures
-if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
-	die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
-if (ini_get('short_open_tag') == '0' || strtolower(ini_get('short_open_tag')) == 'off')
-	die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
-
-if (!interface_exists('ArrayAccess'))
-	die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
-
-// Variables for Start Time
-$tstart = timer(); // Start time
-
-// INCLUDE BACK-END
-if (empty($rootpath))
-	$rootpath = ROOT_PATH;
-
-require_once($rootpath . 'include/core.php');
 
 ?>
