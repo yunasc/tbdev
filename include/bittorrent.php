@@ -37,9 +37,9 @@ if (!defined('IN_TRACKER')) {
 	// DEFINE IMPORTANT CONSTANTS
 	define('IN_TRACKER', true);
 
-	$allowed_referrers = <<<REF
+$allowed_referrers = <<<REF
 
-	REF;
+REF;
 
 	// referrer check for POSTs; this is simply designed to prevent self-submitting
 	// forms on foreign hosts from doing nasty things
