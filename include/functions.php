@@ -102,8 +102,8 @@ function userlogin($lightmode = false) {
 		}
 	}
 
-	$c_uid = $_COOKIE["uid"];
-	$c_pass = $_COOKIE["pass"];
+	$c_uid = $_COOKIE[COOKIE_UID];
+	$c_pass = $_COOKIE[COOKIE_PASSHASH];
 
 	if (!$SITE_ONLINE || empty($c_uid) || empty($c_pass)) {
 		if ($use_lang)
@@ -606,16 +606,16 @@ function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff) {
 	$subnet[2] = $subnet[3] = 0;
 	$subnet = implode('.', $subnet); // 255.255.0.0
 
-	setcookie("uid", $id, $expires, "/");
-	setcookie("pass", md5($passhash.COOKIE_SALT.$subnet), $expires, "/");
+	setcookie(COOKIE_UID, $id, $expires, "/");
+	setcookie(COOKIE_PASSHASH, md5($passhash.COOKIE_SALT.$subnet), $expires, "/");
 
 	if ($updatedb)
 		sql_query("UPDATE users SET last_login = NOW() WHERE id = $id");
 }
 
 function logoutcookie() {
-//	setcookie("uid", "", 0x7fffffff, "/");
-	setcookie("pass", "", 0x7fffffff, "/");
+//	setcookie(COOKIE_UID, "", 0x7fffffff, "/"); // Ќе стоит убирать комментирование т.к небудет работать система анти-двойной реги
+	setcookie(COOKIE_PASSHASH, "", 0x7fffffff, "/");
 }
 
 function loggedinorreturn($nowarn = false) {

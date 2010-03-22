@@ -135,8 +135,8 @@ if (!validemail($email))
 if (!validusername($wantusername))
 	bark("Неверное имя пользователя.");
 
-if ($year=='0000' || $month=='00' || $day=='00')
-        stderr($tracker_lang['error'],"Похоже вы указали неверную дату рождения");
+if ($year == '0000' || $month == '00' || $day == '00')
+        stderr($tracker_lang['error'], "Похоже вы указали неверную дату рождения");
 	$birthday = date("$year.$month.$day");
 
 // make sure user agrees to everything...
@@ -144,11 +144,17 @@ if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ag
 	stderr($tracker_lang['error'], "Извините, вы не подходите для того что-бы стать членом этого сайта.");
 
 // check if email addy is already in use
-$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or die(mysql_error());
+/*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or die(mysql_error());
 if ($a[0] != 0)
+	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");*/
+
+$a = get_row_count('users', 'WHERE email = '.sqlesc($email));
+if ($a != 0)
 	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");
 
 if ($use_captcha) {
+	if (!$_POST['imagestring')
+		bark("Вы должны ввести код подтверждения.");
 	$b = get_row_count("captcha", "WHERE imagehash = ".sqlesc($_POST["imagehash"])." AND imagestring = ".sqlesc($_POST["imagestring"]));
 	sql_query("DELETE FROM captcha WHERE imagehash = ".sqlesc($_POST["imagehash"])) or die(mysql_error());
 	if ($b == 0)
@@ -157,8 +163,8 @@ if ($use_captcha) {
 
 $ip = getip();
 
-if (isset($_COOKIE["uid"]) && is_numeric($_COOKIE["uid"]) && $users) {
-    $cid = intval($_COOKIE["uid"]);
+if (isset($_COOKIE[COOKIE_UID]) && is_numeric($_COOKIE[COOKIE_UID]) && $users && $enable_adv_antidreg) {
+    $cid = intval($_COOKIE[COOKIE_UID]);
     $c = sql_query("SELECT enabled FROM users WHERE id = $cid ORDER BY id DESC LIMIT 1");
     $co = @mysql_fetch_row($c);
     if ($co[0] == 'no') {
@@ -167,10 +173,10 @@ if (isset($_COOKIE["uid"]) && is_numeric($_COOKIE["uid"]) && $users) {
     } else
 		bark("Регистрация невозможна!");
 } else {
-    $b = (@mysql_fetch_row(@sql_query("SELECT enabled, id FROM users WHERE ip LIKE '$ip' ORDER BY last_access DESC LIMIT 1")));
+    $b = (@mysql_fetch_row(@sql_query("SELECT enabled, id FROM users WHERE ip = '$ip' ORDER BY last_access DESC LIMIT 1")));
     if ($b[0] == 'no') {
 		$banned_id = $b[1];
-        setcookie("uid", $banned_id, "0x7fffffff", "/");
+        setcookie(COOKIE_UID, $banned_id, "0x7fffffff", "/");
 		bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
     }
 }
