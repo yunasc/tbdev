@@ -153,7 +153,7 @@ if ($a != 0)
 	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");
 
 if ($use_captcha) {
-	if (!$_POST['imagestring')
+	if (!$_POST['imagestring'])
 		bark("¬ы должны ввести код подтверждени€.");
 	$b = get_row_count("captcha", "WHERE imagehash = ".sqlesc($_POST["imagehash"])." AND imagestring = ".sqlesc($_POST["imagestring"]));
 	sql_query("DELETE FROM captcha WHERE imagehash = ".sqlesc($_POST["imagehash"])) or die(mysql_error());
