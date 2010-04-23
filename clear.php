@@ -29,7 +29,7 @@
 require "include/bittorrent.php";
 dbconn();
 
-stdhead(); // test
+stdhead();
 
 stdfoot();
 
