@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined('UC_SYSOP'))
 	die('Direct access denied.');
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

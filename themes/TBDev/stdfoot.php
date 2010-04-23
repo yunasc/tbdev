@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (!defined('UC_SYSOP'))
 	die('Direct access denied.');

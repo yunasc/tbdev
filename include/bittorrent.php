@@ -94,7 +94,7 @@ REF;
 	// Additional security countermeasures
 	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
 		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
-	if (ini_get('short_open_tag') == '0' || strtolower(ini_get('short_open_tag')) == 'off')
+	if ((int) ini_get('short_open_tag') == '0')
 		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
 
 	if (!interface_exists('ArrayAccess'))
