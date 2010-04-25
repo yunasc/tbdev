@@ -353,8 +353,8 @@ end_frame();
 
 ?>
 <?
+}
 end_frame();
 end_main_frame();
 stdfoot();
-}
 ?>
