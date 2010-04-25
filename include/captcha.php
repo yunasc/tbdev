@@ -5,7 +5,8 @@ if(!defined('IN_TRACKER'))
   die('Hacking attempt!');
 
 function create_captcha() {
-	$randomstr = mksecret(5);
+	//$randomstr = mksecret(5);
+	$randomstr = rand(10000, 99999);
 	$imagehash = md5($randomstr);
 	sql_query("INSERT INTO captcha SET imagehash = ".sqlesc($imagehash).", imagestring = ".sqlesc($randomstr).", dateline = ".sqlesc(time())) or sqlerr(__FILE__,__LINE__);
 	return $imagehash;
