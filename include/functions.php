@@ -34,6 +34,57 @@ require_once($rootpath . 'include/functions_global.php');
 require_once($rootpath . 'include/functions_torrenttable.php');
 require_once($rootpath . 'include/functions_commenttable.php');
 
+///////////////////////////////////////////////////////////////////////////////
+// Check open port, requires --enable-sockets
+function check_port($host, $port, $timeout, $force_fsock = false) {
+	if (function_exists('socket_create') && !$force_fsock) {
+		// Create a TCP/IP socket.
+		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		if ($socket == false) {
+			return false;
+		}
+		//
+		if (socket_set_nonblock($socket) == false) {
+			socket_close($socket);
+			return false;
+		}
+		//
+		@socket_connect($socket, $host, $port); // will return FALSE as it's async, so no check
+		//
+		if (socket_set_block($socket) == false) {
+			socket_close($socket);
+			return false;
+		}
+
+		switch(socket_select($r = array($socket), $w = array($socket), $f = array($socket), $timeout)) {
+			case 2:
+			// Refused
+				$result = false;
+				break;
+			case 1:
+				$result = true;
+				break;
+			case 0:
+				// Timeout
+				$result = false;
+				break;
+		}
+
+		// cleanup
+		socket_close($socket);
+	} else {
+		$socket = @fsockopen($host, $port, $errno, $errstr, 5);
+		if (!$socket)
+			$result = false;
+		else {
+			$result = true;
+			@fclose($socket);
+		}
+	}
+
+	return $result;
+}
+
 function strip_magic_quotes($arr) {
 	foreach ($arr as $k => $v) {
 		if (is_array($v)) {
@@ -406,10 +457,15 @@ function validfilename($name) {
 }
 
 function validemail($email) {
-	if (ereg("^([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", $email)) 
-		return true;
+	return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function mail_possible($email) {
+	list(, $domain) = explode('@', $email);
+	if (function_exists('checkdnsrr'))
+		return checkdnsrr($domain, 'MX');
 	else
-		return false;
+		return true;
 }
 
 function send_pm($sender, $receiver, $added, $subject, $msg) {
@@ -828,7 +884,8 @@ function parked() {
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
 define ("VERSION", "Pre 6 RC 0");
-define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v2.1.11 <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
+define ("NUM_VERSION", "2.1.12");
+define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v".NUM_VERSION." <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
 
 function mysql_modified_rows () {
 	$info_str = mysql_info();

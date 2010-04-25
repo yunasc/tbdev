@@ -375,26 +375,23 @@ if ($CURUSER) {
 <?
 
 if ($CURUSER) {
-    if ($unread)
-    {
-        print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=red><tr><td style='padding: 10px; background: red'>\n");
-        print("<b><a href=\"message.php\"><font color=white>".sprintf($tracker_lang['new_pms'],$unread)."</font></a></b>");
-        print("</td></tr></table></p>\n");
-    }
-}
-
-    if (COOKIE_SALT == 'default')
-    {
-        print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=red><tr><td style='padding: 10px; background: red'>\n");
-        print("<b><font color=white>Администратор, измени COOKIE_SALT в include/init.php прежде чем выпустить трекер в сеть!</font></b>");
-        print("</td></tr></table></p>\n");
-    }
-
-if ($CURUSER['override_class'] != 255 && $CURUSER) // Second condition needed so that this box isn't displayed for non members/logged out members.
-{
-		print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=green><tr><td style='padding: 10px; background: green'>\n");
-		print("<b><a href=\"$DEFAULTBASEURL/restoreclass.php\"><font color=white>".$tracker_lang['lower_class']."</font></a></b>");
+	if ($unread) {
+		print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=red><tr><td style='padding: 10px; background: red'>\n");
+		print("<b><a href=\"message.php\"><font color=white>".sprintf($tracker_lang['new_pms'],$unread)."</font></a></b>");
 		print("</td></tr></table></p>\n");
+	}
 }
- 
- show_blocks('c');
+
+if (COOKIE_SALT == 'default') {
+    print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=orange><tr><td style='padding: 10px; background: orange'>\n");
+    print("<b><font color=white>Администратор, измени COOKIE_SALT в include/init.php прежде, чем выпустить трекер в сеть!</font></b>");
+    print("</td></tr></table></p>\n");
+}
+
+if ($CURUSER['override_class'] != 255 && $CURUSER) { // Second condition needed so that this box isn't displayed for non members/logged out members.
+	print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=green><tr><td style='padding: 10px; background: green'>\n");
+	print("<b><a href=\"$DEFAULTBASEURL/restoreclass.php\"><font color=white>".$tracker_lang['lower_class']."</font></a></b>");
+	print("</td></tr></table></p>\n");
+}
+
+show_blocks('c');

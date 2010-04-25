@@ -37,6 +37,11 @@ if (!defined('IN_TRACKER')) {
 	// DEFINE IMPORTANT CONSTANTS
 	define('IN_TRACKER', true);
 
+	if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS'])) {
+		echo 'Request tainting attempted.';
+		exit;
+	}
+
 $allowed_referrers = <<<REF
 
 REF;

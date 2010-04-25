@@ -109,6 +109,8 @@ $skype = unesc($_POST["skype"]);
 if (strlen($skype) > 20)
     bark("Жаль, Ваш skype слишком длинный  (Макс - 20)");
 
+$email = trim(strtolower($email));
+
 if (empty($wantusername) || empty($wantpassword) || empty($email) || empty($gender) || empty($country))
 	bark("Все поля обязательны для заполнения.");
 
@@ -127,10 +129,23 @@ if (strlen($wantpassword) > 40)
 if ($wantpassword == $wantusername)
 	bark("Извините, пароль не может быть такой-же как имя пользователя.");
 
-$email = trim($email);
-
 if (!validemail($email))
 	bark("Это не похоже на реальный email адрес.");
+
+list(, $domain) = explode('@', $email);
+if (!mail_possible($email))
+        bark('Почты в таком домене быть не может ('.htmlspecialchars_uni($domain).')');
+
+getmxrr($domain, $mxs);
+foreach ($mxs as $mx) {
+	if (check_port($mx, 25, 1, true)) {
+		$is_good_smtp = true;
+		break;
+	}
+}
+
+if (!$is_good_smtp)
+	bark("На вашей почтовой службе не работает почтовый сервер (MTA).");
 
 if (!validusername($wantusername))
 	bark("Неверное имя пользователя.");
@@ -152,7 +167,7 @@ $a = get_row_count('users', 'WHERE email = '.sqlesc($email));
 if ($a != 0)
 	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");
 
-if ($use_captcha) {
+if ($use_captcha && $users) {
 	if (!$_POST['imagestring'])
 		bark("Вы должны ввести код подтверждения.");
 	$b = get_row_count("captcha", "WHERE imagehash = ".sqlesc($_POST["imagehash"])." AND imagestring = ".sqlesc($_POST["imagestring"]));
