@@ -186,7 +186,20 @@ tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=\"40
 if ($use_captcha) {
 	include_once("include/captcha.php");
 	$hash = create_captcha();
-	tr("Код подтверждения", "<input type=\"text\" name=\"imagestring\" size=\"20\" value=\"\" autocomplete=\"off\" /><p>Пожалуйста, введите текст изображенный на картинке внизу.<br />Этот процесс предотвращает автоматическую регистрацию.</p><img src=\"captcha.php?imagehash=$hash\" alt=\"Captcha\" /><br /><font color=\"red\">Код чувствителен к регистру</font><input type=\"hidden\" name=\"imagehash\" value=\"$hash\" />", 1);
+	tr("Код подтверждения", "<input type=\"text\" name=\"imagestring\" size=\"20\" value=\"\" />
+	<p>Пожалуйста, введите текст изображенный на картинке внизу.<br />Этот процесс предотвращает автоматическую регистрацию.</p>
+	<table>
+		<tr>
+			<td class=\"block\" rowspan=\"2\">
+				<img id=\"captcha\" src=\"captcha.php?imagehash=$hash\" alt=\"Captcha\" ondblclick=\"document.getElementById('captcha').src = 'captcha.php?imagehash=$hash&amp;' + Math.random();\" />
+			</td>
+			<td class=\"block\"><img src=\"themes/$ss_uri/images/reload.gif\" style=\"cursor: pointer;\" onclick=\"document.getElementById('captcha').src = 'captcha.php?imagehash=$hash&amp;' + Math.random();\" /></td>
+		</tr>
+		<tr>
+			<td class=\"block\"><a href=\"captcha_mp3.php?imagehash=$hash\"><img src=\"themes/$ss_uri/images/listen.gif\" style=\"cursor: pointer;\" border=\"0\" /></a></td>
+		</tr>
+	</table>
+	<font color=\"red\">Код чувствителен к регистру</font><br />Кликните два раза на картинке, что-бы обновить картинку.<input type=\"hidden\" name=\"imagehash\" value=\"$hash\" />", 1);
 }
 
 if ($allow_invite_signup) {
