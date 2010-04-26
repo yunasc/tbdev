@@ -136,18 +136,20 @@ list(, $domain) = explode('@', $email);
 if (!mail_possible($email))
         bark('Почты в таком домене быть не может ('.htmlspecialchars_uni($domain).')');
 
-// Some fucking pre PHP 5.3 WINDOWS installations...
-if (function_exists('getmxrr')) {
-	getmxrr($domain, $mxs);
-	foreach ($mxs as $mx) {
-		if (check_port($mx, 25, 1, true)) {
-			$is_good_smtp = true;
-			break;
+if ($check_for_working_mta) {
+	// Some fucking pre PHP 5.3 WINDOWS installations...
+	if (function_exists('getmxrr')) {
+		getmxrr($domain, $mxs);
+		foreach ($mxs as $mx) {
+			if (check_port($mx, 25, 1, true)) {
+				$is_good_smtp = true;
+				break;
+			}
 		}
-	}
 
-	if (!$is_good_smtp)
-		bark("На вашей почтовой службе не работает почтовый сервер (MTA).");
+		if (!$is_good_smtp)
+			bark("На вашей почтовой службе не работает почтовый сервер (MTA).");
+	}
 }
 
 if (!validusername($wantusername))
