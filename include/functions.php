@@ -361,6 +361,10 @@ function autoclean() {
 	$ts = $row[0];
 	if ($ts + $autoclean_interval > $now)
 		return;
+	if ($ts > $now) { // Fuck, someone has set time in future!
+		sql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
+		return;
+	}
 	sql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
 	if (!mysql_affected_rows())
 		return;
