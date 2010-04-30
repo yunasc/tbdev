@@ -203,6 +203,11 @@ function docleanup() {
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster) SELECT 0, id, $now, $msg, 0 FROM users WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET warned='no', warneduntil = '0000-00-00 00:00:00', modcomment = CONCAT($modcomment, modcomment) WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 
+	//remove expired bans
+	$modcomment = sqlesc(date("Y-m-d") . " - ¬ключен системой по истечению бана.\n");
+	sql_query("UPDATE users SET enabled = 'yes', modcomment = CONCAT($modcomment, modcomment) WHERE id IN (SELECT userid FROM users_ban WHERE disuntil < NOW() AND disuntil != '0000-00-00 00:00:00')") or sqlerr();
+	sql_query("DELETE FROM users_ban WHERE disuntil < NOW() AND disuntil != '0000-00-00 00:00:00'") or sqlerr();
+
 	// promote to power users
 	$limit = 25*1024*1024*1024;
 	$minratio = 1.05;

@@ -64,6 +64,7 @@ if ($action == "edituser") {
 	$enabled = $_POST["enabled"];
 	$warned = $_POST["warned"];
 	$warnlength = 0 + $_POST["warnlength"];
+	$dislength = 0 + $_POST["dislength"];
 	$warnpm = $_POST["warnpm"];
 	$donor = $_POST["donor"];
 	$uploadtoadd = $_POST["amountup"];
@@ -162,7 +163,7 @@ if ($action == "edituser") {
 		$updateset[] = "warned = 'yes'";
 	}
 
-	if ($enabled != $curenabled) {
+	if ($enabled != $curenabled && (!empty($enabled) || $dislength != 0)) {
 		$modifier = (int) $CURUSER['id'];
 		if ($enabled == 'yes') {
 			$nowdate = sqlesc(get_date_time());
@@ -170,17 +171,22 @@ if ($action == "edituser") {
 				puke("Введите причину почему вы включаете пользователя!");
 			$enareason = htmlspecialchars($_POST["enareason"]);
 			$modcomment = date("Y-m-d") . " - Включен пользователем " . $CURUSER['username'] . ".\nПричина: $enareason\n" . $modcomment;
+			sql_query('DELETE FROM users_ban WHERE userid = '.$userid) or sqlerr();
+			$updateset[] = "enabled = 'yes'";
 		} else {
 			$date = sqlesc(get_date_time());
 			$dateline = sqlesc(time());
+			$disuntil = get_date_time(gmtime() + $dislength * 604800);
+			$dur = $dislength . " недел" . ($dislength > 1 ? "и" : "ю");
 			if (!isset($_POST["disreason"]) || empty($_POST["disreason"]))
 				puke("Введите причину почему вы отключаете пользователя!");
 			$disreason = htmlspecialchars($_POST["disreason"]);
-			$modcomment = date("Y-m-d") . " - Отключен пользователем " . $CURUSER['username'] . ".\nПричина: $disreason\n" . $modcomment;
+			$modcomment = date("Y-m-d") . " - Отключен пользователем " . $CURUSER['username'] . ($disuntil != '0000-00-00 00:00:00' ? ' на ' . $dur : '') . ".\nПричина: $disreason\n" . $modcomment;
+			sql_query('INSERT INTO users_ban (userid, disuntil, disby, reason) VALUES ('.implode(', ', array_map('sqlesc', array($userid, $disuntil, $modifier, $disreason))).')') or sqlerr();
+			$updateset[] = "enabled = 'no'";
 		}
 	}
 
-	$updateset[] = "enabled = " . sqlesc($enabled);
 	$updateset[] = "donor = " . sqlesc($donor);
 	$updateset[] = "supportfor = " . sqlesc($supportfor);
 	$updateset[] = "support = " . sqlesc($support);

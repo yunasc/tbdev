@@ -170,7 +170,7 @@ function userlogin($lightmode = false) {
 		user_session();
 		return;*/
 	}
-	$res = sql_query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysql_error());
+	$res = sql_query("SELECT * FROM users WHERE id = $id");// or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	if (!$row) {
 		if ($use_lang)
@@ -198,6 +198,12 @@ function userlogin($lightmode = false) {
 	$GLOBALS["CURUSER"] = $row;
 	if ($use_lang)
 		include_once('languages/lang_' . $row['language'] . '/lang_main.php');
+
+	if ($row['enabled'] == 'no') {
+		$GLOBALS['use_blocks'] = 0;
+		list($reason, $disuntil) = mysql_fetch_row(sql_query('SELECT reason, disuntil FROM users_ban WHERE userid = '.$row['id']));
+		stderr($tracker_lang['error'], 'Вы забанены на трекере.' . ($disuntil != '0000-00-00 00:00:00' ? '<br />Дата снятия бана: '.$disuntil : '<br />Дата снятия бана: никогда') . '<br />Причина: '.$reason);
+	}
 
 	if (!$lightmode)
 		user_session();

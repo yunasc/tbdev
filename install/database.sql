@@ -673,6 +673,20 @@ CREATE TABLE `users` (
 ) ENGINE=MyISAM;
 
 #
+# Structure for the `users_ban` table :
+#
+
+DROP TABLE IF EXISTS `users_ban`;
+
+CREATE TABLE `users_ban` (
+  `userid` int(10) unsigned NOT NULL default '0',
+  `disuntil` datetime NOT NULL default '0000-00-00 00:00:00',
+  `disby` int(10) unsigned NOT NULL default '0',
+  `reason` text NOT NULL,
+  UNIQUE KEY `userid` (`userid`)
+) ENGINE=MyISAM;
+
+#
 # Data for the `bonus` table  (LIMIT 0,100)
 #
 

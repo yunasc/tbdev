@@ -477,11 +477,30 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
     print("</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Комментарий в ЛС:</td></tr>\n");
     print("<tr><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"warnpm\"></td></tr>");
   }
-    print("<tr><td class=\"rowhead\" rowspan=\"2\">Включен</td><td colspan=\"2\" align=\"left\"><input name=\"enabled\" value=\"yes\" type=\"radio\"" . ($enabled ? " checked" : "") . ">Да <input name=\"enabled\" value=\"no\" type=\"radio\"" . (!$enabled ? " checked" : "") . ">Нет</td></tr>\n");
+    /*print("<tr><td class=\"rowhead\" rowspan=\"2\">Включен</td><td colspan=\"2\" align=\"left\"><input name=\"enabled\" value=\"yes\" type=\"radio\"" . ($enabled ? " checked" : "") . ">Да <input name=\"enabled\" value=\"no\" type=\"radio\"" . (!$enabled ? " checked" : "") . ">Нет</td></tr>\n");
     if ($enabled)
     	print("<tr><td colspan=\"2\" align=\"left\">Причина отключения:&nbsp;<input type=\"text\" name=\"disreason\" size=\"60\" /></td></tr>");
 	else
-		print("<tr><td colspan=\"2\" align=\"left\">Причина включения:&nbsp;<input type=\"text\" name=\"enareason\" size=\"60\" /></td></tr>");
+		print("<tr><td colspan=\"2\" align=\"left\">Причина включения:&nbsp;<input type=\"text\" name=\"enareason\" size=\"60\" /></td></tr>");*/
+
+	print("<tr><td class=\"rowhead\" rowspan=\"2\">Включен</td><td align=\"center\" colspan=\"2\">".($enabled ? "<font color=\"green\">Пользователь включен</font>" : "<font color=\"red\">Пользователь отключен</font>")."</td></tr>");
+
+$disabler = <<<DIS
+<select name="dislength">
+	<option value="0">------</option>
+	<option value="1">1 неделю</option>
+	<option value="2">2 недели</option>
+	<option value="4">4 недели</option>
+	<option value="8">8 недель</option>
+	<option value="255">Неограничено</option>
+</select>
+DIS;
+
+	if ($enabled)
+		print("<tr><td>Отключить на:<br />$disabler</td><td>Причина отключения:<br /><input type=\"text\" name=\"disreason\" size=\"60\" /></td></td></tr>");
+	else
+		print("<tr><td>Включить?<br /><input name=\"enabled\" value=\"yes\" type=\"radio\">Да <input name=\"enabled\" value=\"no\" type=\"radio\" checked>Нет<br /></td><td>Причина включения:<br /><input type=\"text\" name=\"enareason\" size=\"60\" /></td></tr>");
+
 ?>
 <script type="text/javascript">
 
