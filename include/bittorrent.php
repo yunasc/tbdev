@@ -96,14 +96,19 @@ REF;
 		return ((float)$usec + (float)$sec);
 	}
 
+	// Some basic checking for engine to work
+	// Check for PHP version
+	if (version_compare(PHP_VERSION, '5.2.0', '<'))
+		die('Извините, трекер работает на PHP от версии 5.2 и выше. Обновите версию PHP.');
+	// Check for php-spl
+	if (!interface_exists('ArrayAccess'))
+		die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
+
 	// Additional security countermeasures
 	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
 		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
 	if ((int) ini_get('short_open_tag') == '0')
 		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
-
-	if (!interface_exists('ArrayAccess'))
-		die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
 
 	// Variables for Start Time
 	$tstart = timer(); // Start time

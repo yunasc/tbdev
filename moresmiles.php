@@ -37,9 +37,7 @@ if ($CURUSER) {
 if (!$ss_uri) {
 	$ss_uri = $default_theme;
 }
-?>
-
-<html>
+?><html>
 <head>
 <script language=javascript>
 
@@ -73,5 +71,3 @@ while ((list($code, $url) = each($smilies))) {
 <div align="center">
 <a class="altlink_green" href="javascript: window.close()"><? echo Закрыть; ?></a>
 </div>
-<?
-stdfoot();
