@@ -519,20 +519,6 @@ CREATE TABLE `snatched` (
 ) ENGINE=MyISAM;
 
 #
-# Structure for the `stylesheets` table :
-#
-
-DROP TABLE IF EXISTS `stylesheets`;
-
-CREATE TABLE `stylesheets` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `uri` varchar(255) NOT NULL default '',
-  `name` varchar(64) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `uri` (`uri`)
-) ENGINE=MyISAM;
-
-#
 # Structure for the `thanks` table :
 #
 
@@ -615,7 +601,7 @@ CREATE TABLE `users` (
   `last_access` datetime NOT NULL default '0000-00-00 00:00:00',
   `editsecret` varchar(20) NOT NULL default '',
   `privacy` enum('strong','normal','low') NOT NULL default 'normal',
-  `stylesheet` int(10) default '1',
+  `theme` varchar(40) NOT NULL default '',
   `info` text,
   `acceptpms` enum('yes','friends','no') NOT NULL default 'yes',
   `ip` varchar(15) NOT NULL default '',
@@ -934,15 +920,5 @@ INSERT INTO `orbital_blocks` (`bid`, `bkey`, `title`, `content`, `bposition`, `w
   (5,'','Опрос','','c',4,1,'','block-polls.php',1,'0','d','ihome,'),
   (6,'','Релизы','','c',5,1,'','block-releases.php',0,'0','d','ihome,'),
   (11,'','Загрузка сервера','','c',8,1,'','block-server_load.php',0,'0','d','ihome,');
-
-COMMIT;
-
-#
-# Data for the `stylesheets` table  (LIMIT 0,100)
-#
-
-INSERT INTO `stylesheets` (`id`, `uri`, `name`) VALUES
-  (1,'TBDev','TBDev'),
-  (2,'Gray','Gray');
 
 COMMIT;

@@ -42,17 +42,15 @@ $max_dead_torrent_time = 6 * 3600;
 
 // Max users on site
 $maxusers = 10000;
-$torrent_dir = "torrents";
-
-$doxpath = "dox";
+$torrent_dir = 'torrents';
 
 // Email for sender/return path.
-$SITEEMAIL = "noreply@" . $_SERVER["HTTP_HOST"];
+$SITEEMAIL = 'noreply@' . $_SERVER['HTTP_HOST'];
 
-$SITENAME = "TBDev Yuna Scatari Edition";
+$SITENAME = 'TBDev Yuna Scatari Edition';
 
 $autoclean_interval = 900;
-$pic_base_url = "./pic/";
+$pic_base_url = './pic/';
 
 // [BEGIN] Custom variables from Yuna Scatari
 // TTL
@@ -62,9 +60,9 @@ $avatar_max_width = 100; // Максимальная ширина аватары.
 $avatar_max_height = 100; // Максимальная высота аватары.
 $points_per_hour = 1; // Сколько добавлять бонусов в час, если пользователь сидирует.
 $points_per_cleanup = $points_per_hour*($autoclean_interval/3600); // Don't change it!
-$default_theme = "TBDev"; // Тема по умолчанию для гостей.
-$nc = "no"; // Не пропускать на трекер пиров с закрытыми портами.
-$default_language = "russian"; // Язык трекера по умолчанию.
+$default_theme = 'TBDev'; // Тема по умолчанию.
+$nc = 'no'; // Не пропускать на трекер пиров с закрытыми портами.
+$default_language = 'russian'; // Язык трекера по умолчанию.
 $deny_signup = 0; // Запретить регистрацию. 1 = регистрация отключена, 0 = регистрация включена.
 $allow_invite_signup = 1; // Разрешить регистрацию через приглашения. 1 = разрешена, 0 = не разрешена.
 $ctracker = 1; // Use CrackerTracker - anti-cracking system. I personaly think it's un-needed...
@@ -76,7 +74,7 @@ $use_blocks = 1; // Использовать систему блоков. 1 - да, 0 - нет. Если ее отключ
 $use_gzip = 1; // Использовать сжатие GZip на страницах.
 $use_ipbans = 1; // Использовать функцию блокирования IP-адресов. 0 - нет, 1 - да.
 $use_sessions = 1; // Использовать сессии. 0 - нет, 1 - да.
-$smtptype = "advanced"; // Тип отправки почты, по умолчанию advanced, лучше не менять
+$smtptype = 'advanced'; // Тип отправки почты, по умолчанию advanced, лучше не менять
 $allow_block_hide = true; // Разрешить сворачивание блоков
 $check_for_working_mta = true; // Проверять работу почтового MTA при регистрации пользователя (TCP connect @ domain:25)
 $enable_adv_antidreg = false; // Использовать продвинутую систему против двойных регистраций. Пояснение внизу:

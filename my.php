@@ -69,21 +69,10 @@ tr("Written comments", $row[0]);
 
 ****************/
 
-$ss_r = sql_query("SELECT * FROM stylesheets ORDER by id ASC") or die;
-$ss_sa = array();
-while ($ss_a = mysql_fetch_array($ss_r)) {
-  $ss_id = $ss_a["id"];
-  $ss_name = $ss_a["name"];
-  $ss_sa[$ss_name] = $ss_id;
-}
-reset($ss_sa);
-while (list($ss_name, $ss_id) = each($ss_sa)) {
-  if ($ss_id == $CURUSER["stylesheet"]) $ss = " selected"; else $ss = "";
-  $stylesheets .= "<option value=\"$ss_id\"$ss>$ss_name</option>\n";
-}
+$themes = theme_selector($CURUSER["theme"]);
 
 $countries = "<option value=0>---- ".$tracker_lang['my_unset']." ----</option>\n";
-$ct_r = sql_query("SELECT id,name FROM countries ORDER BY name") or die;
+$ct_r = sql_query("SELECT id, name FROM countries ORDER BY name ASC") or sqlerr(__FILE__,__LINE__);
 while ($ct_a = mysql_fetch_array($ct_r))
   $countries .= "<option value=$ct_a[id]" . ($CURUSER["country"] == $ct_a['id'] ? " selected" : "") . ">$ct_a[name]</option>\n";
 
@@ -131,13 +120,13 @@ tr($tracker_lang['my_parked'],
 tr($tracker_lang['my_delete_after_reply'], "<input type=checkbox name=deletepms" . ($CURUSER["deletepms"] == "yes" ? " checked" : "") . ">",1);
 tr($tracker_lang['my_sentbox'], "<input type=checkbox name=savepms" . ($CURUSER["savepms"] == "yes" ? " checked" : "") . ">",1);
 
-$r = sql_query("SELECT id,name FROM categories ORDER BY sort") or sqlerr(__FILE__, __LINE__);
+$r = genrelist();
 //$categories = "Default browsing categories:<br />\n";
-if (mysql_num_rows($r) > 0)
+if (count($r) > 0)
 {
 	$categories .= "<table><tr>\n";
 	$i = 0;
-	while ($a = mysql_fetch_assoc($r))
+	foreach ($r as $a)
 	{
 	  $categories .=  ($i && $i % 2 == 0) ? "</tr><tr>" : "";
 	  $categories .= "<td class=bottom style='padding-right: 5px'><input name=cat$a[id] type=\"checkbox\" " . (strpos($CURUSER['notifs'], "[cat$a[id]]") !== false ? " checked" : "") . " value='yes'>&nbsp;" . htmlspecialchars($a["name"]) . "</td>\n";
@@ -150,7 +139,7 @@ tr($tracker_lang['my_email_notify'], "<input type=checkbox name=pmnotif" . (strp
 	 "<input type=checkbox name=emailnotif" . (strpos($CURUSER['notifs'], "[email]") !== false ? " checked" : "") . " value=yes> Уведомить меня при размещении торрента в одной <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; из следующих предпочитаемых категорий.\n"
    , 1);
 tr($tracker_lang['my_default_browse'],$categories,1);
-tr($tracker_lang['my_style'], "<select name=stylesheet>\n$stylesheets\n</select>",1);
+tr($tracker_lang['my_style'], "$themes",1);
 tr($tracker_lang['my_country'], "<select name=country>\n$countries\n</select>",1);
 tr($tracker_lang['my_language'], $lang_select ,1);
 tr($tracker_lang['my_avatar_url'], "<input name=avatar size=50 value=\"" . htmlspecialchars($CURUSER["avatar"]) .
@@ -161,10 +150,10 @@ tr($tracker_lang['my_gender'],
 ,1);
 
 ///////////////// BIRTHDAY MOD /////////////////////
-$birthday = $CURUSER["birthday"];
-$birthday = date("Y-m-d", strtotime($birthday));
+$birthday = $CURUSER['birthday'];
+$birthday = date('Y-m-d', strtotime($birthday));
 list($year1, $month1, $day1) = explode('-', $birthday);
-if ($CURUSER[birthday] == "0000-00-00") {
+if ($CURUSER['birthday'] == '0000-00-00') {
         $year .= "<select name=year><option value=\"0000\">".$tracker_lang['my_year']."</option>\n";
         $i = "1920";
         while($i <= (date('Y',time())-13)) {

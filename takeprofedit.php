@@ -116,7 +116,7 @@ $updateset[] = "passkey_ip = ".($_POST["passkey_ip"] != "" ? sqlesc(getip()) : "
 // $ircnick = $_POST["ircnick"];
 // $ircpass = $_POST["ircpass"];
 $info = $_POST["info"];
-$stylesheet = $_POST["stylesheet"];
+$theme = $_POST["theme"];
 $country = $_POST["country"];
 $language = $_POST["language"];
 if (!file_exists('./languages/lang_'.$language.'/lang_main.php')) {
@@ -170,10 +170,10 @@ $updateset[] = "torrentsperpage = " . min(100, 0 + $_POST["torrentsperpage"]);
 $updateset[] = "topicsperpage = " . min(100, 0 + $_POST["topicsperpage"]);
 $updateset[] = "postsperpage = " . min(100, 0 + $_POST["postsperpage"]);
 
-if (is_valid_id($stylesheet))
-  $updateset[] = "stylesheet = '$stylesheet'";
+if (is_theme($theme))
+	$updateset[] = "theme = ".sqlesc($theme);
 if (is_valid_id($country))
-  $updateset[] = "country = $country";
+	$updateset[] = "country = $country";
 
 //$updateset[] = "timezone = $timezone";
 //$updateset[] = "dst = '$dst'";

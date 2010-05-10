@@ -85,6 +85,46 @@ function check_port($host, $port, $timeout, $force_fsock = false) {
 	return $result;
 }
 
+function is_theme($theme = "") {
+	global $rootpath;
+	return file_exists($rootpath . "themes/$theme/stdhead.php") && file_exists($rootpath . "themes/$theme/stdfoot.php") && file_exists($rootpath . "themes/$theme/template.php");
+}
+
+function get_themes() {
+	global $rootpath;
+	$handle = opendir($rootpath . "themes");
+	$themelist = array();
+	while ($file = readdir($handle)) {
+		if (is_theme($file) && $file != "." && $file != "..") {
+			$themelist[] = $file;
+		}
+	}
+	closedir($handle);
+	sort($themelist);
+	return $themelist;
+}
+
+function theme_selector($sel_theme = "", $use_fsw = false) {
+	global $DEFAULTBASEURL;
+	$themes = get_themes();
+	$content .= "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?theme='+this.options[this.selectedIndex].value\"" : "").">\n";
+	foreach ($themes as $theme)
+		$content .= "<option value=\"$theme\"".($theme == $sel_theme ? " selected" : "").">$theme</option>\n";
+	$content .= "</select>";
+	return $content;
+}
+
+function select_theme() {
+	global $CURUSER, $default_theme;
+	if ($CURUSER)
+		$theme = $CURUSER["theme"];
+	else
+		$theme = $default_theme;
+	if (!is_theme($theme))
+		$theme = $default_theme;
+	return $theme;
+}
+
 function decode_to_utf8($int = 0) {
 	$t = '';
 	if ( $int < 0 ) {
@@ -226,8 +266,16 @@ function userlogin($lightmode = false) {
 		return;
 	}
 
-	sql_query("UPDATE users SET last_access = ".sqlesc(get_date_time()).", ip = ".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
-	$row['ip'] = $ip;
+	$updateset = array();
+
+	if ($ip != $row['ip']) {
+		$updateset[] = 'ip = '. sqlesc($ip);
+		$row['ip'] = $ip;
+	}
+	$updateset[] = 'last_access = ' . sqlesc(get_date_time());
+
+	if (count($updateset))
+		sql_query('UPDATE users SET '.implode(', ', $updateset).' WHERE id = ' . $row['id']) or sqlerr(__FILE__,__LINE__);
 
 	if ($row['override_class'] < $row['class'])
 		$row['class'] = $row['override_class']; // Override class and save in GLOBAL array below.
@@ -614,72 +662,57 @@ function stdhead($title = "", $msgalert = true) {
 	global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $DEFAULTBASEURL, $ss_uri, $tracker_lang, $default_theme;
 
 	if (!$SITE_ONLINE)
-		die("Site is down for maintenance, please check back again later... thanks<br />");
+		die('Site is down for maintenance, please check back again later... thanks<br />');
 
-		header ("Content-Type: text/html; charset=" . $tracker_lang['language_charset']);
-		header ("X-Powered-by: TBDev Yuna Scatari Edition - http://bit-torrent.kiev.ua");
-		header ("X-Chocolate-to: ICQ 7282521");
-		header ("Cache-Control: no-cache");
-		header ("Pragma: no-cache");
-		if ($title == "")
-			$title = $SITENAME .(isset($_GET['yuna'])?" (".TBVERSION.")":'');
-		else
-			$title = $SITENAME .(isset($_GET['yuna'])?" (".TBVERSION.")":''). " :: " . htmlspecialchars_uni($title);
+	header ('Content-Type: text/html; charset=' . $tracker_lang['language_charset']);
+	header ('X-Powered-by: TBDev Yuna Scatari Edition - http://bit-torrent.kiev.ua');
+	header ('X-Chocolate-to: ICQ 7282521');
+	header ('Cache-Control: no-cache');
+	header ('Pragma: no-cache');
+	if ($title == '')
+		$title = $SITENAME . (isset($_GET['yuna']) ? ' ('.TBVERSION.')' : '');
+	else
+		$title = $SITENAME . (isset($_GET['yuna']) ? ' ('.TBVERSION.')' : ''). ' :: ' . htmlspecialchars_uni($title);
 
-		if (isset($_GET['styleid']) && $CURUSER) {
-			$styleid = $_GET['styleid'];
-			if (is_numeric($styleid)) {
-				sql_query("UPDATE users SET stylesheet = $styleid WHERE id=" . $CURUSER["id"]) or sqlerr(__FILE__, __LINE__);
-				   header("Location: $DEFAULTBASEURL/");
-				//$CURUSER["stylesheet"] = $styleid;
-			} else {
-				die("Сука, ты чего ломаешь?");
-			}
-		}
+	$ss_uri = select_theme();
 
-	if ($CURUSER) {
-		$ss_a = @mysql_fetch_array(@sql_query("SELECT uri FROM stylesheets WHERE id = " . $CURUSER["stylesheet"]));
-		if ($ss_a)
-			$ss_uri = $ss_a["uri"];
-		else
-			$ss_uri = $default_theme;
-	} else
-		$ss_uri = $default_theme;
-
-	  if ($msgalert && $CURUSER) {
-		$res = sql_query("SELECT COUNT(*) FROM messages WHERE receiver = " . $CURUSER["id"] . " AND unread='yes'") or die("OopppsY!");
+	if ($msgalert && $CURUSER) {
+		$res = sql_query('SELECT COUNT(*) FROM messages WHERE receiver = ' . $CURUSER['id'] . ' AND unread="yes"') or die('OopppsY!');
 		$arr = mysql_fetch_row($res);
 		$unread = $arr[0];
-	  }
+	}
 
-	require_once("themes/" . $ss_uri . "/template.php");
-	require_once("themes/" . $ss_uri . "/stdhead.php");
+	require_once('themes/' . $ss_uri . '/template.php');
+	require_once('themes/' . $ss_uri . '/stdhead.php');
 
 } // stdhead
 
 function stdfoot() {
 	global $CURUSER, $ss_uri, $tracker_lang, $queries, $tstart, $query_stat, $querytime;
 
-	require_once("themes/" . $ss_uri . "/template.php");
-	require_once("themes/" . $ss_uri . "/stdfoot.php");
-	if ((DEBUG_MODE || isset($_GET["yuna"])) && count($query_stat)) {
+	if (!is_theme($ss_uri) || empty($ss_uri))
+		$ss_uri = select_theme();
+
+	require_once('themes/' . $ss_uri . '/template.php');
+	require_once('themes/' . $ss_uri . '/stdfoot.php');
+	if ((DEBUG_MODE || isset($_GET['yuna'])) && count($query_stat)) {
 		foreach ($query_stat as $key => $value) {
-			print("<div>[".($key+1)."] => <b>".($value["seconds"] > 0.01 ? "<font color=\"red\" title=\"Рекомендуется оптимизировать запрос. Время исполнения превышает норму.\">".$value["seconds"]."</font>" : "<font color=\"green\" title=\"Запрос не нуждается в оптимизации. Время исполнения допустимое.\">".$value["seconds"]."</font>" )."</b> [".htmlspecialchars_uni($value['query'])."]</div>\n");
+			print('<div>['.($key+1).'] => <b>'.($value['seconds'] > 0.01 ? '<font color="red" title="Рекомендуется оптимизировать запрос. Время исполнения превышает норму.">'.$value['seconds'].'</font>' : '<font color="green" title="Запрос не нуждается в оптимизации. Время исполнения допустимое.">'.$value['seconds'].'</font>' ).'</b> ['.htmlspecialchars_uni($value['query']).']</div>'."\n");
 		}
-		print("<br />");
+		print('<br />');
 	}
 }
 
 function genbark($x,$y) {
 	stdhead($y);
-	print("<h2>" . htmlspecialchars_uni($y) . "</h2>\n");
-	print("<p>" . htmlspecialchars_uni($x) . "</p>\n");
+	print('<h2>' . htmlspecialchars_uni($y) . '</h2>\n');
+	print('<p>' . htmlspecialchars_uni($x) . '</p>\n');
 	stdfoot();
 	exit();
 }
 
 function mksecret($length = 20) {
-$set = array("a","A","b","B","c","C","d","D","e","E","f","F","g","G","h","H","i","I","j","J","k","K","l","L","m","M","n","N","o","O","p","P","q","Q","r","R","s","S","t","T","u","U","v","V","w","W","x","X","y","Y","z","Z","1","2","3","4","5","6","7","8","9");
+$set = array('a','A','b','B','c','C','d','D','e','E','f','F','g','G','h','H','i','I','j','J','k','K','l','L','m','M','n','N','o','O','p','P','q','Q','r','R','s','S','t','T','u','U','v','V','w','W','x','X','y','Y','z','Z','1','2','3','4','5','6','7','8','9');
 	$str;
 	for($i = 1; $i <= $length; $i++)
 	{
@@ -709,22 +742,22 @@ function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff) {
 	$subnet[2] = $subnet[3] = 0;
 	$subnet = implode('.', $subnet); // 255.255.0.0
 
-	setcookie(COOKIE_UID, $id, $expires, "/");
-	setcookie(COOKIE_PASSHASH, md5($passhash.COOKIE_SALT.$subnet), $expires, "/");
+	setcookie(COOKIE_UID, $id, $expires, '/');
+	setcookie(COOKIE_PASSHASH, md5($passhash.COOKIE_SALT.$subnet), $expires, '/');
 
 	if ($updatedb)
-		sql_query("UPDATE users SET last_login = NOW() WHERE id = $id");
+		sql_query('UPDATE users SET last_login = NOW() WHERE id = '.$id);
 }
 
 function logoutcookie() {
-//	setcookie(COOKIE_UID, "", 0x7fffffff, "/"); // Не стоит убирать комментирование т.к небудет работать система анти-двойной реги
-	setcookie(COOKIE_PASSHASH, "", 0x7fffffff, "/");
+//	setcookie(COOKIE_UID, '', 0x7fffffff, '/'); // Не стоит убирать комментирование т.к небудет работать система анти-двойной реги
+	setcookie(COOKIE_PASSHASH, '', 0x7fffffff, '/');
 }
 
 function loggedinorreturn($nowarn = false) {
 	global $CURUSER, $DEFAULTBASEURL;
 	if (!$CURUSER) {
-		header("Location: $DEFAULTBASEURL/login.php?returnto=" . urlencode(basename($_SERVER["REQUEST_URI"])).($nowarn ? "&nowarn=1" : ""));
+		header('Location: '.$DEFAULTBASEURL.'/login.php?returnto=' . urlencode(basename($_SERVER['REQUEST_URI'])).($nowarn ? '&nowarn=1' : ''));
 		exit();
 	}
 }
@@ -734,23 +767,23 @@ function deletetorrent($id) {
 	$images = mysql_fetch_array(sql_query('SELECT image1, image2, image3, image4, image5 FROM torrents WHERE id = '.$id));
 	if ($images) {
 		for ($x=1; $x <= 5; $x++) {
-			if ($images['image' . $x] != "")
+			if ($images['image' . $x] != '')
 				unlink('torrents/images/' . $images['image' . $x]);
 		}
 	}
-	sql_query("DELETE FROM torrents WHERE id = $id");
-	sql_query("DELETE FROM snatched WHERE torrent = $id");
-	sql_query("DELETE FROM bookmarks WHERE id = $id");
-	sql_query("DELETE FROM readtorrents WHERE torrentid = $id");
-	foreach(explode(".","peers.files.comments.ratings") as $x)
-		sql_query("DELETE FROM $x WHERE torrent = $id");
-	unlink("$torrent_dir/$id.torrent");
+	sql_query('DELETE FROM torrents WHERE id = '.$id);
+	sql_query('DELETE FROM snatched WHERE torrent = '.$id);
+	sql_query('DELETE FROM bookmarks WHERE id = '.$id);
+	sql_query('DELETE FROM readtorrents WHERE torrentid = '.$id);
+	foreach(explode('.','peers.files.comments.ratings') as $x)
+		sql_query('DELETE FROM $x WHERE torrent = $id');
+	unlink('$torrent_dir/$id.torrent');
 }
 
 function pager($rpp, $count, $href, $opts = array()) {
 	$pages = ceil($count / $rpp);
 
-	if (!$opts["lastpagedefault"])
+	if (!$opts['lastpagedefault'])
 		$pagedefault = 0;
 	else {
 		$pagedefault = floor(($count - 1) / $rpp);
@@ -758,8 +791,8 @@ function pager($rpp, $count, $href, $opts = array()) {
 			$pagedefault = 0;
 	}
 
-	if (isset($_GET["page"])) {
-		$page = 0 + (int) $_GET["page"];
+	if (isset($_GET['page'])) {
+		$page = 0 + (int) $_GET['page'];
 		if ($page < 0)
 			$page = $pagedefault;
 	}
@@ -855,12 +888,12 @@ function downloaderdata($res) {
 }
 
 function searchfield($s) {
-	return preg_replace(array('/[^a-z0-9]/si', '/^\s*/s', '/\s*$/s', '/\s+/s'), array(" ", "", "", " "), $s);
+	return preg_replace(array('/[^a-z0-9]/si', '/^\s*/s', '/\s*$/s', '/\s+/s'), array(' ', '', '', ' '), $s);
 }
 
 function genrelist() {
 	$ret = array();
-	$res = sql_query("SELECT id, name FROM categories ORDER BY sort ASC");
+	$res = sql_query('SELECT id, name FROM categories ORDER BY sort ASC');
 	while ($row = mysql_fetch_array($res))
 		$ret[] = $row;
 	return $ret;
@@ -868,10 +901,10 @@ function genrelist() {
 
 function linkcolor($num) {
 	if (!$num)
-		return "red";
+		return 'red';
 //	if ($num == 1)
-//		return "yellow";
-	return "green";
+//		return 'yellow';
+	return 'green';
 }
 
 function ratingpic($num) {
@@ -886,7 +919,7 @@ function writecomment($userid, $comment) {
 	$res = sql_query("SELECT modcomment FROM users WHERE id = '$userid'") or sqlerr(__FILE__, __LINE__);
 	$arr = mysql_fetch_assoc($res);
 
-	$modcomment = date("d-m-Y") . " - " . $comment . "" . ($arr[modcomment] != "" ? "\n" : "") . "$arr[modcomment]";
+	$modcomment = date('d-m-Y') . ' - ' . $comment . '' . ($arr['modcomment'] != '' ? "\n" : '') . $arr['modcomment'];
 	$modcom = sqlesc($modcomment);
 
 	return sql_query("UPDATE users SET modcomment = $modcom WHERE id = '$userid'") or sqlerr(__FILE__, __LINE__);
@@ -897,7 +930,7 @@ function hash_pad($hash) {
 }
 
 function hash_where($name, $hash) {
-	$shhash = preg_replace('/ *$/s', "", $hash);
+	$shhash = preg_replace('/ *$/s', '', $hash);
 	return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
 }
 
@@ -925,14 +958,14 @@ function get_user_icons($arr, $big = false) {
 
 function parked() {
 	   global $CURUSER;
-	   if ($CURUSER["parked"] == "yes")
-		  stderr($tracker_lang['error'], "Ваш аккаунт припаркован.");
+	   if ($CURUSER['parked'] == 'yes')
+		  stderr($tracker_lang['error'], 'Ваш аккаунт припаркован.');
 }
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
-define ("VERSION", "Pre 6 RC 0");
-define ("NUM_VERSION", "2.1.12");
-define ("TBVERSION", "Powered by <a href=\"http://www.tbdev.net\" target=\"_blank\" style=\"cursor: help;\" title=\"Беспатная OpenSource база\" class=\"copyright\">TBDev</a> v".NUM_VERSION." <a href=\"http://bit-torrent.kiev.ua\" target=\"_blank\" style=\"cursor: help;\" title=\"Сайт разработчика движка\" class=\"copyright\">Yuna Scatari Edition</a> ".VERSION." Copyright &copy; 2001-".date("Y"));
+define ('VERSION', 'Pre 6 RC 0');
+define ('NUM_VERSION', '2.1.12');
+define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Беспатная OpenSource база" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="Сайт разработчика движка" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
 
 function mysql_modified_rows () {
 	$info_str = mysql_info();

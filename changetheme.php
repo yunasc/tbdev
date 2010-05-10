@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -26,43 +26,15 @@
 // +--------------------------------------------------------------------------+
 */
 
-require_once "include/bittorrent.php";
-dbconn(false);
+require_once("include/bittorrent.php");
+dbconn();
 loggedinorreturn();
 
-$ss_uri = select_theme();
+$theme = (string) $_GET["theme"];
 
-?><html>
-<head>
-<script language=javascript>
+if (is_theme($theme))
+	sql_query("UPDATE users SET theme = ".sqlesc($theme)." WHERE id = {$CURUSER["id"]}") or sqlerr(__FILE__,__LINE__);
 
-function SmileIT(smile,form,text){
-    window.opener.document.forms[form].elements[text].value = window.opener.document.forms[form].elements[text].value+" "+smile+" ";
-    window.opener.document.forms[form].elements[text].focus();
-}
-</script>
-<title>Смайлики</title>
-<link rel="stylesheet" href="./themes/<?=$ss_uri."/".$ss_uri?>.css" type="text/css">
-</head>
+header('Location: '.$DEFAULTBASEURL);
 
-<table width="100%" border=1 cellspacing="2" cellpadding="2">
-<h2>Смайлики</h2>
-<tr align="center">
-<?
-$ctr=0;
-global $smilies;
-while ((list($code, $url) = each($smilies))) {
-   if ($count % 3==0)
-      print("\n<tr>");
-      print("<td align=\"center\"><a href=\"javascript: SmileIT('".str_replace("'","\'",$code)."','".htmlentities($_GET["form"])."','".htmlentities($_GET["text"])."')\"><img border=\"0\" src=\"pic/smilies/".$url."\"></a></td>");
-      $count++;
-
-   if ($count % 3==0)
-      print("\n</tr>");
-}
 ?>
-</tr>
-</table>
-<div align="center">
-<a class="altlink_green" href="javascript: window.close()"><? echo Закрыть; ?></a>
-</div>
