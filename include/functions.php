@@ -85,6 +85,43 @@ function check_port($host, $port, $timeout, $force_fsock = false) {
 	return $result;
 }
 
+function decode_to_utf8($int = 0) {
+	$t = '';
+	if ( $int < 0 ) {
+		return chr(0);
+	} else if ( $int <= 0x007f ) {
+		$t .= chr($int);
+	} else if ( $int <= 0x07ff ) {
+		$t .= chr(0xc0 | ($int >> 6));
+		$t .= chr(0x80 | ($int & 0x003f));
+	} else if ( $int <= 0xffff ) {
+		$t .= chr(0xe0 | ($int  >> 12));
+		$t .= chr(0x80 | (($int >> 6) & 0x003f));
+		$t .= chr(0x80 | ($int  & 0x003f));
+	} else if ( $int <= 0x10ffff ) {
+		$t .= chr(0xf0 | ($int  >> 18));
+		$t .= chr(0x80 | (($int >> 12) & 0x3f));
+		$t .= chr(0x80 | (($int >> 6) & 0x3f));
+		$t .= chr(0x80 | ($int  &  0x3f));
+	} else {
+		return chr(0);
+	}
+	return $t;
+}
+
+function convert_unicode($t, $to = 'windows-1251') {
+	$to = strtolower($to);
+	if ($to == 'utf-8') {
+		$t = preg_replace( '#%u([0-9A-F]{1,4})#ie', "decode_to_utf8(hexdec('\\1'))", utf8_encode($t) );
+		$t = urldecode ($t);
+	} else {
+		$t = preg_replace( '#%u([0-9A-F]{1,4})#ie', "'&#' . hexdec('\\1') . ';'", $t );
+		$t = urldecode ($t);
+		$t = @html_entity_decode($t, ENT_NOQUOTES, $to);
+	}
+	return $t;
+}
+
 function strip_magic_quotes($arr) {
 	foreach ($arr as $k => $v) {
 		if (is_array($v)) {
