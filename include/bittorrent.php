@@ -105,6 +105,9 @@ REF;
 		die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
 
 	// Additional security countermeasures
+	// Will be enabled later...
+	/*if (file_exists('install'))
+		die('После установки нужно обязательно удалить папку install.');*/
 	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
 		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
 	if ((int) ini_get('short_open_tag') == '0')

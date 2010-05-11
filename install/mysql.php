@@ -565,7 +565,7 @@ class mysql {
             if ($link) {
                 $this->_db_link = $link;
             } else {
-                $this->_error("Unable to connect to MySQL server!", E_USER_ERROR);
+                $this->_error("Unable to connect to MySQL server: ".mysql_error(), E_USER_ERROR);
                 return false;
             }
         }
