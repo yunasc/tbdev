@@ -84,7 +84,7 @@ else
 
 deletetorrent($id);
 
-write_log("Торрент $id ($row[name]) был удален пользователем $CURUSER[username] ($reasonstr)\n","F25B61","torrent");
+write_log("Торрент $id ($row[name]) был удален пользователем $CURUSER[username] (".htmlspecialchars_uni($reasonstr).")\n","F25B61","torrent");
 
 stdhead("Торрент удален!");
 
