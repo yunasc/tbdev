@@ -201,27 +201,17 @@ CREATE TABLE `friends` (
 DROP TABLE IF EXISTS `indexreleases`;
 
 CREATE TABLE `indexreleases` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `torrentid` int(10) NOT NULL default '0',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `torrentid` int(10) NOT NULL DEFAULT '0',
   `name` text NOT NULL,
-  `cat` int(10) NOT NULL default '0',
+  `cat` int(10) NOT NULL DEFAULT '0',
   `poster` text NOT NULL,
-  `genre` text NOT NULL,
-  `director` text NOT NULL,
-  `actors` text NOT NULL,
-  `descr` text NOT NULL,
-  `time` text NOT NULL,
   `imdb` text NOT NULL,
-  `added` datetime default '0000-00-00 00:00:00',
-  `quality` int(5) NOT NULL default '0',
-  `video_codec` int(5) NOT NULL default '0',
-  `video_size` text NOT NULL,
-  `video_kbps` int(5) NOT NULL default '0',
-  `audio_lang` int(5) NOT NULL default '0',
-  `audio_trans` int(5) NOT NULL default '0',
-  `audio_codec` int(5) NOT NULL default '0',
-  `audio_kbps` int(5) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  `top` text NOT NULL,
+  `center` text NOT NULL,
+  `bottom` text NOT NULL,
+  `added` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 #

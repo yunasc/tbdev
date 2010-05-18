@@ -235,7 +235,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 			if ($variant != "bookmarks" && $CURUSER)
 				print("<a href=\"bookmark.php?torrent=$row[id]\"><img border=\"0\" src=\"pic/bookmark.gif\" alt=\"".$tracker_lang['bookmark_this']."\" title=\"".$tracker_lang['bookmark_this']."\" /></a>\n");
 
-			print("<a href=\"download.php?id=$id&amp;name=" . rawurlencode($row["filename"]) . "\"><img src=\"pic/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
+			print("<a href=\"download.php?id=$id\"><img src=\"pic/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;

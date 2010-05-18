@@ -245,7 +245,7 @@ else {
                 }
                 $editlink = "a href=\"$url\" class=\"sublink\"";
 
-                $s = "<a class=\"index\" href=\"download.php?id=$id&amp;name=" . rawurlencode($row["filename"]) . "\"><b>" . $row["name"] . "</b></a>";
+                $s = "<a class=\"index\" href=\"download.php?id=$id\"><b>" . $row["name"] . "</b></a>";
                 if ($owned)
                 $s .= " $spacer<$editlink>[".$tracker_lang['edit']."]</a>";
 
@@ -483,18 +483,18 @@ $count = mysql_num_rows($thanked_sql);
 if ($count == 0) {
      $thanksby = $tracker_lang['none_yet'];
 } else {
-
      //$thanked_sql = sql_query("SELECT thanks.userid, users.username FROM thanks INNER JOIN users ON thanks.userid = users.id WHERE thanks.torrentid = $torrentid");
+     $thanksby = array();
      while ($thanked_row = mysql_fetch_assoc($thanked_sql)) {
           if ($thanked_row["userid"] == $CURUSER["id"])
                $can_not_thanks = true;
           $userid = $thanked_row["userid"];
           $username = $thanked_row["username"];
           $class = $thanked_row["class"];
-          $thanksby .= "<a href=\"userdetails.php?id=$userid\">".get_user_class_color($class, $username)."</a>, ";
+          $thanksby[] = "<a href=\"userdetails.php?id=$userid\">".get_user_class_color($class, $username)."</a>";
      }
      if ($thanksby)
-          $thanksby = substr($thanksby, 0, -2);
+          $thanksby = implode(', ', $thanksby);
 }
 if ($row["owner"] == $CURUSER["id"])
      $can_not_thanks = true;

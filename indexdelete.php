@@ -26,7 +26,7 @@
 // +--------------------------------------------------------------------------+
 */
 
-require "include/bittorrent.php";
+require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
 

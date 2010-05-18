@@ -27,61 +27,73 @@
 */
 
 require_once("include/bittorrent.php");
-include("include/codecs.php");
-dbconn(false);
+dbconn();
 loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
 	stderr($tracker_lang["error"], $tracker_lang["access_denied"]);
 
-stdhead("Добавить релиз");
+$types = array(
+	"notemplate" => array("type" => "notemplate", "name" => "Без шаблона"),
+	"video" => array("type" => "video", "name" => "Видео"),
+	"games" => array("type" => "games", "name" => "Игры"),
+	"music" => array("type" => "music", "name" => "Музыка"),
+	"soft" => array("type" => "soft", "name" => "Программы"),
+);
 
-$cats = sql_query("SELECT * FROM categories ORDER BY sort ASC");
+$templates = array(
+	"notemplate" => array("toptemplate" => "", "centertemplate" => "", "bottomtemplate" => ""),
+	"video" => array("toptemplate" => "[b]Жанр:[/b] \n[b]Режиссер:[/b] \n[b]В ролях:[/b] ", "centertemplate" => "[b]О фильме:[/b] ", "bottomtemplate" => "[b]Качество:[/b] \n[b]Видео:[/b] \n[b]Аудио:[/b] \n[b]Продолжительность:[/b] \n[b]Язык:[/b] \n[b]Перевод:[/b] "),
+	"music" => array("toptemplate" => "[b]Исполнитель:[/b] \n[b]Альбом:[/b] \n[b]Год выпуска:[/b] \n[b]Стиль:[/b] ", "centertemplate" => "[b]Треклист:[/b] ", "bottomtemplate" => "[b]Звук:[/b] \n[b]Продолжительность:[/b] "),
+	"games" => array("toptemplate" => "[b]Название:[/b] \n[b]Производитель:[/b] \n[b]Жанр:[/b] \n[b]Год выпуска:[/b] ", "centertemplate" => "[b]Описание:[/b] ", "bottomtemplate" => "[b]Системные требования:[/b] \n[b]Скрины:[/b] "),
+	"soft" => array("toptemplate" => "[b]Название:[/b] \n[b]Производитель:[/b] \n[b]Год выпуска:[/b] ", "centertemplate" => "[b]Описание:[/b] ", "bottomtemplate" => "[b]Системные требования:[/b] "),
+);
+
+if (empty($_GET["type"])) {
+stdhead("Выберите тип релиза");
+?>
+<form action="indexadd.php" method="get">
+	<table border="1" cellspacing="0" cellpadding="3" width="20%">
+	<tr><td class="heading" align="right">Тип</td><td>
+	<select name="type">
+<?
+	foreach ($types as $type)
+		print("<option value=\"" . $type["type"] . "\">" . $type["name"] . "</option>");
+?>
+	</select>
+	</td></tr>
+	<tr><td align="center" colspan="2"><input type="submit" class=btn value="Дальше"></td></tr>
+	</table>
+</form>
+<?
+stdfoot();
+die;
+} else
+	$type = $_GET["type"];
+
+stdhead("Добавить релиз - ".$types[$type]["name"]);
+
+$cats = genrelist();
 $categories = "<select name=\"cat\"><option selected>Выберите категорию</option>";
-while ($cat = mysql_fetch_array($cats)) {
+foreach ($cats as $cat) {
 	$cat_id = $cat["id"];
 	$cat_name = $cat["name"];
 	$categories .= "<option value=\"$cat_id\">$cat_name</option>";
 }
 $categories .= "</select>";
-$quality = "<select name=\"quality\"><option value=\"0\">Выберите качество</option>";
-foreach ($release_quality as $id => $name)
-	$quality .= "<option value=\"$id\">$name</option>";
-$quality .= "</select>";
-$video = "<select name=\"video_codec\"><option value=\"0\">Выберите кодек</option>";
-foreach ($video_codec as $id => $name)
-	$video .= "<option value=\"$id\">$name</option>";
-$video .= "</select>".
-"<input type=\"text\" name=\"video_size\" size=\"20\" value=\"\">".
-"<input type=\"text\" name=\"video_kbps\" size=\"20\" value=\"\"> кб/с";
-$audio = "<select name=\"audio_lang\"><option value=\"0\">Выберите язык</option>";
-foreach ($audio_lang as $id => $name)
-	$audio .= "<option value=\"$id\">$name</option>";
-$audio .= "</select>".
-"<select name=\"audio_trans\"><option value=\"0\">Выберите перевод</option>";
-foreach ($audio_trans as $id => $name)
-	$audio .= "<option value=\"$id\">$name</option>";
-$audio .= "</select>".
-"<select name=\"audio_codec\"><option value=\"0\">Выберите кодек</option>";
-foreach ($audio_codec as $id => $name)
-	$audio .= "<option value=\"$id\">$name</option>";
-$audio .= "</select>".
-"<input type=\"text\" name=\"audio_kbps\" size=\"20\" value=\"\"> кб/с";
 
 ?>
 
-<form action="takeindex.php" method="post">
+<form name="index" action="takeindex.php" method="post">
 <table border="0" cellspacing="0" cellpadding="5">
+<tr><td class="colhead" colspan="2">Выбранный шаблон: <?=$types[$type]["name"];?></td></tr>
 <?
 tr("Название релиза", "<input type=\"text\" name=\"name\" size=\"80\" /><br />Пример: Смерть Президента (2006) DVDRip\n", 1);
 tr("Постер", "<input type=\"text\" name=\"poster\" size=\"80\" /><br />Залить картинку на <a href=\"http://www.imageshack.us\">ImageShack</a>", 1);
-tr("Жанр", "<input type=\"text\" name=\"genre\" size=\"80\" />\n", 1);
-tr("Режиссер", "<input type=\"text\" name=\"director\" size=\"80\" />\n", 1);
-tr("В ролях", "<input type=\"text\" name=\"actors\" size=\"80\" />\n", 1);
-tr("Описание", "<textarea name=\"descr\" rows=\"10\" cols=\"80\"></textarea>", 1);
-tr("Качество", $quality, 1);
-tr("Видео", $video, 1);
-tr("Аудио", $audio, 1);
-tr("Продолжительность", "<input type=\"text\" name=\"time\" size=\"30\" value=\"чч:мм:сс\" /><br />Пример: 01:54:00\n", 1);
+?>
+<tr><td width="" class="heading" valign="top" align="right">Верхний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "top", $templates[$type]["toptemplate"]);?></td></tr>
+<tr><td width="" class="heading" valign="top" align="right">Средний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "center", $templates[$type]["centertemplate"]);?></td></tr>
+<tr><td width="" class="heading" valign="top" align="right">Нижний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "bottom", $templates[$type]["bottomtemplate"]);?></td></tr>
+<?
 tr("Номер торрента", "<input type=\"text\" name=\"torrentid\" size=\"60\" /><br />Пример: $DEFAULTBASEURL/details.php?id=<b>6764</b><br />Выделенное жирным - и есть номер торрента\n", 1);
 tr("URL IMDB", "<input type=\"text\" name=\"imdb\" size=\"60\" /><br />Пример: http://www.imdb.com/title/tt0408306/\n", 1);
 tr("Категория", $categories, 1);
