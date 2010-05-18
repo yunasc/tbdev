@@ -7,6 +7,7 @@ require_once('./config.php');
 
 $total = $db->sdImportFromFile('database.sql');
 
-echo "Success! Executed $total queries!";
+header('Refresh: 3; url=../signup.php');
+echo "Установка завершена! Выполнено $total запросов к БД!<br />Теперь <font color=\"red\">Вам надо удалить папку install</font>.<br />Сейчас Вас переадресует на страницу регистрации, где Вы после регистрации будете Директором.<script>alert('Не забудьте удалить папку install после установки!');</script>";
 
 ?>
