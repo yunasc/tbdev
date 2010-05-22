@@ -183,7 +183,7 @@ tr($tracker_lang['signup_contact'], "<table cellSpacing=\"3\" cellPadding=\"0\" 
     </table>",1);
 tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=\"40\" value=\"\" />", 1);
 
-if ($use_captcha) {
+if ($use_captcha && $users) {
 	include_once("include/captcha.php");
 	$hash = create_captcha();
 	tr("Код подтверждения", "<input type=\"text\" name=\"imagestring\" size=\"20\" value=\"\" />

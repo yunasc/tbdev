@@ -38,6 +38,10 @@ function bark($text = "Имя пользователя или пароль неверны")
   stderr("Ошибка входа", $text);
 }
 
+function is_password_correct($password, $secret, $hash) {
+	return ($hash == md5($secret . $password . $secret) || $hash == md5($secret . trim($password) . $secret)); // А нахуя вторая часть? Дебилы вводят из писем пароли с пробелом в конце/начале
+}
+
 $res = sql_query("SELECT id, passhash, secret, enabled, status FROM users WHERE username = " . sqlesc($username));
 $row = mysql_fetch_array($res);
 
@@ -47,7 +51,7 @@ if (!$row)
 if ($row["status"] == 'pending')
 	bark("Вы еще не активировали свой аккаунт! Активируйте ваш аккаунт и попробуйте снова.");
 
-if ($row["passhash"] != md5($row["secret"] . $password . $row["secret"]))
+if (!is_password_correct($password, $row['secret'], $row['passhash']))
 	bark();
 
 if ($row["enabled"] == "no")
@@ -57,7 +61,7 @@ $peers = sql_query("SELECT COUNT(id) FROM peers WHERE userid = $row[id]");
 $num = mysql_fetch_row($peers);
 $ip = getip();
 if ($num[0] > 0 && $row[ip] != $ip && $row[ip])
-	bark("Этот пользователь на данный момент активен. Вход невозможен.");
+	bark("Этот пользователь на данный момент активен с другого IP. Вход невозможен.");
 
 logincookie($row["id"], $row["passhash"]);
 
