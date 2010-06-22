@@ -588,7 +588,7 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 	$headers .= "From: $fromname <$fromemail>".$eol;
 	$headers .= "Reply-To: $fromname <$fromemail>".$eol;
 	$headers .= "Return-Path: $fromname <$fromemail>".$eol;
-	$headers .= "Message-ID: <$mid thesystem@$name>".$eol;
+	$headers .= "Message-ID: <$mid.thesystem@$name>".$eol;
 	$headers .= "X-Mailer: PHP v".phpversion().$eol;
     $headers .= "MIME-Version: 1.0".$eol;
     $headers .= "Content-type: text/plain; charset=windows-1251".$eol;
