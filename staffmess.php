@@ -54,32 +54,20 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 <td>Кому отправлять:<br />
   <table style="border: 0" width="100%" cellpadding="0" cellspacing="0">
     <tr>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_USER;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_USER);?></td>
-
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_POWER_USER;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_POWER_USER);?></td>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_VIP;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_VIP);?></td>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_UPLOADER;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_UPLOADER);?></td>
-             </tr><tr>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_MODERATOR;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_MODERATOR);?></td>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_ADMINISTRATOR;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_ADMINISTRATOR);?></td>
-             <td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=UC_SYSOP;?>">
-             </td>
-             <td style="border: 0"><?=get_user_class_name(UC_SYSOP);?></td>
-       <td style="border: 0">&nbsp;</td>
-       <td style="border: 0">&nbsp;</td>
-      </tr>
+<?
+	$per_line = 4;
+	for ($class = UC_USER; $class <= UC_SYSOP; $class++) {
+	if ($class % $per_line == 0 && $class > 0)
+		echo '</tr><tr>';
+?><td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=$class;?>">
+</td>
+<td style="border: 0"><?=get_user_class_name($class);?></td><?
+	}
+	while ($class % $per_line != 0) {
+		$class++;
+		?><td style="border: 0">&nbsp;</td><?
+	}
+     ?></tr>
     </table>
   </td>
 </tr>
