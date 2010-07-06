@@ -403,7 +403,7 @@ $DEFAULTBASEURL/message.php?action=viewmessage&id=$sended_id
 $SITENAME
 EOD;
                 $subj = "Вы получили новое ЛС от $username!"; 
-                mail($usremail, $subj, $body, $SITEEMAIL);
+                sent_mail($usrmail, $SITENAME, $SITEEMAIL, $subj, $body, false);
         }
         $delete = $_POST["delete"];
         if ($origmsg)
@@ -420,7 +420,7 @@ EOD;
                                 if ($arr["saved"] == "no")
                                         sql_query("DELETE FROM messages WHERE id=$origmsg") or sqlerr(__FILE__, __LINE__);
                                 elseif ($arr["saved"] == "yes")
-                                        sql_query("UPDATE messages SET location = '0' WHERE id=$origmsg") or sqlerr(__FILE__, __LINE__);
+                                        sql_query("UPDATE messages SET unread = 'no', location = '0' WHERE id=$origmsg") or sqlerr(__FILE__, __LINE__);
                         }
                 }
                 if (!$returnto)
