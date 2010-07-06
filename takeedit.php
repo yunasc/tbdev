@@ -320,7 +320,7 @@ $updateset[] = "visible = '" . ($_POST["visible"] ? "yes" : "no") . "'";
 $updateset[] = "moderated = 'yes'";
 $updateset[] = "moderatedby = ".sqlesc($CURUSER["id"]);
 
-sql_query("UPDATE torrents SET " . join(",", $updateset) . " WHERE id = $id");
+sql_query("UPDATE torrents SET " . join(",", $updateset) . " WHERE id = $id") or sqlerr();
 
 write_log("Торрент '$name' был отредактирован пользователем $CURUSER[username]\n","F25B61","torrent");
 
