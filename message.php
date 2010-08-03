@@ -403,7 +403,7 @@ $DEFAULTBASEURL/message.php?action=viewmessage&id=$sended_id
 $SITENAME
 EOD;
                 $subj = "Вы получили новое ЛС от $username!"; 
-                sent_mail($usrmail, $SITENAME, $SITEEMAIL, $subj, $body, false);
+                sent_mail($usremail, $SITENAME, $SITEEMAIL, $subj, $body, false);
         }
         $delete = $_POST["delete"];
         if ($origmsg)
