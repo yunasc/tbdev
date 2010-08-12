@@ -27,7 +27,8 @@
 */
 
 require_once("include/bittorrent.php");
-
+dbconn();
+loggedinorreturn();
 
 function bark($msg) {
   stdhead($tracker_lang['error']);
@@ -42,10 +43,6 @@ if (!mkglobal("id"))
 $id = intval($id);
 if (!$id)
 	die();
-
-dbconn();
-
-loggedinorreturn();
 
 $res = sql_query("SELECT name, owner, seeders FROM torrents WHERE id = $id");
 $row = mysql_fetch_array($res);
