@@ -110,7 +110,10 @@ function send(){
 		$bonus = $arr["name"];
 		$points = $arr["points"];
 		$descr = $arr["description"];
-		$output .= "<tr><td><b>$bonus</b><br />$descr</td><td><center>$points&nbsp;/&nbsp;$my_points</center></td><td><center><input type=\"radio\" name=\"bonus_id\" value=\"$id\" /></center></td></tr>\n";
+		$color = 'green';
+		if ($CURUSER['bonus'] < $points)
+			$color = 'red';
+		$output .= "<tr><td><b>$bonus</b><br />$descr</td><td><center><font style=\"color: $color\">$points&nbsp;/&nbsp;$my_points</font></center></td><td><center><input type=\"radio\" name=\"bonus_id\" value=\"$id\"".($color == 'red' ? ' disabled' : '')." /></center></td></tr>\n";
 	}
 ?>
 	<tr><td class="colhead" colspan="3">ћой бонус (<?=$CURUSER["bonus"];?> бонусов в наличии / <?=$points_per_hour;?> бонусов в час)</td></tr>
