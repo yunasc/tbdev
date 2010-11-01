@@ -34,12 +34,11 @@ loggedinorreturn();
 
 stdhead($tracker_lang['my_my']);
 
-if ($_GET["edited"]) {
+if (isset($_GET["edited"])) {
 	print("<h1>".$tracker_lang['my_updated']."</h1>\n");
-	if ($_GET["mailsent"])
+	if (isset($_GET["mailsent"]))
 		print("<h2>".$tracker_lang['my_mail_sent']."</h2>\n");
-}
-elseif ($_GET["emailch"])
+} elseif (isset($_GET["emailch"]))
 	print("<h1>".$tracker_lang['my_mail_updated']."</h1>\n");
 /*else
 	print("<h1>Добро пожаловать, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");*/
@@ -124,7 +123,7 @@ $r = genrelist();
 //$categories = "Default browsing categories:<br />\n";
 if (count($r) > 0)
 {
-	$categories .= "<table><tr>\n";
+	$categories = "<table><tr>\n";
 	$i = 0;
 	foreach ($r as $a)
 	{
@@ -194,8 +193,8 @@ if ($CURUSER['birthday'] == '0000-00-00') {
         $day .="</select>\n";
         tr($tracker_lang['my_birthdate'], $year . $month . $day ,1);
 }
-if($CURUSER[birthday] != "0000-00-00") {
-        tr($tracker_lang['my_birthdate'],"<b><input type=hidden name=year value=$year1>$year1<input type=hidden name=month value=$month1>.$month1<input type=hidden name=day value=$day1>.$day1</b>",1);
+if ($CURUSER['birthday'] != "0000-00-00") {
+	tr($tracker_lang['my_birthdate'],"<b><input type=hidden name=year value=$year1>$year1<input type=hidden name=month value=$month1>.$month1<input type=hidden name=day value=$day1>.$day1</b>",1);
 }
 ///////////////// BIRTHDAY MOD /////////////////////
 

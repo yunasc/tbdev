@@ -107,7 +107,7 @@ function get_themes() {
 function theme_selector($sel_theme = "", $use_fsw = false) {
 	global $DEFAULTBASEURL;
 	$themes = get_themes();
-	$content .= "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?theme='+this.options[this.selectedIndex].value\"" : "").">\n";
+	$content = "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?theme='+this.options[this.selectedIndex].value\"" : "").">\n";
 	foreach ($themes as $theme)
 		$content .= "<option value=\"$theme\"".($theme == $sel_theme ? " selected" : "").">$theme</option>\n";
 	$content .= "</select>";
@@ -783,7 +783,7 @@ function deletetorrent($id) {
 function pager($rpp, $count, $href, $opts = array()) {
 	$pages = ceil($count / $rpp);
 
-	if (!$opts['lastpagedefault'])
+	if (!isset($opts['lastpagedefault']))
 		$pagedefault = 0;
 	else {
 		$pagedefault = floor(($count - 1) / $rpp);
@@ -799,7 +799,9 @@ function pager($rpp, $count, $href, $opts = array()) {
 	else
 		$page = $pagedefault;
 
-	   $pager = "<td class=\"pager\">Страницы:</td><td class=\"pagebr\">&nbsp;</td>";
+	$pager = "<td class=\"pager\">Страницы:</td><td class=\"pagebr\">&nbsp;</td>";
+	$pager2 = "";
+	$bregs = "";
 
 	$mp = $pages - 1;
 	$as = "<b>«</b>";
@@ -814,7 +816,8 @@ function pager($rpp, $count, $href, $opts = array()) {
 		$pager2 .= "<td class=\"pager\">";
 		$pager2 .= "<a href=\"{$href}page=" . ($page + 1) . "\" style=\"text-decoration: none;\">$as</a>";
 		$pager2 .= "</td>$bregs";
-	}else	 $pager2 .= $bregs;
+	} else
+		$pager2 .= $bregs;
 
 	if ($count) {
 		$pagerarr = array();

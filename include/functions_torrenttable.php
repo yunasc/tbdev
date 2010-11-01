@@ -51,26 +51,19 @@ print("<tr>\n");
 $count_get = 0;
 
 foreach ($_GET as $get_name => $get_value) {
-
-$get_name = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
-
-$get_value = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
-
-if ($get_name != "sort" && $get_name != "type") {
-if ($count_get > 0) {
-$oldlink = $oldlink . "&" . $get_name . "=" . $get_value;
-} else {
-$oldlink = $oldlink . $get_name . "=" . $get_value;
-}
-$count_get++;
+	$get_name = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
+	$get_value = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
+	if ($get_name != "sort" && $get_name != "type") {
+		if ($count_get > 0)
+			$oldlink = $oldlink . "&" . $get_name . "=" . $get_value;
+		else
+			$oldlink = $oldlink . $get_name . "=" . $get_value;
+		$count_get++;
+	}
 }
 
-}
-
-if ($count_get > 0) {
-$oldlink = $oldlink . "&";
-}
-
+if ($count_get > 0)
+	$oldlink = $oldlink . "&";
 
 if ($_GET['sort'] == "1") {
 if ($_GET['type'] == "desc") {

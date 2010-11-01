@@ -207,15 +207,15 @@ $owned = $moderator = 0;
 if (!$row || ($row["banned"] == "yes" && !$moderator))
         stderr($tracker_lang['error'], $tracker_lang['no_torrent_with_such_id']);
 else {
-        if ($_GET["hit"]) {
+        if (isset($_GET["hit"])) {
                 sql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
-                if ($_GET["tocomm"])
+                if (isset($_GET["tocomm"]))
                         header("Location: $DEFAULTBASEURL/details.php?id=$id&page=0#startcomments");
-                elseif ($_GET["filelist"])
+                elseif (isset($_GET["filelist"]))
                         header("Location: $DEFAULTBASEURL/details.php?id=$id&filelist=1#filelist");
-                elseif ($_GET["toseeders"])
+                elseif (isset($_GET["toseeders"]))
                         header("Location: $DEFAULTBASEURL/details.php?id=$id&dllist=1#seeders");
-                elseif ($_GET["todlers"])
+                elseif (isset($_GET["todlers"]))
                         header("Location: $DEFAULTBASEURL/details.php?id=$id&dllist=1#leechers");
                 else
                         header("Location: $DEFAULTBASEURL/details.php?id=$id");
@@ -265,6 +265,8 @@ else {
 
                 if (!empty($row["descr"]))
 					tr($tracker_lang['description'], format_comment($row["descr"]), 1, 1);
+
+				$images = array();
 
 				for ($i = 2; $i <= 5; $i++) {
 					if ($row['image'.$i])
@@ -374,7 +376,7 @@ else {
                         }
                 }
 
-                if (!$_GET["dllist"]) {
+                if (!isset($_GET["dllist"])) {
                         /*
                         $subres = sql_query("SELECT seeder, COUNT(*) FROM peers WHERE torrent = $id GROUP BY seeder");
                         $resarr = array(yes => 0, no => 0);

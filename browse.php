@@ -35,14 +35,17 @@ parked();
 
 $cats = genrelist();
 
-$searchstr = (string) unesc($_GET["search"]);
+$searchstr = '';
+
+if (isset($_GET['search']))
+	$searchstr = (string) unesc($_GET["search"]);
 $cleansearchstr = htmlspecialchars($searchstr);
 if (empty($cleansearchstr))
 unset($cleansearchstr);
 
 // sorting by MarkoStamcar
 
-if ($_GET['sort'] && $_GET['type']) {
+if (isset($_GET['sort']) && isset($_GET['type'])) {
 
 $column = '';
 $ascdesc = '';
@@ -81,93 +84,87 @@ $pagerlink = "";
 $addparam = "";
 $wherea = array();
 $wherecatina = array();
+$incldead = 0;
 
-if ($_GET["incldead"] == 1)
-{
-        $addparam .= "incldead=1&amp;";
-        if (!isset($CURUSER) || get_user_class() < UC_ADMINISTRATOR)
-                $wherea[] = "banned != 'yes'";
-}
-elseif ($_GET["incldead"] == 2)
-{
-        $addparam .= "incldead=2&amp;";
-                $wherea[] = "visible = 'no'";
-}
-elseif ($_GET["incldead"] == 3)
-{
-        $addparam .= "incldead=3&amp;";
-                $wherea[] = "free = 'yes'";
-               $wherea[] = "visible = 'yes'";
-}
-elseif ($_GET["incldead"] == 4)
-{
-        $addparam .= "incldead=4&amp;";
-                $wherea[] = "seeders = 0";
-                $wherea[] = "visible = 'yes'";
-}
-        else
-                $wherea[] = "visible = 'yes'";
+if (isset($_GET['incldead'])) {
+	if ($_GET["incldead"] == 1) {
+		$addparam .= "incldead=1&amp;";
+		if (!isset($CURUSER) || get_user_class() < UC_ADMINISTRATOR)
+			$wherea[] = "banned != 'yes'";
+	}
+	elseif ($_GET["incldead"] == 2) {
+		$addparam .= "incldead=2&amp;";
+		$wherea[] = "visible = 'no'";
+	}
+	elseif ($_GET["incldead"] == 3) {
+		$addparam .= "incldead=3&amp;";
+		$wherea[] = "free = 'yes'";
+		$wherea[] = "visible = 'yes'";
+	}
+	elseif ($_GET["incldead"] == 4) {
+		$addparam .= "incldead=4&amp;";
+		$wherea[] = "seeders = 0";
+		$wherea[] = "visible = 'yes'";
+	}
+	$incldead = (int) $_GET['incldead'];
+} else
+	$wherea[] = "visible = 'yes'";
 
-$category = (int)$_GET["cat"];
+if (isset($_GET['cat']))
+	$category = (int) $_GET["cat"];
+else
+	$category = 0;
 
-$all = $_GET["all"];
+if (isset($_GET['all']))
+	$all = $_GET["all"];
+else
+	$all = false;
 
 if (!$all)
-        if (!$_GET && $CURUSER["notifs"])
-        {
-          $all = True;
-          foreach ($cats as $cat)
-          {
-            $all &= $cat[id];
-            if (strpos($CURUSER["notifs"], "[cat" . $cat[id] . "]") !== False)
-            {
-              $wherecatina[] = $cat[id];
-              $addparam .= "c$cat[id]=1&amp;";
-            }
-          }
-        }
-        elseif ($category)
-        {
-          if (!is_valid_id($category))
-            stderr($tracker_lang['error'], "Invalid category ID.");
-          $wherecatina[] = $category;
-          $addparam .= "cat=$category&amp;";
-        }
-        else
-        {
-          $all = True;
-          foreach ($cats as $cat)
-          {
-            $all &= $_GET["c$cat[id]"];
-            if ($_GET["c$cat[id]"])
-            {
-              $wherecatina[] = $cat[id];
-              $addparam .= "c$cat[id]=1&amp;";
-            }
-          }
-        }
+if (!$_GET && $CURUSER["notifs"]) {
+	$all = True;
+	foreach ($cats as $cat) {
+		$all &= $cat[id];
+		if (strpos($CURUSER["notifs"], "[cat" . $cat[id] . "]") !== false) {
+			$wherecatina[] = $cat[id];
+			$addparam .= "c$cat[id]=1&amp;";
+		}
+	}
+} elseif ($category) {
+	if (!is_valid_id($category))
+		stderr($tracker_lang['error'], "Invalid category ID.");
+	$wherecatina[] = $category;
+	$addparam .= "cat=$category&amp;";
+} else {
+	$all = true;
+	foreach ($cats as $cat) {
+		$all = !isset($_GET["c$cat[id]"]);
+		if (isset($_GET["c$cat[id]"])) {
+			$wherecatina[] = $cat[id];
+			$addparam .= "c$cat[id]=1&amp;";
+		}
+	}
+}
 
-if ($all)
-{
-        $wherecatina = array();
-  $addparam = "";
+if ($all) {
+	$wherecatina = array();
+	$addparam = "";
 }
 
 if (count($wherecatina) > 1)
-        $wherecatin = implode(",",$wherecatina);
+	$wherecatin = implode(",",$wherecatina);
 elseif (count($wherecatina) == 1)
-        $wherea[] = "category = $wherecatina[0]";
+	$wherea[] = "category = $wherecatina[0]";
 
 $wherebase = $wherea;
 
-if (isset($cleansearchstr))
-{
-		$wherea[] = "torrents.name LIKE '%" . sqlwildcardesc($searchstr) . "%'";
-        $addparam .= "search=" . urlencode($searchstr) . "&amp;";
+if (isset($cleansearchstr)) {
+	$wherea[] = "torrents.name LIKE '%" . sqlwildcardesc($searchstr) . "%'";
+	$addparam .= "search=" . urlencode($searchstr) . "&amp;";
 }
 
 $where = implode(" AND ", $wherea);
-if ($wherecatin)
+if (isset($wherecatin) && !empty($wherecatin))
         $where .= ($where ? " AND " : "") . "category IN (" . $wherecatin . ")";
 
 if ($where != "")
@@ -262,7 +259,7 @@ foreach ($cats as $cat)
 {
         $catsperrow = 5;
         print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
-        print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat[id],$wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars($cat[name]) . "</a></td>\n");
+        print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat['id'], $wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars($cat['name']) . "</a></td>\n");
         $i++;
 }
 
@@ -291,23 +288,22 @@ if ($lastrowcols != 0)
 <?=$tracker_lang['in'];?>
 <select name="incldead">
 <option value="0"><?=$tracker_lang['active'];?></option>
-<option value="1"<? print($_GET["incldead"] == 1 ? " selected" : ""); ?>><?=$tracker_lang['including_dead'];?></option>
-<option value="2"<? print($_GET["incldead"] == 2 ? " selected" : ""); ?>><?=$tracker_lang['only_dead'];?></option>
-<option value="3"<? print($_GET["incldead"] == 3 ? " selected" : ""); ?>><?=$tracker_lang['golden_torrents'];?></option>
-<option value="4"<? print($_GET["incldead"] == 4 ? " selected" : ""); ?>><?=$tracker_lang['no_seeds'];?></option>
+<option value="1"<? print($incldead == 1 ? " selected" : ""); ?>><?=$tracker_lang['including_dead'];?></option>
+<option value="2"<? print($incldead == 2 ? " selected" : ""); ?>><?=$tracker_lang['only_dead'];?></option>
+<option value="3"<? print($incldead == 3 ? " selected" : ""); ?>><?=$tracker_lang['golden_torrents'];?></option>
+<option value="4"<? print($incldead == 4 ? " selected" : ""); ?>><?=$tracker_lang['no_seeds'];?></option>
 </select>
 <select name="cat">
 <option value="0">(<?=$tracker_lang['all_types'];?>)</option>
 <?
 
-
 //$cats = genrelist();
 $catdropdown = "";
 foreach ($cats as $cat) {
-$catdropdown .= "<option value=\"" . $cat["id"] . "\"";
-if ($cat["id"] == $_GET["cat"])
-$catdropdown .= " selected=\"selected\"";
-$catdropdown .= ">" . htmlspecialchars($cat["name"]) . "</option>\n";
+	$catdropdown .= "<option value=\"" . $cat["id"] . "\"";
+	if (isset($_GET['cat']) && $cat["id"] == $_GET["cat"])
+		$catdropdown .= " selected=\"selected\"";
+	$catdropdown .= ">" . htmlspecialchars($cat["name"]) . "</option>\n";
 }
 
 ?>

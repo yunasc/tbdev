@@ -91,43 +91,20 @@ $(document).ready(function(){
 
 <?
 
-$datum = getdate();
-
-$datum[hours] = sprintf("%02.0f", $datum[hours]);
-
-$datum[minutes] = sprintf("%02.0f", $datum[minutes]);
-
-$datum[seconds] = sprintf("%02.0f", $datum[seconds]);
-
 $uped = mksize($CURUSER['uploaded']);
-
 $downed = mksize($CURUSER['downloaded']);
-
-if ($CURUSER["downloaded"] > 0)
-
-{
-
-$ratio = $CURUSER['uploaded'] / $CURUSER['downloaded'];
-
-$ratio = number_format($ratio, 3);
-
-$color = get_ratio_color($ratio);
-
-if ($color)
-
-$ratio = "<font color=$color>$ratio</font>";
-
-}
-
+if ($CURUSER["downloaded"] > 0) {
+	$ratio = $CURUSER['uploaded'] / $CURUSER['downloaded'];
+	$ratio = number_format($ratio, 3);
+	$color = get_ratio_color($ratio);
+	if ($color)
+		$ratio = "<font color=$color>$ratio</font>";
+} elseif ($CURUSER["uploaded"] > 0)
+	$ratio = "Inf.";
 else
+	$ratio = "---";
 
-if ($CURUSER["uploaded"] > 0)
-
-$ratio = "Inf.";
-
-else
-
-$ratio = "---";
+$medaldon = $warn = '';
 
 if ($CURUSER['donor'] == "yes")
 	$medaldon = "<img src=\"pic/star.gif\" alt=\"Донор\" title=\"Донор\">";

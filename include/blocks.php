@@ -4,12 +4,13 @@
 if(!defined('IN_TRACKER'))
   die('Hacking attempt!');
 
-	function render_blocks($side, $blockfile, $blocktitle, $content, $bid, $bposition, $allow_hide) {
+	function render_blocks($blockfile, $blocktitle, $content, $bid, $bposition, $allow_hide) {
 	global $showbanners, $allow_block_hide;
 	global $foot;
 		if ($blockfile != "") {
 			if (file_exists ("blocks/".$blockfile."")) {
-				define( 'BLOCK_FILE', 1);
+				if (!defined('BLOCK_FILE'))
+					define('BLOCK_FILE', 1);
 				require ("blocks/".$blockfile."");
 			} else {
 				$content = "<center>Существует проблема с этим блоком!</center>";
@@ -20,28 +21,8 @@ if(!defined('IN_TRACKER'))
 			$content = "<center>Существует проблема с этим блоком!</center>";
 		}
 
-	  switch ($side) {
-	    case 'b':
-			$showbanners = $content;
-			return null;
-
-		case 'f':
-			$foot = $content;
-			return null;
-
-		case 'n':
-			echo $content;
-			return null;
-
-		case 'p':
-			return $content;
-
-		case 'o':
-			return "$blocktitle - $content";
-	  }
-
 		if ($allow_block_hide && ($allow_hide || get_user_class() >= UC_ADMINISTRATOR)) {
-			$hidden_blocks = ($_COOKIE['hb'] ? unserialize($_COOKIE['hb']) : array());
+			$hidden_blocks = (isset($_COOKIE['hb']) && !empty($_COOKIE['hb']) ? unserialize($_COOKIE['hb']) : array());
 			$display = 'block';
 			$picture = 'minus';
 			$alt = 'Скрыть';
@@ -195,13 +176,13 @@ function show_blocks($position) {
 				continue;
 			}
 			if ($view == 0) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
+				render_blocks($blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 1 && $CURUSER) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
+				render_blocks($blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 2 && (get_user_class() >= UC_MODERATOR)) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
+				render_blocks($blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			} elseif ($view == 3 && (!$CURUSER || get_user_class() >= UC_MODERATOR)) {
-				render_blocks($side, $blockfile, $title, $content, $bid, $bposition, $allow_hide);
+				render_blocks($blockfile, $title, $content, $bid, $bposition, $allow_hide);
 			}
 		}
 	}

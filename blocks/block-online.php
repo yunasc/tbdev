@@ -21,6 +21,9 @@ if ($use_sessions)
 	$result = sql_query("SELECT s.uid, s.username, s.class FROM sessions AS s WHERE s.time > $dt ORDER BY s.class DESC");
 else
 	$result = sql_query("SELECT u.id, u.username, u.class FROM users AS u WHERE u.last_access > ".sqlesc(get_date_time(time() - 300))." ORDER BY u.class DESC");
+
+$users = $guests = $staff = $total = 0;
+
 while (list($uid, $uname, $class) = mysql_fetch_row($result)) {
 
 	$parsed = array();
@@ -43,17 +46,17 @@ while (list($uid, $uname, $class) = mysql_fetch_row($result)) {
 		$parsed_id[] = $uid;
     $total++;
 
-	if (empty($uname))
+	/*if (empty($uname))
 		continue;
 	else
-		$who_online .= $title_who;
+		$who_online .= $title_who;*/
 
 }
 
-if ($staff == "")  $staff = 0;
+/*if ($staff == "") $staff = 0;
 if ($guests == "") $guests = 0;
 if ($users == "")  $users = 0;
-if ($total == "")  $total = 0;
+if ($total == "")  $total = 0;*/
 
 $content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>Последний пользователь: </b> $latestuser<hr></td></tr></table>\n";
 
