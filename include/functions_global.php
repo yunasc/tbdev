@@ -823,7 +823,7 @@ function format_comment($text, $strip_html = true) {
 	$html[] = "<hr>";
 	// Dirty YouTube hack...
 	// Yeah, unsecure! Hello noobies! :D
-	#$bb[] = "#\[youtube=(.*?)\]#si";
+	#$bb[] = "#\[youtube=([a-zA-Z0-9]+)\]#si";
 	#$html = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"http://www.youtube.com/v/\\1?fs=1&amp;rel=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"http://www.youtube.com/v/\\1?fs=1&amp;rel=0\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
 	//$bb[] = "/\[hide\]\s*((\s|.)+?)\s*\[\/hide\]\s*/i";
 	//$html[] = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
