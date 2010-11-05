@@ -42,6 +42,18 @@ if (!defined('IN_TRACKER')) {
 		exit;
 	}
 
+	// SET PHP ENVIRONMENT
+	@error_reporting(E_ALL & ~E_NOTICE);
+	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
+	@ini_set('display_errors', '1');
+	@ini_set('display_startup_errors', '0');
+	@ini_set('ignore_repeated_errors', '1');
+	@ignore_user_abort(1);
+	@set_time_limit(0);
+	@set_magic_quotes_runtime(0);
+	@session_start();
+	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
+
 $allowed_referrers = <<<REF
 
 REF;
@@ -58,7 +70,10 @@ REF;
 		if ($http_host AND $_SERVER['HTTP_REFERER']) {
 			$http_host = preg_replace('#:80$#', '', trim($http_host));
 			$referrer_parts = @parse_url($_SERVER['HTTP_REFERER']);
-			$ref_port = intval($referrer_parts['port']);
+			if (isset($referrer_parts['port']))
+				$ref_port = intval($referrer_parts['port']);
+			else
+				$ref_post = 80;
 			$ref_host = $referrer_parts['host'] . ((!empty($ref_port) AND $ref_port != '80') ? ":$ref_port" : '');
 
 			$allowed = preg_split('#\s+#', $allowed_referrers, -1, PREG_SPLIT_NO_EMPTY);
@@ -78,18 +93,6 @@ REF;
 				die('In order to accept POST request originating from this domain, the admin must add this domain to the whitelist.');
 		}
 	}
-
-	// SET PHP ENVIRONMENT
-	@error_reporting(E_ALL & ~E_NOTICE);
-	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
-	@ini_set('display_errors', '1');
-	@ini_set('display_startup_errors', '0');
-	@ini_set('ignore_repeated_errors', '1');
-	@ignore_user_abort(1);
-	@set_time_limit(0);
-	@set_magic_quotes_runtime(0);
-	@session_start();
-	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
 
 	function timer() {
 		list($usec, $sec) = explode(" ", microtime());

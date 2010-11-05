@@ -243,8 +243,13 @@ $DEFAULTBASEURL/confirm.php?id=$id&secret=$psecret
 EOD;
 
 if($use_email_act && $users) {
-	if (!sent_mail($email, $SITENAME, $SITEEMAIL,"Подтверждение регистрации на $SITENAME", $body, false)) {
-		stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
+	if (!sent_mail($email, $SITENAME, $SITEEMAIL, "Подтверждение регистрации на $SITENAME", $body, false)) {
+		//stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
+		write_log("Проблема с отправкой письма для активации на адрес $email","FF0000","errors");
+		logincookie($id, $wantpasshash);
+		sql_query('UPDATE users SET status = "confirmed" WHERE id = '.$id) or sqlerr();
+		header("Location: ok.php?type=confirm");
+		die;
 	}
 } else {
 	logincookie($id, $wantpasshash);
