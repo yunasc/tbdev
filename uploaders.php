@@ -74,9 +74,12 @@ $warned = mysql_result($result, $i, "warned");
 $upperquery = "SELECT added FROM torrents WHERE owner = $id";
 $upperresult = sql_query($upperquery);
 
-$torrentinfo = mysql_fetch_array($upperresult);
-
 $numtorrents = mysql_num_rows($upperresult);
+
+$lastadded = '';
+while ($torrentinfo = mysql_fetch_array($upperresult));
+	if (strtotime($torrentinfo['added']) > strtotime($lastadded))
+		$lastadded = $torrentinfo['added'];
 
 if ($downloaded > 0)
 {
@@ -114,7 +117,8 @@ echo "<td>$ratio</td>";
 echo "<td>$numtorrents торрентов</td>";
 if ($numtorrents > 0)
 {
-$lastadded = mysql_result($upperresult, $numtorrents - 1, "added");
+//$lastadded = mysql_result($upperresult, $numtorrents - 1, "added");
+
 echo "<td>" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastadded)) . " назад (" . date("d. M Y",strtotime($lastadded)) . ")</td>";
 }
 else
