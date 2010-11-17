@@ -75,7 +75,7 @@ $upperquery = "SELECT added FROM torrents WHERE owner = $id";
 $upperresult = sql_query($upperquery);
 $numtorrents = mysql_num_rows($upperresult);
 $lastadded = '0000-00-00 00:00:00';
-while ($torrentinfo = mysql_fetch_array($upperresult));
+while ($torrentinfo = mysql_fetch_array($upperresult))
 	if (strtotime($torrentinfo['added']) > strtotime($lastadded))
 		$lastadded = $torrentinfo['added'];
 
