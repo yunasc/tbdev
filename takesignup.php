@@ -31,7 +31,7 @@ require_once("include/bittorrent.php");
 dbconn();
 
 if ($deny_signup && !$allow_invite_signup)
-	stderr($tracker_lang['error'], "Извините, но регистрация отключена администрацией.");
+	stderr($tracker_lang['error'], $tracker_lang['signup_disabled']);
 
 if ($CURUSER)
 	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_already_registered'], $SITENAME));
@@ -41,16 +41,16 @@ if ($users >= $maxusers)
 	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_users_limit'], number_format($maxusers)));
 
 if (!mkglobal("wantusername:wantpassword:passagain:email"))
-	stderr($tracker_lang['error'], "Прямой доступ к этому файлу не разрешен.");
+	stderr($tracker_lang['error'], $tracker_lang['dad']);
 
 if ($deny_signup && $allow_invite_signup) {
 	if (empty($_POST["invite"]))
-		stderr("Ошибка", "Для регистрации вам нужно ввести код приглашения!");
+		stderr($tracker_lang['error'], "Для регистрации вам нужно ввести код приглашения!");
 	if (strlen($_POST["invite"]) != 32)
-		stderr("Ошибка", "Вы ввели не правильный код приглашения.");
+		stderr($tracker_lang['error'], "Вы ввели не правильный код приглашения");
 	list($inviter) = mysql_fetch_row(sql_query("SELECT inviter FROM invites WHERE invite = ".sqlesc($_POST["invite"])));
 	if (!$inviter)
-		stderr("Ошибка", "Код приглашения введенный вами не рабочий.");
+		stderr($tracker_lang['error'], "Код приглашения введенный вами не рабочий");
 	list($invitedroot) = mysql_fetch_row(sql_query("SELECT invitedroot FROM users WHERE id = $inviter"));
 }
 
@@ -87,27 +87,27 @@ $day = $_POST["day"];
 
 $icq = unesc($_POST["icq"]);
 if (strlen($icq) > 10)
-    bark("Жаль, Номер icq слишком длинный  (Макс - 10)");
+    bark("Жаль, Номер icq слишком длинный (Макс - 10)");
 
 $msn = unesc($_POST["msn"]);
 if (strlen($msn) > 30)
-    bark("Жаль, Ваш msn слишком длинный  (Макс - 30)");
+    bark("Жаль, Ваш msn слишком длинный (Макс - 30)");
 
 $aim = unesc($_POST["aim"]);
 if (strlen($aim) > 30)
-    bark("Жаль, Ваш aim слишком длинный  (Макс - 30)");
+    bark("Жаль, Ваш aim слишком длинный (Макс - 30)");
 
 $yahoo = unesc($_POST["yahoo"]);
 if (strlen($yahoo) > 30)
-    bark("Жаль, Ваш yahoo слишком длинный  (Макс - 30)");
+    bark("Жаль, Ваш yahoo слишком длинный (Макс - 30)");
 
 $mirc = unesc($_POST["mirc"]);
 if (strlen($mirc) > 30)
-    bark("Жаль, Ваш mirc слишком длинный  (Макс - 30)");
+    bark("Жаль, Ваш mirc слишком длинный (Макс - 30)");
 
 $skype = unesc($_POST["skype"]);
 if (strlen($skype) > 20)
-    bark("Жаль, Ваш skype слишком длинный  (Макс - 20)");
+    bark("Жаль, Ваш skype слишком длинный (Макс - 20)");
 
 $email = trim(strtolower($email));
 
