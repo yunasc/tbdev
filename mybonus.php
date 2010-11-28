@@ -32,11 +32,11 @@ loggedinorreturn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	header("Content-Type: text/html; charset=".$tracker_lang['language_charset']);
-	if (empty($_POST["id"])) {
+	if (empty($_POST["bonus_id"])) {
 		stdmsg($tracker_lang['error'], "Вы не выбрали тип бонуса!");
 		die();
 	}
-	$id = (int) $_POST["id"];
+	$id = (int) $_POST["bonus_id"];
 	if (!is_valid_id($id)) {
 		stdmsg($tracker_lang['error'], $tracker_lang['access_denied']);
 		die();
@@ -90,7 +90,7 @@ function send(){
 	ajax.onShow ('');
 	var varsString = "";
 	ajax.requestFile = "mybonus.php";
-	ajax.setVar("id", bonus_type);
+	ajax.setVar("bonus_id", bonus_type);
 	ajax.method = 'POST';
 	ajax.element = 'ajax';
 	ajax.sendAJAX(varsString);
