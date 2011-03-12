@@ -664,7 +664,7 @@ function encode_quote_from($text) {
 }
 
 // Format spoiler
-function encode_spoiler($text) {
+/*function encode_spoiler($text) {
 	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
 	$text = preg_replace("#\[hide\](.*?)\[/hide\]#si", $replace, $text);
 	return $text;
@@ -675,6 +675,29 @@ function encode_spoiler_from($text) {
 	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">\\1</div><div class=\"spoiler-body\"><textarea>\\2</textarea></div></div>";
 	$text = preg_replace("#\[hide=(.+?)\](.*?)\[/hide\]#si", "".$replace, $text);
 	return $text;
+}*/
+
+// Thanks to Leonid from TorrentsZona for figuring this shit out...
+// Format spoiler
+function encode_spoiler($text) {
+	$text = preg_replace_callback("#\[hide\](.*?)\[/hide\]#si", 'escape1', $text);
+	return $text;
+}
+
+// Format spoiler from
+function encode_spoiler_from($text) {
+	$text = preg_replace_callback("#\[hide=(.+?)\](.*?)\[/hide\]#si", 'escape2', $text);
+	return $text;
+}
+
+// Format spoiler
+function escape1($matches){
+	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars($matches[1])."</textarea></div></div>";
+}
+
+// Format spoiler from
+function escape2($matches){
+	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">".$matches[1]."</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars($matches[2])."</textarea></div></div>";
 }
 
 // Format code
@@ -835,13 +858,6 @@ function format_comment($text, $strip_html = true) {
 	// Linebreaks
 	$s = nl2br($s);
 
-	while (preg_match("#\[quote\](.*?)\[/quote\]#si", $s)) $s = encode_quote($s);
-	while (preg_match("#\[quote=(.+?)\](.*?)\[/quote\]#si", $s)) $s = encode_quote_from($s);
-	while (preg_match("#\[hide\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler($s);
-	while (preg_match("#\[hide=(.+?)\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler_from($s);
-	if (preg_match("#\[code\](.*?)\[/code\]#si", $s)) $s = encode_code($s);
-	if (preg_match("#\[php\](.*?)\[/php\]#si", $s)) $s = encode_php($s);
-
 	// URLs
 	$s = format_urls($s);
 	//$s = format_local_urls($s);
@@ -854,6 +870,13 @@ function format_comment($text, $strip_html = true) {
 
 	foreach ($privatesmilies as $code => $url)
 		$s = str_replace($code, "<img border=\"0\" src=\"pic/smilies/$url\">", $s);
+
+	while (preg_match("#\[quote\](.*?)\[/quote\]#si", $s)) $s = encode_quote($s);
+	while (preg_match("#\[quote=(.+?)\](.*?)\[/quote\]#si", $s)) $s = encode_quote_from($s);
+	while (preg_match("#\[hide\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler($s);
+	while (preg_match("#\[hide=(.+?)\](.*?)\[/hide\]#si", $s)) $s = encode_spoiler_from($s);
+	if (preg_match("#\[code\](.*?)\[/code\]#si", $s)) $s = encode_code($s);
+	if (preg_match("#\[php\](.*?)\[/php\]#si", $s)) $s = encode_php($s);
 
 	return $s;
 }
