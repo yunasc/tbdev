@@ -677,7 +677,7 @@ function encode_spoiler_from($text) {
 	return $text;
 }*/
 
-// Thanks to Leonid from TorrentsZona for figuring this shit out...
+// Thanks to Leonid Evstigneev from TorrentsZona for figuring this shit out...
 // Format spoiler
 function encode_spoiler($text) {
 	$text = preg_replace_callback("#\[hide\](.*?)\[/hide\]#si", 'escape1', $text);
