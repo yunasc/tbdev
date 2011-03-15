@@ -46,12 +46,19 @@ if ($search != '' || $class) {
 	if (strlen($letter) > 1)
 		die;
 
-	if ($letter != "" && strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false)
+/*	if ($letter != "" && strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false)
 		$letter = "a";
 	$query = ( $letter != "" ? "username LIKE '$letter%' AND " : "") . "status='confirmed'";
 	if ($letter == "")
 		$letter = "a";
-	$q = "letter=$letter";
+	$q = "letter=$letter";*/
+
+	if ($letter != "" && strpos("abcdefghijklmnopqrstuvwxyz" . "абвгдеёжзийклмнопрстуфхцчшщъыьэюя", $letter) === false)
+		$letter = "";
+	$query = ( $letter != "" ? "username LIKE '$letter%' AND " : "") . "status='confirmed'";
+	if ($letter != "")
+		$q = "letter=$letter";
+
 }
 
 if (is_valid_user_class($class)) {
@@ -91,6 +98,22 @@ print("<a href=\"users.php?letter=$l\"><b>$L</b></a>\n");
 
 print("</p>\n");
 
+print("<p>\n");
+
+$russian_letters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"; // Да, Я догадываюсь что слова не могут начинатся с ьъы, но Юзернеймы могут!
+$russian_upperscase_letters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+foreach (str_split($russian_letters) as $key => $l)
+{
+$L = $russian_upperscase_letters[$key];
+if ($l == $letter)
+print("<b>$L</b>\n");
+else
+print("<a href=\"users.php?letter=$l\"><b>$L</b></a>\n");
+}
+
+print("</p>\n");
+
+$q .= ($q ? "&amp;" : "");
 $page = $_GET['page'];
 $perpage = 100;
 
@@ -110,19 +133,19 @@ for ($i = 1; $i <= $pages; ++$i)
 if ($i == $page)
 $pagemenu .= "<b>$i</b>\n";
 else
-$pagemenu .= "<a href=\"users.php?$q&page=$i\"><b>$i</b></a>\n";
+$pagemenu .= "<a href=\"users.php?{$q}page=$i\"><b>$i</b></a>\n";
 
 if ($page == 1)
 $browsemenu .= "<b>&lt;&lt; Пред</b>";
 else
-$browsemenu .= "<a href=\"users.php?$q&page=" . ($page - 1) . "\"><b>&lt;&lt; Пред</b></a>";
+$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page - 1) . "\"><b>&lt;&lt; Пред</b></a>";
 
 $browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
-if ($page == $pages)
+if ($page == $pages || (($page * $perpage) > $arr[0]))
 $browsemenu .= "<b>След &gt;&gt;</b>";
 else
-$browsemenu .= "<a href=\"users.php?$q&page=" . ($page + 1) . "\"><b>След &gt;&gt;</b></a>";
+$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page + 1) . "\"><b>След &gt;&gt;</b></a>";
 
 print("<p>$browsemenu<br />$pagemenu</p>");
 
