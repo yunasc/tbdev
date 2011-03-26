@@ -196,9 +196,12 @@ function mozWrap(txtarea, open, close)
         var s1 = (txtarea.value).substring(0,selStart);
         var s2 = (txtarea.value).substring(selStart, selEnd)
         var s3 = (txtarea.value).substring(selEnd, selLength);
+        var sT = txtarea.scrollTop, sL = txtarea.scrollLeft;
         txtarea.value = s1 + open + s2 + close + s3;
         txtarea.focus();
-        return;
+        txtarea.scrollTop=sT;
+        txtarea.scrollLeft=sL;
+	return;
 }
 
 language=1;
@@ -493,9 +496,12 @@ function translateAlltoCyrillic(){
 	<div class="editorbutton" OnClick="translateAlltoCyrillic()"><img title="Перевод текста с латиницы в кириллицу" src="editor/rus.gif"></div>
 	<div class="editorbutton" OnClick="translateAlltoLatin()"><img title="Перевод текста с кириллицы в латиницу" src="editor/eng.gif"></div>
 	<div class="editorbutton" OnClick="changelanguage()"><img title="Автоматический перевод текста" src="editor/auto.gif"></div>
-	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="family" onChange="InsertCode('family',this.options[this.selectedIndex].value)"><option style="font-family:Verdana;" value="Verdana">Verdana</option><option style="font-family:Arial;" value="Arial">Arial</option><option style="font-family:'Courier New';" value="Courier New">Courier New</option><option style="font-family:Tahoma;" value="Tahoma">Tahoma</option><option style="font-family:Helvetica;" value="Helvetica">Helvetica</option></select></div>
-	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)"><option style="color:black;" value="black">Цвет шрифта</option><option style="color:silver;" value="silver">Цвет шрифта</option><option style="color:gray;" value="gray">Цвет шрифта</option><option style="color:white;" value="white">Цвет шрифта</option><option style="color:maroon;" value="maroon">Цвет шрифта</option><option style="color:red;" value="red">Цвет шрифта</option><option style="color:purple;" value="purple">Цвет шрифта</option><option style="color:fuchsia;" value="fuchsia">Цвет шрифта</option><option style="color:green;" value="green">Цвет шрифта</option><option style="color:lime;" value="lime">Цвет шрифта</option><option style="color:olive;" value="olive">Цвет шрифта</option><option style="color:yellow;" value="yellow">Цвет шрифта</option><option style="color:navy;" value="navy">Цвет шрифта</option><option style="color:blue;" value="blue">Цвет шрифта</option><option style="color:teal;" value="teal">Цвет шрифта</option><option style="color:aqua;" value="aqua">Цвет шрифта</option></select></div>
-	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)"><option value="8">Размер 8</option><option value="10">Размер 10</option><option value="12">Размер 12</option><option value="14">Размер 14</option><option value="18">Размер 18</option><option value="24">Размер 24</option></select></div>
+	<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="family" onChange="InsertCode('family',this.options[this.selectedIndex].value)"><option style="font-family:Verdana;" value="Verdana">Verdana</option><option style="font-family:Arial;" value="Arial">Arial</option><option style="font-family:'Courier New';" value="Courier New">Courier New</option><option style="font-family:Tahoma;" value="Tahoma">Tahoma</option><option style="font-family:Helvetica;" value="Helvetica">Helvetica</option></select></div>-->
+	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="family" onChange="InsertCode('family',this.options[this.selectedIndex].value)" onFocus="this.value='Шрифт'"><option style="font-weight:bold;" value="Шрифт">Шрифт</option><option style="font-family:Verdana;" value="Verdana">Verdana</option><option style="font-family:Arial;" value="Arial">Arial</option><option style="font-family:'Courier New';" value="Courier New">Courier New</option><option style="font-family:Tahoma;" value="Tahoma">Tahoma</option><option style="font-family:Helvetica;" value="Helvetica">Helvetica</option></select></div>
+	<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)"><option style="color:black;" value="black">Цвет шрифта</option><option style="color:silver;" value="silver">Цвет шрифта</option><option style="color:gray;" value="gray">Цвет шрифта</option><option style="color:white;" value="white">Цвет шрифта</option><option style="color:maroon;" value="maroon">Цвет шрифта</option><option style="color:red;" value="red">Цвет шрифта</option><option style="color:purple;" value="purple">Цвет шрифта</option><option style="color:fuchsia;" value="fuchsia">Цвет шрифта</option><option style="color:green;" value="green">Цвет шрифта</option><option style="color:lime;" value="lime">Цвет шрифта</option><option style="color:olive;" value="olive">Цвет шрифта</option><option style="color:yellow;" value="yellow">Цвет шрифта</option><option style="color:navy;" value="navy">Цвет шрифта</option><option style="color:blue;" value="blue">Цвет шрифта</option><option style="color:teal;" value="teal">Цвет шрифта</option><option style="color:aqua;" value="aqua">Цвет шрифта</option></select></div>-->
+	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)" onFocus="this.value='Цвет'"><option style="font-weight:bold;" value="Цвет">Цвет</option><option style="color:black;" value="black">Black</option><option style="color:silver;" value="silver">Silver</option><option style="color:gray;" value="gray">Gray</option><option style="color:white;" value="white">White</option><option style="color:maroon;" value="maroon">Maroon</option><option style="color:red;" value="red">Red</option><option style="color:purple;" value="purple">Purple</option><option style="color:fuchsia;" value="fuchsia">Fuchsia</option><option style="color:green;" value="green">Green</option><option style="color:lime;" value="lime">Lime</option><option style="color:olive;" value="olive">Olive</option><option style="color:yellow;" value="yellow">Yellow</option><option style="color:navy;" value="navy">Navy</option><option style="color:blue;" value="blue">Blue</option><option style="color:teal;" value="teal">Teal</option><option style="color:aqua;" value="aqua">Aqua</option></select></div>
+	<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)"><option value="8">Размер 8</option><option value="10">Размер 10</option><option value="12">Размер 12</option><option value="14">Размер 14</option><option value="18">Размер 18</option><option value="24">Размер 24</option></select></div>-->
+	<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)" onFocus="this.value='Размер'"><option style="font-weight:bold;" value="Размер">Размер</option><option value="8">Размер 8</option><option value="10">Размер 10</option><option value="12">Размер 12</option><option value="14">Размер 14</option><option value="18">Размер 18</option><option value="24">Размер 24</option></select></div>
 </div>
 <?php
 }
@@ -782,6 +788,13 @@ function encode_php($text) {
     return $text;
 }
 
+function code_nobb ($matches){
+	$code = $matches[1];
+	$code = str_replace("[", "&#91;", $code);
+	$code = str_replace("]", "&#93;", $code);
+	return '[code]'.$code.'[/code]';
+}
+
 function format_comment($text, $strip_html = true) {
 	global $smilies, $privatesmilies;
 	$smiliese = $smilies;
@@ -794,6 +807,8 @@ function format_comment($text, $strip_html = true) {
   // (What took us so long? :blush:)- wyz
 
 	$s = str_replace(";)", ":wink:", $s);
+
+	$s = preg_replace_callback("#\[code\](.*?)\[/code\]#si","code_nobb",$s);
 
 	if ($strip_html)
 		$s = htmlspecialchars_uni($s);
