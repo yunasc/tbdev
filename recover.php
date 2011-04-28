@@ -101,7 +101,7 @@ EOD;
 
 Вот ваши новые данные для этого аккаунта:
 
-    Польщователь: {$arr["username"]}
+    Пользователь: {$arr["username"]}
     Пароль:       $newpassword
 
 Вы можете войти на сайт тут: $DEFAULTBASEURL/login.php
