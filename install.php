@@ -1,15 +1,8 @@
 <?php
 
-require_once('include/secrets.php');
+define('IN_TRACKER', true);
+require_once('include/init.php');
 
-$_DB_CONFIG = array(
-	'host' => $mysql_host,
-	'user' => $mysql_user,
-	'passwd' => $mysql_pass,
-	'db_names' => array ('DEFAULT_DB' => $mysql_db),
-	'charset' => $mysql_charset,
-);
-
-die('todo');
+header('Location: '.$DEFAULTBASEURL.'/install/');
 
 ?>
