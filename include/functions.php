@@ -705,8 +705,8 @@ function stdfoot() {
 
 function genbark($x,$y) {
 	stdhead($y);
-	print('<h2>' . htmlspecialchars_uni($y) . '</h2>\n');
-	print('<p>' . htmlspecialchars_uni($x) . '</p>\n');
+	print('<h2>' . htmlspecialchars_uni($y) . '</h2>');
+	print('<p>' . htmlspecialchars_uni($x) . '</p>');
 	stdfoot();
 	exit();
 }
