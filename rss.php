@@ -84,7 +84,7 @@ $aktivl="нет качающих";
 
 // ddl or detail ?
 if ($feed == "dl")
-$link = "$DEFAULTBASEURL/download.php/$id/". ($passkey ? "$passkey/" : "") ."$filename";
+$link = "$DEFAULTBASEURL/download.php?id=$id". ($passkey ? "&amp;passkey=$passkey" : "") ."&amp;name=$filename";
 else
 $link = "$DEFAULTBASEURL/details.php?id=$id&amp;hit=1";
 
