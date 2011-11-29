@@ -85,7 +85,7 @@ if ($action == "viewmailbox") {
                 }
                 //  End -->
         </script>
-        <script language="javascript" type="text/javascript" src="js/functions.js"></script>
+        <!--<script language="javascript" type="text/javascript" src="js/functions.js"></script>-->
         <H1><?=$mailbox_name?></H1>
         <DIV align="right"><FORM action="message.php" method="get">
         <INPUT type="hidden" name="action" value="viewmailbox"><?=$tracker_lang['go_to'];?>: <SELECT name="box">
