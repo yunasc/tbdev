@@ -285,7 +285,7 @@ if ($action == "sendmessage") {
         $std = $_GET["std"];
 
         if (($auto || $std ) && get_user_class() < UC_MODERATOR)
-                stderr($tracker_lang['error'], "Досступ запрещен.");
+                stderr($tracker_lang['error'], $tracker_lang['access_denied']);
 
         $res = sql_query("SELECT * FROM users WHERE id=$receiver") or die(mysql_error());
         $user = mysql_fetch_assoc($res);
