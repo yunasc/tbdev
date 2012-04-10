@@ -39,9 +39,8 @@ exit;
 }
 
 $id = (int) $_GET["torrent"];
-
-if (!isset($id))
-       bark($tracker_lang['torrent_not_selected']);
+if (!is_valid_id($id))
+	bark($tracker_lang['torrent_not_selected']);
 
 $res = sql_query("SELECT name FROM torrents WHERE id = $id") or sqlerr(__FILE__, __LINE__);
 $arr = mysql_fetch_array($res);
