@@ -43,6 +43,8 @@ if ($users >= $maxusers)
 if (!mkglobal("wantusername:wantpassword:passagain:email"))
 	stderr($tracker_lang['error'], $tracker_lang['dad']);
 
+$inviter = $invitedroot = 0;
+
 if ($deny_signup && $allow_invite_signup) {
 	if (empty($_POST["invite"]))
 		stderr($tracker_lang['error'], "Для регистрации вам нужно ввести код приглашения!");
