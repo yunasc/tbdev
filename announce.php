@@ -50,7 +50,7 @@ foreach (array('passkey','info_hash','peer_id','port','downloaded','uploaded','l
 			if (strlen($GLOBALS[$x]) != 20)
 				err('Invalid '.$x.' (' . strlen($GLOBALS[$x]) . ' - ' . urlencode($GLOBALS[$x]) . ')');
 			if (strlen($passkey) != 32)
-				err('Invalid passkey (' . strlen($passkey) . ' - $passkey)');
+				err('Invalid passkey (' . strlen($passkey) . ' - ' . $passkey . ')');
 $ip = getip();
 $rsize = 50;
 
