@@ -360,6 +360,7 @@ function user_session() {
 	$updateset[] = "time = ".sqlesc($ctime);
 	$updateset[] = "url = ".sqlesc($url);
 	$updateset[] = "useragent = ".sqlesc($agent);
+	session_write_close();
 	if (count($updateset))
 		sql_query("UPDATE sessions SET ".implode(", ", $updateset)." WHERE ".implode(" AND ", $where)) or sqlerr(__FILE__,__LINE__);
 	if (mysql_modified_rows() < 1)
