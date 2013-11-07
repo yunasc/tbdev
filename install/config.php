@@ -4,6 +4,7 @@ define('CWD', (($getcwd = getcwd()) ? $getcwd : '.'));
 
 require_once(CWD . '/../include/secrets.php');
 
+// Если вы такой б...н, что залезли сюда - то брысь на 2 строки выше
 $_DB_CONFIG = array(
 	'host' => $mysql_host,
 	'user' => $mysql_user,
