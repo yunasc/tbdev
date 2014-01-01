@@ -52,7 +52,7 @@ if (!isset($CURUSER) || ($CURUSER["id"] != $row["owner"] && get_user_class() < U
 	print("<form name=\"edit\" method=post action=takeedit.php enctype=multipart/form-data>\n");
 	print("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
 	if (isset($_GET["returnto"]))
-		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars($_GET["returnto"]) . "\" />\n");
+		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($_GET["returnto"]) . "\" />\n");
 	print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
 	print("<tr><td class=\"colhead\" colspan=\"2\">Редактировать торрент</td></tr>");
 	tr($tracker_lang['torrent_file'], "<input type=file name=tfile size=80>\n", 1);
@@ -67,9 +67,9 @@ if ((strpos($row["ori_descr"], "<") === false) || (strpos($row["ori_descr"], "&l
   $c = "";
 else
   $c = " checked";
-	//tr("Описание", "<textarea name=\"descr\" rows=\"10\" cols=\"80\">" . htmlspecialchars($row["ori_descr"]) . "</textarea><br />(HTML <b>не</b> разрешен. Нажмите <a href=tags.php>сюда</a> для получения информации о тегах.)", 1);
+	//tr("Описание", "<textarea name=\"descr\" rows=\"10\" cols=\"80\">" . htmlspecialchars_uni($row["ori_descr"]) . "</textarea><br />(HTML <b>не</b> разрешен. Нажмите <a href=tags.php>сюда</a> для получения информации о тегах.)", 1);
 	print("<tr><td class=rowhead style='padding: 3px'>".$tracker_lang['description']."</td><td>");
-	textbbcode("edit","descr",htmlspecialchars($row["ori_descr"]));
+	textbbcode("edit","descr",htmlspecialchars_uni($row["ori_descr"]));
 	print("</td></tr>\n");
 
 	$s = "<select name=\"type\">\n";
@@ -79,7 +79,7 @@ else
 		$s .= "<option value=\"" . $subrow["id"] . "\"";
 		if ($subrow["id"] == $row["category"])
 			$s .= " selected=\"selected\"";
-		$s .= ">" . htmlspecialchars($subrow["name"]) . "</option>\n";
+		$s .= ">" . htmlspecialchars_uni($subrow["name"]) . "</option>\n";
 	}
 
 	$s .= "</select>\n";
@@ -107,7 +107,7 @@ else
   print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"5\" checked>&nbsp;Другое:</td><td><input type=\"text\" size=\"40\" name=\"reason[]\">(Обязательно)</td></tr>\n");
 	print("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
 	if (isset($_GET["returnto"]))
-		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars($_GET["returnto"]) . "\" />\n");
+		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($_GET["returnto"]) . "\" />\n");
   print("<td colspan=\"2\" align=\"center\"><input type=submit value='Удалить' style='height: 25px'></td></tr>\n");
   print("</table>");
 	print("</form>\n");

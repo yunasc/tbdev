@@ -74,8 +74,8 @@ if ($action == "edituser") {
 	$mpup = $_POST["upchange"];
 	$mpdown = $_POST["downchange"];
 	$support = $_POST["support"];
-	$supportfor = htmlspecialchars($_POST["supportfor"]);
-	$modcomm = htmlspecialchars($_POST["modcomm"]);
+	$supportfor = htmlspecialchars_uni($_POST["supportfor"]);
+	$modcomm = htmlspecialchars_uni($_POST["modcomm"]);
 	$deluser = $_POST["deluser"];
 
 	$class = 0 + $_POST["class"];
@@ -169,7 +169,7 @@ if ($action == "edituser") {
 			$nowdate = sqlesc(get_date_time());
 			if (!isset($_POST["enareason"]) || empty($_POST["enareason"]))
 				puke("Введите причину почему вы включаете пользователя!");
-			$enareason = htmlspecialchars($_POST["enareason"]);
+			$enareason = htmlspecialchars_uni($_POST["enareason"]);
 			$modcomment = date("Y-m-d") . " - Включен пользователем " . $CURUSER['username'] . ".\nПричина: $enareason\n" . $modcomment;
 			sql_query('DELETE FROM users_ban WHERE userid = '.$userid) or sqlerr();
 			$updateset[] = "enabled = 'yes'";
@@ -180,7 +180,7 @@ if ($action == "edituser") {
 			$dur = $dislength . " недел" . ($dislength > 1 ? "и" : "ю");
 			if (!isset($_POST["disreason"]) || empty($_POST["disreason"]))
 				puke("Введите причину почему вы отключаете пользователя!");
-			$disreason = htmlspecialchars($_POST["disreason"]);
+			$disreason = htmlspecialchars_uni($_POST["disreason"]);
 			$modcomment = date("Y-m-d") . " - Отключен пользователем " . $CURUSER['username'] . ($disuntil != '0000-00-00 00:00:00' ? ' на ' . $dur : '') . ".\nПричина: $disreason\n" . $modcomment;
 			sql_query('INSERT INTO users_ban (userid, disuntil, disby, reason) VALUES ('.implode(', ', array_map('sqlesc', array($userid, $disuntil, $modifier, $disreason))).')') or sqlerr();
 			$updateset[] = "enabled = 'no'";

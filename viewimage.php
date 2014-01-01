@@ -31,7 +31,7 @@ dbconn(false);
 
 loggedinorreturn();
 
-$pic = htmlspecialchars((string) $_GET["pic"]);
+$pic = htmlspecialchars_uni((string) $_GET["pic"]);
 
 stdhead("Просмотр картинки");
 print("<h1>$pic</h1>\n");

@@ -37,9 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		stderr($tracker_lang['error'], $tracker_lang['missing_form_data']);
 	if ($_POST["password"] != $_POST["password2"])
 		stderr($tracker_lang['error'], $tracker_lang['password_mismatch']);
-	$username = sqlesc(htmlspecialchars($_POST["username"]));
+	$username = sqlesc(htmlspecialchars_uni($_POST["username"]));
 	$password = $_POST["password"];
-	$email = sqlesc(htmlspecialchars($_POST["email"]));
+	$email = sqlesc(htmlspecialchars_uni($_POST["email"]));
 	$secret = mksecret();
 	$passhash = sqlesc(md5($secret . $password . $secret));
 	$secret = sqlesc($secret);

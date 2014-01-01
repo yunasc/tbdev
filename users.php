@@ -40,7 +40,7 @@ if ($class == '-' || !is_valid_user_class($class))
 if ($search != '' || $class) {
 	$query = "username LIKE '%" . sqlwildcardesc("$search") . "%' AND status='confirmed'";
 	if ($search)
-		$q = "search=" . htmlspecialchars($search);
+		$q = "search=" . htmlspecialchars_uni($search);
 } else {
 	$letter = trim($_GET["letter"]);
 	if (strlen($letter) > 1)
@@ -71,7 +71,7 @@ stdhead("Пользователи");
 print("<h1>Пользователи</h1>\n");
 
 print("<form method=\"get\" action=\"users.php\">\n");
-print("Поиск: <input type=\"text\" size=\"30\" name=\"search\" value=\"".htmlspecialchars($search)."\">\n");
+print("Поиск: <input type=\"text\" size=\"30\" name=\"search\" value=\"".htmlspecialchars_uni($search)."\">\n");
 print("<select name=\"class\">\n");
 print("<option value=\"-\">(Все уровни)</option>\n");
 for ($i = 0;;++$i) {

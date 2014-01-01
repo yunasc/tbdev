@@ -51,7 +51,7 @@ stdfoot();
 die();
 }
 $delid = (int) $_GET['delid'];
-$name = htmlspecialchars($_GET['cat']);
+$name = htmlspecialchars_uni($_GET['cat']);
 if($delid > 0) {
 echo("Вы действителньо хотите удалить эту категорию? ($name) ( <strong><a href=\"". $_SERVER['PHP_SELF'] . "?delid=$delid&cat=$name&sure=yes\">Да</a></strong> / <strong><a href=\"". $_SERVER['PHP_SELF'] . "\">Нет</a></strong> )");
 end_frame();
@@ -64,8 +64,8 @@ die();
 $edited = $_GET['edited'];
 if($edited == 1) {
 $id = (int) $_GET['id'];
-$cat_name = htmlspecialchars($_GET['cat_name']);
-$cat_img = htmlspecialchars($_GET['cat_img']);
+$cat_name = htmlspecialchars_uni($_GET['cat_name']);
+$cat_img = htmlspecialchars_uni($_GET['cat_img']);
 $cat_sort = (int) $_GET['cat_sort'];
 $query = "UPDATE categories SET
 name = ".sqlesc($cat_name).",
@@ -83,8 +83,8 @@ die();
 }
 
 $editid = (int) $_GET['editid'];
-$name = htmlspecialchars($_GET['name']);
-$img = htmlspecialchars($_GET['img']);
+$name = htmlspecialchars_uni($_GET['name']);
+$img = htmlspecialchars_uni($_GET['img']);
 $sort = (int) $_GET['sort'];
 if($editid > 0) {
 echo("<form name='form1' method='get' action='" . $_SERVER['PHP_SELF'] . "'>");
@@ -105,8 +105,8 @@ die();
 ///////////////////// A D D A N E W C A T E G O R Y \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 $add = $_GET['add'];
 if($add == 'true') {
-$cat_name = htmlspecialchars($_GET['cat_name']);
-$cat_img = htmlspecialchars($_GET['cat_img']);
+$cat_name = htmlspecialchars_uni($_GET['cat_name']);
+$cat_img = htmlspecialchars_uni($_GET['cat_img']);
 $cat_sort = (int) $_GET['cat_sort'];
 $query = "INSERT INTO categories SET
 name = ".sqlesc($cat_name).",

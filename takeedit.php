@@ -59,7 +59,7 @@ function uploadimage($x, $imgname, $tid) {
 
 		// Is valid filetype?
 		if (!array_key_exists($_FILES[image.$x]['type'], $allowed_types))
-			bark("Invalid file type! Image $y (".htmlspecialchars($_FILES[image.$x]['type']).")");
+			bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES[image.$x]['type']).")");
 
 		if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES[image.$x]['name']))
 			bark("Неверное имя файла (не картинка).");
@@ -290,14 +290,14 @@ if ($update_torrent) {
 
 }
 
-$name = htmlspecialchars($name);
+$name = htmlspecialchars_uni($name);
 
 $descr = unesc($_POST["descr"]);
 if (!$descr)
 	bark("Вы должны ввести описание!");
 
 $updateset[] = "name = " . sqlesc($name);
-$updateset[] = "search_text = " . sqlesc(htmlspecialchars("$shortfname $dname $torrent"));
+$updateset[] = "search_text = " . sqlesc(htmlspecialchars_uni("$shortfname $dname $torrent"));
 $updateset[] = "descr = " . sqlesc($descr);
 $updateset[] = "ori_descr = " . sqlesc($descr);
 $updateset[] = "category = " . (0 + $type);

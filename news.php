@@ -136,10 +136,10 @@ if ($action == 'edit')
 	  print("<form method=post name=news action=?action=edit&newsid=$newsid>\n");
 	  print("<table border=1 cellspacing=0 cellpadding=5>\n");
 	  print("<tr><td class=colhead>Редактирование новости<input type=hidden name=returnto value=$returnto></td></tr>\n");
-	  print("<tr><td>Тема: <input type=text name=subject maxlength=70 size=50 value=\"" . htmlspecialchars($arr["subject"]) . "\"/></td></tr>");
+	  print("<tr><td>Тема: <input type=text name=subject maxlength=70 size=50 value=\"" . htmlspecialchars_uni($arr["subject"]) . "\"/></td></tr>");
 	  print("<tr><td style='padding: 0px'>");
-	  textbbcode("news","body",htmlspecialchars($arr["body"]));
-	  //<textarea name=body cols=145 rows=5 style='border: 0px'>" . htmlspecialchars($arr["body"]) . 
+	  textbbcode("news","body",htmlspecialchars_uni($arr["body"]));
+	  //<textarea name=body cols=145 rows=5 style='border: 0px'>" . htmlspecialchars_uni($arr["body"]) . 
 	  print("</textarea></td></tr>\n");
 	  print("<tr><td align=center><input type=submit value='Отредактировать'></td></tr>\n");
 	  print("</table>\n");
@@ -157,7 +157,7 @@ if ($warning)
 print("<form method=post name=news action=?action=add>\n");
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
 print("<tr><td class=colhead>Добавить новость</td></tr>\n");
-print("<tr><td>Тема: <input type=text name=subject maxlength=40 size=50 value=\"" . htmlspecialchars($arr["subject"]) . "\"/></td></tr>");
+print("<tr><td>Тема: <input type=text name=subject maxlength=40 size=50 value=\"" . htmlspecialchars_uni($arr["subject"]) . "\"/></td></tr>");
 print("<tr><td style='padding: 0px'>");
 textbbcode("news","body","");
 //<textarea name=body cols=145 rows=5 style='border: 0px'>
@@ -200,7 +200,7 @@ if (mysql_num_rows($res) > 0)
     print("</td></tr></table></p>\n");
 
 	  begin_table(true);
-      print("<tr valign=top><td><b>".htmlspecialchars($subject)."</b></td></tr>\n");
+      print("<tr valign=top><td><b>".htmlspecialchars_uni($subject)."</b></td></tr>\n");
 	  print("<tr valign=top><td class=comment>".format_comment($body)."</td></tr>\n");
 	  end_table();
 	}

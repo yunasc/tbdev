@@ -39,7 +39,7 @@ $searchstr = '';
 
 if (isset($_GET['search']))
 	$searchstr = (string) unesc($_GET["search"]);
-$cleansearchstr = htmlspecialchars($searchstr);
+$cleansearchstr = htmlspecialchars_uni($searchstr);
 if (empty($cleansearchstr))
 unset($cleansearchstr);
 
@@ -259,7 +259,7 @@ foreach ($cats as $cat)
 {
         $catsperrow = 5;
         print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
-        print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat['id'], $wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars($cat['name']) . "</a></td>\n");
+        print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat['id'], $wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars_uni($cat['name']) . "</a></td>\n");
         $i++;
 }
 
@@ -284,7 +284,7 @@ if ($lastrowcols != 0)
 <tr><td class="embedded">
 <center>
 <?=$tracker_lang['search'];?>:
-<input type="text" id="searchinput" name="search" size="40" autocomplete="off" ondblclick="suggest(event.keyCode,this.value);" onkeyup="suggest(event.keyCode,this.value);" onkeypress="return noenter(event.keyCode);" value="<?= htmlspecialchars($searchstr) ?>" />
+<input type="text" id="searchinput" name="search" size="40" autocomplete="off" ondblclick="suggest(event.keyCode,this.value);" onkeyup="suggest(event.keyCode,this.value);" onkeypress="return noenter(event.keyCode);" value="<?= htmlspecialchars_uni($searchstr) ?>" />
 <?=$tracker_lang['in'];?>
 <select name="incldead">
 <option value="0"><?=$tracker_lang['active'];?></option>
@@ -303,7 +303,7 @@ foreach ($cats as $cat) {
 	$catdropdown .= "<option value=\"" . $cat["id"] . "\"";
 	if (isset($_GET['cat']) && $cat["id"] == $_GET["cat"])
 		$catdropdown .= " selected=\"selected\"";
-	$catdropdown .= ">" . htmlspecialchars($cat["name"]) . "</option>\n";
+	$catdropdown .= ">" . htmlspecialchars_uni($cat["name"]) . "</option>\n";
 }
 
 ?>
@@ -321,7 +321,7 @@ foreach ($cats as $cat) {
 <?
 
 if (isset($cleansearchstr))
-print("<tr><td class=\"index\" colspan=\"12\">".$tracker_lang['search_results_for']." \"" . htmlspecialchars($searchstr) . "\"</td></tr>\n");
+print("<tr><td class=\"index\" colspan=\"12\">".$tracker_lang['search_results_for']." \"" . htmlspecialchars_uni($searchstr) . "\"</td></tr>\n");
 
 print("</td></tr>");
 

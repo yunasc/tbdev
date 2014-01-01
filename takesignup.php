@@ -168,11 +168,11 @@ if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ag
 // check if email addy is already in use
 /*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or die(mysql_error());
 if ($a[0] != 0)
-	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");*/
+	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");*/
 
 $a = get_row_count('users', 'WHERE email = '.sqlesc($email));
 if ($a != 0)
-	bark("E-mail адрес ".htmlspecialchars($email)." уже зарегистрирован в системе.");
+	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");
 
 if ($use_captcha && $users) {
 	if (!$_POST['imagestring'])
@@ -219,7 +219,7 @@ $ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gen
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("Пользователь $wantusername уже зарегистрирован!");
-	bark("Неизвестная ошибка. Ответ от сервера mySQL: ".htmlspecialchars(mysql_error()));
+	bark("Неизвестная ошибка. Ответ от сервера mySQL: ".htmlspecialchars_uni(mysql_error()));
 }
 
 $id = mysql_insert_id();

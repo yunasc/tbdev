@@ -63,20 +63,20 @@ if ($action == 'add') {
         }
         if (!isset($_POST["description"])) {
         stderr("","<p>Напишите причину, по которой вы выдаете " . ($resp_type == 1?"респект":"антиреспект") . " пользователю:</p>
-        <form action=\"" . $_SERVER["PHP_SELF"] . "?action=add&amp;" . ($resp_type == 1?'good':'bad') . "&amp;type=".htmlspecialchars($type)."&amp;targetid=$targetid\" method=\"post\">
+        <form action=\"" . $_SERVER["PHP_SELF"] . "?action=add&amp;" . ($resp_type == 1?'good':'bad') . "&amp;type=".htmlspecialchars_uni($type)."&amp;targetid=$targetid\" method=\"post\">
         <input type=text name=description maxlength=300 size=100></textarea>
-		".(isset($_GET["returnto"]) ? "<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars($_GET["returnto"]) . "\" />\n" : "").
+		".(isset($_GET["returnto"]) ? "<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($_GET["returnto"]) . "\" />\n" : "").
         "<input type=submit value=".($resp_type == 1?"Респект":"Антиреспект").">
         </form>");
         }
-        sql_query ('INSERT INTO simpaty VALUES (0, ' . $targetid . ', ' . $CURUSER['id'] . ', ' . sqlesc($CURUSER['username']) . ', ' . ($resp_type==0?1:0) . ', ' . ($resp_type==1?1:0) . ', ' . sqlesc($type) . ', ' . sqlesc($current_time) . ', ' . sqlesc(htmlspecialchars($_POST["description"])) . ')') or sqlerr(__FILE__, __LINE__);
+        sql_query ('INSERT INTO simpaty VALUES (0, ' . $targetid . ', ' . $CURUSER['id'] . ', ' . sqlesc($CURUSER['username']) . ', ' . ($resp_type==0?1:0) . ', ' . ($resp_type==1?1:0) . ', ' . sqlesc($type) . ', ' . sqlesc($current_time) . ', ' . sqlesc(htmlspecialchars_uni($_POST["description"])) . ')') or sqlerr(__FILE__, __LINE__);
         if ($resp_type == 1) {
                 sql_query('UPDATE users SET simpaty = simpaty + 1 WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         } else {
                 sql_query('UPDATE users SET simpaty = simpaty - 1 WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         }
         // mod by StirolXXX (Yuna Scatari)
-		$msg = "Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars($_POST["description"]) . "[/quote]";
+		$msg = "Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars_uni($_POST["description"]) . "[/quote]";
 		$subject = "Уведомление об изменении репутации";
 		send_pm(0, $targetid, get_date_time(), $subject, $msg);
 		//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0, $targetid, NOW(), $msg, \"Уведомление об изменении репутации\")");
@@ -88,7 +88,7 @@ if ($action == 'add') {
         stdhead(($resp_type == 1?"Респект":"Антиреспект") . " добавлен");
         stdmsg($tracker_lang['success'],"<p>Пользователь успешно получил " . ($resp_type == 1?"респект":"антиреспект") . " от вас.</p>".(isset($_POST["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
         if (isset($_POST["returnto"])) {
-        	print("<p><a href=\"".htmlspecialchars($_POST["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
+        	print("<p><a href=\"".htmlspecialchars_uni($_POST["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
         }
 }
 
@@ -111,7 +111,7 @@ if ($action == 'delete') {
         stdhead();
         stdmsg($tracker_lang['success'], "<p>".($respect_type == 'good'?"Респект":"Антиреспект")." удален успешно.</p>".(isset($_GET["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
         if (isset($_GET["returnto"])) {
-        	print("<p><a href=\"".htmlspecialchars($_GET["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
+        	print("<p><a href=\"".htmlspecialchars_uni($_GET["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
         }
         stdfoot();
         die();

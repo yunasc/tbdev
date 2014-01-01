@@ -51,27 +51,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	if ($action=='edit' && !is_valid_id($pollid))
 		stderr($tracker_lang['error'],$tracker_lang['invalid_id']);
-  $question = htmlspecialchars($_POST["question"]);
-  $option0 = htmlspecialchars($_POST["option0"]);
-  $option1 = htmlspecialchars($_POST["option1"]);
-  $option2 = htmlspecialchars($_POST["option2"]);
-  $option3 = htmlspecialchars($_POST["option3"]);
-  $option4 = htmlspecialchars($_POST["option4"]);
-  $option5 = htmlspecialchars($_POST["option5"]);
-  $option6 = htmlspecialchars($_POST["option6"]);
-  $option7 = htmlspecialchars($_POST["option7"]);
-  $option8 = htmlspecialchars($_POST["option8"]);
-  $option9 = htmlspecialchars($_POST["option9"]);
-  $option10 = htmlspecialchars($_POST["option10"]);
-  $option11 = htmlspecialchars($_POST["option11"]);
-  $option12 = htmlspecialchars($_POST["option12"]);
-  $option13 = htmlspecialchars($_POST["option13"]);
-  $option14 = htmlspecialchars($_POST["option14"]);
-  $option15 = htmlspecialchars($_POST["option15"]);
-  $option16 = htmlspecialchars($_POST["option16"]);
-  $option17 = htmlspecialchars($_POST["option17"]);
-  $option18 = htmlspecialchars($_POST["option18"]);
-  $option19 = htmlspecialchars($_POST["option19"]);
+  $question = htmlspecialchars_uni($_POST["question"]);
+  $option0 = htmlspecialchars_uni($_POST["option0"]);
+  $option1 = htmlspecialchars_uni($_POST["option1"]);
+  $option2 = htmlspecialchars_uni($_POST["option2"]);
+  $option3 = htmlspecialchars_uni($_POST["option3"]);
+  $option4 = htmlspecialchars_uni($_POST["option4"]);
+  $option5 = htmlspecialchars_uni($_POST["option5"]);
+  $option6 = htmlspecialchars_uni($_POST["option6"]);
+  $option7 = htmlspecialchars_uni($_POST["option7"]);
+  $option8 = htmlspecialchars_uni($_POST["option8"]);
+  $option9 = htmlspecialchars_uni($_POST["option9"]);
+  $option10 = htmlspecialchars_uni($_POST["option10"]);
+  $option11 = htmlspecialchars_uni($_POST["option11"]);
+  $option12 = htmlspecialchars_uni($_POST["option12"]);
+  $option13 = htmlspecialchars_uni($_POST["option13"]);
+  $option14 = htmlspecialchars_uni($_POST["option14"]);
+  $option15 = htmlspecialchars_uni($_POST["option15"]);
+  $option16 = htmlspecialchars_uni($_POST["option16"]);
+  $option17 = htmlspecialchars_uni($_POST["option17"]);
+  $option18 = htmlspecialchars_uni($_POST["option18"]);
+  $option19 = htmlspecialchars_uni($_POST["option19"]);
   $sort = (int) $_POST["sort"];
   $returnto = htmlentities($_POST["returnto"]);
 
@@ -198,7 +198,7 @@ else
 <p><font color=red>*</font> обязательно</p>
 <input type=hidden name=pollid value=<?=$poll["id"]?>>
 <input type=hidden name=action value=<?=$pollid?'edit':'create'?>
-<input type=hidden name=returnto value=<?=htmlspecialchars($_GET["returnto"]);?>>
+<input type=hidden name=returnto value=<?=htmlspecialchars_uni($_GET["returnto"]);?>>
 </form>
 
 <? stdfoot(); ?>

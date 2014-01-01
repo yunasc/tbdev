@@ -38,7 +38,7 @@ stdhead("Search");
 <form method="get" action=browse.php>
 <p align="center">
 Поиск:
-<input type="text" name="search" size="40" value="<?= htmlspecialchars($searchstr) ?>" />
+<input type="text" name="search" size="40" value="<?= htmlspecialchars_uni($searchstr) ?>" />
 в
 <select name="cat">
 <option value="0">(Все типы)</option>
@@ -51,7 +51,7 @@ foreach ($cats as $cat) {
     $catdropdown .= "<option value=\"" . $cat["id"] . "\"";
     if ($cat["id"] == $_GET["cat"])
         $catdropdown .= " selected=\"selected\"";
-    $catdropdown .= ">" . htmlspecialchars($cat["name"]) . "</option>\n";
+    $catdropdown .= ">" . htmlspecialchars_uni($cat["name"]) . "</option>\n";
 }
 
 $deadchkbox = "<input type=\"checkbox\" name=\"incldead\" value=\"1\"";

@@ -61,8 +61,8 @@ $res = sql_query("SELECT COUNT(*) FROM peers") or sqlerr(__FILE__, __LINE__);
 $n = mysql_fetch_row($res);
 $n_peers = $n[0];
 
-$uporder = htmlspecialchars($_GET['uporder']);
-$catorder = htmlspecialchars($_GET["catorder"]);
+$uporder = htmlspecialchars_uni($_GET['uporder']);
+$catorder = htmlspecialchars_uni($_GET["catorder"]);
 
 if ($uporder == "lastul")
 	$orderby = "last DESC, name";

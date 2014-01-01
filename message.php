@@ -150,7 +150,7 @@ if ($action == "viewmailbox") {
                         else {
                                 $receiver = $tracker_lang['from_system'];
                         }
-                        $subject = htmlspecialchars($row['subject']);
+                        $subject = htmlspecialchars_uni($row['subject']);
                         if (strlen($subject) <= 0) {
                                 $subject = $tracker_lang['no_subject'];
                         }
@@ -239,7 +239,7 @@ if ($action == "viewmessage") {
         {
                 $unread = "";
         }
-        $subject = htmlspecialchars($message['subject']);
+        $subject = htmlspecialchars_uni($message['subject']);
         if (strlen($subject) <= 0)
         {
                 $subject = "Без темы";
@@ -304,9 +304,9 @@ if ($action == "sendmessage") {
 
                 $res = sql_query("SELECT username FROM users WHERE id=" . $msga["sender"]) or sqlerr(__FILE__, __LINE__);
                 $usra = mysql_fetch_assoc($res);
-                $body .= "\n\n\n-------- $usra[username] писал(а): --------\n".htmlspecialchars($msga['msg'])."\n";
+                $body .= "\n\n\n-------- $usra[username] писал(а): --------\n".htmlspecialchars_uni($msga['msg'])."\n";
                 // Change
-                $subject = "Re: " . htmlspecialchars($msga['subject']);
+                $subject = "Re: " . htmlspecialchars_uni($msga['subject']);
                 // End of Change
         }
 
@@ -458,7 +458,7 @@ if ($action == 'mass_pm') {
         <form method=post action=<?=$_SERVER['PHP_SELF']?> name=message>
         <input type=hidden name=action value=takemass_pm>
         <? if ($_SERVER["HTTP_REFERER"]) { ?>
-        <input type=hidden name=returnto value="<?=htmlspecialchars($_SERVER["HTTP_REFERER"]);?>">
+        <input type=hidden name=returnto value="<?=htmlspecialchars_uni($_SERVER["HTTP_REFERER"]);?>">
         <? } ?>
         <table border=1 cellspacing=0 cellpadding=5>
         <tr><td class=colhead colspan=2>Массовая рассылка для <?=$n_pms?> пользовате<?=($n_pms>1?"лей":"ля")?></td></tr>
@@ -663,7 +663,7 @@ if ($action == "forward") {
                 $message = mysql_fetch_assoc($res);
 
                 // Prepare variables
-                $subject = "Fwd: " . htmlspecialchars($message['subject']);
+                $subject = "Fwd: " . htmlspecialchars_uni($message['subject']);
                 $from = $message['sender'];
                 $orig = $message['receiver'];
 

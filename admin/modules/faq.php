@@ -100,8 +100,8 @@ function FaqAction() {
 
 	$res = sql_query("SELECT * FROM `faq` WHERE `id`=".sqlesc((int)$_GET[id])." LIMIT 1");
 	while ($arr = mysql_fetch_array($res, MYSQL_BOTH)) {
-	$arr["question"] = htmlspecialchars($arr["question"]);
-	$arr["answer"] = htmlspecialchars($arr["answer"]);
+	$arr["question"] = htmlspecialchars_uni($arr["question"]);
+	$arr["answer"] = htmlspecialchars_uni($arr["answer"]);
 	if ($arr[type] == "item") {
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=edititem\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=100%>\n");

@@ -128,7 +128,7 @@ if (count($r) > 0)
 	foreach ($r as $a)
 	{
 	  $categories .=  ($i && $i % 2 == 0) ? "</tr><tr>" : "";
-	  $categories .= "<td class=bottom style='padding-right: 5px'><input name=cat$a[id] type=\"checkbox\" " . (strpos($CURUSER['notifs'], "[cat$a[id]]") !== false ? " checked" : "") . " value='yes'>&nbsp;" . htmlspecialchars($a["name"]) . "</td>\n";
+	  $categories .= "<td class=bottom style='padding-right: 5px'><input name=cat$a[id] type=\"checkbox\" " . (strpos($CURUSER['notifs'], "[cat$a[id]]") !== false ? " checked" : "") . " value='yes'>&nbsp;" . htmlspecialchars_uni($a["name"]) . "</td>\n";
 	  ++$i;
 	}
 	$categories .= "</tr></table>\n";
@@ -141,7 +141,7 @@ tr($tracker_lang['my_default_browse'],$categories,1);
 tr($tracker_lang['my_style'], "$themes",1);
 tr($tracker_lang['my_country'], "<select name=country>\n$countries\n</select>",1);
 tr($tracker_lang['my_language'], $lang_select ,1);
-tr($tracker_lang['my_avatar_url'], "<input name=avatar size=50 value=\"" . htmlspecialchars($CURUSER["avatar"]) .
+tr($tracker_lang['my_avatar_url'], "<input name=avatar size=50 value=\"" . htmlspecialchars_uni($CURUSER["avatar"]) .
   "\"><br />\n".sprintf($tracker_lang['max_avatar_size'], $avatar_max_width, $avatar_max_height),1);
 tr($tracker_lang['my_gender'],
 "<input type=radio name=gender" . ($CURUSER["gender"] == "1" ? " checked" : "") . " value=1>".$tracker_lang['my_gender_male']."
@@ -236,14 +236,14 @@ tr(" ", "    <table cellspacing=\"3\" cellpadding=\"0\" width=\"100%\" border=\"
         <input maxLength=\"30\" size=\"25\" name=\"mirc\" value=\"" . $CURUSER["mirc"] . "\" ></td>
       </tr>
     </table>",1);
-tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=50 value=\"" . htmlspecialchars($CURUSER["website"]) . "\" /> ", 1);
+tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=50 value=\"" . htmlspecialchars_uni($CURUSER["website"]) . "\" /> ", 1);
 tr($tracker_lang['my_torrents_per_page'], "<input type=text size=10 name=torrentsperpage value=$CURUSER[torrentsperpage]> (0 = установки по умолчанию)",1);
 tr($tracker_lang['my_topics_per_page'], "<input type=text size=10 name=topicsperpage value=$CURUSER[topicsperpage]> (0 = установки по умолчанию)",1);
 tr($tracker_lang['my_messages_per_page'], "<input type=text size=10 name=postsperpage value=$CURUSER[postsperpage]> (0 = установки по умолчанию)",1);
 tr($tracker_lang['my_show_avatars'], "<input type=checkbox name=avatars" . ($CURUSER["avatars"] == "yes" ? " checked" : "") . "> (ѕользователи с маленькими каналами могут отключить эту опцию)",1);
 tr($tracker_lang['my_info'], "<textarea name=info cols=50 rows=4>" . $CURUSER["info"] . "</textarea><br />ѕоказываетс€ на вашей публичной странице. ћожет содержать <a href=tags.php target=_new>BB коды</a>.", 1);
 tr($tracker_lang['my_userbar'], "<img src=\"torrentbar/bar.php/".$CURUSER["id"].".png\" border=\"0\"><br />".$tracker_lang['my_userbar_descr'].":<br /><input type=\"text\" size=65 value=\"[url=$DEFAULTBASEURL][img]$DEFAULTBASEURL/torrentbar/bar.php/".$CURUSER["id"].".png[/img][/url]\" readonly />",1);
-tr($tracker_lang['my_mail'], "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars($CURUSER["email"]) . "\" />", 1);
+tr($tracker_lang['my_mail'], "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars_uni($CURUSER["email"]) . "\" />", 1);
 print("<tr><td colspan=\"2\" align=left><b>ѕримечание:</b> ≈сли вы смените ваш Email адрес, то вам придет запрос о подтверждении на ваш новый Email-адрес. ≈сли вы не подтвердите письмо, то Email адрес не будет изменен.</td></tr>\n");
 tr("—менить пасскей","<input type=checkbox name=resetpasskey value=1 /> (¬ы должны перекачать все активные торренты после смены пасске€)", 1);
 

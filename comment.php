@@ -97,7 +97,7 @@ if ($action == "add")
 	<tr>
 	<td class="colhead">
 <?
-	print("".$tracker_lang['add_comment']." к \"" . htmlspecialchars($arr["name"]) . "\"");
+	print("".$tracker_lang['add_comment']." к \"" . htmlspecialchars_uni($arr["name"]) . "\"");
 ?>
 	</td>
 	</tr>
@@ -148,14 +148,14 @@ elseif ($action == "quote")
 	<tr>
 	<td class="colhead">
 <?
-	print("Добавления комментария к \"" . htmlspecialchars($arr["name"]) . "\"");
+	print("Добавления комментария к \"" . htmlspecialchars_uni($arr["name"]) . "\"");
 ?>
 	</td>
 	</tr>
 	<tr>
 	<td>
 <?
-	textbbcode("comment","text",htmlspecialchars($text));
+	textbbcode("comment","text",htmlspecialchars_uni($text));
 ?>
 	</td></tr></table>
 
@@ -212,14 +212,14 @@ elseif ($action == "edit")
 	<tr>
 	<td class="colhead">
 <?
-	print("Редактирование комментария к \"" . htmlspecialchars($arr["name"]) . "\"");
+	print("Редактирование комментария к \"" . htmlspecialchars_uni($arr["name"]) . "\"");
 ?>
 	</td>
 	</tr>
 	<tr>
 	<td>
 <?
-	textbbcode("comment","text",htmlspecialchars($arr["text"]));
+	textbbcode("comment","text",htmlspecialchars_uni($arr["text"]));
 ?>
 	</td></tr></table>
 
@@ -306,7 +306,7 @@ elseif ($action == "vieworiginal")
   print("<h1>Оригинальное содержание комментария №$commentid</h1><p>\n");
 	print("<table width=500 border=1 cellspacing=0 cellpadding=5>");
   print("<tr><td class=comment>\n");
-	echo htmlspecialchars($arr["ori_text"]);
+	echo htmlspecialchars_uni($arr["ori_text"]);
   print("</td></tr></table>\n");
 
   $returnto = "details.php?id={$arr["tid"]}&amp;viewcomm=$commentid#comm$commentid";

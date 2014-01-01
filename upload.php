@@ -72,7 +72,7 @@ $s = "<select name=\"type\">\n<option value=\"0\">(".$tracker_lang['choose'].")<
 
 $cats = genrelist();
 foreach ($cats as $row)
-	$s .= "<option value=\"" . $row["id"] . "\">" . htmlspecialchars($row["name"]) . "</option>\n";
+	$s .= "<option value=\"" . $row["id"] . "\">" . htmlspecialchars_uni($row["name"]) . "</option>\n";
 
 $s .= "</select>\n";
 tr($tracker_lang['type'], $s, 1);

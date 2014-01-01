@@ -134,27 +134,27 @@ $updateset[] = "icq = " . sqlesc($icq);
 $msn = unesc($_POST["msn"]);
 if (strlen($msn) > 30)
     bark("Жаль, Ваш msn слишком длинный  (Макс - 30)");
-$updateset[] = "msn = " . sqlesc(htmlspecialchars($msn));
+$updateset[] = "msn = " . sqlesc(htmlspecialchars_uni($msn));
 
 $aim = unesc($_POST["aim"]);
 if (strlen($aim) > 30)
     bark("Жаль, Ваш aim слишком длинный  (Макс - 30)");
-$updateset[] = "aim = " . sqlesc(htmlspecialchars($aim));
+$updateset[] = "aim = " . sqlesc(htmlspecialchars_uni($aim));
 
 $yahoo = unesc($_POST["yahoo"]);
 if (strlen($yahoo) > 30)
     bark("Жаль, Ваш yahoo слишком длинный  (Макс - 30)");
-$updateset[] = "yahoo = " . sqlesc(htmlspecialchars($yahoo));
+$updateset[] = "yahoo = " . sqlesc(htmlspecialchars_uni($yahoo));
 
 $mirc = unesc($_POST["mirc"]);
 if (strlen($mirc) > 30)
     bark("Жаль, Ваш mirc слишком длинный  (Макс - 30)");
-$updateset[] = "mirc = " . sqlesc(htmlspecialchars($mirc));
+$updateset[] = "mirc = " . sqlesc(htmlspecialchars_uni($mirc));
 
 $skype = unesc($_POST["skype"]);
 if (strlen($skype) > 20)
     bark("Жаль, Ваш skype слишком длинный  (Макс - 20)");
-$updateset[] = "skype = " . sqlesc(htmlspecialchars($skype));
+$updateset[] = "skype = " . sqlesc(htmlspecialchars_uni($skype));
 
 /*
 if ($privacy != "normal" && $privacy != "low" && $privacy != "strong")

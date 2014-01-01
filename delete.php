@@ -86,7 +86,7 @@ write_log("Торрент $id ($row[name]) был удален пользователем $CURUSER[username] 
 stdhead("Торрент удален!");
 
 if (isset($_POST["returnto"]))
-	$ret = "<a href=\"" . htmlspecialchars($_POST["returnto"]) . "\">Назад</a>";
+	$ret = "<a href=\"" . htmlspecialchars_uni($_POST["returnto"]) . "\">Назад</a>";
 else
 	$ret = "<a href=\"$DEFAULTBASEURL/\">На главную</a>";
 

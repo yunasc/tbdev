@@ -59,8 +59,8 @@ function maketable($res)
       else
         $ratio = "---";
     $catid = $arr["catid"];
-	$catimage = htmlspecialchars($arr["image"]);
-	$catname = htmlspecialchars($arr["catname"]);
+	$catimage = htmlspecialchars_uni($arr["image"]);
+	$catname = htmlspecialchars_uni($arr["catname"]);
 	$ttl = ($ttl_days*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($arr["added"])) / 3600);
 	if ($ttl == 1) $ttl .= "&nbsp;час"; else $ttl .= "&nbsp;часов";
 	$size = str_replace(" ", "<br />", mksize($arr["size"]));
@@ -319,7 +319,7 @@ if ($user["website"])
 //if ($user['donated'] > 0 && (get_user_class() >= UC_MODERATOR || $CURUSER["id"] == $user["id"]))
 //  print("<tr><td class=rowhead>Donated</td><td align=left>$$user[donated]</td></tr>\n");
 if ($user["avatar"])
-	print("<tr><td class=\"rowhead\">Аватар</td><td align=left><img src=\"" . htmlspecialchars($user["avatar"]) . "\"></td></tr>\n");
+	print("<tr><td class=\"rowhead\">Аватар</td><td align=left><img src=\"" . htmlspecialchars_uni($user["avatar"]) . "\"></td></tr>\n");
 print("<tr><td class=\"rowhead\">Класс</td><td align=\"left\"><b>" . get_user_class_color($user["class"], get_user_class_name($user["class"])) . ($user["title"] != "" ? " / <span style=\"color: purple;\">{$user["title"]}</span>" : "") . "</b></td></tr>\n");
 print("<tr><td class=\"rowhead\">Пол</td><td align=\"left\">$gender</td></tr>\n");
 if($user["birthday"]!='0000-00-00') {
@@ -418,8 +418,8 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
   print("<input type=\"hidden\" name=\"userid\" value=\"$id\">\n");
   print("<input type=\"hidden\" name=\"returnto\" value=\"userdetails.php?id=$id\">\n");
   print("<table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-  print("<tr><td class=\"rowhead\">Заголовок</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"title\" value=\"" . htmlspecialchars($user[title]) . "\"></tr>\n");
-	$avatar = htmlspecialchars($user["avatar"]);
+  print("<tr><td class=\"rowhead\">Заголовок</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"title\" value=\"" . htmlspecialchars_uni($user[title]) . "\"></tr>\n");
+	$avatar = htmlspecialchars_uni($user["avatar"]);
   print("<tr><td class=\"rowhead\">Аватар</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"avatar\" value=\"$avatar\"></tr>\n");
 	// we do not want mods to be able to change user classes or amount donated...
 	if ($CURUSER["class"] < UC_ADMINISTRATOR)
@@ -444,8 +444,8 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
 	  print("</select></td></tr>\n");
 	}
 	print("<tr><td class=\"rowhead\">Сбросить день рождения</td><td colspan=\"2\" align=\"left\"><input type=\"radio\" name=\"resetb\" value=\"yes\">Да<input type=\"radio\" name=\"resetb\" value=\"no\" checked>Нет</td></tr>\n");
-	$modcomment = htmlspecialchars($user["modcomment"]);
-	$supportfor = htmlspecialchars($user["supportfor"]);
+	$modcomment = htmlspecialchars_uni($user["modcomment"]);
+	$supportfor = htmlspecialchars_uni($user["supportfor"]);
 	print("<tr><td class=rowhead>Поддержка</td><td colspan=2 align=left><input type=radio name=support value=yes" .($user["support"] == "yes" ? " checked" : "").">Да <input type=radio name=support value=no" .($user["support"] == "no" ? " checked" : "").">Нет</td></tr>\n");
 	print("<tr><td class=rowhead>Поддержка для:</td><td colspan=2 align=left><textarea cols=60 rows=6 name=supportfor>$supportfor</textarea></td></tr>\n");
 	print("<tr><td class=rowhead>История пользователя</td><td colspan=2 align=left><textarea cols=60 rows=6".(get_user_class() < UC_SYSOP ? " readonly" : " name=modcomment").">$modcomment</textarea></td></tr>\n");

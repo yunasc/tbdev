@@ -51,7 +51,7 @@ if ($ip)
 	  {
 	    $first = long2ip($arr["first"]);
 	    $last = long2ip($arr["last"]);
-	    $comment = htmlspecialchars($arr["comment"]);
+	    $comment = htmlspecialchars_uni($arr["comment"]);
 	    $banstable .= "<tr><td>$first</td><td>$last</td><td>$comment</td></tr>\n";
 	  }
 	  $banstable .= "</table>\n";

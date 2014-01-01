@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR
 	$last = ip2long($last);
 	if ($first == -1 || $last == -1)
 		stderr($tracker_lang['error'], $tracker_lang['invalid_ip']);
-	$comment = sqlesc(htmlspecialchars($comment));
+	$comment = sqlesc(htmlspecialchars_uni($comment));
 	$added = sqlesc(get_date_time());
 	sql_query("INSERT INTO bans (added, addedby, first, last, comment) VALUES($added, $CURUSER[id], $first, $last, $comment)") or sqlerr(__FILE__, __LINE__);
 	write_log("IP адреса от ".long2ip($first)." до ".long2ip($last)." были забанены пользователем $CURUSER[username].");

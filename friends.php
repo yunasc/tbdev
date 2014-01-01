@@ -142,7 +142,7 @@ else
     	"<br />(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend[last_access])) . " ".$tracker_lang['ago'].")";
 		$body2 = "<br /><a href=friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . ">".$tracker_lang['delete']."</a>" .
 			"<br /><br /><a href=message.php?action=sendmessage&amp;receiver=" . $friend['id'] . ">".$tracker_lang['pm']."</a>";
-    $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");
+    $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars_uni($friend["avatar"]) : "");
 		if (!$avatar)
 			$avatar = "pic/default_avatar.gif";
     if ($i % 2 == 0)

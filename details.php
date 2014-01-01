@@ -179,7 +179,7 @@ function dltable($name, $arr, $torrent)
                 $s .= "<td align=\"right\">" . sprintf("%.2f%%", 100 * (1 - ($e["to_go"] / $torrent["size"]))) . "</td>\n";
                 $s .= "<td align=\"right\">" . mkprettytime($now - $e["st"]) . "</td>\n";
                 $s .= "<td align=\"right\">" . mkprettytime($now - $e["la"]) . "</td>\n";
-                $s .= "<td align=\"left\">" . htmlspecialchars(getagent($e["agent"], $e["peer_id"])) . "</td>\n";
+                $s .= "<td align=\"left\">" . htmlspecialchars_uni(getagent($e["agent"], $e["peer_id"])) . "</td>\n";
                 $s .= "</tr>\n";
         }
         $s .= "</table>\n";
@@ -348,7 +348,7 @@ else {
                 tr($tracker_lang['snatched'], $row["times_completed"] . " ".$tracker_lang['times']);
 
                 $keepget = "";
-                $uprow = (isset($row["username"]) ? ("<a href=userdetails.php?id=" . $row["owner"] . ">" . htmlspecialchars($row["username"]) . "</a>") : "<i>Аноним</i>");
+                $uprow = (isset($row["username"]) ? ("<a href=userdetails.php?id=" . $row["owner"] . ">" . htmlspecialchars_uni($row["username"]) . "</a>") : "<i>Аноним</i>");
 /*
                 if ($owned)
                         $uprow .= " $spacer<$editlink><b>[".$tracker_lang['edit']."]</b></a>";

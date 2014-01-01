@@ -34,7 +34,7 @@
 // delete items older than a week
   $secs = 7 * 86400;
   stdhead("Логи");
-  $type = htmlspecialchars((string)$_GET["type"]);
+  $type = htmlspecialchars_uni((string)$_GET["type"]);
    if(!$type || $type == 'simp') $type = "tracker";
  	print("<p align=center>"  .
 		($type == tracker || !$type ? "<b>Трекер</b>" : "<a href=log.php?type=tracker>Трекер</a>") . " | " .

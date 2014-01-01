@@ -698,12 +698,12 @@ function encode_spoiler_from($text) {
 
 // Format spoiler
 function escape1($matches){
-	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars($matches[1])."</textarea></div></div>";
+	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars_uni($matches[1])."</textarea></div></div>";
 }
 
 // Format spoiler from
 function escape2($matches){
-	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">".$matches[1]."</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars($matches[2])."</textarea></div></div>";
+	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">".$matches[1]."</div><div class=\"spoiler-body\"><textarea>".htmlspecialchars_uni($matches[2])."</textarea></div></div>";
 }
 
 // Format code

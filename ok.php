@@ -37,7 +37,7 @@ if ($type == "signup" && mkglobal("email")) {
 	if (!validemail($email))
 		stderr($tracker_lang['error'], "Это не похоже на реальный email адрес.");
 	stdhead($tracker_lang['signup_successful']);
-        stdmsg($tracker_lang['signup_successful'],($use_email_act ? sprintf($tracker_lang['confirmation_mail_sent'], htmlspecialchars($email)) : sprintf($tracker_lang['thanks_for_registering'], $SITENAME)));
+        stdmsg($tracker_lang['signup_successful'],($use_email_act ? sprintf($tracker_lang['confirmation_mail_sent'], htmlspecialchars_uni($email)) : sprintf($tracker_lang['thanks_for_registering'], $SITENAME)));
 	stdfoot();
 }
 elseif ($type == "sysop") {
