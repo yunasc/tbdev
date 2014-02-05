@@ -31,7 +31,7 @@ require_once("include/bittorrent.php");
 dbconn();
 
 if (get_user_class() < UC_SYSOP) {
-	die;
+	die('No access to this module');
 }
 
 require_once($rootpath . 'include/cleanup.php');
