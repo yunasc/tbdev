@@ -130,12 +130,12 @@ function getagent($httpagent, $peer_id = "") {
 function dltable($name, $arr, $torrent)
 {
 
-        global $CURUSER, $tracker_lang;
+        global $tracker_lang;
         $s = "<b>" . count($arr) . " $name</b>\n";
         if (!count($arr))
                 return $s;
         $s .= "\n";
-        $s .= "<table width=100% class=main border=1 cellspacing=0 cellpadding=5>\n";
+        $s .= "<table width=\"100%\" class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
         $s .= "<tr><td class=colhead>".$tracker_lang['user']."</td>" .
           "<td class=colhead align=center>".$tracker_lang['port_open']."</td>".
           "<td class=colhead align=right>".$tracker_lang['uploaded']."</td>".
@@ -148,8 +148,8 @@ function dltable($name, $arr, $torrent)
           "<td class=colhead align=right>".$tracker_lang['idle']."</td>" .
           "<td class=colhead align=left>".$tracker_lang['client']."</td></tr>\n";
         $now = time();
-        $moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR);
-		$mod = get_user_class() >= UC_MODERATOR;
+        //$moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR); // Redundant
+		$mod = (get_user_class() >= UC_MODERATOR);
         foreach ($arr as $e) {
                 // user/ip/port
                 // check if anyone has this ip
@@ -159,8 +159,7 @@ function dltable($name, $arr, $torrent)
                 else
                   $s .= "<td>" . ($mod ? $e["ip"] : preg_replace('/\.\d+$/', ".xxx", $e["ip"])) . "</td>\n";
                 $secs = max(10, ($e["la"]) - $e["pa"]);
-                $revived = $e["revived"] == "yes";
-        		$s .= "<td align=\"center\">" . ($e[connectable] == "yes" ? "<span style=\"color: green; cursor: help;\" title=\"Порт открыт. Этот пир может подключатся к любому пиру.\">".$tracker_lang['yes']."</span>" : "<span style=\"color: red; cursor: help;\" title=\"Порт закрыт. Рекомендовано проверить настройки Firwewall'а.\">".$tracker_lang['no']."</span>") . "</td>\n";
+        		$s .= "<td align=\"center\">" . ($e['connectable'] == "yes" ? "<span style=\"color: green; cursor: help;\" title=\"Порт открыт. Этот пир может подключатся к любому пиру.\">".$tracker_lang['yes']."</span>" : "<span style=\"color: red; cursor: help;\" title=\"Порт закрыт. Рекомендовано проверить настройки Firwewall'а.\">".$tracker_lang['no']."</span>") . "</td>\n";
                 $s .= "<td align=\"right\"><nobr>" . mksize($e["uploaded"]) . "</nobr></td>\n";
                 $s .= "<td align=\"right\"><nobr>" . mksize($e["uploadoffset"] / $secs) . "/s</nobr></td>\n";
                 $s .= "<td align=\"right\"><nobr>" . mksize($e["downloaded"]) . "</nobr></td>\n";
@@ -289,7 +288,7 @@ else {
                 tr($tracker_lang['size'],mksize($row["size"]) . " (" . number_format($row["size"]) . " ".$tracker_lang['bytes'].")");
 
                 $s = "";
-                $s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=embedded>";
+                $s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=\"embedded\">";
                 if (!isset($row["rating"])) {
                         if ($minvotes > 1) {
                                 $s .= sprintf($tracker_lang['not_enough_votes'], $minvotes);
@@ -362,7 +361,7 @@ else {
                         else {
                                 tr($tracker_lang['files'], $row["numfiles"] . " ".$tracker_lang['files_l'], 1);
 
-                                $s = "<table class=main border=\"1\" cellspacing=0 cellpadding=\"5\">\n";
+                                $s = "<table class=\"main\" border=\"1\" cellspacing=0 cellpadding=\"5\">\n";
 
                                 $subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
 								$s.="<tr><td class=colhead>".$tracker_lang['path']."</td><td class=colhead align=right>".$tracker_lang['size']."</td></tr>\n";
@@ -458,7 +457,7 @@ else {
 						//end
 						//$highlight = $CURUSER["id"] == $arr["id"] ? " bgcolor=#00A527" : "";;
 						$snatched_small[] = "<a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])." (<font color=" . get_ratio_color($ratio) . ">$ratio</font>)</a>";
-						$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>" . $arr["startdat"] . "<br />" . $arr["completedat"] . "</nobr></td><td align=center><nobr>" . $arr["last_action"] . "</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=green>Да</font>" : "<font color=red>Нет</font></b>") .
+						$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>" . $arr["startdat"] . "<br />" . $arr["completedat"] . "</nobr></td><td align=center><nobr>" . $arr["last_action"] . "</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
 							"</td><td align=center><a href=message.php?action=sendmessage&amp;receiver=$arr[userid]><img src=$pic_base_url/button_pm.gif border=\"0\"></a></td></tr>\n";
                     }
 		            $snatched_full .= "</table>\n";
@@ -508,10 +507,11 @@ $thanksby = "<div id=\"ajax\"><form action=\"thanks.php\" method=\"post\">
 <script language="javascript" type="text/javascript" src="js/ajax.js"></script>
 <script type="text/javascript">
 function send() {
-     var ajax = new tbdev_ajax();
+     //noinspection JSPotentiallyInvalidConstructorUsage
+    var ajax = new tbdev_ajax('thanks.php');
      ajax.onShow ('');
      var varsString = "";
-     ajax.requestFile = "thanks.php";
+     //ajax.requestFile = "thanks.php";
      ajax.setVar("torrentid", <?=$torrentid;?>);
      ajax.setVar("ajax", "yes");
      ajax.method = 'POST';
@@ -545,19 +545,19 @@ function send() {
 if (!$count) {
 
   print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
-  print("<tr><td class=colhead align=\"left\" colspan=\"2\">");
+  print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">");
   print("<div style=\"float: left; width: auto;\" align=\"left\"> :: Список комментариев</div>");
-  print("<div align=\"right\"><a href=#comments class=altlink_white>Добавить комментарий</a></div>");
+  print("<div align=\"right\"><a href=#comments class=\"altlink_white\">Добавить комментарий</a></div>");
   print("</td></tr><tr><td align=\"center\">");
-  print("Комментариев нет. <a href=#comments>Желаете добавить?</a>");
+  print("Комментариев нет. <a href=\"#comments\">Желаете добавить?</a>");
   print("</td></tr></table><br>");
 
   print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
-  print("<tr><td class=colhead align=\"left\" colspan=\"2\"> <a name=comments>&nbsp;</a><b>:: Без комментариев</b></td></tr>");
+  print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\"> <a name=\"comments\">&nbsp;</a><b>:: Без комментариев</b></td></tr>");
   print("<tr><td align=\"center\" >");
   //print("<b>Ваше имя:</b> ");
   //print("".$CURUSER['username']."<p>");
-  print("<form name=comment method=\"post\" action=\"comment.php?action=add\">");
+  print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">");
   print("<div>");
   textbbcode("comment","text","");
   print("</div>");
@@ -568,7 +568,7 @@ if (!$count) {
 
         }
         else {
-                list($pagertop, $pagerbottom, $limit) = pager($limited, $count, "details.php?id=$id&", array(lastpagedefault => 1));
+                list($pagertop, $pagerbottom, $limit) = pager($limited, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
 
                 $subres = sql_query("SELECT c.id, c.ip, c.text, c.user, c.added, c.editedby, c.editedat, u.avatar, u.warned, ".
                   "u.username, u.title, u.class, u.donor, u.downloaded, u.uploaded, u.gender, u.last_access, e.username AS editedbyname FROM comments AS c LEFT JOIN users AS u ON c.user = u.id LEFT JOIN users AS e ON c.editedby = e.id WHERE torrent = " .
@@ -581,7 +581,7 @@ if (!$count) {
          print("<table class=main cellspacing=\"0\" cellPadding=\"5\" width=\"100%\" >");
          print("<tr><td class=\"colhead\" align=\"center\" >");
          print("<div style=\"float: left; width: auto;\" align=\"left\"> :: Список комментариев</div>");
-         print("<div align=\"right\"><a href=#comments class=altlink_white>Добавить комментарий</a></div>");
+         print("<div align=\"right\"><a href=#comments class=\"altlink_white\">Добавить комментарий</a></div>");
          print("</td></tr>");
 
          print("<tr><td>");
@@ -598,7 +598,7 @@ if (!$count) {
 
 
   print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
-  print("<tr><td class=colhead align=\"left\" colspan=\"2\">  <a name=comments>&nbsp;</a><b>:: Добавить комментарий к торренту</b></td></tr>");
+  print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">  <a name=\"comments\">&nbsp;</a><b>:: Добавить комментарий к торренту</b></td></tr>");
   print("<tr><td width=\"100%\" align=\"center\" >");
   //print("Ваше имя: ");
   //print("".$CURUSER['username']."<p>");
