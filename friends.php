@@ -30,8 +30,8 @@ require_once("include/bittorrent.php");
 dbconn(false);
 loggedinorreturn();
 
-$userid = (int)$_GET['id'];
-$action = $_GET['action'];
+$userid = intval($_GET['id']);
+$action = strval($_GET['action']);
 
 if (!$userid)
 	$userid = $CURUSER['id'];
@@ -49,23 +49,19 @@ $user = mysql_fetch_array($res) or stderr($tracker_lang['error'], $tracker_lang[
 
 if ($action == 'add')
 {
-	$targetid = (int)$_GET['targetid'];
-	$type = $_GET['type'];
+	$targetid = intval($_GET['targetid']);
+	$type = strval($_GET['type']);
 
   if (!is_valid_id($targetid))
 		stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
-  if ($type == 'friend')
-  {
+  if ($type == 'friend') {
   	$table_is = $frag = 'friends';
     $field_is = 'friendid';
-  }
-	elseif ($type == 'block')
-  {
+  }	elseif ($type == 'block') {
 		$table_is = $frag = 'blocks';
     $field_is = 'blockid';
-  }
-	else
+  } else
 		stderr($tracker_lang['error'], "Unknown type.");
 
   $r = sql_query("SELECT id FROM $table_is WHERE userid=$userid AND $field_is=$targetid") or sqlerr(__FILE__, __LINE__);
@@ -81,7 +77,7 @@ if ($action == 'add')
 
 if ($action == 'delete')
 {
-	$targetid = (int)$_GET['targetid'];
+	$targetid = intval($_GET['targetid']);
 	$sure = htmlentities($_GET['sure']);
 	$type = htmlentities($_GET['type']);
 
@@ -118,9 +114,6 @@ if ($action == 'delete')
 
 stdhead("Мои списки пользователей");
 
-/*print("<p><table class=main border=0 cellspacing=0 cellpadding=0>".
-"<tr><td class=embedded><h1 style='margin:0px'> Personal lists for $user[username]</h1>$donor$warned$country</td></tr></table></p>\n");*/
-
 print("<table class=main width=100% border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>");
 
 print("<table width=100% border=1 cellspacing=0 cellpadding=5>");
@@ -137,11 +130,11 @@ else
     $title = $friend["title"];
 		if (!$title)
 	    $title = get_user_class_name($friend["class"]);
-    $body1 = "<a href=userdetails.php?id=" . $friend['id'] . "><b>" . get_user_class_color($friend["class"], $friend['name']) . "</b></a>" .
+    $body1 = "<a href=\"userdetails.php?id=" . $friend['id'] . "\"><b>" . get_user_class_color($friend["class"], $friend['name']) . "</b></a>" .
     	get_user_icons($friend) . " ($title)<br /><br />" . $tracker_lang['last_seen'] . $friend['last_access'] .
-    	"<br />(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend[last_access])) . " ".$tracker_lang['ago'].")";
-		$body2 = "<br /><a href=friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . ">".$tracker_lang['delete']."</a>" .
-			"<br /><br /><a href=message.php?action=sendmessage&amp;receiver=" . $friend['id'] . ">".$tracker_lang['pm']."</a>";
+    	"<br />(" . get_et(sql_ts_to_ut($friend[last_access])) . " ".$tracker_lang['ago'].")";
+		$body2 = "<br /><a href=\"friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . "\">".$tracker_lang['delete']."</a>" .
+			"<br /><br /><a href=\"message.php?action=sendmessage&amp;receiver=" . $friend['id'] . "\">".$tracker_lang['pm']."</a>";
     $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars_uni($friend["avatar"]) : "");
 		if (!$avatar)
 			$avatar = "pic/default_avatar.gif";
@@ -169,7 +162,7 @@ if ($i % 2 == 1)
 print($friends);
 print("</td></tr></table>\n");
 
-$res = sql_query("SELECT b.blockid as id, u.username AS name, u.class, u.donor, u.warned, u.enabled, u.last_access FROM blocks AS b LEFT JOIN users as u ON b.blockid = u.id WHERE userid=$userid ORDER BY name") or sqlerr(__FILE__, __LINE__);
+$res = sql_query("SELECT b.blockid AS id, u.username AS name, u.class, u.donor, u.warned, u.enabled, u.last_access FROM blocks AS b LEFT JOIN users AS u ON b.blockid = u.id WHERE userid = $userid ORDER BY name") or sqlerr(__FILE__, __LINE__);
 if(mysql_num_rows($res) == 0)
 	$blocks = "<em>".$tracker_lang['no_blocked'].".</em>";
 else

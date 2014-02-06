@@ -47,7 +47,7 @@ function uploadimage($x, $imgname, $tid) {
 	// Add more types here if you like
 	);
 
-	if (!($_FILES[image.$x]['name'] == "")) {
+	if (!($_FILES['image'.$x]['name'] == "")) {
 
 		if ($imgname != "") {
 			// Make sure is same as in takeedit.php (except for the $imgname bit)
@@ -58,14 +58,14 @@ function uploadimage($x, $imgname, $tid) {
 		$y = $x + 1;
 
 		// Is valid filetype?
-		if (!array_key_exists($_FILES[image.$x]['type'], $allowed_types))
-			bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES[image.$x]['type']).")");
+		if (!array_key_exists($_FILES['image'.$x]['type'], $allowed_types))
+			bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES['image'.$x]['type']).")");
 
-		if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES[image.$x]['name']))
+		if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES['image'.$x]['name']))
 			bark("Неверное имя файла (не картинка).");
 
 		// Is within allowed filesize?
-		if ($_FILES[image.$x]['size'] > $maxfilesize)
+		if ($_FILES['image'.$x]['size'] > $maxfilesize)
 			bark("Invalid file size! Image $y - Must be less than 500kb");
 
 		// Where to upload?
@@ -73,11 +73,11 @@ function uploadimage($x, $imgname, $tid) {
 		$uploaddir = "torrents/images/";
 
 		// What is the temporary file name?
-		$ifile = $_FILES[image.$x]['tmp_name'];
+		$ifile = $_FILES['image'.$x]['tmp_name'];
 
 		// By what filename should the tracker associate the image with?
-		//$ifilename = $tid . $x . substr($_FILES[image.$x]['name'], strlen($_FILES[image.$x]['name'])-4, 4);
-		$ifilename = $tid . $x . '.' . end(explode('.', $_FILES[image.$x]['name']));
+		//$ifilename = $tid . $x . substr($_FILES['image'.$x]['name'], strlen($_FILES['image'.$x]['name'])-4, 4);
+		$ifilename = $tid . $x . '.' . end(explode('.', $_FILES['image'.$x]['name']));
 
 		// Upload the file
 		$copy = copy($ifile, $uploaddir.$ifilename);
@@ -165,26 +165,6 @@ for ($x=1; $x <= 5; $x++) {
 			$updateset[] = 'image' . $x . ' = ""';
 		}
 	}
-
-	/*$img1action = $_POST['img1action'];
-	if ($img1action == "update")
-		$updateset[] = "image1 = " .sqlesc(uploadimage(0, $row[image1], $id));
-	if ($img1action == "delete") {
-		if ($row[image1]) {
-			$del = unlink("torrents/images/$row[image1]");
-			$updateset[] = "image1 = ''";
-		}
-	}
-
-	$img2action = $_POST['img2action'];
-	if ($img2action == "update")
-		$updateset[] = "image2 = " .sqlesc(uploadimage(1, $row[image2], $id));
-	if ($img2action == "delete") {
-		if ($row[image2]) {
-			$del = unlink("torrents/images/$row[image2]");
-			$updateset[] = "image2 = ''";
-		}
-	}*/
 }
 // picturemod
 
@@ -285,19 +265,18 @@ if ($update_torrent) {
 
 	@sql_query("DELETE FROM files WHERE torrent = $id");
 	foreach ($filelist as $file) {
-		@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).",".$file[1].")");
+		@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
 	}
 
 }
 
-$name = htmlspecialchars_uni($name);
+$name = html_uni($name);
 
 $descr = unesc($_POST["descr"]);
 if (!$descr)
 	bark("Вы должны ввести описание!");
 
 $updateset[] = "name = " . sqlesc($name);
-$updateset[] = "search_text = " . sqlesc(htmlspecialchars_uni("$shortfname $dname $torrent"));
 $updateset[] = "descr = " . sqlesc($descr);
 $updateset[] = "ori_descr = " . sqlesc($descr);
 $updateset[] = "category = " . (0 + $type);
@@ -320,9 +299,9 @@ $updateset[] = "visible = '" . ($_POST["visible"] ? "yes" : "no") . "'";
 $updateset[] = "moderated = 'yes'";
 $updateset[] = "moderatedby = ".sqlesc($CURUSER["id"]);
 
-sql_query("UPDATE torrents SET " . join(",", $updateset) . " WHERE id = $id") or sqlerr();
+sql_query("UPDATE torrents SET " . join(", ", $updateset) . " WHERE id = $id") or sqlerr(__FILE__,__LINE__);
 
-write_log("Торрент '$name' был отредактирован пользователем $CURUSER[username]\n","F25B61","torrent");
+write_log("Торрент '$name' был отредактирован пользователем {$CURUSER['username']}", "F25B61", "torrent");
 
 $returl = "details.php?id=$id";
 if (isset($_POST["returnto"]))

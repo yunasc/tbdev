@@ -963,6 +963,10 @@ function is_valid_id($id) {
   return is_numeric($id) && ($id > 0) && (floor($id) == $id);
 }
 
+function sql_ts_to_ut($s) {
+    return sql_timestamp_to_unix_timestamp($s);
+}
+
 function sql_timestamp_to_unix_timestamp($s) {
   return mktime(substr($s, 11, 2), substr($s, 14, 2), substr($s, 17, 2), substr($s, 5, 2), substr($s, 8, 2), substr($s, 0, 4));
 }
@@ -1006,6 +1010,10 @@ function write_log($text, $color = "transparent", $type = "tracker") {
   $text = sqlesc($text);
   $added = sqlesc(get_date_time());
   sql_query("INSERT INTO sitelog (added, color, txt, type) VALUES($added, $color, $text, $type)");
+}
+
+function get_et($ts) {
+    return get_elapsed_time($ts);
 }
 
 function get_elapsed_time($ts) {

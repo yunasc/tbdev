@@ -891,10 +891,6 @@ function downloaderdata($res) {
 	return array($rows, $peerdata);
 }
 
-function searchfield($s) {
-	return preg_replace(array('/[^a-z0-9]/si', '/^\s*/s', '/\s*$/s', '/\s+/s'), array(' ', '', '', ' '), $s);
-}
-
 function genrelist() {
 	$ret = array();
 	$res = sql_query('SELECT id, name FROM categories ORDER BY sort ASC');
@@ -920,22 +916,23 @@ function ratingpic($num) {
 }
 
 function writecomment($userid, $comment) {
-	$res = sql_query("SELECT modcomment FROM users WHERE id = '$userid'") or sqlerr(__FILE__, __LINE__);
+    $userid = intval($userid);
+    if (!$userid)
+        throw new Exception(E_FATAL_ERROR, 'User ID cannot be 0 or null');
+	/*$res = sql_query("SELECT modcomment FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
 	$arr = mysql_fetch_assoc($res);
 
-	$modcomment = date('d-m-Y') . ' - ' . $comment . '' . ($arr['modcomment'] != '' ? "\n" : '') . $arr['modcomment'];
+	$modcomment = date('d-m-Y') . ' - ' . $comment . '' . ($arr['modcomment'] != '' ? "\n" : "") . $arr['modcomment'];
 	$modcom = sqlesc($modcomment);
 
-	return sql_query("UPDATE users SET modcomment = $modcom WHERE id = '$userid'") or sqlerr(__FILE__, __LINE__);
+	return sql_query("UPDATE users SET modcomment = $modcom WHERE id = $userid") or sqlerr(__FILE__, __LINE__);*/
+
+    $modcomment = sqlesc(date('d-m-Y') . ' - ' . $comment);
+    return sql_query("UPDATE users SET modcomment = CONCAT_WS('\n', $modcomment, modcomment) WHERE id = $userid") or sqlerr(__FILE__,__LINE__);
 }
 
 function hash_pad($hash) {
 	return str_pad($hash, 20);
-}
-
-function hash_where($name, $hash) {
-	$shhash = preg_replace('/ *$/s', '', $hash);
-	return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
 }
 
 function get_user_icons($arr, $big = false) {

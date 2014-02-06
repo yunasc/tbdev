@@ -534,7 +534,6 @@ CREATE TABLE `torrents` (
   `name` varchar(255) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `save_as` varchar(255) NOT NULL default '',
-  `search_text` text NOT NULL,
   `descr` text NOT NULL,
   `ori_descr` text NOT NULL,
   `image1` text NOT NULL,
@@ -569,7 +568,6 @@ CREATE TABLE `torrents` (
   KEY `owner` (`owner`),
   KEY `visible` (`visible`),
   KEY `category_visible` (`category`,`visible`),
-  FULLTEXT KEY `ft_search` (`search_text`,`ori_descr`)
 ) ENGINE=MyISAM;
 
 #

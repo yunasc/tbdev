@@ -39,6 +39,10 @@ if (!function_exists("htmlspecialchars_uni")) {
 		$message = str_replace("  ", "&nbsp;&nbsp;", $message);
 		return $message;
 	}
+
+    function html_uni($str) {
+        return htmlspecialchars_uni($str);
+    }
 }
 
 // DEFINE IMPORTANT CONSTANTS

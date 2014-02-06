@@ -249,7 +249,7 @@ if($use_email_act && $users) {
 		//stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
 		write_log("Проблема с отправкой письма для активации на адрес $email","FF0000","errors");
 		logincookie($id, $wantpasshash);
-		sql_query('UPDATE users SET status = "confirmed" WHERE id = '.$id) or sqlerr();
+		sql_query('UPDATE users SET status = "confirmed" WHERE id = '.$id) or sqlerr(__FILE__,__LINE__);
 		header("Location: ok.php?type=confirm");
 		die;
 	}

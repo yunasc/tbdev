@@ -43,7 +43,7 @@ parked();
 if (get_user_class() < UC_UPLOADER)
   die;
 
-foreach(explode(":","descr:type:name") as $v) {
+foreach(explode(":", "descr:type:name") as $v) {
 	if (!isset($_POST[$v]))
 		bark("missing form data");
 }
@@ -56,11 +56,11 @@ $fname = unesc($f["name"]);
 if (empty($fname))
 	bark("Файл не загружен. Пустое имя файла!");
 
-$descr = unesc($_POST["descr"]);
+$descr = unesc(strval($_POST["descr"]));
 if (!$descr)
 	bark("Вы должны ввести описание!");
 
-$catid = (0 + $_POST["type"]);
+$catid = intval($_POST["type"]);
 if (!is_valid_id($catid))
 	bark("Вы должны выбрать категорию, в которую поместить торрент!");
 	
@@ -211,18 +211,18 @@ $allowed_types = array(
 
 for ($x=0; $x < 5; $x++) {
 
-if (!($_FILES[image.$x]['name'] == "")) {
+if (!($_FILES['image'.$x]['name'] == "")) {
 	$y = $x + 1;
 
 	// Is valid filetype?
-	if (!array_key_exists($_FILES[image.$x]['type'], $allowed_types))
-		bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES[image.$x]['type']).")");
+	if (!array_key_exists($_FILES['image'.$x]['type'], $allowed_types))
+		bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES['image'.$x]['type']).")");
 
-	if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES[image.$x]['name']))
+	if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES['image'.$x]['name']))
 		bark("Неверное имя файла (не картинка).");
 
 	// Is within allowed filesize?
-	if ($_FILES[image.$x]['size'] > $maxfilesize)
+	if ($_FILES['image'.$x]['size'] > $maxfilesize)
 		bark("Invalid file size! Image $y - Must be less than 500kb");
 
 	// Where to upload?
@@ -230,7 +230,7 @@ if (!($_FILES[image.$x]['name'] == "")) {
 	$uploaddir = "torrents/images/";
 
 	// What is the temporary file name?
-	$ifile = $_FILES[image.$x]['tmp_name'];
+	$ifile = $_FILES['image'.$x]['tmp_name'];
 
 	// Calculate what the next torrent id will be
 	$ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
@@ -238,14 +238,13 @@ if (!($_FILES[image.$x]['name'] == "")) {
 	$next_id = $row['Auto_increment'];
 
 	// By what filename should the tracker associate the image with?
-//	$ifilename = $next_id . $x . substr($_FILES[image.$x]['name'], strlen($_FILES[image.$x]['name'])-4, 4);
-	$ifilename = $next_id . $x . '.' . end(explode('.', $_FILES[image.$x]['name']));
+	$ifilename = $next_id . $x . '.' . end(explode('.', $_FILES['image'.$x]['name']));
 
 	// Upload the file
 	$copy = copy($ifile, $uploaddir.$ifilename);
 
 	if (!$copy)
-	bark("Error occured uploading image! - Image $y");
+	    bark("Error occured uploading image! - Image $y");
 
 	$inames[] = $ifilename;
 
@@ -259,7 +258,7 @@ if (!($_FILES[image.$x]['name'] == "")) {
 
 $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
-$ret = sql_query("INSERT INTO torrents (search_text, filename, owner, visible, sticky, info_hash, name, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array(searchfield("$shortfname $dname $torrent"), $fname, $CURUSER["id"], "no", $sticky, $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
+$ret = sql_query("INSERT INTO torrents (filename, owner, visible, sticky, info_hash, name, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $sticky, $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");
@@ -269,7 +268,7 @@ $id = mysql_insert_id();
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
 @sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {
-	@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).",".$file[1].")");
+	@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
 }
 
 move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
@@ -283,7 +282,7 @@ if ($fp)
 
 write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["username"],"5DDB6E","torrent");
 
-/* Email notifs */
+/* Email notify */
 /*******************
 
 $res = sql_query("SELECT name FROM categories WHERE id=$catid") or sqlerr(__FILE__, __LINE__);
