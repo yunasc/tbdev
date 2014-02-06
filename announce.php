@@ -26,6 +26,14 @@
 // +--------------------------------------------------------------------------+
 */
 
+/*
+ * Small To-Do list
+ * 1. Shuffle announce sections, for benc_resp_raw($resp) will be higher in the code
+ *    So we can close connection to client, and then do background stuff
+ * 2. Make so, that checking user port is done by another script in background queue
+ *
+*/
+
 define ('IN_ANNOUNCE', true);
 require_once('./include/core_announce.php');
 
