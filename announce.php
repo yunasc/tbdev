@@ -29,7 +29,7 @@
 /*
  * Small To-Do list
  * 1. Shuffle announce sections, for benc_resp_raw($resp) will be higher in the code
- *    So we can close connection to client, and then do background stuff
+ *    So we can close connection to client, and then do background stuff - DONE!
  * 2. Make so, that checking user port is done by another script in background queue
  *
 */
@@ -155,6 +155,10 @@ if (!isset($self)) {
 }
 
 $announce_wait = 10;
+$dt = sqlesc(date('Y-m-d H:i:s', time()));
+$updateset = array();
+$snatch_updateset = array();
+
 if (isset($self) && ($self['prevts'] > ($self['nowts'] - $announce_wait )) )
 	err('There is a minimum announce time of ' . $announce_wait . ' seconds');
 if (!isset($self)) {
@@ -164,7 +168,7 @@ if (!isset($self)) {
 	$az = mysql_fetch_array($rz);
 	if ($az['enabled'] == 'no')
 		err('This account is disabled.');
-	$userid = 0 + $az['id'];
+	$userid = $az['id'];
 	if ($az['class'] < UC_VIP) {
 		if ($use_wait) {
 			$gigs = $az['uploaded'] / (1024*1024*1024);
@@ -187,86 +191,81 @@ if (!isset($self)) {
 	$passkey_ip = $az['passkey_ip'];
 	if ($passkey_ip != '' && getip() != $passkey_ip)
 		err('Unauthorized IP for this passkey!');
+    if ($az['parked'] == 'yes')
+        err('Error, your account is parked!');
+    if (portblacklisted($port))
+        err('Port '.$port.' is blacklisted.');
+    else {
+        $sockres = @fsockopen($ip, $port, $errno, $errstr, 5);
+        if (!$sockres) {
+            $connectable = 'no';
+            if ($nc == 'yes')
+                err('Your client is not connectable! Check your Port-configuration or search on forums.');
+        }else {
+            $connectable = 'yes';
+            @fclose($sockres);
+        }
+    }
+
+    $res = mysql_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err(mysql_error());
+    $check = mysql_fetch_array($res);
+    if (!$check)
+        mysql_query("INSERT LOW_PRIORITY INTO snatched (torrent, userid, port, startdat, last_action) VALUES ($torrentid, $userid, $port, $dt, $dt)");
+    $ret = mysql_query("INSERT LOW_PRIORITY INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, uploadoffset, downloadoffset, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', $userid, " . sqlesc($agent) . ", $uploaded, $downloaded, " . sqlesc($passkey) . ")") or err('Peers error 4 (insert)');
+    if ($ret) {
+        if ($seeder == 'yes')
+            $updateset[] = 'seeders = seeders + 1';
+        else
+            $updateset[] = 'leechers = leechers + 1';
+    }
 } else {
 	$upthis = max(0, $uploaded - $self['uploaded']);
 	$downthis = ($torrent['free'] == 'no') ? max(0, $downloaded - $self['downloaded']) : 0;
 	if ($upthis > 0 || $downthis > 0)
 		mysql_query('UPDATE LOW_PRIORITY users SET uploaded = uploaded + '.$upthis.', downloaded = downloaded + '.$downthis.' WHERE id='.$userid) or err('Users error 2 (update)');
-}
-$dt = sqlesc(date('Y-m-d H:i:s', time()));
-$updateset = array();
-$snatch_updateset = array();
-if ($event == 'stopped') {
-	if (isset($self)) {
-		mysql_query('UPDATE LOW_PRIORITY snatched SET seeder = "no", connectable = "no" WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 1 (update)');
-		mysql_query('DELETE FROM peers WHERE '.$selfwhere);
-		if (mysql_affected_rows()) {
-			if ($self['seeder'] == 'yes')
-				$updateset[] = 'seeders = IF(seeders > 0, seeders - 1, 0)';
-			else
-				$updateset[] = 'leechers = IF(leechers > 0, leechers - 1, 0)';
-		}
-	}
-} else {
-	if ($event == 'completed') {
-		$snatch_updateset[] = "finished = 'yes'";
-		$snatch_updateset[] = "completedat = $dt";
-		$snatch_updateset[] = "seeder = 'yes'";
-		$updateset[] = 'times_completed = times_completed + 1';
-	}
-	if (isset($self)) {
-		$downloaded2 = max(0, $downloaded - $self['downloaded']);
-		$uploaded2 = max(0, $uploaded - $self['uploaded']);
-		if ($downloaded2 > 0 || $uploaded2 > 0) {
-			$snatch_updateset[] = "uploaded = uploaded + $uploaded2";
-			$snatch_updateset[] = "downloaded = downloaded + $downloaded2";
-			$snatch_updateset[] = "to_go = $left";
-		}
-		$snatch_updateset[] = "port = $port";
-		$snatch_updateset[] = "last_action = $dt";
-		$snatch_updateset[] = "seeder = '$seeder'";
-		$prev_action = $self['last_action'];
-		mysql_query("UPDATE LOW_PRIORITY peers SET uploaded = $uploaded, downloaded = $downloaded, uploadoffset = $uploaded2, downloadoffset = $downloaded2, to_go = $left, last_action = NOW(), prev_action = ".sqlesc($prev_action).", seeder = '$seeder'"
-		. ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . time() : "") . ", agent = ".sqlesc($agent)." WHERE $selfwhere") or err('Peers error 3 (update)');
-		if (mysql_affected_rows() && $self['seeder'] != $seeder) {
-			if ($seeder == 'yes') {
-				$updateset[] = 'seeders = seeders + 1';
-				$updateset[] = 'leechers = IF(leechers > 0, leechers - 1, 0)';
-			} else {
-				$updateset[] = 'leechers = leechers + 1';
-				$updateset[] = 'seeders = IF(seeders > 0, seeders - 1, 0)';
-			}
-		}
-	} else {
-		if ($az['parked'] == 'yes')
-			err('Error, your account is parked!');
-		if (portblacklisted($port))
-			err('Port '.$port.' is blacklisted.');
-		else {
-			$sockres = @fsockopen($ip, $port, $errno, $errstr, 5);
-			if (!$sockres) {
-				$connectable = 'no';
-				if ($nc == 'yes')
-					err('Your client is not connectable! Check your Port-configuration or search on forums.');
-			}else {
-				$connectable = 'yes';
-				@fclose($sockres);
-			}
-		}
+    $downloaded2 = max(0, $downloaded - $self['downloaded']);
+    $uploaded2 = max(0, $uploaded - $self['uploaded']);
+    if ($downloaded2 > 0 || $uploaded2 > 0) {
+        $snatch_updateset[] = "uploaded = uploaded + $uploaded2";
+        $snatch_updateset[] = "downloaded = downloaded + $downloaded2";
+        $snatch_updateset[] = "to_go = $left";
+    }
+    $snatch_updateset[] = "port = $port";
+    $snatch_updateset[] = "last_action = $dt";
+    $snatch_updateset[] = "seeder = '$seeder'";
+    $prev_action = $self['last_action'];
+    mysql_query("UPDATE LOW_PRIORITY peers SET uploaded = $uploaded, downloaded = $downloaded, uploadoffset = $uploaded2, downloadoffset = $downloaded2, to_go = $left, last_action = NOW(), prev_action = ".sqlesc($prev_action).", seeder = '$seeder'"
+        . ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . time() : "") . ", agent = ".sqlesc($agent)." WHERE $selfwhere") or err('Peers error 3 (update)');
+    if (mysql_affected_rows() && $self['seeder'] != $seeder) {
+        if ($seeder == 'yes') {
+            $updateset[] = 'seeders = seeders + 1';
+            $updateset[] = 'leechers = IF(leechers > 0, leechers - 1, 0)';
+        } else {
+            $updateset[] = 'leechers = leechers + 1';
+            $updateset[] = 'seeders = IF(seeders > 0, seeders - 1, 0)';
+        }
+    }
 
-		$res = mysql_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err(mysql_error());
-		$check = mysql_fetch_array($res);
-		if (!$check)
-			mysql_query("INSERT LOW_PRIORITY INTO snatched (torrent, userid, port, startdat, last_action) VALUES ($torrentid, $userid, $port, $dt, $dt)");
-		$ret = mysql_query("INSERT LOW_PRIORITY INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, uploadoffset, downloadoffset, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', $userid, " . sqlesc($agent) . ", $uploaded, $downloaded, " . sqlesc($passkey) . ")") or err('Peers error 4 (insert)');
-		if ($ret) {
-			if ($seeder == 'yes')
-				$updateset[] = 'seeders = seeders + 1';
-			else
-				$updateset[] = 'leechers = leechers + 1';
-		}
-	}
+    if ($event == 'stopped') {
+        mysql_query('UPDATE LOW_PRIORITY snatched SET seeder = "no", connectable = "no" WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 1 (update)');
+        mysql_query('DELETE FROM peers WHERE '.$selfwhere);
+        if (mysql_affected_rows()) {
+            if ($self['seeder'] == 'yes')
+                $updateset[] = 'seeders = IF(seeders > 0, seeders - 1, 0)';
+            else
+                $updateset[] = 'leechers = IF(leechers > 0, leechers - 1, 0)';
+        }
+    }
+
 }
+
+if ($event == 'completed') {
+    $snatch_updateset[] = "finished = 'yes'";
+    $snatch_updateset[] = "completedat = $dt";
+    $snatch_updateset[] = "seeder = 'yes'";
+    $updateset[] = 'times_completed = times_completed + 1';
+}
+
 if ($seeder == 'yes') {
 	if ($torrent['banned'] != 'yes' && $torrent['visible'] != 'yes')
 		$updateset[] = 'visible = \'yes\'';
