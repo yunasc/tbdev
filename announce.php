@@ -196,7 +196,7 @@ if (!isset($self)) {
     if (portblacklisted($port))
         err('Port '.$port.' is blacklisted.');
     else {
-        $sockres = @fsockopen($ip, $port, $errno, $errstr, 5);
+        $sockres = check_port($ip, $port, 5);
         if (!$sockres) {
             $connectable = 'no';
             if ($nc == 'yes')

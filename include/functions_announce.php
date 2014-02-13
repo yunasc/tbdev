@@ -181,4 +181,54 @@ function gzip() {
 	}
 }
 
+// Check open port, requires --enable-sockets
+function check_port($host, $port, $timeout) {
+    if (function_exists('socket_create')) {
+        // Create a TCP/IP socket.
+        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        if ($socket == false) {
+            return false;
+        }
+        //
+        if (socket_set_nonblock($socket) == false) {
+            socket_close($socket);
+            return false;
+        }
+        //
+        @socket_connect($socket, $host, $port); // will return FALSE as it's async, so no check
+        //
+        if (socket_set_block($socket) == false) {
+            socket_close($socket);
+            return false;
+        }
+
+        switch(socket_select($r = array($socket), $w = array($socket), $f = array($socket), $timeout)) {
+            case 2:
+                // Refused
+                $result = false;
+                break;
+            case 1:
+                $result = true;
+                break;
+            case 0:
+                // Timeout
+                $result = false;
+                break;
+        }
+
+        // cleanup
+        socket_close($socket);
+    } else {
+        $socket = @fsockopen($host, $port, $errno, $errstr, 5);
+        if (!$socket)
+            $result = false;
+        else {
+            $result = true;
+            @fclose($socket);
+        }
+    }
+
+    return $result;
+}
+
 ?>
