@@ -628,16 +628,16 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 	return $result;
 }
 
-function sqlesc($value) {
-	// Stripslashes
-   /*if (get_magic_quotes_gpc()) {
-	   $value = stripslashes($value);
-   }*/
-   // Quote if not a number or a numeric string
-   if (!is_numeric($value)) {
-	   $value = "'" . mysql_real_escape_string($value) . "'";
-   }
-   return $value;
+function sqlesc($value, $force = false) {
+    // Stripslashes
+    /*if (get_magic_quotes_gpc()) {
+        $value = stripslashes($value);
+    }*/
+    // Quote if not a number or a numeric string
+    if (!is_numeric($value) || $force) {
+        $value = "'" . mysql_real_escape_string($value) . "'";
+    }
+    return $value;
 }
 
 function sqlwildcardesc($x) {

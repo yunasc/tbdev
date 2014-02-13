@@ -31,53 +31,55 @@ require_once("include/bittorrent.php");
 dbconn();
 
 if ($deny_signup && !$allow_invite_signup)
-	stderr($tracker_lang['error'], $tracker_lang['signup_disabled']);
+    stderr($tracker_lang['error'], $tracker_lang['signup_disabled']);
 
 if ($CURUSER)
-	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_already_registered'], $SITENAME));
+    stderr($tracker_lang['error'], sprintf($tracker_lang['signup_already_registered'], $SITENAME));
 
 $users = get_row_count("users");
 if ($users >= $maxusers)
-	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_users_limit'], number_format($maxusers)));
+    stderr($tracker_lang['error'], sprintf($tracker_lang['signup_users_limit'], number_format($maxusers)));
 
 if (!mkglobal("wantusername:wantpassword:passagain:email"))
-	stderr($tracker_lang['error'], $tracker_lang['dad']);
+    stderr($tracker_lang['error'], $tracker_lang['dad']);
 
 $inviter = $invitedroot = 0;
 
 if ($deny_signup && $allow_invite_signup) {
-	if (empty($_POST["invite"]))
-		stderr($tracker_lang['error'], "Для регистрации вам нужно ввести код приглашения!");
-	if (strlen($_POST["invite"]) != 32)
-		stderr($tracker_lang['error'], "Вы ввели не правильный код приглашения");
-	list($inviter) = mysql_fetch_row(sql_query("SELECT inviter FROM invites WHERE invite = ".sqlesc($_POST["invite"])));
-	if (!$inviter)
-		stderr($tracker_lang['error'], "Код приглашения введенный вами не рабочий");
-	list($invitedroot) = mysql_fetch_row(sql_query("SELECT invitedroot FROM users WHERE id = $inviter"));
+    if (empty($_POST["invite"]))
+        stderr($tracker_lang['error'], "Для регистрации вам нужно ввести код приглашения!");
+    if (strlen($_POST["invite"]) != 32)
+        stderr($tracker_lang['error'], "Вы ввели не правильный код приглашения");
+    // true - to decline bug-abusers: there was a bug, if 32 0-s were sent as invite code - this could cause usage of someones invite.
+    // now forcing to escape as string all times.
+    list($inviter) = mysql_fetch_row(sql_query("SELECT inviter FROM invites WHERE invite = " . sqlesc($_POST["invite"], true)));
+    if (!$inviter)
+        stderr($tracker_lang['error'], "Код приглашения введенный вами не рабочий");
+    list($invitedroot) = mysql_fetch_row(sql_query("SELECT invitedroot FROM users WHERE id = $inviter"));
 }
 
 function bark($msg) {
-	global $tracker_lang;
-	stdhead();
-	stdmsg($tracker_lang['error'], $msg, 'error');
-	stdfoot();
-	exit;
+    global $tracker_lang;
+    stdhead();
+    stdmsg($tracker_lang['error'], $msg, 'error');
+    stdfoot();
+    exit;
 }
 
-function validusername($username)
-{
-	if ($username == "")
-	  return false;
+function validusername($username) {
+    // Must rework as regular expressions
+    if ($username == "")
+        return false;
 
-	// The following characters are allowed in user names
-	$allowedchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".
-		"абвгдеёжзиклмнопрстуфхшщэюяьъАБВГДЕЁЖЗИКЛМНОПРСТУФХШЩЭЮЯЬЪ";
+    // The following characters are allowed in user names
+    $allowedchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".
+                    "абвгдеёжзиклмнопрстуфхшщэюяьъАБВГДЕЁЖЗИКЛМНОПРСТУФХШЩЭЮЯЬЪ";
 
-	for ($i = 0; $i < strlen($username); ++$i)
-	  if (strpos($allowedchars, $username[$i]) === false)
-	    return false;
+    for ($i = 0; $i < strlen($username); ++$i)
+        if (strpos($allowedchars, $username[$i]) === false)
+            return false;
 
-	return true;
+    return true;
 }
 
 $gender = $_POST["gender"];
@@ -114,73 +116,73 @@ if (strlen($skype) > 20)
 $email = trim(strtolower($email));
 
 if (empty($wantusername) || empty($wantpassword) || empty($email) || empty($gender) || empty($country))
-	bark("Все поля обязательны для заполнения.");
+    bark("Все поля обязательны для заполнения.");
 
 if (strlen($wantusername) > 12)
-	bark("Извините, имя пользователя слишком длинное (максимум 12 символов)");
+    bark("Извините, имя пользователя слишком длинное (максимум 12 символов)");
 
 if ($wantpassword != $passagain)
-	bark("Пароли не совпадают! Похоже вы ошиблись. Попробуйте еще.");
+    bark("Пароли не совпадают! Похоже вы ошиблись. Попробуйте еще.");
 
 if (strlen($wantpassword) < 6)
-	bark("Извините, пароль слишком коротки (минимум 6 символов)");
+    bark("Извините, пароль слишком коротки (минимум 6 символов)");
 
 if (strlen($wantpassword) > 40)
-	bark("Извините, пароль слишком длинный (максимум 40 символов)");
+    bark("Извините, пароль слишком длинный (максимум 40 символов)");
 
 if ($wantpassword == $wantusername)
-	bark("Извините, пароль не может быть такой-же как имя пользователя.");
+    bark("Извините, пароль не может быть такой-же как имя пользователя.");
 
 if (!validemail($email))
-	bark("Это не похоже на реальный email адрес.");
+    bark("Это не похоже на реальный email адрес.");
 
 list(, $domain) = explode('@', $email);
 if (!mail_possible($email))
-        bark('Почты в таком домене быть не может ('.htmlspecialchars_uni($domain).')');
+    bark('Почты в таком домене быть не может (' . htmlspecialchars_uni($domain) . ')');
 
 if ($check_for_working_mta) {
-	// Some fucking pre PHP 5.3 WINDOWS installations...
-	if (function_exists('getmxrr')) {
-		getmxrr($domain, $mxs);
-		foreach ($mxs as $mx) {
-			if (check_port($mx, 25, 1, true)) {
-				$is_good_smtp = true;
-				break;
-			}
-		}
+    // Some pre PHP 5.3 WINDOWS installations...
+    if (function_exists('getmxrr')) {
+        getmxrr($domain, $mxs);
+        foreach ($mxs as $mx) {
+            if (check_port($mx, 25, 1, true)) {
+                $is_good_smtp = true;
+                break;
+            }
+        }
 
-		if (!$is_good_smtp)
-			bark("На вашей почтовой службе не работает почтовый сервер (MTA).");
-	}
+        if (!$is_good_smtp)
+            bark("На вашей почтовой службе не работает почтовый сервер (MTA).");
+    }
 }
 
 if (!validusername($wantusername))
-	bark("Неверное имя пользователя.");
+    bark("Неверное имя пользователя.");
 
 if ($year == '0000' || $month == '00' || $day == '00')
-        stderr($tracker_lang['error'], "Похоже вы указали неверную дату рождения");
-	$birthday = date("$year.$month.$day");
+    stderr($tracker_lang['error'], "Похоже вы указали неверную дату рождения");
+$birthday = date("$year.$month.$day");
 
 // make sure user agrees to everything...
 if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ageverify"] != "yes")
-	stderr($tracker_lang['error'], "Извините, вы не подходите для того что-бы стать членом этого сайта.");
+    stderr($tracker_lang['error'], "Извините, вы не подходите для того что-бы стать членом этого сайта.");
 
 // check if email addy is already in use
 /*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or die(mysql_error());
 if ($a[0] != 0)
 	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");*/
 
-$a = get_row_count('users', 'WHERE email = '.sqlesc($email));
+$a = get_row_count('users', 'WHERE email = ' . sqlesc($email));
 if ($a != 0)
-	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");
+    bark("E-mail адрес " . htmlspecialchars_uni($email) . " уже зарегистрирован в системе.");
 
 if ($use_captcha && $users) {
-	if (!$_POST['imagestring'])
-		bark("Вы должны ввести код подтверждения.");
-	$b = get_row_count("captcha", "WHERE imagehash = ".sqlesc($_POST["imagehash"])." AND imagestring = ".sqlesc($_POST["imagestring"]));
-	sql_query("DELETE FROM captcha WHERE imagehash = ".sqlesc($_POST["imagehash"])) or die(mysql_error());
-	if ($b == 0)
-		bark("Вы ввели неправильный код подтверждения.");
+    if (!$_POST['imagestring'])
+        bark("Вы должны ввести код подтверждения.");
+    $b = get_row_count("captcha", "WHERE imagehash = " . sqlesc($_POST["imagehash"], true) . " AND imagestring = " . sqlesc($_POST["imagestring"], true));
+    sql_query("DELETE FROM captcha WHERE imagehash = " . sqlesc($_POST["imagehash"], true)) or die(mysql_error());
+    if ($b == 0)
+        bark("Вы ввели неправильный код подтверждения.");
 }
 
 $ip = getip();
@@ -188,45 +190,45 @@ $ip = getip();
 if (isset($_COOKIE[COOKIE_UID]) && is_numeric($_COOKIE[COOKIE_UID]) && $users && $enable_adv_antidreg) {
     $cid = intval($_COOKIE[COOKIE_UID]);
     $c = sql_query("SELECT enabled FROM users WHERE id = $cid ORDER BY id DESC LIMIT 1");
-    $co = @mysql_fetch_row($c);
+    $co = mysql_fetch_row($c);
     if ($co[0] == 'no') {
-		sql_query("UPDATE users SET ip = '$ip', last_access = NOW() WHERE id = $cid");
-		bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
+        sql_query("UPDATE users SET ip = '$ip', last_access = NOW() WHERE id = $cid");
+        bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
     } else
-		bark("Регистрация невозможна!");
+        bark("Регистрация невозможна!");
 } else {
-    $b = (@mysql_fetch_row(@sql_query("SELECT enabled, id FROM users WHERE ip = '$ip' ORDER BY last_access DESC LIMIT 1")));
+    $b = (mysql_fetch_row(sql_query("SELECT enabled, id FROM users WHERE ip = '$ip' ORDER BY last_access DESC LIMIT 1")));
     if ($b[0] == 'no') {
-		$banned_id = $b[1];
+        $banned_id = $b[1];
         setcookie(COOKIE_UID, $banned_id, "0x7fffffff", "/");
-		bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
+        bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
     }
 }
 
 $secret = mksecret();
 $wantpasshash = md5($secret . $wantpassword . $secret);
-$editsecret = (!$users?"":mksecret());
+$editsecret = (!$users ? "" : mksecret());
 
 if ((!$users) || (!$use_email_act == true))
-	$status = 'confirmed';
-else
-	$status = 'pending';
+    $status = 'confirmed'; else
+    $status = 'pending';
 
-$ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gender, country, icq, msn, aim, yahoo, skype, mirc, website, email, status, ". (!$users?"class, ":"") ."added, birthday, invitedby, invitedroot, theme) VALUES (" .
-		implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $gender, $country, $icq, $msn, $aim, $yahoo, $skype, $mirc, $website, $email, $status))).
-		", ". (!$users?UC_SYSOP.", ":""). "'". get_date_time() ."', '$birthday', '$inviter', '$invitedroot', '".select_theme()."')");// or sqlerr(__FILE__, __LINE__);
+// This is ugly, we but we have it...
+// To-Do rewrite
+$ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gender, country, icq, msn, aim, yahoo, skype, mirc, website, email, status, " . (!$users ? "class, " : "") . "added, birthday, invitedby, invitedroot, theme) VALUES (" . implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $gender, $country, $icq, $msn, $aim, $yahoo, $skype, $mirc, $website, $email, $status))) . ", " . (!$users ? UC_SYSOP . ", " : "") . "'" . get_date_time() . "', '$birthday', '$inviter', '$invitedroot', '" . select_theme() . "')");
+// or sqlerr(__FILE__, __LINE__);
 
 if (!$ret) {
-	if (mysql_errno() == 1062)
-		bark("Пользователь $wantusername уже зарегистрирован!");
-	bark("Неизвестная ошибка. Ответ от сервера mySQL: ".htmlspecialchars_uni(mysql_error()));
+    if (mysql_errno() == 1062)
+        bark("Пользователь $wantusername уже зарегистрирован!");
+    bark("Неизвестная ошибка. Ответ от сервера mySQL: " . htmlspecialchars_uni(mysql_error()));
 }
 
 $id = mysql_insert_id();
 
-sql_query("DELETE FROM invites WHERE invite = ".sqlesc($_POST["invite"]));
+sql_query("DELETE FROM invites WHERE invite = " . sqlesc($_POST["invite"]));
 
-write_log("Зарегистрирован новый пользователь $wantusername","FFFFFF","tracker");
+write_log("Зарегистрирован новый пользователь $wantusername", "FFFFFF", "tracker");
 
 $psecret = md5($editsecret);
 
@@ -244,19 +246,19 @@ $DEFAULTBASEURL/confirm.php?id=$id&secret=$psecret
 и ЧаВо прежде чем вы начнете использовать $SITENAME.
 EOD;
 
-if($use_email_act && $users) {
-	if (!sent_mail($email, $SITENAME, $SITEEMAIL, "Подтверждение регистрации на $SITENAME", $body, false)) {
-		//stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
-		write_log("Проблема с отправкой письма для активации на адрес $email","FF0000","errors");
-		logincookie($id, $wantpasshash);
-		sql_query('UPDATE users SET status = "confirmed" WHERE id = '.$id) or sqlerr(__FILE__,__LINE__);
-		header("Location: ok.php?type=confirm");
-		die;
-	}
+if ($use_email_act && $users) {
+    if (!sent_mail($email, $SITENAME, $SITEEMAIL, "Подтверждение регистрации на $SITENAME", $body, false)) {
+        //stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
+        write_log("Проблема с отправкой письма для активации на адрес $email", "FF0000", "errors");
+        logincookie($id, $wantpasshash);
+        sql_query('UPDATE users SET status = "confirmed" WHERE id = ' . $id) or sqlerr(__FILE__, __LINE__);
+        header("Location: ok.php?type=confirm");
+        die;
+    }
 } else {
-	logincookie($id, $wantpasshash);
+    logincookie($id, $wantpasshash);
 }
 
-header("Refresh: 0; url=ok.php?type=". (!$users?"sysop":("signup&email=" . urlencode($email))));
+header("Refresh: 0; url=ok.php?type=" . (!$users ? "sysop" : ("signup&email=" . urlencode($email))));
 
 ?>
