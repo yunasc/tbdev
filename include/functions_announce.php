@@ -150,10 +150,13 @@ function hash_pad($hash) {
     return str_pad($hash, 20);
 }
 
-function hash_where($name, $hash) {
+// Was used long long ago, now not needed.
+// Disabled, but not deleted for quick restore in case of regression
+
+/*function hash_where($name, $hash) {
     $shhash = preg_replace('/ *$/s', "", $hash);
     return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
-}
+}*/
 
 function unesc($x) {
     if (get_magic_quotes_gpc())
