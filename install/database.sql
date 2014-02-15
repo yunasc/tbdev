@@ -567,7 +567,7 @@ CREATE TABLE `torrents` (
   UNIQUE KEY `info_hash` (`info_hash`),
   KEY `owner` (`owner`),
   KEY `visible` (`visible`),
-  KEY `category_visible` (`category`,`visible`),
+  KEY `category_visible` (`category`,`visible`)
 ) ENGINE=MyISAM;
 
 #
