@@ -805,16 +805,16 @@ if ($action == "deletemessage") {
         }
         $message = mysql_fetch_assoc($res);
         if ($message['receiver'] == $CURUSER['id'] && $message['saved'] == 'no') {
-                $res2 = sql_query("DELETE FROM messages WHERE id=" . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
+                $res2 = sql_query("DELETE FROM messages WHERE id = " . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
         }
         elseif ($message['sender'] == $CURUSER['id'] && $message['location'] == PM_DELETED) {
-                $res2 = sql_query("DELETE FROM messages WHERE id=" . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
+                $res2 = sql_query("DELETE FROM messages WHERE id = " . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
         }
         elseif ($message['receiver'] == $CURUSER['id'] && $message['saved'] == 'yes') {
-                $res2 = sql_query("UPDATE messages SET location=0 WHERE id=" . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
+                $res2 = sql_query("UPDATE messages SET location = " . PM_DELETED . ", unread = 'no' WHERE id = " . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
         }
         elseif ($message['sender'] == $CURUSER['id'] && $message['location'] != PM_DELETED) {
-                $res2 = sql_query("UPDATE messages SET saved='no' WHERE id=" . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
+                $res2 = sql_query("UPDATE messages SET saved = 'no' WHERE id = " . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
         }
         if (!$res2) {
                 stderr($tracker_lang['error'],"Невозможно удалить сообщение.");
