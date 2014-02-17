@@ -600,7 +600,7 @@ if ($action == "moveordel") {
                                         sql_query("DELETE FROM messages WHERE id=" . sqlesc((int) $id)) or sqlerr(__FILE__,__LINE__);
                                 }
                                 elseif ($message['receiver'] == $CURUSER['id'] && $message['saved'] == 'yes') {
-                                        sql_query("UPDATE messages SET location=0 WHERE id=" . sqlesc((int) $id)) or sqlerr(__FILE__,__LINE__);
+                                        sql_query("UPDATE messages SET location = " . PM_DELETED . ", unread = 'no' WHERE id=" . sqlesc((int) $id)) or sqlerr(__FILE__,__LINE__);
                                 }
                                 elseif ($message['sender'] == $CURUSER['id'] && $message['location'] != PM_DELETED) {
                                         sql_query("UPDATE messages SET saved='no' WHERE id=" . sqlesc((int) $id)) or sqlerr(__FILE__,__LINE__);
