@@ -37,7 +37,8 @@ $image_path = IMAGE_BASE . "/$image_file";
 
 # Load image
 $img = null;
-$ext = strtolower(end(explode('.', $image_path)));
+$tmp = explode('.', $image_path);
+$ext = strtolower(end($tmp));
 if ($ext == 'jpg' || $ext == 'jpeg') {
 $img = @imagecreatefromjpeg($image_path);
 } else if ($ext == 'png') {
