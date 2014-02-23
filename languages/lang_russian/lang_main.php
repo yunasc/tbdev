@@ -40,7 +40,7 @@ class lang implements arrayaccess {
 			'news_poster' => 'Автор',
 			'my_my' => 'Панель управления',
 			'my_updated' => 'Профиль обновлён!',
-			'my_mail_sent' => 'Подтверждающее письмо отппавлено!',
+			'my_mail_sent' => 'Подтверждающее письмо отправлено!',
 			'my_mail_updated' => 'E-mail адрес обновлен!',
 			'my_torrents' => 'Мои торренты',
 			'my_unset' => 'Не выбрано',
