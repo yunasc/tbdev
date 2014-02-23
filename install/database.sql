@@ -559,7 +559,7 @@ CREATE TABLE `torrents` (
   `owner` int(10) unsigned NOT NULL default '0',
   `numratings` int(10) unsigned NOT NULL default '0',
   `ratingsum` int(10) unsigned NOT NULL default '0',
-  `free` enum('yes','no') default 'no',
+  `free` enum('yes','silver','no') default 'no',
   `sticky` enum('yes','no') NOT NULL default 'no',
   `moderated` enum('yes','no') NOT NULL default 'no',
   `moderatedby` int(10) unsigned default '0',

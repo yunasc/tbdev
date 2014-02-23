@@ -90,7 +90,11 @@ else
 	if(get_user_class() >= UC_ADMINISTRATOR)
 		tr("Забанен", "<input type=\"checkbox\" name=\"banned\"" . (($row["banned"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" />", 1);
     if(get_user_class() >= UC_ADMINISTRATOR)
-        tr("Золотая раздача", "<input type=\"checkbox\" name=\"free\"" . (($row["free"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Золотая раздача (считаеться только раздача, скачка не учитиваеться)", 1);
+        tr("Тип раздачи",
+"<input type=\"radio\" name=\"free\" id=\"gold\" value=\"yes\"" . (($row["free"] == "yes") ? " checked" : "") . " /><label for=\"gold\">Золотая раздача (считаеться только раздача, скачка не учитиваеться)</label><br />".
+"<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\"" . (($row["free"] == "silver") ? " checked" : "") . " /><label for=\"silver\">Серебрянная раздача (скачка не учитиваеться только на 50%)</label><br />".
+"<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\"" . (($row["free"] == "no") ? " checked" : "") . " /><label for=\"no\">Обычная раздача (скачка и раздача учитиваеться как обычно)</label><br />"
+, 1);
     if(get_user_class() >= UC_ADMINISTRATOR)
         tr("Важный", "<input type=\"checkbox\" name=\"sticky\"" . (($row["sticky"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"yes\" /> Прикрепить этот торрент (всегда наверху)", 1);
 	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Отредактировать\" style=\"height: 25px; width: 100px\"> <input type=reset value=\"Обратить изменения\" style=\"height: 25px; width: 100px\"></td></tr>\n");

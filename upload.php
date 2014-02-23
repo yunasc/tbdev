@@ -77,8 +77,12 @@ foreach ($cats as $row)
 $s .= "</select>\n";
 tr($tracker_lang['type'], $s, 1);
 
-if(get_user_class() >= UC_ADMINISTRATOR)
-	tr($tracker_lang['golden'], "<input type=checkbox name=free value=yes> ".$tracker_lang['golden_descr'], 1);
+    if(get_user_class() >= UC_ADMINISTRATOR)
+        tr("Тип раздачи",
+"<input type=\"radio\" name=\"free\" id=\"gold\" value=\"yes\" /><label for=\"gold\">Золотая раздача (считаеться только раздача, скачка не учитиваеться)</label><br />".
+"<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\" /><label for=\"silver\">Серебрянная раздача (скачка не учитиваеться только на 50%)</label><br />".
+"<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\" checked /><label for=\"no\">Обычная раздача (скачка и раздача учитиваеться как обычно)</label><br />"
+, 1);
 
 if (get_user_class() >= UC_ADMINISTRATOR)
     tr("Важный", "<input type=\"checkbox\" name=\"sticky\" value=\"yes\">Прикрепить этот торрент (всегда наверху)", 1);

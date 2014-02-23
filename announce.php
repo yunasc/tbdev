@@ -220,7 +220,17 @@ if (!isset($self)) {
     }
 } else {
 	$upthis = max(0, $uploaded - $self['uploaded']);
-	$downthis = ($torrent['free'] == 'no') ? max(0, $downloaded - $self['downloaded']) : 0;
+	$downthis = max(0, $downloaded - $self['downloaded']);
+	switch ($torrent['free']) {
+		case 'yes':
+			$downthis = 0;
+			break;
+		case 'silver':
+			$downthis = round($downthis / 2);
+			break;
+		case 'no':
+			break;
+	}
 	if ($upthis > 0 || $downthis > 0)
 		mysql_query('UPDATE LOW_PRIORITY users SET uploaded = uploaded + '.$upthis.', downloaded = downloaded + '.$downthis.' WHERE id='.$userid) or err('Users error 2 (update)');
     $downloaded2 = max(0, $downloaded - $self['downloaded']);

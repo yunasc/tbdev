@@ -82,11 +82,9 @@ $dict = bdec_file($tmpname, $max_torrent_size);
 if (!isset($dict))
 	bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
 
-if ($_POST['free'] == 'yes' AND get_user_class() >= UC_ADMINISTRATOR) {
-	$free = "yes";
-} else {
-	$free = "no";
-};
+if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no'))) {
+	$free = $_POST['free'];
+}
 
 if ($_POST['sticky'] == 'yes' AND get_user_class() >= UC_ADMINISTRATOR)
     $sticky = "yes";

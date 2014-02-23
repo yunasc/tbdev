@@ -291,8 +291,9 @@ if (get_user_class() >= UC_ADMINISTRATOR) {
 	    else
 	        $updateset[] = "sticky = 'no'";
 }
-if(get_user_class() >= UC_ADMINISTRATOR)
-       $updateset[] = "free = '".($_POST["free"]==1 ? 'yes' : 'no')."'";
+
+if(get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no')))
+       $updateset[] = "free = " . sqlesc($_POST['free']);
 
 $updateset[] = "visible = '" . ($_POST["visible"] ? "yes" : "no") . "'";
 

@@ -73,7 +73,7 @@ if ($action == 'add') {
         if ($resp_type == 1) {
                 sql_query('UPDATE users SET simpaty = simpaty + 1 WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         } else {
-                sql_query('UPDATE users SET simpaty = simpaty - 1 WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
+                sql_query('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         }
         // mod by StirolXXX (Yuna Scatari)
 		$msg = "Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars_uni($_POST["description"]) . "[/quote]";
@@ -100,7 +100,10 @@ if ($action == 'delete') {
         $respect_type = $_GET['respect_type'];
         $touserid = intval($_GET['touserid']);
         sql_query ('DELETE FROM simpaty WHERE id = ' . $respect_id) or sqlerr(__LINE__,__FILE__);
-        sql_query ('UPDATE users SET simpaty = simpaty ' .($respect_type=='bad'?'+1':'-1') . ' WHERE id = ' . $touserid) or sqlerr(__LINE__,__FILE__);
+        if ($respect_type == 'bad')
+        	sql_query ('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = ' . $touserid) or sqlerr(__LINE__,__FILE__);
+        else
+			sql_query ('UPDATE users SET simpaty = simpaty + 1 WHERE id = ' . $touserid) or sqlerr(__LINE__,__FILE__);
         /*if (mysql_affected_rows != 1) {
         	stderr($tracker_lang['error'], "Не могу удалить ".($respect_type == 'good'?"респект":"антиреспект").".");
         }*/
@@ -109,7 +112,7 @@ if ($action == 'delete') {
 			header("Refresh: 2; url=$returl");
         };
         stdhead();
-        stdmsg($tracker_lang['success'], "<p>".($respect_type == 'good'?"Респект":"Антиреспект")." удален успешно.</p>".(isset($_GET["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
+        stdmsg($tracker_lang['success'], "<p>".($respect_type == 'good' ? "Респект" : "Антиреспект")." удален успешно.</p>".(isset($_GET["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
         if (isset($_GET["returnto"])) {
         	print("<p><a href=\"".htmlspecialchars_uni($_GET["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
         }
