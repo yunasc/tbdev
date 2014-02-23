@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["username"] == "" || $_POST["invites"] == "" || $_POST["invites"] == "")
         stderr("Error", "Missing form data.");
 
-    $username = sqlesc($_POST["username"], true);
+    $username = sqlesc($_POST["username"]);
     $invites = sqlesc($_POST["invites"]);
 
     $res = sql_query("SELECT id FROM users WHERE username = $username");
