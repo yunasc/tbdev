@@ -41,43 +41,43 @@ if (isset($_GET['search']))
 	$searchstr = (string) unesc($_GET["search"]);
 $cleansearchstr = htmlspecialchars_uni($searchstr);
 if (empty($cleansearchstr))
-unset($cleansearchstr);
+	unset($cleansearchstr);
 
 // sorting by MarkoStamcar
 
 if (isset($_GET['sort']) && isset($_GET['type'])) {
 
-$column = '';
-$ascdesc = '';
+	$column = '';
+	$ascdesc = '';
 
-switch($_GET['sort']) {
-case '1': $column = "name"; break;
-case '2': $column = "numfiles"; break;
-case '3': $column = "comments"; break;
-case '4': $column = "added"; break;
-case '5': $column = "size"; break;
-case '6': $column = "times_completed"; break;
-case '7': $column = "seeders"; break;
-case '8': $column = "leechers"; break;
-case '9': $column = "owner"; break;
-case '10': if (get_user_class() >= UC_MODERATOR) $column = "moderatedby"; break;
-default: $column = "id"; break;
-}
+	switch ($_GET['sort']) {
+		case '1': $column = "name"; break;
+		case '2': $column = "numfiles"; break;
+		case '3': $column = "comments"; break;
+		case '4': $column = "added"; break;
+		case '5': $column = "size"; break;
+		case '6': $column = "times_completed"; break;
+		case '7': $column = "seeders"; break;
+		case '8': $column = "leechers"; break;
+		case '9': $column = "owner"; break;
+		case '10': if (get_user_class() >= UC_MODERATOR) $column = "moderatedby"; break;
+		default: $column = "id"; break;
+	}
 
-    switch($_GET['type']) {
-  case 'asc': $ascdesc = "ASC"; $linkascdesc = "asc"; break;
-  case 'desc': $ascdesc = "DESC"; $linkascdesc = "desc"; break;
-  default: $ascdesc = "DESC"; $linkascdesc = "desc"; break;
-    }
+	switch ($_GET['type']) {
+		case 'asc': $ascdesc = "ASC"; $linkascdesc = "asc"; break;
+		case 'desc': $ascdesc = "DESC"; $linkascdesc = "desc"; break;
+		default: $ascdesc = "DESC"; $linkascdesc = "desc"; break;
+	}
 
 
-$orderby = "ORDER BY torrents." . $column . " " . $ascdesc;
-$pagerlink = "sort=" . intval($_GET['sort']) . "&type=" . $linkascdesc . "&";
+	$orderby = "ORDER BY torrents." . $column . " " . $ascdesc;
+	$pagerlink = "sort=" . intval($_GET['sort']) . "&type=" . $linkascdesc . "&";
 
 } else {
 
-$orderby = "ORDER BY torrents.sticky ASC, torrents.id DESC";
-$pagerlink = "";
+	$orderby = "ORDER BY torrents.sticky ASC, torrents.id DESC";
+	$pagerlink = "";
 
 }
 
@@ -138,7 +138,7 @@ if (!$_GET && $CURUSER["notifs"]) {
 } else {
 	$all = true;
 	foreach ($cats as $cat) {
-		$all = !isset($_GET["c$cat[id]"]);
+		$all &= $_GET["cr$car[id]"];
 		if (isset($_GET["c$cat[id]"])) {
 			$wherecatina[] = $cat[id];
 			$addparam .= "c$cat[id]=1&amp;";
