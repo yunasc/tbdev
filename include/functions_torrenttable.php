@@ -51,8 +51,8 @@ print("<tr>\n");
 $count_get = 0;
 
 foreach ($_GET as $get_name => $get_value) {
-	$get_name = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
-	$get_value = mysql_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
+	$get_name = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
+	$get_value = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
 	if ($get_name != "sort" && $get_name != "type") {
 		if ($count_get > 0)
 			$oldlink = $oldlink . "&" . $get_name . "=" . $get_value;
@@ -222,7 +222,17 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 		print("</td>\n");
 
 		$dispname = $row["name"];
-		$thisisfree = ($row[free]=="yes" ? "<img src=\"pic/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">" : "");
+        switch ($row['free']) {
+            case 'yes':
+                $freepic = "<img src=\"pic/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">";
+            break;
+            case 'silver':
+                $freepic = "<img src=\"pic/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">";
+            break;
+            case 'no':
+                $freepic = '';
+        }
+		$thisisfree = $freepic;
 		print("<td align=\"left\">".($row["sticky"] == "yes" ? "Важный: " : "")."<a href=\"details.php?");
 		if ($variant == "mytorrents")
 			print("returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;");

@@ -190,7 +190,7 @@ $id = intval($_GET["id"]);
 if (!isset($id) || !$id)
         die();
 
-$res = sql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(torrents.last_action) AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, torrents.image1, torrents.image2, torrents.image3, torrents.image4, torrents.image5, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
+$res = sql_query("SELECT t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id")
         or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_array($res);
 
@@ -246,9 +246,20 @@ else {
 
                 $s = "<a class=\"index\" href=\"download.php?id=$id\"><b>" . $row["name"] . "</b></a>";
                 if ($owned)
-                $s .= " $spacer<$editlink>[".$tracker_lang['edit']."]</a>";
+                    $s .= " $spacer<$editlink>[".$tracker_lang['edit']."]</a>";
 
-                tr ("<nobr>{$row["cat_name"]}</nobr>", $s, 1, 1, "10%");
+                switch ($row['free']) {
+                    case 'yes':
+                        $freepic = "<img src=\"pic/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">&nbsp;";
+                        break;
+                    case 'silver':
+                        $freepic = "<img src=\"pic/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">&nbsp;";
+                        break;
+                    case 'no':
+                        $freepic = '';
+                }
+
+                tr ("<nobr>{$row["cat_name"]}</nobr>", $freepic.$s, 1, 1, "10%");
 
                 function hex_esc($matches) {
                         return sprintf("%02x", ord($matches[0]));
