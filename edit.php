@@ -84,6 +84,10 @@ else
 
 	$s .= "</select>\n";
 	tr("Тип", $s, 1);
+
+    tr('Keywords', '<input type="text" name="keywords" value="' . $row['keywords'] . '" size="80" />', 1);
+    tr('Description', '<input type="text" name="description" value="' . $row['description'] . '" size="80" />', 1);
+
 	tr("Видимый", "<input type=\"checkbox\" name=\"visible\"" . (($row["visible"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" />
 					Видимый в торрентах<br /><table border=0 cellspacing=0 cellpadding=0 width=420><tr><td class=embedded>Обратите внимание, что торрент автоматически станет видимым когда появиться раздающий и автоматически перестанет быть видимым (станет мертвяком) когда не будет раздающего некоторое время.
 					Используйте этот переключатель для ускорения процеса. Также учтите что невидимые торренты (мертвяки) все-равно могут быть просмотрены и найдены, это просто не по-умолчанию.</td></tr></table>", 1);

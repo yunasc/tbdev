@@ -190,9 +190,12 @@ $id = intval($_GET["id"]);
 if (!isset($id) || !$id)
         die();
 
-$res = sql_query("SELECT t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id")
+$res = sql_query("SELECT t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id")
         or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_array($res);
+
+$keywords = $row['keywords'];
+$description = $row['description'];
 
 sql_query("INSERT INTO readtorrents (userid, torrentid) VALUES (".sqlesc($CURUSER["id"]).", ".sqlesc($id).")")/* or sqlerr(__FILE__,__LINE__)*/;
 

@@ -39,6 +39,12 @@ $(document).ready(function(){
 
 //-->
 </script>
+<?
+if($keywords)
+    echo "<meta name=\"keywords\" content=\"$keywords\" />\n";
+if($description)
+    echo "<meta name=\"description\" content=\"$description\" />\n";
+?>
 <link rel="alternate" type="application/rss+xml" title="Последние торренты" href="<?=$DEFAULTBASEURL?>/rss.php">
 <link rel="shortcut icon" href="<?=$DEFAULTBASEURL;?>/favicon.ico" type="image/x-icon" />
 </head>

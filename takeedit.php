@@ -276,6 +276,11 @@ $descr = unesc($_POST["descr"]);
 if (!$descr)
 	bark("Вы должны ввести описание!");
 
+$keywords = htmlspecialchars_uni((string)$_POST["keywords"]);
+$description = htmlspecialchars_uni((string)$_POST["description"]);
+
+$updateset[] = "keywords = " . sqlesc($keywords);
+$updateset[] = "description = " . sqlesc($description);
 $updateset[] = "name = " . sqlesc($name);
 $updateset[] = "descr = " . sqlesc($descr);
 $updateset[] = "ori_descr = " . sqlesc($descr);

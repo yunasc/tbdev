@@ -532,6 +532,8 @@ CREATE TABLE `torrents` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `info_hash` varbinary(40) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
+  `keywords` varchar(255) NOT NULL default '',
+  `description` text NOT NULL,
   `filename` varchar(255) NOT NULL default '',
   `save_as` varchar(255) NOT NULL default '',
   `descr` text NOT NULL,
