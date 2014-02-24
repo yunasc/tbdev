@@ -86,10 +86,10 @@ if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes'
 	$free = $_POST['free'];
 }
 
-if ($_POST['sticky'] == 'yes' AND get_user_class() >= UC_ADMINISTRATOR)
-    $sticky = "yes";
+if ($_POST['not_sticky'] == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
+    $not_sticky = "no";
 else
-    $sticky = "no";
+    $not_sticky = "yes";
 
 function dict_check($d, $s) {
 	if ($d["type"] != "dictionary")
@@ -256,7 +256,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
-$ret = sql_query("INSERT INTO torrents (filename, owner, visible, sticky, info_hash, name, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $sticky, $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
+$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");

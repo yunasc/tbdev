@@ -96,7 +96,7 @@ else
 "<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\"" . (($row["free"] == "no") ? " checked" : "") . " /><label for=\"no\">Обычная раздача (скачка и раздача учитиваеться как обычно)</label><br />"
 , 1);
     if(get_user_class() >= UC_ADMINISTRATOR)
-        tr("Важный", "<input type=\"checkbox\" name=\"sticky\"" . (($row["sticky"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"yes\" /> Прикрепить этот торрент (всегда наверху)", 1);
+        tr("Важный", "<input type=\"checkbox\" name=\"not_sticky\"" . (($row["not_sticky"] == "no") ? " checked=\"checked\"" : "" ) . " value=\"yes\" /> Прикрепить этот торрент (всегда наверху)", 1);
 	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Отредактировать\" style=\"height: 25px; width: 100px\"> <input type=reset value=\"Обратить изменения\" style=\"height: 25px; width: 100px\"></td></tr>\n");
 	print("</table>\n");
 	print("</form>\n");

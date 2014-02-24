@@ -85,7 +85,7 @@ tr($tracker_lang['type'], $s, 1);
 , 1);
 
 if (get_user_class() >= UC_ADMINISTRATOR)
-    tr("Важный", "<input type=\"checkbox\" name=\"sticky\" value=\"yes\">Прикрепить этот торрент (всегда наверху)", 1);
+    tr("Важный", "<input type=\"checkbox\" name=\"not_sticky\" value=\"no\">Прикрепить этот торрент (всегда наверху)", 1);
 
 ?>
 <tr><td align="center" colspan="2"><input type="submit" class=btn value="<?=$tracker_lang['upload'];?>" /></td></tr>

@@ -286,10 +286,10 @@ if (get_user_class() >= UC_ADMINISTRATOR) {
 		$_POST["visible"] = 0;
 	} else
 		$updateset[] = "banned = 'no'";
-	if ($_POST["sticky"] == "yes")
-	        $updateset[] = "sticky = 'yes'";
+	if ($_POST["not_sticky"] == "no")
+	        $updateset[] = "not_sticky = 'no'";
 	    else
-	        $updateset[] = "sticky = 'no'";
+	        $updateset[] = "not_sticky = 'yes'";
 }
 
 if(get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no')))

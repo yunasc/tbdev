@@ -206,7 +206,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 
 	while ($row = mysql_fetch_assoc($res)) {
 		$id = $row["id"];
-		print("<tr".($row["sticky"] == "yes" ? " class=\"highlight\"" : "").">\n");
+		print("<tr".($row["not_sticky"] == "no" ? " class=\"highlight\"" : "").">\n");
 
 		print("<td align=\"center\" style=\"padding: 0px\">");
 		if (isset($row["cat_name"])) {
@@ -233,7 +233,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
                 $freepic = '';
         }
 		$thisisfree = $freepic;
-		print("<td align=\"left\">".($row["sticky"] == "yes" ? "Важный: " : "")."<a href=\"details.php?");
+		print("<td align=\"left\">".($row["not_sticky"] == "no" ? "Важный: " : "")."<a href=\"details.php?");
 		if ($variant == "mytorrents")
 			print("returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;");
 		print("id=$id");

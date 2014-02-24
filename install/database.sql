@@ -560,14 +560,15 @@ CREATE TABLE `torrents` (
   `numratings` int(10) unsigned NOT NULL default '0',
   `ratingsum` int(10) unsigned NOT NULL default '0',
   `free` enum('yes','silver','no') default 'no',
-  `sticky` enum('yes','no') NOT NULL default 'no',
+  `not_sticky` enum('yes','no') NOT NULL DEFAULT 'yes',
   `moderated` enum('yes','no') NOT NULL default 'no',
   `moderatedby` int(10) unsigned default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `info_hash` (`info_hash`),
   KEY `owner` (`owner`),
   KEY `visible` (`visible`),
-  KEY `category_visible` (`category`,`visible`)
+  KEY `category_visible` (`category`,`visible`),
+  KEY `vnsi` (`visible`, `not_sticky`, `id`)
 ) ENGINE=MyISAM;
 
 #
