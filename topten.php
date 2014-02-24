@@ -171,10 +171,10 @@ loggedinorreturn();
   begin_main_frame();
 //  $r = sql_query("SELECT * FROM users ORDER BY donated DESC, username LIMIT 100") or die;
 //  donortable($r, "Top 10 Donors");
-	$type = isset($_GET["type"]) ? 0 + $_GET["type"] : 0;
+	$type = isset($_GET["type"]) ? (int)$_GET["type"] : 0;
 	if (!in_array($type,array(1,2,3,4)))
 		$type = 1;
-	$limit = isset($_GET["lim"]) ? 0 + $_GET["lim"] : false;
+	$limit = isset($_GET["lim"]) ? (int)$_GET["lim"] : false;
 	$subtype = isset($_GET["subtype"]) ? $_GET["subtype"] : false;
 
 	print("<p align=center>"  .
