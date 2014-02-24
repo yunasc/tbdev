@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR
 	die;
 }
 
-$res = sql_query("SELECT * FROM bans ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
+$res = sql_query("SELECT bans.*, users.username FROM bans LEFT JOIN users ON bans.addedby = users.id ORDER BY bans.added DESC") or sqlerr(__FILE__, __LINE__);
 
 stdhead($tracker_lang['bans']);
 
@@ -95,11 +95,10 @@ else
 
   while ($arr = mysql_fetch_assoc($res))
   {
-  	$r2 = sql_query("SELECT username FROM users WHERE id=$arr[addedby]") or sqlerr(__FILE__, __LINE__);
-  	$a2 = mysql_fetch_assoc($r2);
 	$arr["first"] = long2ip($arr["first"]);
 	$arr["last"] = long2ip($arr["last"]);
- 	  print("<tr><td class=\"row1\">$arr[added]</td><td class=\"row1\" align=\"left\">$arr[first]</td><td  class=\"row1\" align=\"left\">$arr[last]</td><td  class=\"row1\" align=\"left\"><a href=\"userdetails.php?id=$arr[addedby]\">$a2[username]".
+
+ 	print("<tr><td class=\"row1\">$arr[added]</td><td class=\"row1\" align=\"left\">$arr[first]</td><td  class=\"row1\" align=\"left\">$arr[last]</td><td  class=\"row1\" align=\"left\"><a href=\"userdetails.php?id=$arr[addedby]\">$arr[username]".
  	    "</a></td><td  class=\"row1\" align=\"left\">".$arr["comment"]."</td><td  class=\"row1\"><a href=\"bans.php?remove=$arr[id]\">Снять бан</a></td></tr>\n");
   }
   end_table();
