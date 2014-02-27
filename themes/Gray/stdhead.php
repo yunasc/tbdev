@@ -87,6 +87,8 @@ if($description)
 &nbsp;&#8226;&nbsp;-->
 <a href="staff.php"><font color="#FFFFFF"><?=$tracker_lang['staff'];?></font></a>
 <? } ?>
+&nbsp;&#8226;&nbsp;
+<a href="contactus.php"><font color="#FFFFFF"><?=$tracker_lang['contactus'];?></font></a>
 </td></tr>
 </table>
 <!-- /////// Top Navigation Menu for unregistered-->

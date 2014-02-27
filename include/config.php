@@ -78,6 +78,10 @@ $smtptype = 'advanced'; // Тип отправки почты, по умолчанию advanced, лучше не м
 $allow_block_hide = true; // Разрешить сворачивание блоков
 $check_for_working_mta = true; // Проверять работу почтового MTA при регистрации пользователя (TCP connect @ domain:25)
 $force_private_tracker = true;
+
+$admin_email = 'admin@'.$_SERVER['HTTP_HOST']; // Почта администратора трекера, для формы обратной связи
+$website_name = 'TBDev'; // Краткое имя сайта, для формы обратной связи
+
 $enable_adv_antidreg = false; // Использовать продвинутую систему против двойных регистраций. Пояснение внизу:
 /*
  * Если наш юзер сделал просто выход (ссылка "Выход" aka logout.php) то у него в куксах останется uid
