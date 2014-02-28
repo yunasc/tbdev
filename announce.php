@@ -45,7 +45,7 @@ foreach (array('passkey','info_hash','peer_id','event','ip','localip') as $x) {
 }
 
 foreach (array('port','downloaded','uploaded','left') as $x)
-	$GLOBALS[$x] = 0 + $_GET[$x];
+	$GLOBALS[$x] = intval($_GET[$x]);
 
 if (get_magic_quotes_gpc()) {
     $info_hash = stripslashes($info_hash);
