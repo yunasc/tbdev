@@ -30,8 +30,8 @@
 if(!defined("IN_ANNOUNCE"))
   die("Hacking attempt!");
 
-@error_reporting(E_ALL & ~E_NOTICE);
-@ini_set('error_reporting', E_ALL & ~E_NOTICE);
+@error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+@ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT);
 @ini_set('display_errors', '1');
 @ini_set('display_startup_errors', '0');
 @ini_set('ignore_repeated_errors', '1');
