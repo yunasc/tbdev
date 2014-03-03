@@ -14,6 +14,7 @@ class lang implements arrayaccess {
 			'add_user' => 'Добавить пользователя',
 			'added' => 'Добавлен',
 			'age' => 'Возраст',
+			'contactus' => 'Связаться с нами',
 			'new_torrents_stats' => 'Раздают: %d, Качают: %d',
 			'help_seed' => 'Скачал сам, дай скачать другому!!!',
 			'no_need_seeding' => 'Нет торрентов, которым нужны раздающие',
