@@ -178,8 +178,11 @@ $infohash = sha1(BEncode($dict['info']));
 
 if ($multi_torrent == 'yes') {
 	if (!empty($dict['announce-list'])) {
-		foreach ($dict['announce-list'] as $al_url)
+		foreach ($dict['announce-list'] as $al_url) {
+			if ($al_url[0] == 'http://retracker.local/announce')
+				continue;
 			sql_query('INSERT INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
+		}
 	}
 }
 

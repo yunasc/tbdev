@@ -34,7 +34,7 @@ while ($ann = mysql_fetch_array($anns_r)) {
 			$data = $http->scrape($ann['url'], $ann['info_hash']);
 		$data = $data[$ann['info_hash']];
 		
-		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.$data['seeders'].', leechers = '.$data['leechers'].' WHERE tid = '.$tid.' AND url = '.sqlesc($ann['url'])) or sqlerr(__FILE__,__LINE__);
+		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($ann['url'])) or sqlerr(__FILE__,__LINE__);
 		$s_sum += $data['seeders'];
 		$l_sum += $data['leechers'];
 		$success++;
