@@ -77,6 +77,9 @@ foreach ($cats as $row)
 $s .= "</select>\n";
 tr($tracker_lang['type'], $s, 1);
 
+tr('Мультитрекер', '<input type="checkbox" value="yes" id="multi" name="multi" /><label for="multi">Мультитрекерный торрент</label>
+	<br /><font class="small">Включение этой опции отключает установку private-флага и удаление других аннонсеров из файла</font>', 1);
+
 tr('Keywords', '<input type="text" name="keywords" size="80" />', 1);
 tr('Description', '<input type="text" name="description" size="80" />', 1);
 

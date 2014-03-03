@@ -92,6 +92,11 @@ if ($_POST['not_sticky'] == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
 else
     $not_sticky = "yes";
 
+if ($_POST['multi'] == 'yes')
+	$multi_torrent = 'yes';
+else
+	$multi_torrent = 'no';
+
 //SEO mods
 $keywords = htmlspecialchars_uni(strval($_POST["keywords"]));
 $description = htmlspecialchars_uni(strval($_POST["description"]));
@@ -147,8 +152,7 @@ if (isset($totallen)) {
 	$type = "multi";
 }
 
-$multi_torrent = true;
-if (!$multi_torrent) {
+if ($multi_torrent == 'no') {
 	$dict['value']['announce']=bdec(benc_str($announce_urls[0]));  // change announce url to local
 	$dict['info']['private']=bdec('i1e');  // add private tracker flag
 	$dict['info']['source']=bdec(benc_str( "[$DEFAULTBASEURL] $SITENAME")); // add link for bitcomet users
@@ -172,7 +176,7 @@ $dict['publisher-url.utf-8'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"
 
 $infohash = sha1(BEncode($dict['info']));
 
-if ($multi_torrent) {
+if ($multi_torrent == 'yes') {
 	if (!empty($dict['announce-list'])) {
 		foreach ($dict['announce-list'] as $al_url)
 			sql_query('INSERT INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
@@ -245,7 +249,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
-$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
+$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action, multitracker) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "', ".sqlesc($multi_torrent).")");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");
