@@ -68,18 +68,22 @@ sql_query("UPDATE torrents SET hits = hits + 1 WHERE id = ".sqlesc($id));
 
 $name = str_replace(array(',', ';'), '', $name);
 
-require_once "include/benc.php";
+require_once "include/BDecode.php";
+require_once "include/BEncode.php";
 
 if (strlen($CURUSER['passkey']) != 32) {
 	$CURUSER['passkey'] = md5($CURUSER['username'].get_date_time().$CURUSER['passhash']);
 	sql_query("UPDATE users SET passkey=".sqlesc($CURUSER[passkey])." WHERE id=".sqlesc($CURUSER[id]));
 }
 
-$dict = bdec_file($fn, $max_torrent_size);
+$dict = bdecode(file_get_contents($fn));
 
-$dict['value']['announce']['value'] = $announce_urls[0]."?passkey=$CURUSER[passkey]";//"$DEFAULTBASEURL/announce.php?passkey=$CURUSER[passkey]";
-$dict['value']['announce']['string'] = strlen($dict['value']['announce']['value']).":".$dict['value']['announce']['value'];
-$dict['value']['announce']['strlen'] = strlen($dict['value']['announce']['string']);
+//$dict['announce'] = $announce_urls[0]."?passkey=$CURUSER[passkey]";//"$DEFAULTBASEURL/announce.php?passkey=$CURUSER[passkey]";
+
+if (!empty($dict['announce-list'])) {
+	$dict['announce-list'][][0] = $announce_urls[0]."?passkey=$CURUSER[passkey]"; // Just add one tracker for multitrackers, we are the last
+} else
+	$dict['announce'] = $announce_urls[0]."?passkey=$CURUSER[passkey]";//"$DEFAULTBASEURL/announce.php?passkey=$CURUSER[passkey]";
 
 header ("Expires: Tue, 1 Jan 1980 00:00:00 GMT");
 header ("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
@@ -94,6 +98,6 @@ header ("Content-Disposition: attachment; filename=\"".$name."\"");
 header ("Content-Type: application/x-bittorrent");
 ob_implicit_flush(true);
 
-print(benc($dict));
+print(BEncode($dict));
 
 ?>

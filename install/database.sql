@@ -565,12 +565,33 @@ CREATE TABLE `torrents` (
   `not_sticky` enum('yes','no') NOT NULL DEFAULT 'yes',
   `moderated` enum('yes','no') NOT NULL default 'no',
   `moderatedby` int(10) unsigned default '0',
+  `multitracker` enum('yes','no') NOT NULL DEFAULT 'no',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `info_hash` (`info_hash`),
   KEY `owner` (`owner`),
   KEY `visible` (`visible`),
   KEY `category_visible` (`category`,`visible`),
   KEY `vnsi` (`visible`, `not_sticky`, `id`)
+) ENGINE=MyISAM;
+
+#
+# Structure for the `torrents_scrape` table :
+#
+
+DROP TABLE IF EXISTS `torrents_scrape`;
+
+CREATE TABLE `torrents_scrape` (
+  `tid` int(10) unsigned NOT NULL DEFAULT '0',
+  `info_hash` varbinary(40) NOT NULL DEFAULT '',
+  `url` varchar(100) NOT NULL DEFAULT '',
+  `seeders` int(10) unsigned NOT NULL DEFAULT '0',
+  `leechers` int(10) unsigned NOT NULL DEFAULT '0',
+  `completed` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `state` enum('ok','error') NOT NULL DEFAULT 'ok',
+  `error` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`info_hash`,`url`) USING BTREE,
+  KEY `tid` (`tid`)
 ) ENGINE=MyISAM;
 
 #
