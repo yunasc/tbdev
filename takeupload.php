@@ -205,7 +205,6 @@ $allowed_types = array(
 );
 
 for ($x=0; $x < 5; $x++) {
-
 if (!($_FILES['image'.$x]['name'] == "")) {
 	$y = $x + 1;
 
@@ -218,7 +217,8 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 	// Is within allowed filesize?
 	if ($_FILES['image'.$x]['size'] > $maxfilesize)
-		bark("Invalid file size! Image $y - Must be less than 500kb");
+		bark("Превышен размер файла! Картинка $y - Должна быть меньше 500kb");
+		//bark("Invalid file size! Image $y - Must be less than 500kb");
 
 	// Where to upload?
 	// Update for your own server. Make sure the folder has chmod write permissions. Remember this director
@@ -243,9 +243,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 	$inames[] = $ifilename;
 
-}
-
-}
+}}
 
 //////////////////////////////////////////////
 
@@ -261,23 +259,23 @@ if (!$ret) {
 }
 $id = mysql_insert_id();
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
-@sql_query("DELETE FROM files WHERE torrent = $id");
+sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {
-	@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
+	sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
 }
 
 move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
 
 $fp = fopen("$torrent_dir/$id.torrent", "w");
-if ($fp)
-{
+if ($fp) {
 	$dict_str = BEncode($dict);
     @fwrite($fp, $dict_str, strlen($dict_str));
     fclose($fp);
 }
 
-write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["username"],"5DDB6E","torrent");
+write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["username"], "5DDB6E", "torrent");
 
+// Этой фигней ваще кто-то пользуется?
 /* Email notify */
 /*******************
 
