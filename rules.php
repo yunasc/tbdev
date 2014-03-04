@@ -104,11 +104,11 @@ If you have something interesting that somehow violate these rules (e.g. not ISO
 <br />
 <table border=0 cellspacing=3 cellpadding=0>
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp;<b><font color="black">Пользователь</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="black">Пользователь</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Обычный, нормальный пользователь трекера</td></tr>
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#0099FF">Опытный&nbsp;пользователь</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; &nbsp;&nbsp;<b><font color="#D21E36">Опытный&nbsp;пользователь</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Трекер автоматически присваивает (и отбирает) это звание у пользователей, чей аккаунт активен не менее 4 недель, кто залил более 25 GB и имеет рейтинг 1.05. Модератор может вручную присвоить этот статус до следующего автоматического исполнения скрипта.</td>
 </tr>
@@ -118,27 +118,27 @@ If you have something interesting that somehow violate these rules (e.g. not ISO
 	<td class=embedded>This status is given ONLY by Redbeard since he is the only one who can verify that they actually donated something.</td>
 </tr>-->
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#F75009">VIP</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#9C2FE0">VIP</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Человек, оказывающий финансовую или другую помощь сайту</td>
 </tr>
-<tr>
+<!--<tr>
 	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b>Other</b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Специальное звание для друзей и верных зрителей <?=$SITENAME?>.</td>
-</tr>
+</tr>-->
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#9900FF">Заливающий</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="orange">Заливающий</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Пользователь с правом раздавать на <?=$SITENAME?>. Присваивается Администраторами. Есть подходящие кандидаты? Пишите в приват, не стесняйтесь.</td>
 </tr>
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#FF9900">Модератор</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="red">Модератор</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Назначаются Администрацией и имеют функции модераторов.</td>
 </tr>
 <tr>
-	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="#339900">Администратор</font></b></td>
+	<td class=embedded bgcolor="#F5F4EA" valign=top>&nbsp; <b><font color="green">Администратор</font></b></td>
 	<td class=embedded width=5>&nbsp;</td>
 	<td class=embedded>Ваше непосредственное начальство.</td>
 </tr>
