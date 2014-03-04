@@ -364,6 +364,8 @@ class lang implements arrayaccess {
 			'tracker_seed_peer' => 'Раздающих/Качающих (%)',
 			'tracker_seeders' => 'Раздающих',
 			'tracker_torrents' => 'Торрентов',
+			'external_seeders' => 'Внешних Раздающих',
+			'external_leechers' => 'Внешних Качающих',
 			'ttl' => 'TTL',
 			'type' => 'Тип',
 			'ul_speed' => 'Раздача',
