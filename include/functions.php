@@ -913,7 +913,7 @@ function ratingpic($num) {
 	$r = round($num * 2) / 2;
 	if ($r < 1 || $r > 5)
 		return;
-	return "<img src=\"$pic_base_url$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
+	return "<img src=\"$pic_base_url/$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
 }
 
 function writecomment($userid, $comment) {

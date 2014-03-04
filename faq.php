@@ -88,9 +88,9 @@ if (isset($faq_categ)) {
 					if ($faq_categ[$id][items][$id2][flag] == "1")
 						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a></li>\n");
 					elseif ($faq_categ[$id][items][$id2][flag] == "2")
-						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."updated.png\" alt=\"Обновлено\" title=\"Обновлено\" align=\"absbottom\"></li>\n");
+						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/updated.png\" alt=\"Обновлено\" title=\"Обновлено\" align=\"absbottom\"></li>\n");
 					elseif ($faq_categ[$id][items][$id2][flag] == "3")
-						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."new.png\" alt=\"Новое\" title=\"Новое\" align=\"absbottom\"></li>\n");
+						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/new.png\" alt=\"Новое\" title=\"Новое\" align=\"absbottom\"></li>\n");
 				}
 			}
 			print("</ul>\n</li>\n</ul>\n<br />\n");

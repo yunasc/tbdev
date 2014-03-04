@@ -15,6 +15,7 @@ class lang implements arrayaccess {
 			'added' => 'Добавлен',
 			'age' => 'Возраст',
 			'contactus' => 'Связаться с нами',
+			'external_torrent' => 'Мультитрекерный торрент',
 			'new_torrents_stats' => 'Раздают: %d, Качают: %d',
 			'help_seed' => 'Скачал сам, дай скачать другому!!!',
 			'no_need_seeding' => 'Нет торрентов, которым нужны раздающие',

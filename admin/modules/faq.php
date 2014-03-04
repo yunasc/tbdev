@@ -54,8 +54,8 @@ function FaqAdmin() {
 					print("<option value=\"$n\"". $sel .">". $n ."</option>");
 				}
 				if ($faq_categ[$id]["items"][$id2][flag] == "0") $status = "<font color=\"#FF0000\">Скрыто</font>";
-				elseif ($faq_categ[$id]["items"][$id2][flag] == "2") $status = "<font color=\"#0000FF\"><img src=\"".$rootpath.$pic_base_url."updated.png\" alt=\"Updated\" align=\"absbottom\"></font>";
-				elseif ($faq_categ[$id]["items"][$id2][flag] == "3") $status = "<font color=\"#008000\"><img src=\"".$rootpath.$pic_base_url."new.png\" alt=\"Новое\" align=\"absbottom\"></font>";
+				elseif ($faq_categ[$id]["items"][$id2][flag] == "2") $status = "<font color=\"#0000FF\"><img src=\"".$rootpath.$pic_base_url."/updated.png\" alt=\"Updated\" align=\"absbottom\"></font>";
+				elseif ($faq_categ[$id]["items"][$id2][flag] == "3") $status = "<font color=\"#008000\"><img src=\"".$rootpath.$pic_base_url."/new.png\" alt=\"Новое\" align=\"absbottom\"></font>";
 				else $status = "Обычный";
 				print("</select></td><td>". $faq_categ[$id]["items"][$id2]["question"] ."</td><td align=\"center\" width=\"60px\">". $status ."</td><td align=\"center\" width=\"60px\"><a href=\"$admin_file.php?op=FaqAction&action=edit&id=". $id2 ."\">E</a> / <a href=\"$admin_file.php?op=FaqAction&action=delete&id=". $id2 ."\">D</a></td></tr>\n");
 			}

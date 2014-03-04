@@ -224,10 +224,10 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 		$dispname = $row["name"];
         switch ($row['free']) {
             case 'yes':
-                $freepic = "<img src=\"pic/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">";
+                $freepic = "<img src=\"$pic_base_url/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">";
             break;
             case 'silver':
-                $freepic = "<img src=\"pic/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">";
+                $freepic = "<img src=\"$pic_base_url/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">";
             break;
             case 'no':
                 $freepic = '';
@@ -242,9 +242,12 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 		print("\"><b>$dispname</b></a> $thisisfree\n");
 
 			if ($variant != "bookmarks" && $CURUSER)
-				print("<a href=\"bookmark.php?torrent=$row[id]\"><img border=\"0\" src=\"pic/bookmark.gif\" alt=\"".$tracker_lang['bookmark_this']."\" title=\"".$tracker_lang['bookmark_this']."\" /></a>\n");
+				print("<a href=\"bookmark.php?torrent=$row[id]\"><img border=\"0\" src=\"$pic_base_url/bookmark.gif\" alt=\"".$tracker_lang['bookmark_this']."\" title=\"".$tracker_lang['bookmark_this']."\" /></a>\n");
 
-			print("<a href=\"download.php?id=$id\"><img src=\"pic/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
+			print("<a href=\"download.php?id=$id\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
+
+			if ($row['multitracker'] == 'yes')
+				print("<img src=\"$pic_base_url/multitracker.png\" alt=\"".$tracker_lang['external_torrent']."\" title=\"".$tracker_lang['external_torrent']."\" />\n");
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;
@@ -252,7 +255,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 			$owned = 0;
 
 				if ($owned)
-			print("<a href=\"edit.php?id=$row[id]\"><img border=\"0\" src=\"pic/pen.gif\" alt=\"".$tracker_lang['edit']."\" title=\"".$tracker_lang['edit']."\" /></a>\n");
+			print("<a href=\"edit.php?id=$row[id]\"><img border=\"0\" src=\"$pic_base_url/pen.gif\" alt=\"".$tracker_lang['edit']."\" title=\"".$tracker_lang['edit']."\" /></a>\n");
 
 			   if ($row["readtorrent"] == 0 && $variant == "index")
 				   print ("<b><font color=\"red\" size=\"1\">[новый]</font></b>");

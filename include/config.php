@@ -50,7 +50,7 @@ $SITEEMAIL = 'noreply@' . $_SERVER['HTTP_HOST'];
 $SITENAME = 'TBDev Yuna Scatari Edition';
 
 $autoclean_interval = 900;
-$pic_base_url = './pic/';
+$pic_base_url = './pic';
 
 // [BEGIN] Custom variables from Yuna Scatari
 // TTL

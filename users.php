@@ -180,8 +180,8 @@ else
 	else
 		$ratio = "------";
 
-if ($arr["gender"] == "1") $gender = "<img src=\"".$pic_base_url."male.gif\" alt=\"Парень\" style=\"margin-left: 4pt\">";
-elseif ($arr["gender"] == "2") $gender = "<img src=\"".$pic_base_url."female.gif\" alt=\"Девушка\" style=\"margin-left: 4pt\">";
+if ($arr["gender"] == "1") $gender = "<img src=\"".$pic_base_url."/male.gif\" alt=\"Парень\" style=\"margin-left: 4pt\">";
+elseif ($arr["gender"] == "2") $gender = "<img src=\"".$pic_base_url."/female.gif\" alt=\"Девушка\" style=\"margin-left: 4pt\">";
 
 print("<tr><td align=\"left\"><a href=\"userdetails.php?id=$arr[id]\"><b>".get_user_class_color($arr["class"], $arr["username"])."</b></a>" .($arr["donated"] > 0 ? "<img src=\"pic/star.gif\" border=\"0\" alt=\"Donor\">" : "")."</td>" .
 "<td>$arr[added]</td><td>$arr[last_access]</td><td>$ratio</td><td>$gender</td>".
