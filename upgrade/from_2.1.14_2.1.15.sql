@@ -1,5 +1,5 @@
 #
-# SQL script to update from 2.12.14 version to 2.12.15
+# SQL script to update from 2.1.14 version to 2.1.15
 #
 
 ALTER TABLE `torrents` ADD COLUMN `not_sticky` ENUM('yes','no') NOT NULL DEFAULT 'yes' AFTER `sticky`;

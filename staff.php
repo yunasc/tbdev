@@ -49,9 +49,9 @@ while ($arr = mysql_fetch_assoc($res))
 
 $staff_table[$arr['class']]=$staff_table[$arr['class']].
 "<td class=embedded><a class=altlink href=userdetails.php?id=".$arr['id']."><b>".
-get_user_class_color($arr['class'],$arr['username'])."</b></a></td><td class=embedded> ".("'".$arr['last_access']."'">$dt?"<img src=".$pic_base_url."button_online.gif border=0 alt=\"online\">":"<img src=".$pic_base_url."button_offline.gif border=0 alt=\"offline\">" )."</td>".
+get_user_class_color($arr['class'],$arr['username'])."</b></a></td><td class=embedded> ".("'".$arr['last_access']."'">$dt?"<img src=".$pic_base_url."/button_online.gif border=0 alt=\"online\">":"<img src=".$pic_base_url."/button_offline.gif border=0 alt=\"offline\">" )."</td>".
 "<td class=embedded><a href=message.php?action=sendmessage&amp;receiver=".$arr['id'].">".
-"<img src=".$pic_base_url."button_pm.gif border=0></a></td>".
+"<img src=".$pic_base_url."/button_pm.gif border=0></a></td>".
 " ";
 
 
@@ -317,9 +317,9 @@ while ($arr = mysql_fetch_assoc($res))
 $land = sql_query("SELECT name,flagpic FROM countries WHERE id=$arr[country]") or sqlerr(__FILE__, __LINE__);
 $arr2 = mysql_fetch_assoc($land);
 $firstline .= "<tr height=15><td class=embedded><a class=altlink href=userdetails.php?id=".$arr['id'].">".$arr['username']."</a></td>
-<td class=embedded> ".("'".$arr['last_access']."'">$dt?"<img src=".$pic_base_url."button_online.gif border=0 alt=\"online\">":"<img src=".$pic_base_url."button_offline.gif border=0 alt=\"offline\">" )."</td>".
-"<td class=embedded><a href=message.php?action=sendmessage&amp;receiver=".$arr['id'].">"."<img src=".$pic_base_url."button_pm.gif border=0></a></td>".
-"<td class=embedded><img src=".$pic_base_url."/flag/$arr2[flagpic] title=$arr2[name] border=0 width=19 height=12></td>".
+<td class=embedded> ".("'".$arr['last_access']."'">$dt?"<img src=".$pic_base_url."/button_online.gif border=0 alt=\"online\">":"<img src=".$pic_base_url."/button_offline.gif border=0 alt=\"offline\">" )."</td>".
+"<td class=embedded><a href=message.php?action=sendmessage&amp;receiver=".$arr['id'].">"."<img src=".$pic_base_url."/button_pm.gif border=0></a></td>".
+"<td class=embedded><img src=\"".$pic_base_url."/flag/$arr2[flagpic]\" title=$arr2[name] border=0 width=19 height=12></td>".
 "<td class=embedded>".$arr['supportfor']."</td></tr>\n";
 }
 

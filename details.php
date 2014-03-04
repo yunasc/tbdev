@@ -190,7 +190,7 @@ $id = intval($_GET["id"]);
 if (!isset($id) || !$id)
         die();
 
-$res = sql_query("SELECT t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id")
+$res = sql_query("SELECT t.multitracker, t.last_mt_update, t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id")
         or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_array($res);
 
@@ -439,6 +439,19 @@ else {
                         tr("<a name=\"leechers\">".$tracker_lang['details_leeching']."</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[".$tracker_lang['close_list']."]</a>", dltable($tracker_lang['details_leeching'], $downloaders, $row), 1);
                 }
 
+				if ($row["multitracker"] == 'yes') {
+					$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$id);
+					while ($announce = mysql_fetch_array($announces_r)) {
+						if ($announce['state'] == 'ok')
+							$anns[] = '<li><b>'.$announce['url'].'</b> - раздающие: <b>'.$announce['seeders'].'</b>, качающие: <b>'.$announce['leechers'].'</b>';
+						else
+							$anns[] = '<li><font color="red"><b>'.$announce['url'].'</b></font> - не работает, ошибка: '.$announce['error'].'</b>';
+					}
+					if (strtotime($row['last_mt_update']) < (TIMENOW - 3600))
+						$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id='.$id.'">Обновить мультитрекер</a>';
+					tr("Мультитрекер", '<ul style="margin: 0;">'.implode($anns).'</ul>'.$update_link, 1);
+				}
+
 				if ($row["times_completed"] > 0) {
                     $res = sql_query("SELECT users.id, users.username, users.title, users.uploaded, users.downloaded, users.donor, users.enabled, users.warned, users.last_access, users.class, snatched.startdat, snatched.last_action, snatched.completedat, snatched.seeder, snatched.userid, snatched.uploaded AS sn_up, snatched.downloaded AS sn_dn FROM snatched INNER JOIN users ON snatched.userid = users.id WHERE snatched.finished='yes' AND snatched.torrent =" . sqlesc($id) . " ORDER BY users.class DESC $limit") or sqlerr(__FILE__,__LINE__);
 					$snatched_full = "<table width=100% class=main border=1 cellspacing=0 cellpadding=5>\n";
@@ -472,7 +485,7 @@ else {
 						//$highlight = $CURUSER["id"] == $arr["id"] ? " bgcolor=#00A527" : "";;
 						$snatched_small[] = "<a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])." (<font color=" . get_ratio_color($ratio) . ">$ratio</font>)</a>";
 						$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>" . $arr["startdat"] . "<br />" . $arr["completedat"] . "</nobr></td><td align=center><nobr>" . $arr["last_action"] . "</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
-							"</td><td align=center><a href=message.php?action=sendmessage&amp;receiver=$arr[userid]><img src=$pic_base_url/button_pm.gif border=\"0\"></a></td></tr>\n";
+							"</td><td align=center><a href=message.php?action=sendmessage&amp;receiver=$arr[userid]><img src=\"$pic_base_url/button_pm.gif\" border=\"0\"></a></td></tr>\n";
                     }
 		            $snatched_full .= "</table>\n";
 					?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?

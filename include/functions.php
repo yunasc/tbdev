@@ -778,6 +778,7 @@ function deletetorrent($id) {
 	sql_query('DELETE FROM readtorrents WHERE torrentid = '.$id);
 	foreach(explode('.','peers.files.comments.ratings') as $x)
 		sql_query('DELETE FROM '.$x.' WHERE torrent = '.$id);
+	sql_query('DELETE FROM torrents_scrape WHERE tid = '.$id);
 	unlink($torrent_dir.'/'.$id.'.torrent');
 }
 
@@ -912,7 +913,7 @@ function ratingpic($num) {
 	$r = round($num * 2) / 2;
 	if ($r < 1 || $r > 5)
 		return;
-	return "<img src=\"$pic_base_url$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
+	return "<img src=\"$pic_base_url/$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
 }
 
 function writecomment($userid, $comment) {
@@ -965,7 +966,7 @@ function parked() {
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
 define ('VERSION', '');
-define ('NUM_VERSION', '2.1.15');
+define ('NUM_VERSION', '2.1.16');
 define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Бесплатная OpenSource база" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="Сайт разработчика движка" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
 
 function mysql_modified_rows () {

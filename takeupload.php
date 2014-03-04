@@ -26,7 +26,8 @@
 // +--------------------------------------------------------------------------+
 */
 
-require_once("include/benc.php");
+require_once("include/BDecode.php");
+require_once("include/BEncode.php");
 require_once("include/bittorrent.php");
 
 ini_set("upload_max_filesize",$max_torrent_size);
@@ -63,7 +64,7 @@ if (!$descr)
 $catid = intval($_POST["type"]);
 if (!is_valid_id($catid))
 	bark("Вы должны выбрать категорию, в которую поместить торрент!");
-	
+
 if (!validfilename($fname))
 	bark("Неверное имя файла!");
 if (!preg_match('/^(.+)\.torrent$/si', $fname, $matches))
@@ -78,7 +79,7 @@ if (!is_uploaded_file($tmpname))
 if (!filesize($tmpname))
 	bark("Пустой файл!");
 
-$dict = bdec_file($tmpname, $max_torrent_size);
+$dict = bdecode(file_get_contents($tmpname));
 if (!isset($dict))
 	bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
 
@@ -91,9 +92,14 @@ if ($_POST['not_sticky'] == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
 else
     $not_sticky = "yes";
 
+if ($_POST['multi'] == 'yes')
+	$multi_torrent = 'yes';
+else
+	$multi_torrent = 'no';
+
 //SEO mods
-$keywords = htmlspecialchars_uni((string)$_POST["keywords"]);
-$description = htmlspecialchars_uni((string)$_POST["description"]);
+$keywords = htmlspecialchars_uni(strval($_POST["keywords"]));
+$description = htmlspecialchars_uni(strval($_POST["description"]));
 
 if (!$keywords)
     $keywords = '';
@@ -102,72 +108,36 @@ if (!$description)
     $description = '';
 //SEO mods
 
-function dict_check($d, $s) {
-	if ($d["type"] != "dictionary")
-		bark("not a dictionary");
-	$a = explode(":", $s);
-	$dd = $d["value"];
-	$ret = array();
-	foreach ($a as $k) {
-		unset($t);
-		if (preg_match('/^(.*)\((.*)\)$/', $k, $m)) {
-			$k = $m[1];
-			$t = $m[2];
-		}
-		if (!isset($dd[$k]))
-			bark("dictionary is missing key(s)");
-		if (isset($t)) {
-			if ($dd[$k]["type"] != $t)
-				bark("invalid entry in dictionary");
-			$ret[] = $dd[$k]["value"];
-		}
-		else
-			$ret[] = $dd[$k];
-	}
-	return $ret;
-}
-
-function dict_get($d, $k, $t) {
-	if ($d["type"] != "dictionary")
-		bark("not a dictionary");
-	$dd = $d["value"];
-	if (!isset($dd[$k]))
-		return;
-	$v = $dd[$k];
-	if ($v["type"] != $t)
-		bark("invalid dictionary entry type");
-	return $v["value"];
-}
-
-list($info) = dict_check($dict, "info");
-list($dname, $plen, $pieces) = dict_check($info, "name(string):piece length(integer):pieces(string)");
+$info = $dict['info'];
+list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
 
 /*if (!in_array($ann, $announce_urls, 1))
 	bark("Неверный Announce URL! Должен быть ".$announce_urls[0]);*/
+
+$ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
+$row = mysql_fetch_array($ret);
+$next_id = $row['Auto_increment'];
 
 if (strlen($pieces) % 20 != 0)
 	bark("invalid pieces");
 
 $filelist = array();
-$totallen = dict_get($info, "length", "integer");
 if (isset($totallen)) {
 	$filelist[] = array($dname, $totallen);
 	$type = "single";
 } else {
-	$flist = dict_get($info, "files", "list");
+	$flist = $info['files'];
 	if (!isset($flist))
 		bark("missing both length and files");
 	if (!count($flist))
 		bark("no files");
 	$totallen = 0;
 	foreach ($flist as $fn) {
-		list($ll, $ff) = dict_check($fn, "length(integer):path(list)");
+		list($ll, $ff) = array($fn['length'], $fn['path']);
 		$totallen += $ll;
 		$ffa = array();
 		foreach ($ff as $ffe) {
-			if ($ffe["type"] != "string")
-				bark("filename error");
-			$ffa[] = $ffe["value"];
+			$ffa[] = $ffe;
 		}
 		if (!count($ffa))
 			bark("filename error");
@@ -182,27 +152,43 @@ if (isset($totallen)) {
 	$type = "multi";
 }
 
-$dict['value']['announce']=bdec(benc_str($announce_urls[0]));  // change announce url to local
-$dict['value']['info']['value']['private']=bdec('i1e');  // add private tracker flag
-$dict['value']['info']['value']['source']=bdec(benc_str( "[$DEFAULTBASEURL] $SITENAME")); // add link for bitcomet users
-unset($dict['value']['announce-list']); // remove multi-tracker capability
-unset($dict['value']['nodes']); // remove cached peers (Bitcomet & Azareus)
-unset($dict['value']['info']['value']['crc32']); // remove crc32
-unset($dict['value']['info']['value']['ed2k']); // remove ed2k
-unset($dict['value']['info']['value']['md5sum']); // remove md5sum
-unset($dict['value']['info']['value']['sha1']); // remove sha1
-unset($dict['value']['info']['value']['tiger']); // remove tiger
-unset($dict['value']['azureus_properties']); // remove azureus properties
-$dict=bdec(benc($dict)); // double up on the becoding solves the occassional misgenerated infohash
-$dict['value']['comment']=bdec(benc_str( "Торрент создан для '$SITENAME'")); // change torrent comment
-$dict['value']['created by']=bdec(benc_str( "$CURUSER[username]")); // change created by
-$dict['value']['publisher']=bdec(benc_str( "$CURUSER[username]")); // change publisher
-$dict['value']['publisher.utf-8']=bdec(benc_str( "$CURUSER[username]")); // change publisher.utf-8
-$dict['value']['publisher-url']=bdec(benc_str( "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]")); // change publisher-url
-$dict['value']['publisher-url.utf-8']=bdec(benc_str( "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]")); // change publisher-url.utf-8
-list($info) = dict_check($dict, "info");
+if ($multi_torrent == 'no') {
+	$dict['value']['announce']=bdec(benc_str($announce_urls[0]));  // change announce url to local
+	$dict['info']['private']=bdec('i1e');  // add private tracker flag
+	$dict['info']['source']=bdec(benc_str( "[$DEFAULTBASEURL] $SITENAME")); // add link for bitcomet users
+	unset($dict['announce-list']); // remove multi-tracker capability
+	unset($dict['nodes']); // remove cached peers (Bitcomet & Azareus)
+	unset($dict['info']['crc32']); // remove crc32
+	unset($dict['info']['ed2k']); // remove ed2k
+	unset($dict['info']['md5sum']); // remove md5sum
+	unset($dict['info']['sha1']); // remove sha1
+	unset($dict['info']['tiger']); // remove tiger
+	unset($dict['azureus_properties']); // remove azureus properties
+}
 
-$infohash = sha1($info["string"]);
+$dict = BDecode(BEncode($dict)); // double up on the becoding solves the occassional misgenerated infohash
+$dict['comment'] = "Торрент создан для '$SITENAME'"; // change torrent comment
+$dict['created by'] = "$CURUSER[username]"; // change created by
+$dict['publisher'] = "$CURUSER[username]"; // change publisher
+$dict['publisher.utf-8'] = "$CURUSER[username]"; // change publisher.utf-8
+$dict['publisher-url'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"; // change publisher-url
+$dict['publisher-url.utf-8'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"; // change publisher-url.utf-8
+
+$infohash = sha1(BEncode($dict['info']));
+
+if ($multi_torrent == 'yes') {
+	if (!empty($dict['announce-list'])) {
+		foreach ($dict['announce-list'] as $al_url) {
+			if ($al_url[0] == 'http://retracker.local/announce')
+				continue;
+			// А вдруг в торренте два одинаковых аннонсера? Потому REPLACE INTO
+			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
+		}
+	}
+}
+
+/*print_r($infohash);
+die;*/
 
 //////////////////////////////////////////////
 //////////////Take Image Uploads//////////////
@@ -219,7 +205,6 @@ $allowed_types = array(
 );
 
 for ($x=0; $x < 5; $x++) {
-
 if (!($_FILES['image'.$x]['name'] == "")) {
 	$y = $x + 1;
 
@@ -232,7 +217,8 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 	// Is within allowed filesize?
 	if ($_FILES['image'.$x]['size'] > $maxfilesize)
-		bark("Invalid file size! Image $y - Must be less than 500kb");
+		bark("Превышен размер файла! Картинка $y - Должна быть меньше 500kb");
+		//bark("Invalid file size! Image $y - Must be less than 500kb");
 
 	// Where to upload?
 	// Update for your own server. Make sure the folder has chmod write permissions. Remember this director
@@ -242,9 +228,9 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 	$ifile = $_FILES['image'.$x]['tmp_name'];
 
 	// Calculate what the next torrent id will be
-	$ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
+	/*$ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
 	$row = mysql_fetch_array($ret);
-	$next_id = $row['Auto_increment'];
+	$next_id = $row['Auto_increment'];*/
 
 	// By what filename should the tracker associate the image with?
 	$ifilename = $next_id . $x . '.' . end(explode('.', $_FILES['image'.$x]['name']));
@@ -257,9 +243,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 	$inames[] = $ifilename;
 
-}
-
-}
+}}
 
 //////////////////////////////////////////////
 
@@ -267,7 +251,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
-$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "')");
+$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action, multitracker) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "', ".sqlesc($multi_torrent).")");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");
@@ -275,22 +259,23 @@ if (!$ret) {
 }
 $id = mysql_insert_id();
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
-@sql_query("DELETE FROM files WHERE torrent = $id");
+sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {
-	@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
+	sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
 }
 
 move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
 
 $fp = fopen("$torrent_dir/$id.torrent", "w");
-if ($fp)
-{
-    @fwrite($fp, benc($dict), strlen(benc($dict)));
+if ($fp) {
+	$dict_str = BEncode($dict);
+    @fwrite($fp, $dict_str, strlen($dict_str));
     fclose($fp);
 }
 
-write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["username"],"5DDB6E","torrent");
+write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["username"], "5DDB6E", "torrent");
 
+// Этой фигней ваще кто-то пользуется?
 /* Email notify */
 /*******************
 

@@ -182,9 +182,9 @@ if (mysql_num_rows($res) == 1)
 //if ($user["donor"] == "yes") $donor = "<td class=embedded><img src=pic/starbig.gif alt='Donor' style='margin-left: 4pt'></td>";
 //if ($user["warned"] == "yes") $warned = "<td class=embedded><img src=pic/warnedbig.gif alt='Warned' style='margin-left: 4pt'></td>";
 
-if ($user["gender"] == "1") $gender = "<img src=\"".$pic_base_url."male.gif\" alt=\"Парень\" title=\"Парень\">";
-elseif ($user["gender"] == "2") $gender = "<img src=\"".$pic_base_url."female.gif\" alt=\"Девушка\" title=\"Девушка\">";
-//elseif ($user["gender"] == "Н/Д") $gender = "<td class=embedded><img src=".$pic_base_url."na.gif alt='Н/Д' style='margin-left: 4pt'></td>";
+if ($user["gender"] == "1") $gender = "<img src=\"".$pic_base_url."/male.gif\" alt=\"Парень\" title=\"Парень\">";
+elseif ($user["gender"] == "2") $gender = "<img src=\"".$pic_base_url."/female.gif\" alt=\"Девушка\" title=\"Девушка\">";
+//elseif ($user["gender"] == "Н/Д") $gender = "<td class=embedded><img src=".$pic_base_url."/na.gif alt='Н/Д' style='margin-left: 4pt'></td>";
 
 $res = sql_query("SELECT torrent, added, uploaded, downloaded, torrents.name AS torrentname, categories.name AS catname, categories.id AS catid, size, image, category, seeders, leechers FROM peers LEFT JOIN torrents ON peers.torrent = torrents.id LEFT JOIN categories ON torrents.category = categories.id WHERE userid = $id AND seeder='no'") or sqlerr(__FILE__, __LINE__);
 if (mysql_num_rows($res) > 0)

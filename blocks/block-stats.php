@@ -14,6 +14,7 @@ $torrents = number_format(get_row_count("torrents"));
 $dead = number_format(get_row_count("torrents", "WHERE visible='no'"));
 $seeders = get_row_count("peers", "WHERE seeder='yes'");
 $leechers = get_row_count("peers", "WHERE seeder='no'");
+list($external_seeders, $external_leechers) = array_map('number_format', mysql_fetch_row(sql_query('SELECT SUM(seeders), SUM(leechers) FROM torrents_scrape')));
 $warned_users = number_format(get_row_count("users", "WHERE warned = 'yes'"));
 $disabled = number_format(get_row_count("users", "WHERE enabled = 'no'"));
 $uploaders = number_format(get_row_count("users", "WHERE class = ".UC_UPLOADER));
@@ -50,6 +51,9 @@ $content .= "<tr><td class=\"rowhead\">".$tracker_lang['tracker_seeders']."&nbsp
 <tr><td class=\"rowhead\">".$tracker_lang['tracker_leechers']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=0 align=absbottom></td><td align=right>$leechers</td></tr>
 <tr><td class=\"rowhead\">".$tracker_lang['tracker_seed_peer']."</td><td align=right>$ratio</td></tr>";
 }
+
+$content .= "<tr><td class=\"rowhead\">".$tracker_lang['external_seeders']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=0 align=absbottom></td><td align=right>$external_seeders</td></tr>
+<tr><td class=\"rowhead\">".$tracker_lang['external_leechers']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=0 align=absbottom></td><td align=right>$external_leechers</td></tr>";
 
 $content .= "</table></td>
 
