@@ -69,7 +69,7 @@ This implementation is hereby released under the GFYPL, version 1.00.
 
 */
 class lightbenc {
-	function bdecode($s, &$pos=0) {
+	static function bdecode($s, &$pos=0) {
 		if($pos>=strlen($s)) {
 			return null;
 		}
@@ -123,7 +123,7 @@ class lightbenc {
 		return null;
 	}
 	
-	function bencode(&$d){
+	static function bencode(&$d){
 		if(is_array($d)){
 			$ret="l";
 			if($d["isDct"]){
@@ -155,7 +155,7 @@ class lightbenc {
 			return null;
 	}
 	
-	function bdecode_file($filename){
+	static function bdecode_file($filename){
 		$f=file_get_contents($filename, FILE_BINARY);
 		return bdecode($f);
 	}
