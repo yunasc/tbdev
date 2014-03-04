@@ -181,7 +181,8 @@ if ($multi_torrent == 'yes') {
 		foreach ($dict['announce-list'] as $al_url) {
 			if ($al_url[0] == 'http://retracker.local/announce')
 				continue;
-			sql_query('INSERT INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
+			// А вдруг в торренте два одинаковых аннонсера? Потому REPLACE INTO
+			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
 		}
 	}
 }
