@@ -455,7 +455,7 @@ if ($action == 'mass_pm') {
         ?>
         <table class=main border=0 cellspacing=0 cellpadding=0>
         <tr><td class=embedded><div align=center>
-        <form method=post action=<?=$_SERVER['PHP_SELF']?> name=message>
+        <form method=post action=<?=htmlspecialchars_uni($_SERVER['PHP_SELF']);?> name=message>
         <input type=hidden name=action value=takemass_pm>
         <? if ($_SERVER["HTTP_REFERER"]) { ?>
         <input type=hidden name=returnto value="<?=htmlspecialchars_uni($_SERVER["HTTP_REFERER"]);?>">

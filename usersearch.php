@@ -97,7 +97,7 @@ $highlight = " bgcolor=#BBAF9B";
 
 ?>
 
-<form method=get action=<?=$_SERVER["PHP_SELF"]?>>
+<form method=get action=<?=htmlspecialchars_uni($_SERVER["PHP_SELF"]);?>>
 <table border="1" cellspacing="0" cellpadding="5">
 <tr>
 
