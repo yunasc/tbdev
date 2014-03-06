@@ -95,45 +95,47 @@ $pids = $works = array();
 while ($ann = mysql_fetch_array($anns_r))
 	$works[] = $ann;
 
-$multi = curl_multi_init();
-$channels = array();
+if (function_exists('curl_multi_init')) {
+	$multi = curl_multi_init();
+	$channels = array();
+	foreach ($works as $work) {
+		$url = $work['url'];
+		$info_hash = $work['info_hash'];
+		$url = $DEFAULTBASEURL.'/update_multi.php?id='.$tid.'&url='.urlencode($url).'&info_hash='.urlencode($info_hash).'&token='.generate_token($tid, $url, $info_hash);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
+		curl_multi_add_handle($multi, $ch);
+		$channels[$url] = $ch;
+	}
 
-foreach ($works as $work) {
-	$url = $work['url'];
-	$info_hash = $work['info_hash'];
-	$url = $DEFAULTBASEURL.'/update_multi.php?id='.$tid.'&url='.urlencode($url).'&info_hash='.urlencode($info_hash).'&token='.generate_token($tid, $url, $info_hash);
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HEADER, false);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-	curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
+	$running = null;
+	do {
+	    while (CURLM_CALL_MULTI_PERFORM === curl_multi_exec($multi, $running));
+	    if (!$running)
+	    	break;
+	    while (($res = curl_multi_select($multi)) === 0)
+	    	{};
+	    if ($res === false) {
+	        echo "<h1>select error</h1>";
+	        break;
+	    }
+	} while (true);
 
-	curl_multi_add_handle($multi, $ch);
+	$success = 0;
+	foreach ($channels as $url => $channel) {
+	    $success += intval(curl_multi_getcontent($channel));
+	    curl_multi_remove_handle($multi, $channel);
+	}
 
-	$channels[$url] = $ch;
-}
+	curl_multi_close($multi);
+} else
+	foreach ($works as $work)
+		scrape($tid, $work['url'], $work['info_hash']);
 
-$running = null;
-do {
-    while (CURLM_CALL_MULTI_PERFORM === curl_multi_exec($multi, $running));
-    if (!$running)
-    	break;
-    while (($res = curl_multi_select($multi)) === 0)
-    	{};
-    if ($res === false) {
-        echo "<h1>select error</h1>";
-        break;
-    }
-} while (true);
-
-$success = 0;
-foreach ($channels as $url => $channel) {
-    $success += intval(curl_multi_getcontent($channel));
-    curl_multi_remove_handle($multi, $channel);
-}
-
-curl_multi_close($multi);
 sql_query('UPDATE torrents AS t INNER JOIN (SELECT ts.tid, SUM(ts.seeders) AS sum_seeders, SUM(ts.leechers) AS sum_leechers FROM torrents_scrape AS ts WHERE ts.tid = '.$tid.' GROUP BY ts.tid) AS ts ON ts.tid = t.id SET t.remote_seeders = ts.sum_seeders, t.remote_leechers = ts.sum_leechers, t.last_action = NOW(), t.last_mt_update = NOW() WHERE t.id = '.$tid) or sqlerr(__FILE__,__LINE__);
 
 header('Refresh: 3;url=details.php?id='.$tid);
