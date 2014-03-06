@@ -417,7 +417,7 @@ class mysql {
      * @param array $connect_name имя подключения, ранее определенное с помощью {@link config()}
      * @return object ссылка объект класса
      */
-    function &get_instance($connect_name = null)
+    static function &get_instance($connect_name = null)
     {
         static $instance;
         if (!isset($connect_name) || empty($connect_name)) {
@@ -480,7 +480,7 @@ class mysql {
      * имена БД, назначенные этим методом.
      * @return array
      */
-    function &config($connect_name, $connect_data = null)
+    static function &config($connect_name, $connect_data = null)
     {
         static $config = array();
         if (!isset($config[$connect_name]) && is_array($connect_data)) {
