@@ -29,7 +29,13 @@
 // Да простят меня боги за эти уродства, но это всё писалось в 23:59
 
 require_once('include/bittorrent.php');
+
+// Dirty hack to prevent ghost Guests on website
+$old_us = $use_sessions;
+$use_sessions = 0;
 dbconn();
+$use_sessions = $old_us;
+
 if (!$_GET['token'])
 	loggedinorreturn(); // А вдруг гугл прийдет на такие страницы? Не надо...
 
