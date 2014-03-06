@@ -447,7 +447,7 @@ else {
 						else
 							$anns[] = '<li><font color="red"><b>'.$announce['url'].'</b></font> - не работает, ошибка: '.$announce['error'].'</b>';
 					}
-					if (strtotime($row['last_mt_update']) < (TIMENOW - 3600))
+					if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
 						$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id='.$id.'">Обновить мультитрекер</a>';
 					tr("Мультитрекер", '<ul style="margin: 0;">'.implode($anns).'</ul>'.$update_link, 1);
 				}
