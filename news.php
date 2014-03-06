@@ -116,7 +116,7 @@ if ($action == 'edit')
  	    $returnto = htmlentities($_GET['returnto']);
 
 	    stdhead("Редактирование новости");
-	        echo '<form method=post action=?action=edit&newsid='.$newsid.'>';
+	        echo '<form name="news" method=post action=?action=edit&newsid='.$newsid.'>';
 	            echo '<table border=1 cellspacing=0 cellpadding=5>';
 	                echo '<tr><td class=colhead>Редактирование новости</td></tr>';
 	                echo '<tr><td>Тема: <input type=text name=subject maxlength=70 size=50 value="' . htmlspecialchars_uni($arr["subject"]) . '"/></td></tr>';
@@ -137,7 +137,7 @@ stdhead("Новости");
     if ($warning)
 	    echo '<p><font size=-3>('.$warning.')</font></p>';
 
-    echo '<form method="post" action="?action=add">';
+    echo '<form name="news" method="post" action="?action=add">';
         echo '<table border=1 cellspacing=0 cellpadding=5>';
             echo '<tr><td class=colhead>Добавить новость</td></tr>';
             echo '<tr><td>Тема: <input type=text name=subject maxlength=40 size=50 value="' . htmlspecialchars_uni($arr["subject"]) . '"/></td></tr>';
