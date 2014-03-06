@@ -30,18 +30,55 @@
 
 require_once('include/bittorrent.php');
 dbconn();
-loggedinorreturn();
+if (!$_GET['token'])
+	loggedinorreturn(); // А вдруг гугл прийдет на такие страницы? Не надо...
 
 require_once('include/scraper/httptscraper.php');
 require_once('include/scraper/udptscraper.php');
 
-$timeout = 2;
-$udp = new udptscraper($timeout);
-$http = new httptscraper($timeout);
+function scrape($tid, $url, $info_hash) {
+	$timeout = 5;
+	$udp = new udptscraper($timeout);
+	$http = new httptscraper($timeout);
+
+	try {
+		if (substr($url, 0, 6) == 'udp://')
+			$data = $udp->scrape($url, $info_hash);
+		else
+			$data = $http->scrape($url, $info_hash);
+		$data = $data[$info_hash];
+		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or print(mysql_error()."\n");
+		return true;
+	} catch (ScraperException $e) {
+		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or print(mysql_error()."\n");
+		return false;
+	}
+}
+
+function generate_token($tid, $url, $info_hash) {
+	return md5(implode('', array($tid, $url, $info_hash, COOKIE_SALT)));
+}
+
+function check_token($token, $tid, $url, $info_hash) {
+	return $token === md5(implode('', array($tid, $url, $info_hash, COOKIE_SALT)));
+}
 
 $tid = intval($_GET['id']);
+
 if (!$tid)
 	die('WTF?!');
+
+if ($_GET['info_hash'] && $_GET['url']) {
+	$token = strval($_GET['token']);
+	$url = strval($_GET['url']);
+	$info_hash = strval($_GET['info_hash']);
+	if (strlen($info_hash) != 40)
+		die('Invalid len info_hash supplied');
+	if (!check_token($token, $tid, $url, $info_hash))
+		die('Invalid token');
+	echo scrape($tid, $url, $info_hash);
+	exit;
+}
 
 list($name, $cur_visible, $multitracker, $last_mt_update) = mysql_fetch_row(sql_query('SELECT name, visible, multitracker, last_mt_update FROM torrents WHERE id = '.$tid));
 if ($name == '' || $multitracker == 'no')
@@ -53,36 +90,54 @@ if (strtotime($last_mt_update) > (TIMENOW - 3600))
 $anns_r = sql_query('SELECT info_hash, url FROM torrents_scrape WHERE tid = '.$tid);
 
 $s_sum = $l_sum = $errors = $success = 0;
+$pids = $works = array();
 
-while ($ann = mysql_fetch_array($anns_r)) {
-	try {
-		if (substr($ann['url'], 0, 6) == 'udp://')
-			$data = $udp->scrape($ann['url'], $ann['info_hash']);
-		else
-			$data = $http->scrape($ann['url'], $ann['info_hash']);
-		$data = $data[$ann['info_hash']];
-		
-		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($ann['url'])) or sqlerr(__FILE__,__LINE__);
-		$s_sum += $data['seeders'];
-		$l_sum += $data['leechers'];
-		$success++;
-	} catch (ScraperException $e) {
-		/*echo('Error: ' . $e->getMessage() . "<br />\n");
-		echo('Connection error: ' . ($e->isConnectionError() ? 'yes' : 'no') . "<br />\n");*/
-		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($ann['url'])) or sqlerr(__FILE__,__LINE__);
-		$errors++;
-	}
+while ($ann = mysql_fetch_array($anns_r))
+	$works[] = $ann;
+
+$multi = curl_multi_init();
+$channels = array();
+
+foreach ($works as $work) {
+	$url = $work['url'];
+	$info_hash = $work['info_hash'];
+	$url = $DEFAULTBASEURL.'/update_multi.php?id='.$tid.'&url='.urlencode($url).'&info_hash='.urlencode($info_hash).'&token='.generate_token($tid, $url, $info_hash);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+	curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
+
+	curl_multi_add_handle($multi, $ch);
+
+	$channels[$url] = $ch;
 }
 
-$visible = ($s_sum > 0);
-if (!$visible && $cur_visible == 'no')
-	$visible = 'no';
-else
-	$visible = 'yes';
+$running = null;
+do {
+    while (CURLM_CALL_MULTI_PERFORM === curl_multi_exec($multi, $running));
+    if (!$running)
+    	break;
+    while (($res = curl_multi_select($multi)) === 0)
+    	{};
+    if ($res === false) {
+        echo "<h1>select error</h1>";
+        break;
+    }
+} while (true);
 
-sql_query('UPDATE torrents SET remote_seeders = '.$s_sum.', remote_leechers = '.$l_sum.', last_action = NOW(), last_mt_update = NOW(), visible = '.sqlesc($visible).' WHERE id = '.$tid) or sqlerr(__FILE__,__LINE__);
+$success = 0;
+foreach ($channels as $url => $channel) {
+    $success += intval(curl_multi_getcontent($channel));
+    curl_multi_remove_handle($multi, $channel);
+}
+
+curl_multi_close($multi);
+sql_query('UPDATE torrents AS t INNER JOIN (SELECT ts.tid, SUM(ts.seeders) AS sum_seeders, SUM(ts.leechers) AS sum_leechers FROM torrents_scrape AS ts WHERE ts.tid = '.$tid.' GROUP BY ts.tid) AS ts ON ts.tid = t.id SET t.remote_seeders = ts.sum_seeders, t.remote_leechers = ts.sum_leechers, t.last_action = NOW(), t.last_mt_update = NOW() WHERE t.id = '.$tid) or sqlerr(__FILE__,__LINE__);
 
 header('Refresh: 3;url=details.php?id='.$tid);
+$errors = count($works) - $success;
 stderr($tracker_lang['success'], "Обновление мультитрекера выполнено успешно. Успешно: $success Ошибок: $errors");
 
 ?>
