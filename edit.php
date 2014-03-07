@@ -93,7 +93,7 @@ else
     if(get_user_class() >= UC_ADMINISTRATOR)
         tr("“ип раздачи",
 "<input type=\"radio\" name=\"free\" id=\"gold\" value=\"yes\"" . (($row["free"] == "yes") ? " checked" : "") . " /><label for=\"gold\">«олота€ раздача (считаетьс€ только раздача, скачка не учитиваетьс€)</label><br />".
-"<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\"" . (($row["free"] == "silver") ? " checked" : "") . " /><label for=\"silver\">—еребр€нна€ раздача (скачка не учитиваетьс€ только на 50%)</label><br />".
+"<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\"" . (($row["free"] == "silver") ? " checked" : "") . " /><label for=\"silver\">—еребр€на€ раздача (скачка не учитиваетьс€ только на 50%)</label><br />".
 "<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\"" . (($row["free"] == "no") ? " checked" : "") . " /><label for=\"no\">ќбычна€ раздача (скачка и раздача учитиваетьс€ как обычно)</label><br />"
 , 1);
     if(get_user_class() >= UC_ADMINISTRATOR)
