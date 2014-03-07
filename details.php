@@ -449,6 +449,7 @@ else {
 					}
 					if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
 						$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id='.$id.'">Обновить мультитрекер</a>';
+					$update_link .= '<br />Последнее обновление было <b>'.get_et(strtotime($row['last_mt_update'])).'</b> назад';
 					tr("Мультитрекер", '<ul style="margin: 0;">'.implode($anns).'</ul>'.$update_link, 1);
 				}
 

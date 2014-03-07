@@ -1097,8 +1097,35 @@ function write_log($text, $color = "transparent", $type = "tracker") {
 	sql_query("INSERT INTO sitelog (added, color, txt, type) VALUES($added, $color, $text, $type)");
 }
 
+function getWord($number, $suffix) {
+	$keys = array(2, 0, 1, 1, 1, 2);
+	$mod = $number % 100;
+	$suffix_key = ($mod > 7 && $mod < 20) ? 2: $keys[min($mod % 10, 5)];
+	return $suffix[$suffix_key];
+}
+
 function get_et($ts) {
-	return get_elapsed_time($ts);
+	return get_elapsed_time_plural($ts);
+}
+
+function get_elapsed_time_plural($ts) {
+	$mins = floor((time() - $ts) / 60);
+	$hours = floor($mins / 60);
+	$mins -= $hours * 60;
+	$days = floor($hours / 24);
+	$hours -= $days * 24;
+	$weeks = floor($days / 7);
+	$days -= $weeks * 7;
+	$t = "";
+	if ($weeks > 0)
+		return "$weeks ".getWord($weeks, array("неделю", "недели", "недель"));
+	if ($days > 0)
+		return "$days ".getWord($days, array("день", "дня", "дней"));
+	if ($hours > 0)
+		return "$hours ".getWord($hours, array("час", "часа", "часов"));
+	if ($mins > 0)
+		return "$mins ".getWord($mins, array("минуту", "минуты", "минут"));
+	return "< 1 минуты";
 }
 
 function get_elapsed_time($ts) {
