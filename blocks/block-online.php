@@ -24,11 +24,10 @@ else
 
 $users = $guests = $staff = $total = 0;
 
+$parsed = array();
+$parsed_id = array();
+
 while (list($uid, $uname, $class) = mysql_fetch_row($result)) {
-
-	$parsed = array();
-	$parsed_id = array();
-
     if (!empty($uname) && !in_array($uname, $parsed)) {
     	$parsed[] = $uname;
     	$title_who[] = "<a href=\"userdetails.php?id=".$uid."\" class=\"online\">".get_user_class_color($class, $uname)."</a>";

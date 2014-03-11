@@ -248,10 +248,10 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 
 			if ($row['multitracker'] == 'yes') {
 
-			print("<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"\" title=\"\"></a>\n");
+			print("<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>\n");
 
 				$allow_update = (strtotime($row['last_mt_update']) < (TIMENOW - 3600));
-				$multi_image = "<img src=\"$pic_base_url/multitracker.png\" border=\"0\" alt=\"".$tracker_lang['external_torrent']."\" title=\"".$tracker_lang['external_torrent']."\" />\n";
+				$multi_image = "<img src=\"$pic_base_url/multitracker.png\" border=\"0\" alt=\"{$tracker_lang['external_torrent_update']}\" title=\"{$tracker_lang['external_torrent_update']}\" />\n";
 				if ($allow_update)
 					$multi_image = "<a href=\"update_multi.php?id=$id\">$multi_image</a>\n";
 				echo $multi_image;

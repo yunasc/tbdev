@@ -233,9 +233,7 @@ else {
                         $owned = 0;
 
                 $spacer = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-                $prive = "";
-                $s=$row["name"];
+				$s = "";
 
                 print("<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
                 print("<tr><td class=\"colhead\" colspan=\"2\"><div style=\"float: left; width: auto;\">:: ".$tracker_lang['torrent_details']."</div><div align=\"right\"><a href=\"bookmark.php?torrent=$row[id]\"><b>Добавить в избранное</b></a></div></td></tr>");
@@ -246,8 +244,18 @@ else {
                         $keepget .= $addthis;
                 }
                 $editlink = "a href=\"$url\" class=\"sublink\"";
+                $right_links = array();
 
-                $s = "<a class=\"index\" href=\"download.php?id=$id\"><b>" . $row["name"] . "</b></a>";
+				$right_links[] = "<a href=\"download.php?id={$id}\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"{$tracker_lang['download']}\" title=\"{$tracker_lang['download']}\"></a>";
+                if ($row['multitracker'] == 'yes')
+                	$right_links[] = "<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>";
+                $right_links[] = "<a href=\"bookmark.php?torrent={$id}\"><img src=\"$pic_base_url/bookmark.gif\" border=\"0\" alt=\"{$tracker_lang['bookmark']}\" title=\"{$tracker_lang['bookmark']}\"></a>";
+
+				if (count($right_links))
+					$s .= '<span style="float: right;">'.implode('&nbsp;', $right_links).'</span>';
+
+                $s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>" . $row["name"] . "</b></a>";
+
                 if ($owned)
                     $s .= " $spacer<$editlink>[".$tracker_lang['edit']."]</a>";
 
