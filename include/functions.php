@@ -964,6 +964,11 @@ function parked() {
 		  stderr($tracker_lang['error'], '¬аш аккаунт припаркован.');
 }
 
+function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
+	$ampersand = $html ? '&amp;' : '&';
+	return sprintf('magnet:?xt=urn:btih:%2$s%1$sdn=%3$s%1$sxl=%4$d%1$str=%5$s', $ampersand, $info_hash, urlencode($name), $size, implode($ampersand . 'tr=', $announces));
+}
+
 // ¬ этой строке забит копирайт. ѕри его убирании можешь поплатитьс€ рабочим трекером ;) ¬ данном случае - убира€ строчки ниже ты не сможешь использовать трекер.
 define ('VERSION', '');
 define ('NUM_VERSION', '2.1.16');

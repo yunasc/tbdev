@@ -247,6 +247,9 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 			print("<a href=\"download.php?id=$id\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
 
 			if ($row['multitracker'] == 'yes') {
+
+			print("<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"\" title=\"\"></a>\n");
+
 				$allow_update = (strtotime($row['last_mt_update']) < (TIMENOW - 3600));
 				$multi_image = "<img src=\"$pic_base_url/multitracker.png\" border=\"0\" alt=\"".$tracker_lang['external_torrent']."\" title=\"".$tracker_lang['external_torrent']."\" />\n";
 				if ($allow_update)
