@@ -1111,7 +1111,7 @@ function get_et($ts) {
 function get_elapsed_time_plural($time_start, $decimals = 0) {
 	$divider['years']   = (60 * 60 * 24 * 365);
 	$divider['months']  = (60 * 60 * 24 * 365 / 12);
-	$divider['weeks']   = (60 * 60 * 24 / 7);
+	$divider['weeks']   = (60 * 60 * 24 * 7);
 	$divider['days']    = (60 * 60 * 24);
 	$divider['hours']   = (60 * 60);
 	$divider['minutes'] = (60);
