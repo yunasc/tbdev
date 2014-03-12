@@ -261,10 +261,10 @@ else {
 
                 switch ($row['free']) {
                     case 'yes':
-                        $freepic = "<img src=\"pic/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">&nbsp;";
+                        $freepic = "<img src=\"$pic_base_url/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">&nbsp;";
                         break;
                     case 'silver':
-                        $freepic = "<img src=\"pic/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">&nbsp;";
+                        $freepic = "<img src=\"$pic_base_url/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">&nbsp;";
                         break;
                     case 'no':
                         $freepic = '';
@@ -280,7 +280,7 @@ else {
 
 				if ($row["image1"] != "") {
 					if ($row["image1"] != "")
-						$img1 = "<a href='viewimage.php?pic=$row[image1]'><img border='0' src='thumbnail.php?$row[image1]' /></a>";
+						$img1 = "<a href=\"viewimage.php?pic={$row['image1']}\"><img border=\"0\" src=\"thumbnail.php?{$row['image1']}\" /></a>";
 					tr('Постер', $img1, 1);
 				}
 
@@ -375,25 +375,25 @@ else {
                         $uprow .= " $spacer<$editlink><b>[".$tracker_lang['edit']."]</b></a>";
 */
 
-                tr($tracker_lang['uploaded'], $uprow.'&nbsp;<a href="simpaty.php?action=add&amp;good&amp;targetid=' . $row["owner"] . '&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['respect'].'"><img src="pic/thum_good.gif" border="0" alt="'.$tracker_lang['respect'].'" title="'.$tracker_lang['respect'].'" /></a>&nbsp;&nbsp;<a href="simpaty.php?action=add&amp;bad&amp;targetid='.$row["owner"].'&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['antirespect'].'"><img src="pic/thum_bad.gif" border="0" alt="'.$tracker_lang['antirespect'].'" title="'.$tracker_lang['antirespect'].'" /></a>', 1);
+                tr($tracker_lang['uploaded'], $uprow.'&nbsp;<a href="simpaty.php?action=add&amp;good&amp;targetid=' . $row["owner"] . '&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['respect'].'"><img src="'.$pic_base_url.'/thum_good.gif" border="0" alt="'.$tracker_lang['respect'].'" title="'.$tracker_lang['respect'].'" /></a>&nbsp;&nbsp;<a href="simpaty.php?action=add&amp;bad&amp;targetid='.$row["owner"].'&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['antirespect'].'"><img src="'.$pic_base_url.'/thum_bad.gif" border="0" alt="'.$tracker_lang['antirespect'].'" title="'.$tracker_lang['antirespect'].'" /></a>', 1);
 
                 if ($row["type"] == "multi") {
                         if (!$_GET["filelist"])
-                                tr($tracker_lang['files']."<br /><a href=\"details.php?id=$id&amp;filelist=1$keepget#filelist\" class=\"sublink\">[".$tracker_lang['open_list']."]</a>", $row["numfiles"] . " ".$tracker_lang['files_l'], 1);
+                                tr($tracker_lang['files'] . "<br /><a href=\"details.php?id=$id&amp;filelist=1$keepget#filelist\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", $row["numfiles"] . " " . $tracker_lang['files_l'], 1);
                         else {
                                 tr($tracker_lang['files'], $row["numfiles"] . " ".$tracker_lang['files_l'], 1);
 
                                 $s = "<table class=\"main\" border=\"1\" cellspacing=0 cellpadding=\"5\">\n";
 
                                 $subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
-								$s.="<tr><td class=colhead>".$tracker_lang['path']."</td><td class=colhead align=right>".$tracker_lang['size']."</td></tr>\n";
+								$s.="<tr><td class=colhead>{$tracker_lang['path']}</td><td class=colhead align=right>{$tracker_lang['size']}</td></tr>\n";
                                 while ($subrow = mysql_fetch_array($subres)) {
                                         $s .= "<tr><td>" . $subrow["filename"] .
                             			"</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
                                 }
 
                                 $s .= "</table>\n";
-                                tr("<a name=\"filelist\">".$tracker_lang['file_list']."</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[".$tracker_lang['close_list']."]</a>", $s, 1);
+                                tr("<a name=\"filelist\">{$tracker_lang['file_list']}</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[{$tracker_lang['close_list']}]</a>", $s, 1);
                         }
                 }
 
@@ -421,7 +421,8 @@ else {
                         }
 
                         function leech_sort($a,$b) {
-                                if ( isset( $_GET["usort"] ) ) return seed_sort($a,$b);
+                                if (isset($_GET["usort"]))
+                                    return seed_sort($a, $b);
                                 $x = $a["to_go"];
                                 $y = $b["to_go"];
                                 if ($x == $y)
@@ -501,7 +502,7 @@ else {
 					if ($row["seeders"] == 0 || ($row["leechers"] / $row["seeders"] >= 2))
 						$reseed_button = "<form action=\"takereseed.php\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
 					if (!$_GET["snatched"]==1)
-						tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[Посмотреть список]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="pic/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
+						tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[Посмотреть список]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="$pic_base_url/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
 					else
 						tr("Скачавшие<br /><a href=\"details.php?id=$id\" class=\"sublink\" name=\"snatched\">[Cпрятать список]</a>", $snatched_full,1);
 				}
@@ -557,7 +558,7 @@ function send() {
 </script>
 <div id="loading-layer" style="display:none;font-family: Verdana;font-size: 11px;width:200px;height:50px;background:#FFF;padding:10px;text-align:center;border:1px solid #000">
      <div style="font-weight:bold" id="loading-layer-text">Загрузка. Пожалуйста, подождите...</div><br />
-     <img src="pic/loading.gif" border="0" />
+     <img src="<?=$pic_base_url;?>/loading.gif" border="0" />
 </div>
 <?
 
