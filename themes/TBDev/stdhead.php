@@ -170,13 +170,13 @@ $activeleech = $row[0];
 								color=black><?= $downed ?></font>&nbsp;&nbsp;<font
 								color=darkblue><?= $tracker_lang['bonus']; ?>:</font> <a href="mybonus.php"
 																						 class="online"><font
-									color=black><?= $CURUSER["bonus"] ?></font></a>&nbsp;&nbsp;<font color="1900D1">Торренты:&nbsp;</font></span>
+									color=black><?= $CURUSER["bonus"] ?></font></a>&nbsp;&nbsp;<font color="1900D1"><?=$tracker_lang['torrents'];?>:&nbsp;</font></span>
 						<img alt="<?=$tracker_lang['seeding'];?>" title="<?=$tracker_lang['seeding'];?>" src="./themes/<?= $ss_uri; ?>/images/arrowup.gif">&nbsp;<font
 							color="black"><span class="smallfont"><?= $activeseed ?></span></font>&nbsp;&nbsp;<img
 							alt="<?=$tracker_lang['leeching'];?>" title="<?=$tracker_lang['leeching'];?>" src="./themes/<?= $ss_uri; ?>/images/arrowdown.gif">&nbsp;<font
 							color="black"><span class="smallfont"><?= $activeleech ?></span></font></td>
-					<td class="bottom" align="right"><span class="smallfont">Текущее время: <span
-								id="clock">Загрузка...</span>
+					<td class="bottom" align="right"><span class="smallfont"><?=$tracker_lang['clock'];?>: <span
+								id="clock"><?=$tracker_lang['loading'];?>...</span>
 
 <!-- clock hack -->
 <script type="text/javascript">

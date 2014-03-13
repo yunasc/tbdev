@@ -440,16 +440,19 @@ if (!isset($_GET["dllist"])) {
 }
 
 if ($row["multitracker"] == 'yes') {
-	foreach ($announces_a as $announce) {
-		if ($announce['state'] == 'ok')
-			$anns[] = '<li><b>'.$announce['url'].'</b> - раздающие: <b>'.$announce['seeders'].'</b>, качающие: <b>'.$announce['leechers'].'</b>';
-		else
-			$anns[] = '<li><font color="red"><b>'.$announce['url'].'</b></font> - не работает, ошибка: '.$announce['error'].'</b>';
-	}
-	if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
-		$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id='.$id.'">Обновить мультитрекер</a>';
-	$update_link .= '<br />Последнее обновление было <b>'.get_et(strtotime($row['last_mt_update'])).'</b> назад';
-	tr("Мультитрекер", '<ul style="margin: 0;">'.implode($anns).'</ul>'.$update_link, 1);
+	if (count($announces_a)) {
+		foreach ($announces_a as $announce) {
+			if ($announce['state'] == 'ok')
+				$anns[] = '<li><b>' . $announce['url'] . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
+			else
+				$anns[] = '<li><font color="red"><b>' . $announce['url'] . '</b></font> - не работает, ошибка: ' . $announce['error'] . '</b>';
+		}
+		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
+			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $id . '">' . $tracker_lang['details_update_multitracker'] . '</a>';
+		$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . get_et(strtotime($row['last_mt_update'])) . '</b> ' . $tracker_lang['ago'];
+		tr($tracker_lang['details_multitracker'], '<ul style="margin: 0;">' . implode($anns) . '</ul>' . $update_link, 1);
+	} else
+		tr($tracker_lang['details_multitracker'], 'WTF? Multitracker = YES, but no announces', 1);
 }
 
 if ($row["times_completed"] > 0) {

@@ -4,7 +4,9 @@ if (!defined('BLOCK_FILE')) {
  exit;
 }
 
-global $CURUSER, $use_sessions;
+global $CURUSER, $use_sessions, $tracker_lang;
+
+$blocktitle = $tracker_lang['whos_online'];
 
 $a = mysql_fetch_array(sql_query("SELECT id, username FROM users WHERE status='confirmed' ORDER BY id DESC LIMIT 1"));
 
