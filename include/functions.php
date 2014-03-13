@@ -660,7 +660,7 @@ function parsedescr($d, $html) {
 }
 
 function stdhead($title = "", $msgalert = true) {
-	global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $DEFAULTBASEURL, $ss_uri, $tracker_lang, $default_theme, $keywords, $description;
+	global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $DEFAULTBASEURL, $ss_uri, $tracker_lang, $default_theme, $keywords, $description, $pic_base_url;
 
 	if (!$SITE_ONLINE)
 		die('Site is down for maintenance, please check back again later... thanks<br />');
