@@ -389,7 +389,7 @@ if ($row["type"] == "multi") {
 		$subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
 		$s.="<tr><td class=colhead>{$tracker_lang['path']}</td><td class=colhead align=right>{$tracker_lang['size']}</td></tr>\n";
 		while ($subrow = mysql_fetch_array($subres)) {
-			$s .= "<tr><td>{$subrow["filename"]}</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
+			$s .= "<tr><td>".iconv('utf-8', 'windows-1251', $subrow["filename"])."</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
 		}
 
 		$s .= "</table>\n";
