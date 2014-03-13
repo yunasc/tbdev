@@ -414,6 +414,18 @@ class lang implements arrayaccess {
 			'stats_male' => 'Парни',
 			'stats_maxusers' => 'Мест на трекере',
 
+			'peertable_port_open' => 'Порт открыт. Этот пир может подключатся к любому пиру.',
+			'peertable_port_closed' => 'Порт закрыт. Рекомендовано проверить настройки Firwewall\'а.',
+
+			'details_poster' => 'Постер',
+			'details_screenshot' => 'Скриншот',
+			'details_anonymous' => 'Аноним',
+
+			'ajax_loading' => 'Загрузка. Пожалуйста, подождите...',
+
+			'comments_list' => 'Список комментариев',
+			'comments_add' => 'Добавить комментарий',
+
 		);
 	}
 
