@@ -225,9 +225,19 @@ if (!isset($_GET["page"])) {
 	stdhead($tracker_lang['torrent_details']." \"" . $row["name"] . "\"");
 
 	if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
-	        $owned = 1;
+		$owned = 1;
 	else
-	        $owned = 0;
+		$owned = 0;
+
+	if ($row['multitracker'] == 'yes') {
+		$announces_a = $announces_urls = array();
+		$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$id);
+		while ($announce = mysql_fetch_array($announces_r)) {
+			$announces_a[] = $announce;
+			$announces_urls[] = $announce['url'];
+		}
+		unset($announce);
+	}
 
 	$spacer = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	$s = "";
@@ -245,7 +255,7 @@ if (!isset($_GET["page"])) {
 
 	$right_links[] = "<a href=\"download.php?id={$id}\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"{$tracker_lang['download']}\" title=\"{$tracker_lang['download']}\"></a>";
 	if ($row['multitracker'] == 'yes')
-		$right_links[] = "<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>";
+		$right_links[] = "<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'], $announces_urls)."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>";
 	$right_links[] = "<a href=\"bookmark.php?torrent={$id}\"><img src=\"$pic_base_url/bookmark.gif\" border=\"0\" alt=\"{$tracker_lang['bookmark']}\" title=\"{$tracker_lang['bookmark']}\"></a>";
 
 	if (count($right_links))
@@ -435,8 +445,7 @@ if (!isset($_GET["dllist"])) {
 }
 
 if ($row["multitracker"] == 'yes') {
-	$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$id);
-	while ($announce = mysql_fetch_array($announces_r)) {
+	foreach ($announces_a as $announce) {
 		if ($announce['state'] == 'ok')
 			$anns[] = '<li><b>'.$announce['url'].'</b> - раздающие: <b>'.$announce['seeders'].'</b>, качающие: <b>'.$announce['leechers'].'</b>';
 		else
