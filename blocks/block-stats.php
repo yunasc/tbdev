@@ -1,10 +1,15 @@
 <?php
+
+/* ToDo:
+ * Make cache in this block
+*/
+
 if (!defined('BLOCK_FILE')) {
  Header("Location: ../index.php");
  exit;
 }
 
-global $tracker_lang, $ss_uri, $maxusers;
+global $tracker_lang, $ss_uri, $maxusers, $pic_base_url;
 
 $registered = number_format(get_row_count("users"));
 $unverified = number_format(get_row_count("users", "WHERE status='pending'"));
@@ -33,27 +38,27 @@ $content .= "<table width=\"100%\" class=\"main\" border=\"0\" cellspacing=\"0\"
 <table width=\"100%\" class=\"main\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">
   <tr>
     <td width=\"50%\" align=\"center\" style=\"border: none;\"><table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">
-<tr><td class=\"rowhead\">".$tracker_lang['users_registered']."</td><td align=right><img src=\"pic/male.gif\" alt=\"Парни\">$male<img src=\"pic/female.gif\" alt=\"Девушки\">$female<br />".$tracker_lang['total'].": $registered</td></tr>
-<tr><td colspan=\"2\" class=\"rowhead\"><table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\"><tr><td style=\"text-align: right; font-weight: bold; vertical-align: top;\">Мест на трекере</td><td align=\"right\">$maxusers</td></tr></table></td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['users_unconfirmed']."</td><td align=right>$unverified</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['users_warned']."&nbsp;<img src=\"pic/warned.gif\" border=0 align=absbottom></td><td align=right>$warned_users</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['users_disabled']."&nbsp;<img src=\"pic/disabled.gif\" border=0 align=absbottom></td><td align=right>$disabled</td></tr>
-<tr><td class=\"rowhead\"><font color=\"orange\">".$tracker_lang['users_uploaders']."</font></td><td align=right>$uploaders</td></tr>
-<tr><td class=\"rowhead\"><font color=\"#9C2FE0\">".$tracker_lang['users_vips']."</font></td><td align=right>$vip</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['users_registered']}</td><td align=right><img src=\"$pic_base_url/male.gif\" alt=\"{$tracker_lang['stats_male']}\">$male<img src=\"$pic_base_url/female.gif\" alt=\"{$tracker_lang['stats_female']}\">$female<br />{$tracker_lang['total']}: {$registered}</td></tr>
+<tr><td colspan=\"2\" class=\"rowhead\"><table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\"><tr><td style=\"text-align: right; font-weight: bold; vertical-align: top;\">{$tracker_lang['stats_maxusers']}</td><td align=\"right\">{$maxusers}</td></tr></table></td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['users_unconfirmed']}</td><td align=\"right\">{$unverified}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['users_warned']}&nbsp;<img src=\"$pic_base_url/warned.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$warned_users}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['users_disabled']}&nbsp;<img src=\"$pic_base_url/disabled.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$disabled}</td></tr>
+<tr><td class=\"rowhead\"><font color=\"orange\">{$tracker_lang['users_uploaders']}</font></td><td align=\"right\">{$uploaders}</td></tr>
+<tr><td class=\"rowhead\"><font color=\"#9C2FE0\">{$tracker_lang['users_vips']}</font></td><td align=\"right\">{$vip}</td></tr>
 
 </table></td>
-<td width=\"50%\" align=\"center\" style=\"border: none;\"><table class=main border=1 cellspacing=0 cellpadding=5>
-<tr><td class=\"rowhead\">".$tracker_lang['tracker_torrents']."</td><td align=right>$torrents</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['tracker_dead_torrents']."</td><td align=right>$dead</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['tracker_peers']."</td><td align=right>$peers</td></tr>";
+<td width=\"50%\" align=\"center\" style=\"border: none;\"><table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">
+<tr><td class=\"rowhead\">{$tracker_lang['tracker_torrents']}</td><td align=\"right\">{$torrents}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['tracker_dead_torrents']}</td><td align=\"right\">{$dead}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['tracker_peers']}</td><td align=\"right\">{$peers}</td></tr>";
 if (isset($peers)) {
-$content .= "<tr><td class=\"rowhead\">".$tracker_lang['tracker_seeders']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=0 align=absbottom></td><td align=right>$seeders</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['tracker_leechers']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=0 align=absbottom></td><td align=right>$leechers</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['tracker_seed_peer']."</td><td align=right>$ratio</td></tr>";
+$content .= "<tr><td class=\"rowhead\">{$tracker_lang['tracker_seeders']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$seeders}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['tracker_leechers']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$leechers}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['tracker_seed_peer']}</td><td align=\"right\">{$ratio}</td></tr>";
 }
 
-$content .= "<tr><td class=\"rowhead\">".$tracker_lang['external_seeders']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=0 align=absbottom></td><td align=right>$external_seeders</td></tr>
-<tr><td class=\"rowhead\">".$tracker_lang['external_leechers']."&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=0 align=absbottom></td><td align=right>$external_leechers</td></tr>";
+$content .= "<tr><td class=\"rowhead\">{$tracker_lang['external_seeders']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$external_seeders}</td></tr>
+<tr><td class=\"rowhead\">{$tracker_lang['external_leechers']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$external_leechers}</td></tr>";
 
 $content .= "</table></td>
 

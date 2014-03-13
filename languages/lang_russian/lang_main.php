@@ -409,6 +409,11 @@ class lang implements arrayaccess {
 			'you_have_voted_for_this_torrent' => 'вы оценили этот торрент как',
 			'you_want_to_delete_x_click_here' => 'Вы хотите удалить %s. Нажмите <a href=%s>сюда</a> если вы уверены.',
 			'your_ip' => 'Ваш IP',
+
+			'stats_female' => 'Девушки',
+			'stats_male' => 'Парни',
+			'stats_maxusers' => 'Мест на трекере',
+
 		);
 	}
 
