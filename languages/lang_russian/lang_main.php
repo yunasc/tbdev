@@ -8,7 +8,7 @@ class Language implements arrayaccess {
 
     public function offsetSet($offset, $value) {
     	if ($this->offsetExists($offset))
-    		die('Changing already existing values is prohibitied');
+    		die('Changing already existing values is prohibited');
         $this->tlr[$offset] = $value;
     }
     public function offsetExists($offset) {
