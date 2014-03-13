@@ -134,17 +134,17 @@ function dltable($name, $arr, $torrent) {
 		return $s;
 	$s .=	"\n";
 	$s .=	"<table width=\"100%\" class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
-	$s .=	"<tr><td class=colhead>".$tracker_lang['user']."</td>" .
-			"<td class=colhead align=center>".$tracker_lang['port_open']."</td>".
-			"<td class=colhead align=right>".$tracker_lang['uploaded']."</td>".
-			"<td class=colhead align=right>".$tracker_lang['ul_speed']."</td>".
-			"<td class=colhead align=right>".$tracker_lang['downloaded']."</td>" .
-			"<td class=colhead align=right>".$tracker_lang['dl_speed']."</td>" .
-			"<td class=colhead align=right>".$tracker_lang['ratio']."</td>" .
-			"<td class=colhead align=right>".$tracker_lang['completed']."</td>" .
-			"<td class=colhead align=right>".$tracker_lang['connected']."</td>" .
-			"<td class=colhead align=right>".$tracker_lang['idle']."</td>" .
-			"<td class=colhead align=left>".$tracker_lang['client']."</td></tr>\n";
+	$s .=	"<tr><td class=colhead>{$tracker_lang['user']}</td>" .
+			"<td class=colhead align=center>{$tracker_lang['port_open']}</td>".
+			"<td class=colhead align=right>{$tracker_lang['uploaded']}</td>".
+			"<td class=colhead align=right>{$tracker_lang['ul_speed']}</td>".
+			"<td class=colhead align=right>{$tracker_lang['downloaded']}</td>" .
+			"<td class=colhead align=right>{$tracker_lang['dl_speed']}</td>" .
+			"<td class=colhead align=right>{$tracker_lang['ratio']}</td>" .
+			"<td class=colhead align=right>{$tracker_lang['completed']}</td>" .
+			"<td class=colhead align=right>{$tracker_lang['connected']}</td>" .
+			"<td class=colhead align=right>{$tracker_lang['idle']}</td>" .
+			"<td class=colhead align=left>{$tracker_lang['client']}</td></tr>\n";
 	$now = time();
 	//$moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR); // Redundant
 	$mod = (get_user_class() >= UC_MODERATOR);
@@ -222,7 +222,7 @@ if (isset($_GET["hit"])) {
 }
 
 if (!isset($_GET["page"])) {
-	stdhead($tracker_lang['torrent_details']." \"" . $row["name"] . "\"");
+	stdhead($tracker_lang['torrent_details']." \"".htmlspecialchars_decode($row["name"])."\"");
 
 	if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 		$owned = 1;
@@ -243,7 +243,7 @@ if (!isset($_GET["page"])) {
 	$s = "";
 
 	print("<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-	print("<tr><td class=\"colhead\" colspan=\"2\"><div style=\"float: left; width: auto;\">:: ".$tracker_lang['torrent_details']."</div><div align=\"right\"><a href=\"bookmark.php?torrent=$row[id]\"><b>{$tracker_lang['bookmark']}</b></a></div></td></tr>");
+	print("<tr><td class=\"colhead\" colspan=\"2\"><div style=\"float: left; width: auto;\">:: {$tracker_lang['torrent_details']}</div><div align=\"right\"><a href=\"bookmark.php?torrent=$row[id]\"><b>{$tracker_lang['bookmark']}</b></a></div></td></tr>");
 	$url = "edit.php?id=" . $row["id"];
 	if (isset($_GET["returnto"])) {
 		$addthis = "&amp;returnto=" . urlencode($_GET["returnto"]);
@@ -261,17 +261,17 @@ if (!isset($_GET["page"])) {
 	if (count($right_links))
 		$s .= '<span style="float: right;">'.implode('&nbsp;', $right_links).'</span>';
 
-	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>" . $row["name"] . "</b></a>";
+	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>{$row["name"]}</b></a>";
 
 	if ($owned)
-	    $s .= " $spacer<$editlink>[".$tracker_lang['edit']."]</a>";
+	    $s .= " $spacer<$editlink>[{$tracker_lang['edit']}]</a>";
 
 	switch ($row['free']) {
 		case 'yes':
-			$freepic = "<img src=\"$pic_base_url/freedownload.gif\" title=\"".$tracker_lang['golden']."\" alt=\"".$tracker_lang['golden']."\">&nbsp;";
+			$freepic = "<img src=\"$pic_base_url/freedownload.gif\" title=\"{$tracker_lang['golden']}\" alt=\"{$tracker_lang['golden']}\">&nbsp;";
 			break;
 		case 'silver':
-			$freepic = "<img src=\"$pic_base_url/silverdownload.gif\" title=\"".$tracker_lang['silver']."\" alt=\"".$tracker_lang['silver']."\">&nbsp;";
+			$freepic = "<img src=\"$pic_base_url/silverdownload.gif\" title=\"{$tracker_lang['silver']}\" alt=\"{$tracker_lang['silver']}\">&nbsp;";
 			break;
 		case 'no':
 			$freepic = '';
@@ -304,17 +304,17 @@ if (!isset($_GET["page"])) {
 		tr($tracker_lang['images'], implode('&nbsp; ', $images), 1);
 
 	if ($row["visible"] == "no")
-	        tr($tracker_lang['visible'], "<b>".$tracker_lang['no']."</b> (".$tracker_lang['dead'].")", 1);
+		tr($tracker_lang['visible'], "<b>{$tracker_lang['no']}</b> ({$tracker_lang['dead']})", 1);
 	if ($moderator)
-	        tr($tracker_lang['banned'], ($row["banned"] == 'no' ? $tracker_lang['no'] : $tracker_lang['yes']) );
+		tr($tracker_lang['banned'], ($row["banned"] == 'no' ? $tracker_lang['no'] : $tracker_lang['yes']) );
 
 	if (isset($row["cat_name"]))
-	        tr($tracker_lang['type'], $row["cat_name"]);
+		tr($tracker_lang['type'], $row["cat_name"]);
 	else
-	        tr($tracker_lang['type'], "(".$tracker_lang['no_choose'].")");
+		tr($tracker_lang['type'], "({$tracker_lang['no_choose']})");
 
-	tr($tracker_lang['seeder'], $tracker_lang['seeder_last_seen']." ".mkprettytime($row["lastseed"]) . " ".$tracker_lang['ago']);
-	tr($tracker_lang['size'],mksize($row["size"]) . " (" . number_format($row["size"]) . " ".$tracker_lang['bytes'].")");
+	tr($tracker_lang['seeder'], "{$tracker_lang['seeder_last_seen']} " . mkprettytime($row['lastseed']) . " {$tracker_lang['ago']}");
+	tr($tracker_lang['size'], mksize($row['size']) . " (" . number_format($row['size']) . " {$tracker_lang['bytes']})");
 
 	$s = "";
 	$s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=\"embedded\">";
@@ -333,34 +333,30 @@ if (!isset($_GET["page"])) {
 		if (!isset($rpic))
 			$s .= "invalid?";
 		else
-			$s .= "$rpic (" . $row["rating"] . " ".$tracker_lang['from']." 5 ".$tracker_lang['with']." " . $row["numratings"] . " ".$tracker_lang['votes'].")";
+			$s .= "$rpic ({$row["rating"]} {$tracker_lang['from']} 5 {$tracker_lang['with']} {$row["numratings"]} {$tracker_lang['votes']})";
 	}
 	$s .= "\n";
 	$s .= "</td><td class=embedded>$spacer</td><td valign=\"top\" class=embedded>";
 	if (!isset($CURUSER))
-		$s .= "(<a href=\"login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;nowarn=1\">Log in</a> to rate it)";
-	else {
-		$ratings = array(
-					5 => $tracker_lang['vote_5'],
-					4 => $tracker_lang['vote_4'],
-					3 => $tracker_lang['vote_3'],
-					2 => $tracker_lang['vote_2'],
-					1 => $tracker_lang['vote_1'],
-		);
+		$s .= "(<a href=\"login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;nowarn=1\">Log in</a> to rate it)"; else {
+		$ratings = array(5 => $tracker_lang['vote_5'],
+						 4 => $tracker_lang['vote_4'],
+						 3 => $tracker_lang['vote_3'],
+						 2 => $tracker_lang['vote_2'],
+						 1 => $tracker_lang['vote_1'],);
 		if (!$owned || $moderator) {
 			$xres = sql_query("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . $CURUSER["id"]);
 			$xrow = mysql_fetch_array($xres);
 			if ($xrow)
-				$s .= "(".$tracker_lang['you_have_voted_for_this_torrent']." \"" . $xrow["rating"] . " - " . $ratings[$xrow["rating"]] . "\")";
-			else {
+				$s .= "({$tracker_lang['you_have_voted_for_this_torrent']} \"{$xrow["rating"]} - {$ratings[$xrow["rating"]]}\")"; else {
 				$s .= "<form method=\"post\" action=\"takerate.php\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
 				$s .= "<select name=\"rating\">\n";
-				$s .= "<option value=\"0\">".$tracker_lang['vote']."</option>\n";
+				$s .= "<option value=\"0\">{$tracker_lang['vote']}</option>\n";
 				foreach ($ratings as $k => $v) {
 					$s .= "<option value=\"$k\">$k - $v</option>\n";
 				}
 				$s .= "</select>\n";
-				$s .= "<input type=\"submit\" value=\"".$tracker_lang['vote']."!\" />";
+				$s .= "<input type=\"submit\" value=\"{$tracker_lang['vote']}!\" />";
 				$s .= "</form>\n";
 			}
 		}
@@ -374,10 +370,10 @@ if (!isset($_GET["page"])) {
 	tr($tracker_lang['snatched'], $row["times_completed"] . " ".$tracker_lang['times']);
 
 	$keepget = "";
-	$uprow = (isset($row["username"]) ? ("<a href=userdetails.php?id=" . $row["owner"] . ">" . htmlspecialchars_uni($row["username"]) . "</a>") : "<i>{$tracker_lang['details_anonymous']}</i>");
+	$uprow = (isset($row["username"]) ? ("<a href=userdetails.php?id={$row["owner"]}>" . htmlspecialchars_uni($row["username"]) . "</a>") : "<i>{$tracker_lang['details_anonymous']}</i>");
 /*
 if ($owned)
-        $uprow .= " $spacer<$editlink><b>[".$tracker_lang['edit']."]</b></a>";
+        $uprow .= " $spacer<$editlink><b>[{$tracker_lang['edit']}]</b></a>";
 */
 
 tr($tracker_lang['uploaded'], $uprow.'&nbsp;<a href="simpaty.php?action=add&amp;good&amp;targetid=' . $row["owner"] . '&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['respect'].'"><img src="'.$pic_base_url.'/thum_good.gif" border="0" alt="'.$tracker_lang['respect'].'" title="'.$tracker_lang['respect'].'" /></a>&nbsp;&nbsp;<a href="simpaty.php?action=add&amp;bad&amp;targetid='.$row["owner"].'&amp;type=torrent' . $id . '&amp;returnto=' . urlencode($_SERVER["REQUEST_URI"]) . '" title="'.$tracker_lang['antirespect'].'"><img src="'.$pic_base_url.'/thum_bad.gif" border="0" alt="'.$tracker_lang['antirespect'].'" title="'.$tracker_lang['antirespect'].'" /></a>', 1);
@@ -393,8 +389,7 @@ if ($row["type"] == "multi") {
 		$subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
 		$s.="<tr><td class=colhead>{$tracker_lang['path']}</td><td class=colhead align=right>{$tracker_lang['size']}</td></tr>\n";
 		while ($subrow = mysql_fetch_array($subres)) {
-			$s .= "<tr><td>" . $subrow["filename"] .
-			"</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
+			$s .= "<tr><td>{$subrow["filename"]}</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
 		}
 
 		$s .= "</table>\n";
@@ -403,7 +398,7 @@ if ($row["type"] == "multi") {
 }
 
 if (!isset($_GET["dllist"])) {
-	tr($tracker_lang['downloading']."<br /><a href=\"details.php?id=$id&amp;dllist=1$keepget#seeders\" class=\"sublink\">[".$tracker_lang['open_list']."]</a>", $row["seeders"] . " ".$tracker_lang['seeders_l'].", " . $row["leechers"] . " ".$tracker_lang['leechers_l']." = " . ($row["seeders"] + $row["leechers"]) . " ".$tracker_lang['peers_l'], 1);
+	tr($tracker_lang['downloading']."<br /><a href=\"details.php?id=$id&amp;dllist=1$keepget#seeders\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", $row["seeders"] . " {$tracker_lang['seeders_l']}, {$row["leechers"]} {$tracker_lang['leechers_l']} = " . ($row["seeders"] + $row["leechers"]) . " ".$tracker_lang['peers_l'], 1);
 } else {
 	$downloaders = array();
 	$seeders = array();
@@ -440,8 +435,8 @@ if (!isset($_GET["dllist"])) {
 	usort($seeders, "seed_sort");
 	usort($downloaders, "leech_sort");
 
-	tr("<a name=\"seeders\">".$tracker_lang['details_seeding']."</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[".$tracker_lang['close_list']."]</a>", dltable($tracker_lang['details_seeding'], $seeders, $row), 1);
-	tr("<a name=\"leechers\">".$tracker_lang['details_leeching']."</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[".$tracker_lang['close_list']."]</a>", dltable($tracker_lang['details_leeching'], $downloaders, $row), 1);
+	tr("<a name=\"seeders\">{$tracker_lang['details_seeding']}</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[{$tracker_lang['close_list']}]</a>", dltable($tracker_lang['details_seeding'], $seeders, $row), 1);
+	tr("<a name=\"leechers\">{$tracker_lang['details_leeching']}</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[{$tracker_lang['close_list']}]</a>", dltable($tracker_lang['details_leeching'], $downloaders, $row), 1);
 }
 
 if ($row["multitracker"] == 'yes') {
@@ -489,7 +484,7 @@ if ($row["times_completed"] > 0) {
 		//end
 		//$highlight = $CURUSER["id"] == $arr["id"] ? " bgcolor=#00A527" : "";;
 		$snatched_small[] = "<a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])." (<font color=" . get_ratio_color($ratio) . ">$ratio</font>)</a>";
-		$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>" . $arr["startdat"] . "<br />" . $arr["completedat"] . "</nobr></td><td align=center><nobr>" . $arr["last_action"] . "</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
+		$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>{$arr["startdat"]}<br />{$arr["completedat"]}</nobr></td><td align=center><nobr>{$arr["last_action"]}</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
 			"</td><td align=center><a href=\"message.php?action=sendmessage&amp;receiver={$arr['userid']}\"><img src=\"$pic_base_url/button_pm.gif\" border=\"0\"></a></td></tr>\n";
     }
     $snatched_full .= "</table>\n";
@@ -502,7 +497,7 @@ if ($row["times_completed"] > 0) {
 		tr("Скачавшие<br /><a href=\"details.php?id=$id\" class=\"sublink\" name=\"snatched\">[{$tracker_lang['close_list']}]</a>", $snatched_full,1);
 }
 
-tr($tracker_lang['torrent_info'], "<a href=\"torrent_info.php?id=$id\">".$tracker_lang['show_data']."</a>", 1);
+tr($tracker_lang['torrent_info'], "<a href=\"torrent_info.php?id={$id}\">{$tracker_lang['show_data']}</a>", 1);
 
 
 $torrentid = (int) $_GET["id"];
@@ -524,7 +519,7 @@ if ($count == 0) {
 		$userid = $thanked_row["userid"];
 		$username = $thanked_row["username"];
 		$class = $thanked_row["class"];
-		$thanksby[] = "<a href=\"userdetails.php?id=$userid\">".get_user_class_color($class, $username)."</a>";
+		$thanksby[] = "<a href=\"userdetails.php?id={$userid}\">".get_user_class_color($class, $username)."</a>";
 	}
 	if ($thanksby)
 		$thanksby = implode(', ', $thanksby);
@@ -532,8 +527,8 @@ if ($count == 0) {
 if ($row["owner"] == $CURUSER["id"])
 	$can_not_thanks = true;
 $thanksby = "<div id=\"ajax\"><form action=\"thanks.php\" method=\"post\">
-<input type=\"submit\" name=\"submit\" onclick=\"send(); return false;\" value=\"".$tracker_lang['thanks']."\"".($can_not_thanks == true ? " disabled" : "").">
-<input type=\"hidden\" name=\"torrentid\" value=\"$torrentid\">".$thanksby."
+<input type=\"submit\" name=\"submit\" onclick=\"send(); return false;\" value=\"{$tracker_lang['thanks']}\"".($can_not_thanks == true ? " disabled" : "").">
+<input type=\"hidden\" name=\"torrentid\" value=\"{$torrentid}\">{$thanksby}
 </form></div>";
 ?>
 <script language="javascript" type="text/javascript" src="js/ajax.js"></script>
@@ -562,8 +557,8 @@ function send() {
 	print("</table></p>\n");
 
 	} else {
-		stdhead($tracker_lang['comments_for']." \"" . $row["name"] . "\"");
-		print("<h1>".$tracker_lang['comments_for']." <a href=details.php?id=$id>" . $row["name"] . "</a></h1>\n");
+		stdhead($tracker_lang['comments_for']." \"".htmlspecialchars_decode($row["name"])."\"");
+		print("<h1>{$tracker_lang['comments_for']} <a href=\"details.php?id={$id}\">{$row["name"]}</a></h1>\n");
 	}
 
 	print("<p><a name=\"startcomments\"></a></p>\n");
@@ -587,7 +582,7 @@ if (!$count) {
 	print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\"> <a name=\"comments\">&nbsp;</a><b>:: Без комментариев</b></td></tr>");
 	print("<tr><td align=\"center\" >");
 	//print("<b>Ваше имя:</b> ");
-	//print("".$CURUSER['username']."<p>");
+	//print("{$CURUSER['username']}<p>");
 	print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">");
 	print("<div>");
 	textbbcode("comment","text","");
@@ -628,7 +623,7 @@ if (!$count) {
 	print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">  <a name=\"comments\">&nbsp;</a><b>:: Добавить комментарий к торренту</b></td></tr>");
 	print("<tr><td width=\"100%\" align=\"center\" >");
 	//print("Ваше имя: ");
-	//print("".$CURUSER['username']."<p>");
+	//print("{$CURUSER['username']}<p>");
 	print("<form name=comment method=\"post\" action=\"comment.php?action=add\">");
 	print("<center><table border=\"0\"><tr><td class=\"clear\">");
 	print("<div align=\"center\">". textbbcode("comment","text","", 1) ."</div>");
