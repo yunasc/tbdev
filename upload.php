@@ -48,7 +48,7 @@ sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 }
 
 ?>
-<div align=center>
+<div align="center">
 <p><span style="color: green; font-weight: bold;">После загрузки торрента, вам нужно будет скачать торрент и поставить качаться в папку где лежат оригиналы файлов.</span></p>
 <form name="upload" enctype="multipart/form-data" action="takeupload.php" method="post">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?=$max_torrent_size?>" />
@@ -97,6 +97,7 @@ if (get_user_class() >= UC_ADMINISTRATOR)
 <tr><td align="center" colspan="2"><input type="submit" class=btn value="<?=$tracker_lang['upload'];?>" /></td></tr>
 </table>
 </form>
+</div>
 <?
 
 stdfoot();
