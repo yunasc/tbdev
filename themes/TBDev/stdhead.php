@@ -9,6 +9,7 @@ if (!defined('UC_SYSOP'))
 <script language="javascript" type="text/javascript" src="js/resizer.js"></script>
 <!--<script language="javascript" type="text/javascript" src="js/tooltips.js"></script>-->
 <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.cookies.js"></script>
 <script language="javascript" type="text/javascript" src="js/blocks.js"></script>
 <script language="javascript" type="text/javascript" src="js/lightbox.js"></script>
 <script type="text/javascript">
