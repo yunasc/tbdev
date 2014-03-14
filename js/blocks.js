@@ -18,7 +18,7 @@ function block_switch(id) {
     if (index > -1) {
     	hb.splice(index, 1);
     } else {
-        hb[id] = id;
+        hb[hb.length] = id;
     }
     if (typeof hb == 'boolean')
         hb = []
