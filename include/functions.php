@@ -214,7 +214,10 @@ function userlogin($lightmode = false) {
 	unset($GLOBALS["CURUSER"]);
 
 	if (COOKIE_SALT == '' || (COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR']))
-		die('Скрипт заблокирован! Измените значение переменной COOKIE_SALT в файле include/init.php на случайное');
+		die('Скрипт заблокирован! Измените значение константы COOKIE_SALT в файле include/init.php на случайное');
+
+	if (COOKIE_SALT == 'COOKIE_SALT')
+		die('Идите и учите <a href="http://www.php.net">PHP</a>"... Сказано было ИЗМЕНИТЬ значение, а не удалить константу!');
 
 	$ip = getip();
 	$nip = ip2long($ip);
