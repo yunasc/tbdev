@@ -14,10 +14,11 @@ function block_switch(id) {
         $.cookie('hb', serialize(hb));
     } else
         hb = unserialize(hb);
-    if (hb.indexOf(id) == -1) {
-        hb[id] = id;
+    var index = hb.indexOf(id);
+    if (index > -1) {
+    	hb.splice(index, 1);
     } else {
-        hb = delete(hb[id]);
+        hb[id] = id;
     }
     if (typeof hb == 'boolean')
         hb = []
