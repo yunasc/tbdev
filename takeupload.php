@@ -187,6 +187,9 @@ if ($multi_torrent == 'yes') {
 				continue; // Skip not http:// or udp:// urls
 			if (in_array($al_url[0], $parsed_urls))
 				continue; // To skip doubled announce urls
+			$url_array = parse_url($al_url[0]);
+			if (substr($url_array['host'], -6) == '.local')
+				continue; // Skip any .local domains
 			$parsed_urls[] = $al_url[0];
 			// А вдруг в торренте два одинаковых аннонсера? Потому REPLACE INTO
 			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
