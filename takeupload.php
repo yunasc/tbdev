@@ -179,7 +179,7 @@ $infohash = sha1(BEncode($dict['info']));
 if ($multi_torrent == 'yes') {
 	if (!empty($dict['announce-list'])) {
 		foreach ($dict['announce-list'] as $al_url) {
-			list($al_url[0]) = $al_url[0]; // Trim url for match below and prevent "Invalid tracker url." error message if URL contains " " before proto://
+			$al_url[0] = trim($al_url[0]); // Trim url for match below and prevent "Invalid tracker url." error message if URL contains " " before proto://
 			if ($al_url[0] == 'http://retracker.local/announce')
 				continue;
 			if (!preg_match('#^(udp|http)://#si', $al_url[0]))
