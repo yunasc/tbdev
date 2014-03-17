@@ -449,7 +449,10 @@ if ($row["multitracker"] == 'yes') {
 		}
 		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
 			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $id . '">' . $tracker_lang['details_update_multitracker'] . '</a>';
-		$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . get_et(strtotime($row['last_mt_update'])) . '</b> ' . $tracker_lang['ago'];
+		if ($row['last_mt_update'] == '0000-00-00 00:00:00')
+			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . $tracker_lang['never'] . '</b>';
+		else
+			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . get_et(strtotime($row['last_mt_update'])) . '</b> ' . $tracker_lang['ago'];
 		tr($tracker_lang['details_multitracker'], '<ul style="margin: 0;">' . implode($anns) . '</ul>' . $update_link, 1);
 	} else
 		tr($tracker_lang['details_multitracker'], 'WTF? Multitracker = YES, but no announces', 1);
