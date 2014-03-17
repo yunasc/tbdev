@@ -107,7 +107,7 @@ function docleanup() {
 	sql_query("UPDATE snatched SET seeder = 'no' WHERE seeder = 'yes' AND last_action < FROM_UNIXTIME($deadtime)");
 
 	$deadtime -= $max_dead_torrent_time;
-	sql_query("UPDATE torrents SET visible='no' WHERE visible='yes' AND last_action < FROM_UNIXTIME($deadtime)") or sqlerr(__FILE__,__LINE__);
+	sql_query("UPDATE torrents SET visible='no' WHERE visible='yes' AND last_action < FROM_UNIXTIME($deadtime) AND multitracker = 'no'") or sqlerr(__FILE__,__LINE__);
 
 	$torrents = array();
 	$res = sql_query("SELECT torrent, seeder, COUNT(*) AS c FROM peers GROUP BY torrent, seeder") or sqlerr(__FILE__,__LINE__);

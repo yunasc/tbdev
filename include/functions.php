@@ -214,7 +214,10 @@ function userlogin($lightmode = false) {
 	unset($GLOBALS["CURUSER"]);
 
 	if (COOKIE_SALT == '' || (COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR']))
-		die('Скрипт заблокирован! Измените значение переменной COOKIE_SALT в файле include/init.php на случайное');
+		die('Скрипт заблокирован! Измените значение константы COOKIE_SALT в файле include/init.php на случайное');
+
+	if (COOKIE_SALT == 'COOKIE_SALT')
+		die('Идите и учите <a href="http://www.php.net">PHP</a>"... Сказано было ИЗМЕНИТЬ значение, а не удалить константу!');
 
 	$ip = getip();
 	$nip = ip2long($ip);
@@ -660,7 +663,7 @@ function parsedescr($d, $html) {
 }
 
 function stdhead($title = "", $msgalert = true) {
-	global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $DEFAULTBASEURL, $ss_uri, $tracker_lang, $default_theme, $keywords, $description;
+	global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $DEFAULTBASEURL, $ss_uri, $tracker_lang, $default_theme, $keywords, $description, $pic_base_url;
 
 	if (!$SITE_ONLINE)
 		die('Site is down for maintenance, please check back again later... thanks<br />');
@@ -962,6 +965,11 @@ function parked() {
 	   global $CURUSER;
 	   if ($CURUSER['parked'] == 'yes')
 		  stderr($tracker_lang['error'], 'Ваш аккаунт припаркован.');
+}
+
+function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
+	$ampersand = $html ? '&amp;' : '&';
+	return sprintf('magnet:?xt=urn:btih:%2$s%1$sdn=%3$s%1$sxl=%4$d%1$str=%5$s', $ampersand, $info_hash, urlencode($name), $size, implode($ampersand . 'tr=', $announces));
 }
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.

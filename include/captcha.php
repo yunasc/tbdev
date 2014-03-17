@@ -7,8 +7,9 @@ if(!defined('IN_TRACKER'))
 function create_captcha() {
 	//$randomstr = mksecret(5);
 	$randomstr = rand(10000, 99999);
-	$imagehash = md5($randomstr);
-	sql_query("INSERT INTO captcha SET imagehash = ".sqlesc($imagehash).", imagestring = ".sqlesc($randomstr).", dateline = ".sqlesc(time())) or sqlerr(__FILE__,__LINE__);
+	$imagehash = md5($randomstr . COOKIE_SALT); // Additional security tightening
+	// Have to use MYsql_query to prohibit seeing imagestring in debugmode
+	mysql_query("INSERT INTO captcha SET imagehash = ".sqlesc($imagehash).", imagestring = ".sqlesc($randomstr).", dateline = ".sqlesc(time())) or sqlerr(__FILE__,__LINE__);
 	return $imagehash;
 }
 

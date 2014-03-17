@@ -158,12 +158,12 @@ $completed .= "</table>";
 if ($user[added] == "0000-00-00 00:00:00")
 	$joindate = 'N/A';
 else
-	$joindate = "$user[added] (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($user["added"])) . " ".$tracker_lang['ago'].")";
+	$joindate = "$user[added] (" . get_et(sql_timestamp_to_unix_timestamp($user["added"])) . " ".$tracker_lang['ago'].")";
 $lastseen = $user["last_access"];
 if ($lastseen == "0000-00-00 00:00:00")
 	$lastseen = $tracker_lang['never'];
 else {
-  $lastseen .= " (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastseen)) . " ".$tracker_lang['ago'].")";
+  $lastseen .= " (" . get_et(sql_timestamp_to_unix_timestamp($lastseen)) . " ".$tracker_lang['ago'].")";
 }
   $res = sql_query("SELECT COUNT(*) FROM comments WHERE user = " . $user[id]) or sqlerr(__FILE__, __LINE__);
   $arr3 = mysql_fetch_row($res);

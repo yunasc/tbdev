@@ -246,8 +246,18 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 
 			print("<a href=\"download.php?id=$id\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
 
-			if ($row['multitracker'] == 'yes')
-				print("<img src=\"$pic_base_url/multitracker.png\" alt=\"".$tracker_lang['external_torrent']."\" title=\"".$tracker_lang['external_torrent']."\" />\n");
+			if ($row['multitracker'] == 'yes') {
+
+			print("<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>\n");
+
+				$allow_update = (strtotime($row['last_mt_update']) < (TIMENOW - 3600));
+				if ($allow_update)
+					$suffix = '_update';
+				$multi_image = "<img src=\"$pic_base_url/multitracker.png\" border=\"0\" alt=\"{$tracker_lang['external_torrent' . $suffix]}\" title=\"{$tracker_lang['external_torrent' . $suffix]}\" />\n";
+				if ($allow_update)
+					$multi_image = "<a href=\"update_multi.php?id=$id\">$multi_image</a>\n";
+				echo $multi_image;
+			}
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;

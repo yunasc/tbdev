@@ -153,9 +153,9 @@ if (isset($totallen)) {
 }
 
 if ($multi_torrent == 'no') {
-	$dict['value']['announce']=bdec(benc_str($announce_urls[0]));  // change announce url to local
-	$dict['info']['private']=bdec('i1e');  // add private tracker flag
-	$dict['info']['source']=bdec(benc_str( "[$DEFAULTBASEURL] $SITENAME")); // add link for bitcomet users
+	$dict['value']['announce'] = $announce_urls[0];  // change announce url to local
+	$dict['info']['private'] = 1;  // add private tracker flag
+	$dict['info']['source'] = "[$DEFAULTBASEURL] $SITENAME"; // add link for bitcomet users
 	unset($dict['announce-list']); // remove multi-tracker capability
 	unset($dict['nodes']); // remove cached peers (Bitcomet & Azareus)
 	unset($dict['info']['crc32']); // remove crc32

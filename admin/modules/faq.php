@@ -90,7 +90,7 @@ function FaqAction() {
 	global $admin_file;
 	if ($_GET["action"] == "reorder") {
 		foreach($_POST["order"] as $id => $position)
-			sql_query("UPDATE `faq` SET `order`='$position' WHERE id=".sqlesc((int)$id)) or sqlerr(__FILE__,__LINE__);
+			sql_query("UPDATE `faq` SET `order` = ".sqlesc($position)." WHERE id = ".sqlesc((int)$id)) or sqlerr(__FILE__,__LINE__);
 		header("Location: $admin_file.php?op=FaqAdmin"); 
 	}
 

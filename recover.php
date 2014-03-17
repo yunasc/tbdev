@@ -31,6 +31,14 @@ require "include/bittorrent.php";
 dbconn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+	if ($use_captcha) {
+		$b = get_row_count("captcha", "WHERE imagehash = ".sqlesc($_POST["imagehash"], true)." AND imagestring = ".sqlesc($_POST["imagestring"], true));
+		sql_query("DELETE FROM captcha WHERE imagehash = ".sqlesc($_POST["imagehash"], true)) or sqlerr(__FILE__,__LINE__);
+		if ($b == 0)
+			stderr("Ошибка", "Вы ввели неправильный код подтверждения.");
+	}
+
 	$email = trim($_POST["email"]);
 	if (!$email)
 		stderr($tracker_lang['error'], "Вы должны ввести email адрес");
@@ -121,9 +129,31 @@ EOD;
 	<table border="1" cellspacing="0" cellpadding="5">
 	<tr><td class="colhead" colspan="2">Восстановление имени пользователя или пароля</td></tr>
 	<tr><td colspan="2">Используйте форму ниже для востановления пароля<br /> и ваши данные будут отправлены вам на почту.<br /><br />
-	Вы долны будете подтвердить запрос.</td></tr>
+	Вы должны будете подтвердить запрос.</td></tr>
 	<tr><td class="rowhead">Зарегистрированый email</td>
 	<td><input type="text" size="40" name="email"></td></tr>
+<?
+
+if ($use_captcha) {
+	include_once("include/captcha.php");
+	$hash = create_captcha();
+	tr("Код подтверждения", "<input type=\"text\" name=\"imagestring\" size=\"20\" value=\"\" />
+	<p>Пожалуйста, введите текст изображенный на картинке внизу.<br />Этот процесс предотвращает автоматическую регистрацию.</p>
+	<table>
+		<tr>
+			<td class=\"block\" rowspan=\"2\">
+				<img id=\"captcha\" src=\"captcha.php?imagehash=$hash\" alt=\"Captcha\" ondblclick=\"document.getElementById('captcha').src = 'captcha.php?imagehash=$hash&amp;' + Math.random();\" />
+			</td>
+			<td class=\"block\"><img src=\"themes/$ss_uri/images/reload.gif\" style=\"cursor: pointer;\" onclick=\"document.getElementById('captcha').src = 'captcha.php?imagehash=$hash&amp;' + Math.random();\" /></td>
+		</tr>
+		<tr>
+			<td class=\"block\"><a href=\"captcha_mp3.php?imagehash=$hash\"><img src=\"themes/$ss_uri/images/listen.gif\" style=\"cursor: pointer;\" border=\"0\" /></a></td>
+		</tr>
+	</table>
+	<font color=\"red\">Код чувствителен к регистру</font><br />Кликните два раза на картинке, что-бы обновить картинку.<input type=\"hidden\" name=\"imagehash\" value=\"$hash\" />", 1);
+}
+
+?>
 	<tr><td colspan="2" align="center"><input type="submit" value="Восстановить"></td></tr>
 	</table>
 	<?

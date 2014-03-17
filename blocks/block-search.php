@@ -6,6 +6,8 @@ if (!defined('BLOCK_FILE')) {
 
 global $tracker_lang;
 
+$blocktitle = $tracker_lang['search'];
+
 $content = '<table width="100%">
    <tr><td class="embedded">
    &nbsp;'.$tracker_lang['torrents'].'

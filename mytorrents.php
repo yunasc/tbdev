@@ -52,7 +52,7 @@ else {
 
 	list($pagertop, $pagerbottom, $limit) = pager(20, $count, "mytorrents.php?");
 
-	$res = sql_query("SELECT torrents.type, torrents.comments, torrents.leechers, torrents.seeders, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.id, categories.name AS cat_name, categories.image AS cat_pic, torrents.name, save_as, filename, numfiles, added, size, views, visible, free, hits, times_completed, category FROM torrents LEFT JOIN categories ON torrents.category = categories.id $where ORDER BY id DESC $limit");
+	$res = sql_query("SELECT torrents.type, torrents.comments, (torrents.leechers + torrents.remote_leechers) AS leechers, (torrents.seeders + torrents.remote_seeders) AS seeders, torrents.multitracker, torrents.last_mt_update, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.id, categories.name AS cat_name, categories.image AS cat_pic, torrents.name, torrents.info_hash, save_as, filename, numfiles, added, size, views, visible, free, hits, times_completed, category FROM torrents LEFT JOIN categories ON torrents.category = categories.id $where ORDER BY id DESC $limit");
 
 	print("<tr><td class=\"index\" colspan=\"12\">");
 	print($pagertop);
