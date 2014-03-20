@@ -136,6 +136,19 @@ CREATE TABLE `comments` (
 ) ENGINE=MyISAM;
 
 #
+# Structure for the `comments_parsed` table :
+#
+
+DROP TABLE IF EXISTS `comments_parsed`;
+
+CREATE TABLE `comments_parsed` (
+  `cid` int(10) unsigned NOT NULL DEFAULT '0',
+  `text_hash` varchar(32) NOT NULL DEFAULT '',
+  `text_parsed` text NOT NULL,
+  PRIMARY KEY (`cid`)
+) ENGINE=MyISAM;
+
+#
 # Structure for the `countries` table :
 #
 
@@ -576,6 +589,19 @@ CREATE TABLE `torrents` (
   KEY `category_visible` (`category`,`visible`),
   KEY `vnsi` (`visible`, `not_sticky`, `id`)
 ) ENGINE=MyISAM;
+
+#
+# Structure for the `torrents_descr` table :
+#
+
+DROP TABLE IF EXISTS `torrents_descr`;
+
+CREATE TABLE `torrents_descr` (
+  `tid` int(10) unsigned NOT NULL DEFAULT '0',
+  `descr_hash` varchar(32) NOT NULL DEFAULT '',
+  `descr_parsed` text NOT NULL,
+  PRIMARY KEY (`tid`)
+) ENGINE=MyISAM
 
 #
 # Structure for the `torrents_scrape` table :

@@ -268,6 +268,9 @@ if (!$ret) {
 	bark("mysql puked: ".mysql_error());
 }
 $id = mysql_insert_id();
+
+sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
+
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
 sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {

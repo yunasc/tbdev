@@ -188,7 +188,7 @@ $id = intval($_GET["id"]);
 if (!isset($id) || !$id)
 	die();
 
-$res = sql_query("SELECT t.multitracker, t.last_mt_update, t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id WHERE t.id = $id") or sqlerr(__FILE__, __LINE__);
+$res = sql_query("SELECT td.descr_hash, td.descr_parsed, t.multitracker, t.last_mt_update, t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id LEFT JOIN torrents_descr AS td ON td.tid = $id WHERE t.id = $id") or sqlerr(__FILE__, __LINE__);
 $row = mysql_fetch_array($res);
 
 $keywords = $row['keywords'];
@@ -291,8 +291,15 @@ if (!isset($_GET["page"])) {
 		tr($tracker_lang['details_poster'], $img1, 1);
 	}
 
-	if (!empty($row["descr"]))
-		tr($tracker_lang['description'], format_comment($row["descr"]), 1, 1);
+	if (!empty($row["descr"])) {
+		if (md5($row['descr']) == $row['descr_hash'])
+			$descr = $row['descr_parsed'];
+		else {
+			$descr = format_comment($row['descr']);
+			sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($row['descr']), $descr))).')') or sqlerr(__FILE__,__LINE__);
+		}
+		tr($tracker_lang['description'], $descr, 1, 1);
+	}
 
 	$images = array();
 
@@ -600,8 +607,8 @@ if (!$count) {
 } else {
 	list($pagertop, $pagerbottom, $limit) = pager($limited, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
 
-	$subres = sql_query("SELECT c.id, c.ip, c.text, c.user, c.added, c.editedby, c.editedat, u.avatar, u.warned, ".
-	"u.username, u.title, u.class, u.donor, u.downloaded, u.uploaded, u.gender, u.last_access, e.username AS editedbyname FROM comments AS c LEFT JOIN users AS u ON c.user = u.id LEFT JOIN users AS e ON c.editedby = e.id WHERE torrent = " .
+	$subres = sql_query("SELECT cp.text_hash, cp.text_parsed, c.id, c.ip, c.text, c.user, c.added, c.editedby, c.editedat, u.avatar, u.warned, ".
+	"u.username, u.title, u.class, u.donor, u.downloaded, u.uploaded, u.gender, u.last_access, e.username AS editedbyname FROM comments AS c LEFT JOIN users AS u ON c.user = u.id LEFT JOIN users AS e ON c.editedby = e.id LEFT JOIN comments_parsed AS cp ON cp.cid = c.id WHERE torrent = " .
 	"$id ORDER BY c.id $limit") or sqlerr(__FILE__, __LINE__);
 	$allrows = array();
 	while ($subrow = mysql_fetch_array($subres))
