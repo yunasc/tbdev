@@ -870,7 +870,7 @@ function code_nobb($matches) {
 }
 
 function format_comment($text, $strip_html = true) {
-	global $smilies, $privatesmilies;
+	global $smilies, $privatesmilies, $pic_base_url;
 	$smiliese = $smilies;
 	$s = $text;
 
@@ -950,10 +950,10 @@ function format_comment($text, $strip_html = true) {
 
 	foreach ($smiliese as $code => $url)
 		$s = str_replace($code,
-						 "<img border=\"0\" src=\"pic/smilies/$url\" alt=\"" . htmlspecialchars_uni($code) . "\">", $s);
+						 "<img border=\"0\" src=\"$pic_base_url/smilies/$url\">", $s);
 
 	foreach ($privatesmilies as $code => $url)
-		$s = str_replace($code, "<img border=\"0\" src=\"pic/smilies/$url\">", $s);
+		$s = str_replace($code, "<img border=\"0\" src=\"$pic_base_url/smilies/$url\">", $s);
 
 	while (preg_match("#\[quote\](.*?)\[/quote\]#si", $s)) {
 		$s = encode_quote($s);
