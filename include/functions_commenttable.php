@@ -73,7 +73,13 @@ function commenttable($rows, $redaktor = "comment") {
 
 	$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars_uni($row["avatar"]) : "");
 	if (!$avatar){$avatar = "pic/default_avatar.gif"; }
-	$text = format_comment($row["text"]);
+	
+	if (md5($row['text']) == $row['text_hash'])
+		$text = $row['text_parsed'];
+	else {
+		$text = format_comment($row['text']);
+		sql_query('INSERT INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($row['id'], md5($row['text']), $text))).')') or sqlerr(__FILE__,__LINE__);
+	}
 
 	if ($row["editedby"]) {
 	       //$res = mysql_fetch_assoc(sql_query("SELECT * FROM users WHERE id = $row[editedby]")) or sqlerr(__FILE__,__LINE__);

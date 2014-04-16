@@ -57,6 +57,8 @@ if ($action == "add")
 
 	  $newid = mysql_insert_id();
 
+	sql_query('INSERT INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($newid, md5($text), format_comment($text)))).')') or sqlerr(__FILE__,__LINE__);
+
 	  sql_query("UPDATE torrents SET comments = comments + 1 WHERE id = $torrentid");
 
 	/////////////////—À≈∆≈Õ»≈ «¿  ŒÃÃ≈Õ“¿Ã»///////////////// 
@@ -188,11 +190,14 @@ elseif ($action == "edit")
 	  if ($text == "")
 	  	stderr($tracker_lang['error'], $tracker_lang['comment_cant_be_empty']);
 
+	$orig_text = $text;
 	  $text = sqlesc($text);
 
 	  $editedat = sqlesc(get_date_time());
 
 	  sql_query("UPDATE comments SET text=$text, editedat=$editedat, editedby=$CURUSER[id] WHERE id=$commentid") or sqlerr(__FILE__, __LINE__);
+
+	sql_query('REPLACE INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($commentid, md5($orig_text), format_comment($orig_text)))).')') or sqlerr(__FILE__,__LINE__);
 
 		if ($returnto)
 	  	header("Location: $returnto");

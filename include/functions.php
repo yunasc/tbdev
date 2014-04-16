@@ -769,9 +769,8 @@ function loggedinorreturn($nowarn = false) {
 function deletetorrent($id) {
 	global $torrent_dir;
 	$images = mysql_fetch_array(sql_query('SELECT image1, image2, image3, image4, image5 FROM torrents WHERE id = '.$id));
-	if ($images) {
-		for ($x=1; $x <= 5; $x++) {
-			if ($images['image' . $x] != '')
+	if ($images) { for ($x=1; $x <= 5; $x++) {
+			if ($images['image' . $x] != '' && file_exists('torrents/images/' . $images['image' . $x]))
 				unlink('torrents/images/' . $images['image' . $x]);
 		}
 	}
@@ -782,6 +781,7 @@ function deletetorrent($id) {
 	foreach(explode('.','peers.files.comments.ratings') as $x)
 		sql_query('DELETE FROM '.$x.' WHERE torrent = '.$id);
 	sql_query('DELETE FROM torrents_scrape WHERE tid = '.$id);
+	sql_query('DELETE FROM torrents_descr WHERE tid = '.$id);
 	unlink($torrent_dir.'/'.$id.'.torrent');
 }
 
@@ -974,7 +974,7 @@ function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
 
 // В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
 define ('VERSION', '');
-define ('NUM_VERSION', '2.1.16');
+define ('NUM_VERSION', '2.1.17');
 define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Бесплатная OpenSource база" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="Сайт разработчика движка" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
 
 function mysql_modified_rows () {

@@ -178,9 +178,19 @@ $infohash = sha1(BEncode($dict['info']));
 
 if ($multi_torrent == 'yes') {
 	if (!empty($dict['announce-list'])) {
+		$parsed_urls = array();
 		foreach ($dict['announce-list'] as $al_url) {
+			$al_url[0] = trim($al_url[0]); // Trim url for match below and prevent "Invalid tracker url." error message if URL contains " " before proto://
 			if ($al_url[0] == 'http://retracker.local/announce')
 				continue;
+			if (!preg_match('#^(udp|http)://#si', $al_url[0]))
+				continue; // Skip not http:// or udp:// urls
+			if (in_array($al_url[0], $parsed_urls))
+				continue; // To skip doubled announce urls
+			$url_array = parse_url($al_url[0]);
+			if (substr($url_array['host'], -6) == '.local')
+				continue; // Skip any .local domains
+			$parsed_urls[] = $al_url[0];
 			// А вдруг в торренте два одинаковых аннонсера? Потому REPLACE INTO
 			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
 		}
@@ -258,6 +268,9 @@ if (!$ret) {
 	bark("mysql puked: ".mysql_error());
 }
 $id = mysql_insert_id();
+
+sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
+
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
 sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {

@@ -12,7 +12,7 @@ CREATE TABLE `torrents_scrape` (
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `state` enum('ok','error') NOT NULL DEFAULT 'ok',
   `error` varchar(100) NOT NULL DEFAULT '',
-  PRIMARY KEY (`info_hash`,`url`) USING BTREE,
+  PRIMARY KEY (`info_hash`,`url`),
   KEY `tid` (`tid`)
 ) ENGINE=MyISAM;
 
