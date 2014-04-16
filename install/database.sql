@@ -601,7 +601,7 @@ CREATE TABLE `torrents_descr` (
   `descr_hash` varchar(32) NOT NULL DEFAULT '',
   `descr_parsed` text NOT NULL,
   PRIMARY KEY (`tid`)
-) ENGINE=MyISAM
+) ENGINE=MyISAM;
 
 #
 # Structure for the `torrents_scrape` table :
