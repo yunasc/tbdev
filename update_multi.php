@@ -161,6 +161,8 @@ if ($ajax !== 'yes') {
 	}
 	unset($announce);
 
+	$row = mysql_fetch_array(sql_query('SELECT last_mt_update FROM torrents WHERE id = '.$tid));
+
 	if (count($announces_a)) {
 		foreach ($announces_a as $announce) {
 			if ($announce['state'] == 'ok')
