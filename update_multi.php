@@ -144,8 +144,38 @@ if (function_exists('curl_multi_init')) {
 
 sql_query('UPDATE torrents AS t INNER JOIN (SELECT ts.tid, SUM(ts.seeders) AS sum_seeders, SUM(ts.leechers) AS sum_leechers FROM torrents_scrape AS ts WHERE ts.tid = '.$tid.' GROUP BY ts.tid) AS ts ON ts.tid = t.id SET t.remote_seeders = ts.sum_seeders, t.remote_leechers = ts.sum_leechers, t.last_action = NOW(), t.last_mt_update = NOW(), visible = IF(t.remote_seeders > 0, "yes", visible) WHERE t.id = '.$tid) or sqlerr(__FILE__,__LINE__);
 
-header('Refresh: 3;url=details.php?id='.$tid);
-$errors = count($works) - $success;
-stderr($tracker_lang['success'], "Обновление мультитрекера выполнено успешно. Успешно: $success Ошибок: $errors");
+$ajax = strval($_GET['ajax']);
 
+if ($ajax !== 'yes') {
+	header('Refresh: 3;url=details.php?id='.$tid);
+	$errors = count($works) - $success;
+	stderr($tracker_lang['success'], "Обновление мультитрекера выполнено успешно. Успешно: $success Ошибок: $errors");
+} else {
+	header('Content-Type: text/html; charset=cp1251');
+
+	$announces_a = $announces_urls = array();
+	$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$tid);
+	while ($announce = mysql_fetch_array($announces_r)) {
+		$announces_a[] = $announce;
+		$announces_urls[] = $announce['url'];
+	}
+	unset($announce);
+
+	if (count($announces_a)) {
+		foreach ($announces_a as $announce) {
+			if ($announce['state'] == 'ok')
+				$anns[] = '<li><b>' . $announce['url'] . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
+			else
+				$anns[] = '<li><font color="red"><b>' . $announce['url'] . '</b></font> - не работает, ошибка: ' . $announce['error'] . '</b>';
+		}
+		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
+			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $tid . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';
+		if ($row['last_mt_update'] == '0000-00-00 00:00:00')
+			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . $tracker_lang['never'] . '</b>';
+		else
+			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . get_et(strtotime($row['last_mt_update'])) . '</b> ' . $tracker_lang['ago'];
+		echo '<ul style="margin: 0;">' . implode($anns) . '</ul>' . $update_link;
+	} else
+		echo 'WTF? Multitracker = YES, but no announces';
+}
 ?>

@@ -455,12 +455,12 @@ if ($row["multitracker"] == 'yes') {
 				$anns[] = '<li><font color="red"><b>' . $announce['url'] . '</b></font> - не работает, ошибка: ' . $announce['error'] . '</b>';
 		}
 		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
-			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $id . '">' . $tracker_lang['details_update_multitracker'] . '</a>';
+			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $id . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';
 		if ($row['last_mt_update'] == '0000-00-00 00:00:00')
 			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . $tracker_lang['never'] . '</b>';
 		else
 			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . get_et(strtotime($row['last_mt_update'])) . '</b> ' . $tracker_lang['ago'];
-		tr($tracker_lang['details_multitracker'], '<ul style="margin: 0;">' . implode($anns) . '</ul>' . $update_link, 1);
+		tr($tracker_lang['details_multitracker'], '<div id="update_multi"><ul style="margin: 0;">' . implode($anns) . '</ul>' . $update_link . '</div>', 1);
 	} else
 		tr($tracker_lang['details_multitracker'], 'WTF? Multitracker = YES, but no announces', 1);
 }
@@ -556,6 +556,18 @@ function send() {
 	ajax.setVar("ajax", "yes");
 	ajax.method = 'POST';
 	ajax.element = 'ajax';
+	ajax.sendAJAX(varsString);
+}
+
+function update_multi() {
+	//noinspection JSPotentiallyInvalidConstructorUsage
+	var ajax = new tbdev_ajax('update_multi.php');
+	ajax.onShow ('');
+	var varsString = "";
+	ajax.setVar("id", <?=$torrentid;?>);
+	ajax.setVar("ajax", "yes");
+	ajax.method = 'GET';
+	ajax.element = 'update_multi';
 	ajax.sendAJAX(varsString);
 }
 </script>
