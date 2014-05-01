@@ -261,7 +261,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
-$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action, multitracker) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], 0 + $_POST["type"], $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "', ".sqlesc($multi_torrent).")");
+$ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action, multitracker) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], $catid, $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "', ".sqlesc($multi_torrent).")");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");
