@@ -151,7 +151,7 @@ if ($ajax !== 'yes') {
 	$errors = count($works) - $success;
 	stderr($tracker_lang['success'], "Обновление мультитрекера выполнено успешно. Успешно: $success Ошибок: $errors");
 } else {
-	header('Content-Type: text/html; charset=cp1251');
+	header ("Content-Type: text/html; charset=" . $tracker_lang['language_charset']);
 
 	$announces_a = $announces_urls = array();
 	$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$tid);
