@@ -222,8 +222,8 @@ function userlogin($lightmode = false) {
 	$ip = getip();
 	$nip = ip2long($ip);
 
-	if ($use_ipbans && !$lightmode) {
-		$res = sql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+	if ($use_ipbans && !$lightmode && $nip!==false) {
+		$res = sql_query("SELECT comment FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
 		if (mysql_num_rows($res) > 0) {
 			$comment = mysql_fetch_assoc($res);
 			$comment = $comment["comment"];
