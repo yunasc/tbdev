@@ -63,8 +63,8 @@ if ($action == "edituser") {
 	$birthday = ($resetb=='yes'?", birthday = '0000-00-00'":"");
 	$enabled = $_POST["enabled"];
 	$warned = $_POST["warned"];
-	$warnlength = 0 + $_POST["warnlength"];
-	$dislength = 0 + $_POST["dislength"];
+	$warnlength = intval($_POST["warnlength"]);
+	$dislength = intval($_POST["dislength"]);
 	$warnpm = $_POST["warnpm"];
 	$donor = $_POST["donor"];
 	$uploadtoadd = $_POST["amountup"];
@@ -78,7 +78,7 @@ if ($action == "edituser") {
 	$modcomm = htmlspecialchars_uni($_POST["modcomm"]);
 	$deluser = $_POST["deluser"];
 
-	$class = 0 + $_POST["class"];
+	$class = intval($_POST["class"]);
 	if (!is_valid_id($userid) || !is_valid_user_class($class))
 		stderr($tracker_lang['error'], "Неверный идентификатор пользователя или класса.");
 	// check target user class

@@ -166,9 +166,9 @@ $updateset[] = "privacy = '$privacy'";
 $website = unesc($_POST["website"]);
 $updateset[] = "website = " . sqlesc(htmlspecialchars_uni($website));
 
-$updateset[] = "torrentsperpage = " . min(100, 0 + $_POST["torrentsperpage"]);
-$updateset[] = "topicsperpage = " . min(100, 0 + $_POST["topicsperpage"]);
-$updateset[] = "postsperpage = " . min(100, 0 + $_POST["postsperpage"]);
+$updateset[] = "torrentsperpage = " . min(100, intval($_POST["torrentsperpage"]));
+$updateset[] = "topicsperpage = " . min(100, intval($_POST["topicsperpage"]));
+$updateset[] = "postsperpage = " . min(100, intval($_POST["postsperpage"]));
 
 if (is_theme($theme))
 	$updateset[] = "theme = ".sqlesc($theme);
