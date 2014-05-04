@@ -444,7 +444,7 @@ EOD;
 if ($action == 'mass_pm') {
         if (get_user_class() < UC_MODERATOR)
                 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
-        $n_pms = 0 + $_POST['n_pms'];
+        $n_pms = intval($_POST['n_pms']);
         $pmees = $_POST['pmees'];
         $auto = $_POST['auto'];
 
