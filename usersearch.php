@@ -102,7 +102,7 @@ $highlight = " bgcolor=#BBAF9B";
 <tr>
 
   <td valign="middle" class=rowhead>Имя:</td>
-  <td<?=$_GET['n']?$highlight:""?>><input name="n" type="text" value="<?=$_GET['n']?>" size=35></td>
+  <td<?=$_GET['n']?$highlight:""?>><input name="n" type="text" value="<?=htmlspecialchars_uni($_GET['n'])?>" size=35></td>
 
   <td valign="middle" class=rowhead>Рейтинг:</td>
   <td<?=$_GET['r']?$highlight:""?>><select name="rt">
@@ -113,8 +113,8 @@ $highlight = " bgcolor=#BBAF9B";
 	}
 	?>
     </select>
-    <input name="r" type="text" value="<?=$_GET['r']?>" size="5" maxlength="4">
-    <input name="r2" type="text" value="<?=$_GET['r2']?>" size="5" maxlength="4"></td>
+    <input name="r" type="text" value="<?=floatval($_GET['r'])?>" size="5" maxlength="4">
+    <input name="r2" type="text" value="<?=floatval($_GET['r2'])?>" size="5" maxlength="4"></td>
 
   <td valign="middle" class=rowhead>Статус:</td>
   <td<?=$_GET['st']?$highlight:""?>><select name="st">
@@ -126,9 +126,9 @@ $highlight = " bgcolor=#BBAF9B";
     ?>
     </select></td></tr>
 <tr><td valign="middle" class=rowhead>Email:</td>
-  <td<?=$_GET['em']?$highlight:""?>><input name="em" type="text" value="<?=$_GET['em']?>" size="35"></td>
+  <td<?=$_GET['em']?$highlight:""?>><input name="em" type="text" value="<?=htmlspecialchars_uni($_GET['em'])?>" size="35"></td>
   <td valign="middle" class=rowhead>IP:</td>
-  <td<?=$_GET['ip']?$highlight:""?>><input name="ip" type="text" value="<?=$_GET['ip']?>" maxlength="17"></td>
+  <td<?=$_GET['ip']?$highlight:""?>><input name="ip" type="text" value="<?=htmlspecialchars_uni($_GET['ip'])?>" maxlength="17"></td>
 
   <td valign="middle" class=rowhead>Отключен:</td>
   <td<?=$_GET['as']?$highlight:""?>><select name="as">
@@ -141,9 +141,9 @@ $highlight = " bgcolor=#BBAF9B";
     </select></td></tr>
 <tr>
   <td valign="middle" class=rowhead>Комментарий:</td>
-  <td<?=$_GET['co']?$highlight:""?>><input name="co" type="text" value="<?=$_GET['co']?>" size="35"></td>
+  <td<?=$_GET['co']?$highlight:""?>><input name="co" type="text" value="<?=htmlspecialchars_uni($_GET['co'])?>" size="35"></td>
   <td valign="middle" class=rowhead>Маска:</td>
-  <td<?=$_GET['ma']?$highlight:""?>><input name="ma" type="text" value="<?=$_GET['ma']?>" maxlength="17"></td>
+  <td<?=$_GET['ma']?$highlight:""?>><input name="ma" type="text" value="<?=htmlspecialchars_uni($_GET['ma'])?>" maxlength="17"></td>
   <td valign="middle" class=rowhead>Класс:</td>
   <td<?=($_GET['c'] && $_GET['c'] != 1)?$highlight:""?>><select name="c"><option value='1'>(Любой)</option>
   <?
@@ -171,9 +171,9 @@ $highlight = " bgcolor=#BBAF9B";
     ?>
     </select>
 
-    <input name="d" type="text" value="<?=$_GET['d']?>" size="12" maxlength="10">
+    <input name="d" type="text" value="<?=htmlspecialchars_uni($_GET['d'])?>" size="12" maxlength="10">
 
-    <input name="d2" type="text" value="<?=$_GET['d2']?>" size="12" maxlength="10"></td>
+    <input name="d2" type="text" value="<?=htmlspecialchars_uni($_GET['d2'])?>" size="12" maxlength="10"></td>
 
 
   <td valign="middle" class=rowhead>Раздал:</td>
@@ -187,9 +187,9 @@ $highlight = " bgcolor=#BBAF9B";
     ?>
     </select>
 
-    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?=$_GET['ul']?>">
+    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?=intval($_GET['ul'])?>">
 
-    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?=$_GET['ul2']?>"></td>
+    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?=intval($_GET['ul2'])?>"></td>
   <td valign="middle" class="rowhead">Донор:</td>
 
   <td<?=$_GET['do']?$highlight:""?>><select name="do">
@@ -213,9 +213,9 @@ $highlight = " bgcolor=#BBAF9B";
   ?>
   </select>
 
-  <input name="ls" type="text" value="<?=$_GET['ls']?>" size="12" maxlength="10">
+  <input name="ls" type="text" value="<?=intval($_GET['ls'])?>" size="12" maxlength="10">
 
-  <input name="ls2" type="text" value="<?=$_GET['ls2']?>" size="12" maxlength="10"></td>
+  <input name="ls2" type="text" value="<?=intval($_GET['ls2'])?>" size="12" maxlength="10"></td>
 	  <td valign="middle" class=rowhead>Скачал:</td>
 
   <td<?=$_GET['dl']?$highlight:""?>><select name="dlt" id="dlt">
@@ -227,9 +227,9 @@ $highlight = " bgcolor=#BBAF9B";
 	?>
     </select>
 
-    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?=$_GET['dl']?>">
+    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?=intval($_GET['dl'])?>">
 
-    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?=$_GET['dl2']?>"></td>
+    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?=intval($_GET['dl2'])?>"></td>
 
 	<td valign="middle" class=rowhead>Предупрежден:</td>
 
@@ -412,7 +412,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       	$n = substr($mask, 1, strlen($mask) - 1);
         if (!is_numeric($n) or $n < 0 or $n > 32)
         {
-        	stdmsg($tracker_lang['error'], "Неверная макса подсети.");
+        	stdmsg($tracker_lang['error'], "Неверная маска подсети.");
         	stdfoot();
           die();
         }
@@ -421,7 +421,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       }
       elseif (!preg_match($regex, $mask))
       {
-				stdmsg($tracker_lang['error'], "Неверная макса подсети.");
+				stdmsg($tracker_lang['error'], "Неверная маска подсети.");
 				stdfoot();
 	      die();
       }
