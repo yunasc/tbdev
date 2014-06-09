@@ -213,9 +213,9 @@ $highlight = " bgcolor=#BBAF9B";
   ?>
   </select>
 
-  <input name="ls" type="text" value="<?=intval($_GET['ls'])?>" size="12" maxlength="10">
+  <input name="ls" type="text" value="<?=htmlspecialchars_uni($_GET['ls'])?>" size="12" maxlength="10">
 
-  <input name="ls2" type="text" value="<?=intval($_GET['ls2'])?>" size="12" maxlength="10"></td>
+  <input name="ls2" type="text" value="<?=htmlspecialchars_uni($_GET['ls2'])?>" size="12" maxlength="10"></td>
 	  <td valign="middle" class=rowhead>Скачал:</td>
 
   <td<?=$_GET['dl']?$highlight:""?>><select name="dlt" id="dlt">
