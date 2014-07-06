@@ -36,7 +36,7 @@ function bark($msg) {
 ////////////////////////////////////////////////
 function uploadimage($x, $imgname, $tid) {
 
-	$maxfilesize = 512000; // 500kb
+	$maxfilesize = $max_image_size; // default 1mb
 
 	$allowed_types = array(
 	"image/gif" => "gif",

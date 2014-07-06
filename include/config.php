@@ -77,7 +77,8 @@ $use_sessions = 1; // Использовать сессии. 0 - нет, 1 - да.
 $smtptype = 'advanced'; // Тип отправки почты, по умолчанию advanced, лучше не менять
 $allow_block_hide = true; // Разрешить сворачивание блоков
 $check_for_working_mta = true; // Проверять работу почтового MTA при регистрации пользователя (TCP connect @ domain:25)
-$force_private_tracker = true;
+$force_private_tracker = true; // Yet not working
+$max_image_size = 1024*1024; // 1mb
 
 $admin_email = 'admin@'.$_SERVER['HTTP_HOST']; // Почта администратора трекера, для формы обратной связи
 $website_name = 'TBDev'; // Краткое имя сайта, для формы обратной связи
