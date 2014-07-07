@@ -46,6 +46,7 @@
 
 // Database Presets
 $config_path = "../include/secrets.php";
+$configlocal_path = "../include/secrets.local.php";
 
 $template_file = "./template.png";
 
@@ -149,6 +150,7 @@ $img = @imagecreatefrompng($template_file) or die ("Cannot Initialize new GD ima
 $userid = getParam();
 if ($userid!="") {
 	include($config_path);
+	include($configlocal_path);
 	mysql_init();
 	
 	$query = "SELECT COUNT(id) FROM users WHERE id = '".$userid."'";

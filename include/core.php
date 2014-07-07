@@ -34,9 +34,11 @@ if (!defined("IN_TRACKER"))
 require_once($rootpath . 'include/init.php');
 require_once($rootpath . 'include/global.php');
 require_once($rootpath . 'include/config.php');
+require_once($rootpath . 'include/config.local.php');
 require_once($rootpath . 'include/functions.php');
 require_once($rootpath . 'include/blocks.php');
 require_once($rootpath . 'include/secrets.php');
+require_once($rootpath . 'include/secrets.local.php');
 
 // INCLUDE SECURITY BACK-END
 if ($ctracker) require_once($rootpath . 'include/ctracker.php');

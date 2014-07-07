@@ -31,7 +31,9 @@ if (!defined('IN_ANNOUNCE'))
     die('Hacking attempt!');
 
 require_once($rootpath . 'include/config.php');
+require_once($rootpath . 'include/config.local.php');
 require_once($rootpath . 'include/secrets.php');
+require_once($rootpath . 'include/secrets.local.php');
 
 function err($msg) {
     benc_resp(array("failure reason" => array('type' => 'string', 'value' => $msg)));

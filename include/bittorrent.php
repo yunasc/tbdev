@@ -116,6 +116,12 @@ REF;
 	if ((int) ini_get('short_open_tag') == '0')
 		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
 
+	if (!file_exists('include/secrets.local.php'))
+		die('Создайте файл include/secrets.local.php и переместите в него свои локальные настройки из include/secrets.php (техническое требование)');
+
+	if (!file_exists('include/config.local.php'))
+		die('Создайте файл include/config.local.php и переместите в него свои локальные настройки из include/config.php (техническое требование)');
+
 	// Variables for Start Time
 	$tstart = timer(); // Start time
 
