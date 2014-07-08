@@ -278,7 +278,7 @@ function serialize(mixed_val) {    // Generates a storable representation of a v
                 return "N;";
             } else if (mixed_val instanceof Array) {
                 var idxobj = { idx: -1 };
-                var map = []
+                var map = [];
                 for (var i = 0; i < mixed_val.length; i++) {
                     idxobj.idx++;
                     var ser = serialize(mixed_val[i]);

@@ -191,7 +191,7 @@ function textbbcode($form, $name, $content = "") {
 			selEnd = selLength;
 
 		var s1 = (txtarea.value).substring(0, selStart);
-		var s2 = (txtarea.value).substring(selStart, selEnd)
+		var s2 = (txtarea.value).substring(selStart, selEnd);
 		var s3 = (txtarea.value).substring(selEnd, selLength);
 		var sT = txtarea.scrollTop, sL = txtarea.scrollLeft;
 		txtarea.value = s1 + open + s2 + close + s3;

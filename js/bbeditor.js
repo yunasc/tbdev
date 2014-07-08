@@ -118,7 +118,7 @@ function mozWrap(txtarea, open, close)
                 selEnd = selLength;
 
         var s1 = (txtarea.value).substring(0,selStart);
-        var s2 = (txtarea.value).substring(selStart, selEnd)
+        var s2 = (txtarea.value).substring(selStart, selEnd);
         var s3 = (txtarea.value).substring(selEnd, selLength);
         txtarea.value = s1 + open + s2 + close + s3;
         txtarea.focus();

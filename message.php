@@ -68,7 +68,6 @@ if ($action == "viewmailbox") {
 
         stdhead($mailbox_name); ?>
         <script language="Javascript" type="text/javascript">
-        <!-- Begin
         var checkflag = "false";
         var marked_row = new Array;
         function check(field) {
@@ -83,7 +82,6 @@ if ($action == "viewmailbox") {
                                 checkflag = "false";
                         }
                 }
-                //  End -->
         </script>
         <!--<script language="javascript" type="text/javascript" src="js/functions.js"></script>-->
         <H1><?=$mailbox_name?></H1>

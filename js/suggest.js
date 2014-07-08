@@ -28,7 +28,7 @@ function noenter(key) {
 	}
 }
 
-document.onclick = function () { closechoices(); }
+document.onclick = function () { closechoices(); };
 
 function suggest(key,query) {
 	if (key == 38) {
@@ -68,9 +68,9 @@ function update(result) {
 			novo.id = i;
 			novo.style.height = "14px";
 			novo.style.padding = "3px";
-			novo.onmouseover = function() { select(this,true); }
-			novo.onmouseout = function() { unselect(this,true); }
-			novo.onclick = function() { choiceclick(this); }
+			novo.onmouseover = function() { select(this,true); };
+			novo.onmouseout = function() { unselect(this,true); };
+			novo.onclick = function() { choiceclick(this); };
 			novo.innerHTML = arr[i-1];
 		}
 	} else {

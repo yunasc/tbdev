@@ -7,6 +7,7 @@ function end_chmod($dir, $chm) {
 		$per = substr($pdir, -3);
 		if ($per != $chm) return "".$dir." не имеет нужных разрешений для записи на сервере.<br />Установите нужные атрибуты CHMOD - ".$chm."";
 	}
+	return;
 }
 
 ?>
