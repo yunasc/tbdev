@@ -28,7 +28,8 @@
 
 require_once("include/bittorrent.php");
 dbconn(false);
-loggedinorreturn();
+if (!$allow_guests_details)
+	loggedinorreturn();
 
 function getagent($httpagent, $peer_id = "") {
 	if (preg_match("/^Azureus ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]\_B([0-9][0-9|*])(.+)$)/", $httpagent, $matches))
@@ -537,7 +538,7 @@ if ($count == 0) {
 	if ($thanksby)
 		$thanksby = implode(', ', $thanksby);
 }
-if ($row["owner"] == $CURUSER["id"])
+if ($row["owner"] == $CURUSER["id"] || !$CURUSER)
 	$can_not_thanks = true;
 $thanksby = "<div id=\"ajax\"><form action=\"thanks.php\" method=\"post\">
 <input type=\"submit\" name=\"submit\" onclick=\"send(); return false;\" value=\"{$tracker_lang['thanks']}\"".($can_not_thanks == true ? " disabled" : "").">
@@ -598,24 +599,27 @@ if (!$count) {
 	print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
 	print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">");
 	print("<div style=\"float: left; width: auto;\" align=\"left\"> :: {$tracker_lang['comments_list']}</div>");
-	print("<div align=\"right\"><a href=#comments class=\"altlink_white\">{$tracker_lang['comments_add']}</a></div>");
+	if ($CURUSER)
+		print("<div align=\"right\"><a href=#comments class=\"altlink_white\">{$tracker_lang['comments_add']}</a></div>");
 	print("</td></tr><tr><td align=\"center\">");
-	print("Комментариев нет. <a href=\"#comments\">Желаете добавить?</a>");
+	print("Комментариев нет.".($CURUSER ? " <a href=\"#comments\">Желаете добавить?</a>" : ""));
 	print("</td></tr></table><br>");
 
-	print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
-	print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\"> <a name=\"comments\">&nbsp;</a><b>:: Без комментариев</b></td></tr>");
-	print("<tr><td align=\"center\" >");
-	//print("<b>Ваше имя:</b> ");
-	//print("{$CURUSER['username']}<p>");
-	print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">");
-	print("<div>");
-	textbbcode("comment","text","");
-	print("</div>");
-	print("</td></tr><tr><td  align=\"center\" colspan=\"2\">");
-	print("<input type=\"hidden\" name=\"tid\" value=\"$id\"/>");
-	print("<input type=\"submit\" class=btn value=\"Разместить комментарий\" />");
-	print("</td></tr></form></table>");
+	if ($CURUSER) {
+		print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
+		print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\"> <a name=\"comments\">&nbsp;</a><b>:: Без комментариев</b></td></tr>");
+		print("<tr><td align=\"center\" >");
+		//print("<b>Ваше имя:</b> ");
+		//print("{$CURUSER['username']}<p>");
+		print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">");
+		print("<div>");
+		textbbcode("comment","text","");
+		print("</div>");
+		print("</td></tr><tr><td  align=\"center\" colspan=\"2\">");
+		print("<input type=\"hidden\" name=\"tid\" value=\"$id\"/>");
+		print("<input type=\"submit\" class=btn value=\"Разместить комментарий\" />");
+		print("</td></tr></form></table>");
+	}
 } else {
 	list($pagertop, $pagerbottom, $limit) = pager($limited, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
 
@@ -630,7 +634,8 @@ if (!$count) {
 	print("<table class=\"main\" cellspacing=\"0\" cellpadding=\"5\" width=\"100%\" >");
 	print("<tr><td class=\"colhead\" align=\"center\" >");
 	print("<div style=\"float: left; width: auto;\" align=\"left\"> :: {$tracker_lang['comments_list']}</div>");
-	print("<div align=\"right\"><a href=#comments class=\"altlink_white\">{$tracker_lang['comments_add']}</a></div>");
+	if ($CURUSER)
+		print("<div align=\"right\"><a href=#comments class=\"altlink_white\">{$tracker_lang['comments_add']}</a></div>");
 	print("</td></tr>");
 
 	print("<tr><td>");
@@ -644,19 +649,21 @@ if (!$count) {
 	print("</td></tr>");
 	print("</table>");
 
-	print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
-	print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">  <a name=\"comments\">&nbsp;</a><b>:: Добавить комментарий к торренту</b></td></tr>");
-	print("<tr><td width=\"100%\" align=\"center\" >");
-	//print("Ваше имя: ");
-	//print("{$CURUSER['username']}<p>");
-	print("<form name=comment method=\"post\" action=\"comment.php?action=add\">");
-	print("<center><table border=\"0\"><tr><td class=\"clear\">");
-	print("<div align=\"center\">". textbbcode("comment","text","", 1) ."</div>");
-	print("</td></tr></table></center>");
-	print("</td></tr><tr><td  align=\"center\" colspan=\"2\">");
-	print("<input type=\"hidden\" name=\"tid\" value=\"$id\"/>");
-	print("<input type=\"submit\" class=btn value=\"Разместить комментарий\" />");
-	print("</td></tr></form></table>");
+	if ($CURUSER) {
+		print("<table style=\"margin-top: 2px;\" cellpadding=\"5\" width=\"100%\">");
+		print("<tr><td class=\"colhead\" align=\"left\" colspan=\"2\">  <a name=\"comments\">&nbsp;</a><b>:: Добавить комментарий к торренту</b></td></tr>");
+		print("<tr><td width=\"100%\" align=\"center\" >");
+		//print("Ваше имя: ");
+		//print("{$CURUSER['username']}<p>");
+		print("<form name=comment method=\"post\" action=\"comment.php?action=add\">");
+		print("<center><table border=\"0\"><tr><td class=\"clear\">");
+		print("<div align=\"center\">". textbbcode("comment","text","", 1) ."</div>");
+		print("</td></tr></table></center>");
+		print("</td></tr><tr><td  align=\"center\" colspan=\"2\">");
+		print("<input type=\"hidden\" name=\"tid\" value=\"$id\"/>");
+		print("<input type=\"submit\" class=btn value=\"Разместить комментарий\" />");
+		print("</td></tr></form></table>");
+	}
 }
 
 stdfoot();

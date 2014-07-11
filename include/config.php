@@ -79,6 +79,7 @@ $allow_block_hide = true; // Разрешить сворачивание блоков
 $check_for_working_mta = true; // Проверять работу почтового MTA при регистрации пользователя (TCP connect @ domain:25)
 $force_private_tracker = true; // Yet not working
 $max_image_size = 1024*1024; // 1mb
+$allow_guests_details = false; // Разрешить гостям доступ к странице деталей торрента
 
 $admin_email = 'admin@'.$_SERVER['HTTP_HOST']; // Почта администратора трекера, для формы обратной связи
 $website_name = 'TBDev'; // Краткое имя сайта, для формы обратной связи
