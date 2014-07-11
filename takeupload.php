@@ -153,7 +153,7 @@ if (isset($totallen)) {
 }
 
 if ($multi_torrent == 'no') {
-	$dict['value']['announce'] = $announce_urls[0];  // change announce url to local
+	$dict['announce'] = $announce_urls[0];  // change announce url to local
 	$dict['info']['private'] = 1;  // add private tracker flag
 	$dict['info']['source'] = "[$DEFAULTBASEURL] $SITENAME"; // add link for bitcomet users
 	unset($dict['announce-list']); // remove multi-tracker capability
@@ -177,6 +177,8 @@ $dict['publisher-url.utf-8'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"
 $infohash = sha1(BEncode($dict['info']));
 
 if ($multi_torrent == 'yes') {
+	if (empty($dict['announce-list']) && !empty($dict['announce']))
+		$dict['announce-list'][] = array($dict['announce']);
 	if (!empty($dict['announce-list'])) {
 		$parsed_urls = array();
 		foreach ($dict['announce-list'] as $al_url) {
@@ -194,7 +196,8 @@ if ($multi_torrent == 'yes') {
 			// А вдруг в торренте два одинаковых аннонсера? Потому REPLACE INTO
 			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
 		}
-	}
+	} else
+		stderr($tracker_lang['error'], "В торрент файле нет announce-list и не указан announce. Такой мультитрекерный торрент использовать нельзя.");
 }
 
 /*print_r($infohash);
