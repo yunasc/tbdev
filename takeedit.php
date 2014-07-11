@@ -26,7 +26,8 @@
 // +--------------------------------------------------------------------------+
 */
 
-require_once("include/benc.php");
+require_once("include/BDecode.php");
+require_once("include/BEncode.php");
 require_once("include/bittorrent.php");
 
 function bark($msg) {
@@ -185,34 +186,31 @@ if ($update_torrent) {
 		bark("eek");
 	if (!filesize($tmpname))
 		bark("Пустой файл!");
-	$dict = bdec_file($tmpname, $max_torrent_size);
+	$dict = bdecode(file_get_contents($tmpname));
 	if (!isset($dict))
 		bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
-	list($info) = dict_check($dict, "info");
-	list($dname, $plen, $pieces) = dict_check($info, "name(string):piece length(integer):pieces(string)");
+	$info = $dict['info'];
+	list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
 	if (strlen($pieces) % 20 != 0)
 		bark("invalid pieces");
 
 	$filelist = array();
-	$totallen = dict_get($info, "length", "integer");
 	if (isset($totallen)) {
 		$filelist[] = array($dname, $totallen);
 		$torrent_type = "single";
 	} else {
-		$flist = dict_get($info, "files", "list");
+		$flist = $info['files'];
 		if (!isset($flist))
 			bark("missing both length and files");
 		if (!count($flist))
 			bark("no files");
 		$totallen = 0;
 		foreach ($flist as $fn) {
-			list($ll, $ff) = dict_check($fn, "length(integer):path(list)");
+			list($ll, $ff) = array($fn['length'], $fn['path']);
 			$totallen += $ll;
 			$ffa = array();
 			foreach ($ff as $ffe) {
-				if ($ffe["type"] != "string")
-					bark("filename error");
-				$ffa[] = $ffe["value"];
+				$ffa[] = $ffe;
 			}
 			if (!count($ffa))
 				bark("filename error");
@@ -227,32 +225,32 @@ if ($update_torrent) {
 		$torrent_type = "multi";
 	}
 
-	$dict['value']['announce']=bdec(benc_str($announce_urls[0]));  // change announce url to local
-	$dict['value']['info']['value']['private']=bdec('i1e');  // add private tracker flag
-	$dict['value']['info']['value']['source']=bdec(benc_str( "[$DEFAULTBASEURL] $SITENAME")); // add link for bitcomet users
-	unset($dict['value']['announce-list']); // remove multi-tracker capability
-	unset($dict['value']['nodes']); // remove cached peers (Bitcomet & Azareus)
-	unset($dict['value']['info']['value']['crc32']); // remove crc32
-	unset($dict['value']['info']['value']['ed2k']); // remove ed2k
-	unset($dict['value']['info']['value']['md5sum']); // remove md5sum
-	unset($dict['value']['info']['value']['sha1']); // remove sha1
-	unset($dict['value']['info']['value']['tiger']); // remove tiger
-	unset($dict['value']['azureus_properties']); // remove azureus properties
-	$dict=bdec(benc($dict)); // double up on the becoding solves the occassional misgenerated infohash
-	$dict['value']['comment']=bdec(benc_str( "Торрент создан для '$SITENAME'")); // change torrent comment
-	$dict['value']['created by']=bdec(benc_str( "$CURUSER[username]")); // change created by
-	$dict['value']['publisher']=bdec(benc_str( "$CURUSER[username]")); // change publisher
-	$dict['value']['publisher.utf-8']=bdec(benc_str( "$CURUSER[username]")); // change publisher.utf-8
-	$dict['value']['publisher-url']=bdec(benc_str( "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]")); // change publisher-url
-	$dict['value']['publisher-url.utf-8']=bdec(benc_str( "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]")); // change publisher-url.utf-8
-	list($info) = dict_check($dict, "info");
+	$dict['announce'] = $announce_urls[0];  // change announce url to local
+	$dict['info']['private'] = 1;  // add private tracker flag
+	$dict['info']['source'] = "[$DEFAULTBASEURL] $SITENAME"; // add link for bitcomet users
+	unset($dict['announce-list']); // remove multi-tracker capability
+	unset($dict['nodes']); // remove cached peers (Bitcomet & Azareus)
+	unset($dict['info']['crc32']); // remove crc32
+	unset($dict['info']['ed2k']); // remove ed2k
+	unset($dict['info']['md5sum']); // remove md5sum
+	unset($dict['info']['sha1']); // remove sha1
+	unset($dict['info']['tiger']); // remove tiger
+	unset($dict['azureus_properties']); // remove azureus properties
+	$dict = BDecode(BEncode($dict)); // double up on the becoding solves the occassional misgenerated infohash
+	$dict['comment'] = "Торрент создан для '$SITENAME'"; // change torrent comment
+	$dict['created by'] = "$CURUSER[username]"; // change created by
+	$dict['publisher'] = "$CURUSER[username]"; // change publisher
+	$dict['publisher.utf-8'] = "$CURUSER[username]"; // change publisher.utf-8
+	$dict['publisher-url'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"; // change publisher-url
+	$dict['publisher-url.utf-8'] = "$DEFAULTBASEURL/userdetails.php?id=$CURUSER[id]"; // change publisher-url.utf-8
+	$infohash = sha1(BEncode($dict['info']));
 
-	$infohash = sha1($info["string"]);
 	move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
 
 	$fp = fopen("$torrent_dir/$id.torrent", "w");
 	if ($fp) {
-	    @fwrite($fp, benc($dict), strlen(benc($dict)));
+		$dict_str = BEncode($dict);
+	    @fwrite($fp, $dict_str, strlen($dict_str));
 	    fclose($fp);
 	}
 
