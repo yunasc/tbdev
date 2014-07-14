@@ -34,7 +34,7 @@ function initSpoilers(context) {
 
 $(document).ready(function(){
 	initSpoilers('body');
-	$(function() {$('a[@rel*=lightbox]').lightBox();});
+	$(function() {$('a[rel*=lightbox]').lightBox();});
 });
 
 //-->
