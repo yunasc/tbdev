@@ -103,13 +103,17 @@ function textbbcode($form, $name, $content = "") {
 	var is_mac = (clientPC.indexOf("mac") != -1);
 
 	function StoreCaret(text) {
-		if (text.createTextRange) {
+		if (document.selection) {
 			text.caretPos = document.selection.createRange().duplicate();
+		} else if (document.getSelection) {
+			text.caretPos = document.getSelection();
 		}
 	}
 	function FieldName(text, which) {
-		if (text.createTextRange) {
+		if (document.selection) {
 			text.caretPos = document.selection.createRange().duplicate();
+		} else if (document.getSelection) {
+			text.caretPos = document.getSelection();
 		}
 		if (which != "") {
 			var Field = eval("document.<?php echo $form;?>." + which);
