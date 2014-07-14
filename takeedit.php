@@ -67,7 +67,7 @@ function uploadimage($x, $imgname, $tid) {
 
 		// Is within allowed filesize?
 		if ($_FILES['image'.$x]['size'] > $maxfilesize)
-			bark("Invalid file size! Image $y - Must be less than 500kb");
+			bark("Превышен размер файла! Картинка $y - Должна быть меньше ".mksize($maxfilesize));
 
 		// Where to upload?
 		// Make sure is same as on takeupload.php

@@ -230,7 +230,7 @@ if (!($_FILES['image'.$x]['name'] == "")) {
 
 	// Is within allowed filesize?
 	if ($_FILES['image'.$x]['size'] > $maxfilesize)
-		bark("Превышен размер файла! Картинка $y - Должна быть меньше 500kb");
+		bark("Превышен размер файла! Картинка $y - Должна быть меньше ".mksize($maxfilesize));
 		//bark("Invalid file size! Image $y - Must be less than 500kb");
 
 	// Where to upload?
