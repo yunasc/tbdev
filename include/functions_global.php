@@ -142,6 +142,22 @@ function textbbcode($form, $name, $content = "") {
 			SelField.focus();
 		}
 	}
+	function jqwrapText(element, openTag, closeTag) {
+		// This function is not working properly with IE, thus making workaround without JQ
+		if ((clientVer >= 4) && is_ie && is_win) {
+			AddSelectedText(openTag, closeTag);
+		} else {
+		    var textArea = $(element);
+		    var len = textArea.val().length;
+		    var sel = textArea.getSelection();
+		    var start = sel.start;
+		    var end = sel.end;
+		    var selectedText = textArea.val().substring(start, end);
+		    var replacement = openTag + selectedText + closeTag;
+		    textArea.val(textArea.val().substring(0, start) + replacement + textArea.val().substring(end, len));
+		}
+	}
+
 	function InsertCode(code, info, type, error) {
 		if (code == 'name') {
 			AddSelectedText('[b]' + info + '[/b]', '\n');
@@ -149,45 +165,18 @@ function textbbcode($form, $name, $content = "") {
 			if (code == 'url') var url = prompt(info, 'http://');
 			if (code == 'mail') var url = prompt(info, '');
 			if (!url) return alert(error);
-			if ((clientVer >= 4) && is_ie && is_win) {
-				selection = document.selection.createRange().text;
-				if (!selection) {
-					var title = prompt(type, type);
-					AddSelectedText('[' + code + '=' + url + ']' + title + '[/' + code + ']', '\n');
-				} else {
-					AddSelectedText('[' + code + '=' + url + ']', '[/' + code + ']');
-				}
-			} else {
-				mozWrap(TxtFeld, '[' + code + '=' + url + ']', '[/' + code + ']');
-			}
+			jqwrapText(TxtFeld, '[' + code + '=' + url + ']', '[/' + code + ']');
 		} else if (code == 'color' || code == 'family' || code == 'size') {
-			if ((clientVer >= 4) && is_ie && is_win) {
-				AddSelectedText('[' + code + '=' + info + ']', '[/' + code + ']');
-			} else if (TxtFeld.selectionEnd && (TxtFeld.selectionEnd - TxtFeld.selectionStart > 0)) {
-				mozWrap(TxtFeld, '[' + code + '=' + info + ']', '[/' + code + ']');
-			}
+			jqwrapText(TxtFeld, '[' + code + '=' + info + ']', '[/' + code + ']');
 		} else if (code == 'li' || code == 'hr') {
-			if ((clientVer >= 4) && is_ie && is_win) {
-				AddSelectedText('[' + code + ']', '');
-			} else {
-				mozWrap(TxtFeld, '[' + code + ']', '');
-			}
+			jqwrapText(TxtFeld, '[' + code + ']', '');
 		} else {
-			if ((clientVer >= 4) && is_ie && is_win) {
-				var selection = false;
-				selection = document.selection.createRange().text;
-				if (selection && code == 'quote') {
-					AddSelectedText('[' + code + ']' + selection + '[/' + code + ']', '\n');
-				} else {
-					AddSelectedText('[' + code + ']', '[/' + code + ']');
-				}
-			} else {
-				mozWrap(TxtFeld, '[' + code + ']', '[/' + code + ']');
-			}
+			jqwrapText(TxtFeld, '[' + code + ']', '[/' + code + ']');
 		}
 	}
 
 	function mozWrap(txtarea, open, close) {
+		alert('mozWrap function is deprecated!');
 		var selLength = txtarea.textLength;
 		var selStart = txtarea.selectionStart;
 		var selEnd = txtarea.selectionEnd;
