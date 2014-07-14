@@ -36,6 +36,7 @@ function bark($msg) {
 
 ////////////////////////////////////////////////
 function uploadimage($x, $imgname, $tid) {
+	global $max_image_size;
 
 	$maxfilesize = $max_image_size; // default 1mb
 
