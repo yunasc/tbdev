@@ -27,15 +27,15 @@
 */
 
 require_once("include/bittorrent.php");
-
 dbconn();
+loggedinorreturn();
+
+header("Content-Type: text/html; charset=".$tracker_lang['language_charset']);
 
 function bark($msg) {
-	genbark($msg, "Rating failed!");
+	stdmsg($msg, "Rating failed!", 'error');
+	die;
 }
-
-if (!isset($CURUSER))
-	bark("Must be logged in to vote");
 
 if (!mkglobal("rating:id"))
 	bark("missing form data");
@@ -53,8 +53,8 @@ $row = mysql_fetch_array($res);
 if (!$row)
 	bark("no such torrent");
 
-//if ($row["owner"] == $CURUSER["id"])
-//	bark("You can't vote on your own torrents.");
+/*if ($row["owner"] == $CURUSER["id"])
+	bark("You can't vote on your own torrents.");*/
 
 $own = sql_query("SELECT id FROM ratings WHERE torrent = $id AND user = $CURUSER[id]");
 if (mysql_num_rows($own) != 0)
@@ -70,6 +70,8 @@ if (!$res) {
 
 sql_query("UPDATE torrents SET numratings = numratings + 1, ratingsum = ratingsum + $rating WHERE id = $id");
 
-header("Refresh: 0; url=details.php?id=$id&rated=1");
+stdmsg($tracker_lang['success'], 'Вы успешно оценили торрент. Спасибо!<br />Обновите страницу, что-бы увидеть рейтинг.');
+
+//header("Refresh: 0; url=details.php?id=$id&rated=1");
 
 ?>

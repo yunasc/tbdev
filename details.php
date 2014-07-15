@@ -325,7 +325,7 @@ if (!isset($_GET["page"])) {
 	tr($tracker_lang['size'], mksize($row['size']) . " (" . number_format($row['size']) . " {$tracker_lang['bytes']})");
 
 	$s = "";
-	$s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=\"embedded\">";
+	$s .= "<div id=\"ajaxrate\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=\"embedded\">";
 	if (!isset($row["rating"])) {
 		if ($minvotes > 1) {
 			$s .= sprintf($tracker_lang['not_enough_votes'], $minvotes);
@@ -357,19 +357,48 @@ if (!isset($_GET["page"])) {
 			$xrow = mysql_fetch_array($xres);
 			if ($xrow)
 				$s .= "({$tracker_lang['you_have_voted_for_this_torrent']} \"{$xrow["rating"]} - {$ratings[$xrow["rating"]]}\")"; else {
-				$s .= "<form method=\"post\" action=\"takerate.php\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
+				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
 				$s .= "<select name=\"rating\">\n";
 				$s .= "<option value=\"0\">{$tracker_lang['vote']}</option>\n";
 				foreach ($ratings as $k => $v) {
 					$s .= "<option value=\"$k\">$k - $v</option>\n";
 				}
 				$s .= "</select>\n";
-				$s .= "<input type=\"submit\" value=\"{$tracker_lang['vote']}!\" />";
+				$s .= "<input type=\"submit\" value=\"{$tracker_lang['vote']}!\" onClick=\"sendrating(); return false;\" />";
 				$s .= "</form>\n";
 			}
 		}
 	}
-	$s .= "</td></tr></table>";
+	$s .= "</td></tr></table></div>";
+
+?>
+<script type="text/javascript">
+function sendrating(){
+
+    var frm = document.ajaxrating;
+    var tid = frm.id.value;
+    var rating = frm.rating.value;
+
+	if (rating == 0) {
+		alert("Вы не выбрали оценку!");
+		return false;
+	}
+
+	var ajax = new tbdev_ajax();
+	ajax.onShow ('');
+	var varsString = "";
+	ajax.requestFile = "takerate.php";
+	ajax.setVar("id", tid);
+	ajax.setVar("rating", rating);
+	ajax.method = 'POST';
+	ajax.element = 'ajaxrate';
+	ajax.sendAJAX(varsString);
+
+	return false;
+}
+</script>
+<?
+
 	tr($tracker_lang['rating'], $s, 1);
 
 	tr($tracker_lang['added'], $row["added"]);
