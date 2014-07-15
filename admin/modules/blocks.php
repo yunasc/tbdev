@@ -4,7 +4,16 @@ if (!defined('ADMIN_FILE')) die("Illegal File Access");
 
 $prefix = "orbital";
 
-$allowed_modules = array(
+// This change is made to list all PHPs in tracker root, to make
+// manual adding of pages to block system obsolete
+// Howewer, you can use array below to map filename to some human-readable name
+$existing_modules = str_replace('.php', '', glob('*.php'));
+$allowed_modules = array_combine($existing_modules, array_map(
+function ($el) {
+	return "<i>{$el}</i>";
+}, $existing_modules));
+
+$allowed_modules = array_merge($allowed_modules, array(
 	"admincp" => "Админка",
 	"browse" => "Обзор",
 	"forums" => "Форум",
@@ -24,8 +33,8 @@ $allowed_modules = array(
 	"login" => "Вход",
 	"mybonus" => "Мой Бонус",
 	"invite" => "Приглашения",
-	"bookmarks" => "Закладки"
-);
+	"bookmarks" => "Закладки",
+));
 
 function BlocksNavi() {
 	global $admin_file;
@@ -307,7 +316,7 @@ function BlocksEdit($bid) {
 		$i++;
 		$cel = "";
 		foreach ($where_mas as $key => $val) {
-			if ($val == $name) $cel = " checked";
+			if ($val == $name) { $cel = " checked"; $title = "<b>$title</b>"; } // Just to highlight selected pages on block edit, due to many checkboxes now...
 		}
 		$title = str_replace("_", " ", $title);
 		echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"".$name."\"$cel></td><td>$title</td>";
