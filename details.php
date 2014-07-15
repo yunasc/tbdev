@@ -357,8 +357,8 @@ if (!isset($_GET["page"])) {
 			$xrow = mysql_fetch_array($xres);
 			if ($xrow)
 				$s .= "({$tracker_lang['you_have_voted_for_this_torrent']} \"{$xrow["rating"]} - {$ratings[$xrow["rating"]]}\")"; else {
-				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
-				$s .= "<select name=\"rating\">\n";
+				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" id=\"ratingtid\" name=\"id\" value=\"$id\" />\n";
+				$s .= "<select id=\"ratingselect\" name=\"rating\">\n";
 				$s .= "<option value=\"0\">{$tracker_lang['vote']}</option>\n";
 				foreach ($ratings as $k => $v) {
 					$s .= "<option value=\"$k\">$k - $v</option>\n";
@@ -375,9 +375,8 @@ if (!isset($_GET["page"])) {
 <script type="text/javascript">
 function sendrating(){
 
-    var frm = document.ajaxrating;
-    var tid = frm.id.value;
-    var rating = frm.rating.value;
+    var tid = $('#ratingtid').val();
+    var rating = $('#ratingselect').val();
 
 	if (rating == 0) {
 		alert("Вы не выбрали оценку!");
