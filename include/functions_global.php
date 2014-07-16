@@ -1101,6 +1101,35 @@ function get_et($ts) {
 	return get_elapsed_time_plural($ts);
 }
 
+function get_lt($ts) {
+	return get_left_time_plural($ts);
+}
+
+function get_left_time_plural($time_end, $decimals = 0) {
+	$divider['years']   = (60 * 60 * 24 * 365);
+	$divider['months']  = (60 * 60 * 24 * 365 / 12);
+	$divider['weeks']   = (60 * 60 * 24 * 7);
+	$divider['days']    = (60 * 60 * 24);
+	$divider['hours']   = (60 * 60);
+	$divider['minutes'] = (60);
+
+	$langs['years']		= array("год", "года", "лет");
+	$langs['months']	= array("месяц", "месяца", "месяцев");
+	$langs['weeks']		= array("неделю", "недели", "недель");
+	$langs['days']		= array("сутки", "суток", "суток");
+	$langs['hours']		= array("час", "часа", "часов");
+	$langs['minutes']	= array("минуту", "минуты", "минут");
+
+	foreach ($divider as $unit => $div) {
+		${'left_time_'.$unit} = floor((($time_end - TIMENOW) / $div));
+		if (${'left_time_'.$unit} >= 1)
+			break;
+	}
+	$left_time = ${'left_time_'.$unit} . ' ' . getWord(${'left_time_'.$unit}, $langs[$unit]);
+
+	return $left_time;
+}
+
 function get_elapsed_time_plural($time_start, $decimals = 0) {
 	$divider['years']   = (60 * 60 * 24 * 365);
 	$divider['months']  = (60 * 60 * 24 * 365 / 12);
