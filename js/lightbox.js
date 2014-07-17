@@ -44,7 +44,8 @@
 			keyToNext:				'n',		// (string) (n = next) Letter to show the next image.
 			// Don´t alter these variables in any way
 			imageArray:				[],
-			activeImage:			0
+			activeImage:			0,
+			shrinkToFit:			true 		// (boolean) Shrinks the image to fit withing the current viewport *** FULLER + Yuna
 		},settings);
 		// Caching the jQuery object with all elements matched
 		var jQueryMatchedObj = this; // This, in this context, refer to jQuery object
@@ -203,6 +204,30 @@
 			// Get current width and height
 			var intCurrentWidth = $('#lightbox-container-image-box').width();
 			var intCurrentHeight = $('#lightbox-container-image-box').height();
+
+			var oriImageWidth = intImageWidth;
+			var oriImageHeight = intImageHeight;
+
+			windowWidth = $(window).width();
+			windowHeight = $(window).height();
+			maxImageWidth = windowWidth - (settings.containerBorderSize * 2) - windowWidth * 0.1;
+			maxImageHeight = windowHeight - (settings.containerBorderSize * 2) - windowHeight * 0.46;
+
+			// Is there a fitting issue?
+			if (settings.shrinkToFit && (intImageWidth > maxImageWidth) || (intImageHeight > maxImageHeight)) {
+				if ((intImageWidth / maxImageWidth) > (intImageHeight / maxImageHeight)) {
+					imageWidth = maxImageWidth;
+					imageHeight = parseInt(intImageHeight / (intImageWidth / imageWidth), 10);
+					intImageWidth = imageWidth;
+					intImageHeight = imageHeight;
+				} else {
+					imageHeight = maxImageHeight;
+					imageWidth = parseInt(intImageWidth / (intImageHeight / imageHeight), 10);
+					intImageWidth = imageWidth;
+					intImageHeight = imageHeight;
+				}
+			}
+
 			// Get the width and height of the selected image plus the padding
 			var intWidth = (intImageWidth + (settings.containerBorderSize * 2)); // Plus the image´s width and the left and right padding value
 			var intHeight = (intImageHeight + (settings.containerBorderSize * 2)); // Plus the image´s height and the left and right padding value
@@ -210,7 +235,7 @@
 			var intDiffW = intCurrentWidth - intWidth;
 			var intDiffH = intCurrentHeight - intHeight;
 			// Perfomance the effect
-			$('#lightbox-container-image-box').animate({ width: intWidth, height: intHeight },settings.containerResizeSpeed,function() { _show_image(intImageWidth,intImageHeight); });
+			$('#lightbox-container-image-box').animate({ width: intWidth, height: intHeight },settings.containerResizeSpeed,function() { _show_image(intImageWidth,intImageHeight,oriImageWidth,oriImageHeight); });
 			if ( ( intDiffW == 0 ) && ( intDiffH == 0 ) ) {
 				if ( $.browser.msie ) {
 					___pause(250);
@@ -225,12 +250,12 @@
 		 * Show the prepared image
 		 *
 		 */
-		function _show_image(intImageWidth,intImageHeight) {
+		function _show_image(intImageWidth,intImageHeight,oriImageWidth,oriImageHeight) {
 			$('#lightbox-loading').hide();
 			$('#lightbox-image').fadeIn(function() {
-				_show_image_data(intImageWidth,intImageHeight);
+				_show_image_data(oriImageWidth,oriImageHeight);
 				_set_navigation();
-			});
+			}).css({ width: intImageWidth, height: intImageHeight });
 			_preload_neighbor_images();
 		};
 		/**
