@@ -98,8 +98,9 @@ class Cache_Common {
 }
 
 class Cache_FileCache extends Cache_Common {
-	protected $used = true;
-	protected $cache_folder = './cache/';
+	protected	$used			= true;
+	protected	$cache_folder	= './cache/';
+	public		$default_ttl	= 600;
 	/**
 	 * @return bool
 	 */
@@ -122,7 +123,7 @@ class Cache_FileCache extends Cache_Common {
 	 * @return bool
 	 */
 	function set($name, $value, $ttl = 0) {
-		// TTL is not possible with FileCache
+		// Real TTL is not possible with FileCache
 		return file_put_contents($this->cache_folder . $name, serialize($value));
 	}
 
@@ -131,7 +132,7 @@ class Cache_FileCache extends Cache_Common {
 	 * @return bool
 	 */
 	function exists($name) {
-		return file_exists($this->cache_folder . $name);
+		return file_exists($this->cache_folder . $name) && (TIMENOW - $this->default_ttl < filemtime($this->cache_folder . $name)) && filesize($this->cache_folder . $name);
 	}
 
 	/**
