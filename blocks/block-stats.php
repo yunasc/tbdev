@@ -1,7 +1,7 @@
 <?php
 
 /* ToDo:
- * Make cache in this block
+ * Make cache in this block - DONE
 */
 
 if (!defined('BLOCK_FILE')) {
@@ -11,26 +11,29 @@ if (!defined('BLOCK_FILE')) {
 
 global $tracker_lang, $ss_uri, $maxusers, $pic_base_url;
 
-$registered = number_format(get_row_count("users"));
-$unverified = number_format(get_row_count("users", "WHERE status='pending'"));
-$male = number_format(get_row_count("users", "WHERE gender='1'"));
-$female = number_format(get_row_count("users", "WHERE gender='2'"));
-$torrents = number_format(get_row_count("torrents"));
-$dead = number_format(get_row_count("torrents", "WHERE visible='no'"));
-$seeders = get_row_count("peers", "WHERE seeder='yes'");
-$leechers = get_row_count("peers", "WHERE seeder='no'");
-list($external_seeders, $external_leechers) = array_map('number_format', mysql_fetch_row(sql_query('SELECT SUM(seeders), SUM(leechers) FROM torrents_scrape')));
-$warned_users = number_format(get_row_count("users", "WHERE warned = 'yes'"));
-$disabled = number_format(get_row_count("users", "WHERE enabled = 'no'"));
-$uploaders = number_format(get_row_count("users", "WHERE class = ".UC_UPLOADER));
-$vip = number_format(get_row_count("users", "WHERE class = ".UC_VIP));
-if ($leechers == 0)
-  $ratio = 0;
-else
-  $ratio = round($seeders / $leechers * 100);
-$peers = number_format($seeders + $leechers);
-$seeders = number_format($seeders);
-$leechers = number_format($leechers);
+global $cache;
+
+if (!$cache->exists('tracker_statistics')) {
+	$registered = number_format(get_row_count("users"));
+	$unverified = number_format(get_row_count("users", "WHERE status='pending'"));
+	$male = number_format(get_row_count("users", "WHERE gender='1'"));
+	$female = number_format(get_row_count("users", "WHERE gender='2'"));
+	$torrents = number_format(get_row_count("torrents"));
+	$dead = number_format(get_row_count("torrents", "WHERE visible='no'"));
+	$seeders = get_row_count("peers", "WHERE seeder='yes'");
+	$leechers = get_row_count("peers", "WHERE seeder='no'");
+	list($external_seeders, $external_leechers) = array_map('number_format', mysql_fetch_row(sql_query('SELECT SUM(seeders), SUM(leechers) FROM torrents_scrape')));
+	$warned_users = number_format(get_row_count("users", "WHERE warned = 'yes'"));
+	$disabled = number_format(get_row_count("users", "WHERE enabled = 'no'"));
+	$uploaders = number_format(get_row_count("users", "WHERE class = ".UC_UPLOADER));
+	$vip = number_format(get_row_count("users", "WHERE class = ".UC_VIP));
+	if ($leechers == 0)
+		$ratio = 0;
+	else
+		$ratio = round($seeders / $leechers * 100);
+	$peers = number_format($seeders + $leechers);
+	$seeders = number_format($seeders);
+	$leechers = number_format($leechers);
 
 $content .= "<table width=\"100%\" class=\"main\" border=\"0\" cellspacing=\"0\" cellpadding=\"2\"><td align=\"center\">
 <table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">
@@ -51,18 +54,22 @@ $content .= "<table width=\"100%\" class=\"main\" border=\"0\" cellspacing=\"0\"
 <tr><td class=\"rowhead\">{$tracker_lang['tracker_torrents']}</td><td align=\"right\">{$torrents}</td></tr>
 <tr><td class=\"rowhead\">{$tracker_lang['tracker_dead_torrents']}</td><td align=\"right\">{$dead}</td></tr>
 <tr><td class=\"rowhead\">{$tracker_lang['tracker_peers']}</td><td align=\"right\">{$peers}</td></tr>";
-if (isset($peers)) {
+	if (isset($peers)) {
 $content .= "<tr><td class=\"rowhead\">{$tracker_lang['tracker_seeders']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$seeders}</td></tr>
 <tr><td class=\"rowhead\">{$tracker_lang['tracker_leechers']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$leechers}</td></tr>
 <tr><td class=\"rowhead\">{$tracker_lang['tracker_seed_peer']}</td><td align=\"right\">{$ratio}</td></tr>";
-}
+	}
 
-$content .= "<tr><td class=\"rowhead\">{$tracker_lang['external_seeders']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$external_seeders}</td></tr>
+	$content .= "<tr><td class=\"rowhead\">{$tracker_lang['external_seeders']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowup.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$external_seeders}</td></tr>
 <tr><td class=\"rowhead\">{$tracker_lang['external_leechers']}&nbsp;&nbsp;<img src=\"./themes/$ss_uri/images/arrowdown.gif\" border=\"0\" align=\"absbottom\"></td><td align=\"right\">{$external_leechers}</td></tr>";
 
-$content .= "</table></td>
+	$content .= "</table></td>
 
 </table>
 </td></tr></table>";
+
+	$cache->set('tracker_statistics', $content, 600);
+} else
+	$content = $cache->get('tracker_statistics'); // Примитивнейший вариант кеширования, но и самый простой
 
 ?>
