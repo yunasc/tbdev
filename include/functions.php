@@ -912,11 +912,11 @@ function linkcolor($num) {
 }
 
 function ratingpic($num) {
-	global $pic_base_url, $tracker_lang;
-	$r = round($num * 2) / 2;
+	global $pic_base_url, $tracker_lang, $ss_uri;
+	$r = round($num);
 	if ($r < 1 || $r > 5)
 		return;
-	return "<img src=\"$pic_base_url/$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
+	return "<img src=\"themes/$ss_uri/images/rating/$r.gif\" border=\"0\" alt=\"".$tracker_lang['rating'].": $num / 5\" />";
 }
 
 function writecomment($userid, $comment) {
