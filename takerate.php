@@ -70,7 +70,7 @@ if (!$res) {
 
 sql_query("UPDATE torrents SET numratings = numratings + 1, ratingsum = ratingsum + $rating WHERE id = $id");
 
-stdmsg($tracker_lang['success'], 'Вы успешно оценили торрент. Спасибо!<br />Обновите страницу, что-бы увидеть рейтинг.');
+echo 'Ваша оценка <b>' . $rating . '</b> - <b>' . $tracker_lang['vote_' . $rating] . '</b>';
 
 //header("Refresh: 0; url=details.php?id=$id&rated=1");
 

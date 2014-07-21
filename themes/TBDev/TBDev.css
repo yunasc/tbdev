@@ -113,6 +113,30 @@
 
 /* Spoiler hack */
 
+/* AJAX css-only rating stars */
+/* rating selector */
+span.rating {
+	width: 16px; /* Must be same width as rating images */
+	height: 18px; /* Must be same height as rating images */
+}
+
+span.star {
+	display: block;
+	position: relative;
+	left: 16px; /* Must be same width as rating images */
+	cursor: pointer;
+	background: url(images/rating/off.gif) no-repeat;
+}
+
+span.star:hover {
+	background: url(images/rating/on.gif) no-repeat;
+}
+
+div#rating_selector > span:only-child {
+	left: 0px;
+}
+/* AJAX css-only rating stars */
+
 body {
 	font-family: "tahoma";
 	font-size: 8pt;

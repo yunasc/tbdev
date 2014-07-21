@@ -324,7 +324,7 @@ if (!isset($_GET["page"])) {
 	tr($tracker_lang['seeder'], "{$tracker_lang['seeder_last_seen']} " . mkprettytime($row['lastseed']) . " {$tracker_lang['ago']}");
 	tr($tracker_lang['size'], mksize($row['size']) . " (" . number_format($row['size']) . " {$tracker_lang['bytes']})");
 
-	$s = "";
+	/*$s = "";
 	$s .= "<div id=\"ajaxrate\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=\"embedded\">";
 	if (!isset($row["rating"])) {
 		if ($minvotes > 1) {
@@ -398,7 +398,55 @@ function sendrating(){
 </script>
 <?
 
-	tr($tracker_lang['rating'], $s, 1);
+	tr($tracker_lang['rating'], $s, 1);*/
+
+	if ($CURUSER) {
+?>
+<script>
+$(document).ready(function(){
+	$('span.star').click(function (e) {
+		e.stopPropagation();
+		var tid = $('#ratingtid').val();
+		var rate_value = $(e.target).data('value');
+		$.ajax({
+			url: 'takerate.php',
+			type: 'post',
+			data: {rating: rate_value, id: tid},
+			beforeSend: function () {
+				$('div#rating_selector').html('<img src="pic/loading.gif" />');
+			},
+			success: function (result) {
+				$('div#rating_selector').html(result);
+			}
+		});
+	});
+});	
+</script>
+<?
+
+/* Sorry, but heredoc is not possible to indent */
+$rating_selector = <<<SELECTOR
+<input type="hidden" id="ratingtid" value="{$id}" />
+<div id="rating_selector">
+	<span class="rating star" title="{$tracker_lang['vote_1']}" data-value="1">
+	<span class="rating star" title="{$tracker_lang['vote_2']}" data-value="2">
+	<span class="rating star" title="{$tracker_lang['vote_3']}" data-value="3">
+	<span class="rating star" title="{$tracker_lang['vote_4']}" data-value="4">
+	<span class="rating star" title="{$tracker_lang['vote_5']}" data-value="5">
+	</span></span></span></span></span>
+</div>
+SELECTOR;
+
+		$is_voted = mysql_fetch_array(sql_query('SELECT rating FROM ratings WHERE torrent = ' . $id . ' AND user = ' . $CURUSER['id']));
+		if (mysql_error())
+			sqlerr();
+		if ($is_voted) {
+			$stars .= ratingpic($row['rating']) . "(" . $row["rating"] . " " . $tracker_lang['from'] . " 5 ".$tracker_lang['with'] . " " . $row["numratings"] . " " . getWord($row["numratings"], array($tracker_lang['votes_1'], $tracker_lang['votes_2'], $tracker_lang['votes_3'])).")".' Ваша оценка <b>' . $is_voted['rating'] . '</b> - <b>' . $tracker_lang['vote_' . $is_voted['rating']] . '</b>';
+		} else {
+			$stars .= $rating_selector;
+		}
+		tr($tracker_lang['rating'], $stars, 1);
+	}
 
 	tr($tracker_lang['added'], $row["added"]);
 	tr($tracker_lang['views'], $row["views"]);
