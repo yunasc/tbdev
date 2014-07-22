@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined('UC_SYSOP'))
 	die('Direct access denied.');
 ?><html><head>
@@ -9,6 +9,12 @@ if (!defined('UC_SYSOP'))
 <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 <script language="javascript" type="text/javascript" src="js/jquery.migrate.js"></script>
 <script language="javascript" type="text/javascript" src="js/jquery.cookies.js"></script>
+
+<!-- GreenSock JS -->
+<script language="javascript" type="text/javascript" src="js/TweenMax.min.js"></script>
+<!-- GreenSock jQuery plugin for .animate() via GSAP -->
+<script language="javascript" type="text/javascript" src="js/jquery.gsap.min.js"></script>
+
 <script language="javascript" type="text/javascript" src="js/blocks.js"></script>
 <script language="javascript" type="text/javascript" src="js/lightbox.js"></script>
 <script type="text/javascript">

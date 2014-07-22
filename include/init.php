@@ -55,7 +55,7 @@ $announce_urls = array();
 $announce_urls[] = "$DEFAULTBASEURL/announce.php";
 
 // SECURITY
-define ('COOKIE_SALT', 'default'); // Заполните эту переменную любым мусором, символов эдак 32 - нужно для соли кукисов
+define ('COOKIE_SALT', 'default1'); // Заполните эту переменную любым мусором, символов эдак 32 - нужно для соли кукисов
 // После смены этих двух параметров всем пользователям надо будет ввести логин пароль
 define ('COOKIE_UID', 'uid'); // Имя куки для userid
 define ('COOKIE_PASSHASH', 'pass'); // Имя куки для пароля
