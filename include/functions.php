@@ -210,14 +210,14 @@ function dbconn($autoclean = false, $lightmode = false) {
 }
 
 function userlogin($lightmode = false) {
-	global $SITE_ONLINE, $default_language, $tracker_lang, $use_lang, $use_ipbans;
+	global $SITE_ONLINE, $default_language, $tracker_lang, $use_lang, $use_ipbans, $_COOKIE_SALT;
 	unset($GLOBALS["CURUSER"]);
 
-	if (COOKIE_SALT == '' || (COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR']))
-		die('—крипт заблокирован! »змените значение константы COOKIE_SALT в файле include/init.php на случайное');
+	if ($_COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR'])
+		die('—крипт заблокирован! »змените значение переменной $_COOKIE_SALT в файле include/config.local.php на случайное');
 
-	if (COOKIE_SALT == 'COOKIE_SALT')
-		die('»дите и учите <a href="http://www.php.net">PHP</a>"... —казано было »«ћ≈Ќ»“№ значение, а не удалить константу!');
+	if (empty($_COOKIE_SALT) || !isset($_COOKIE_SALT))
+		die('»дите и учите <a href="http://www.php.net">PHP</a>... —казано было »«ћ≈Ќ»“№ значение, а не удалить переменную!');
 
 	$ip = getip();
 	$nip = ip2long($ip);
