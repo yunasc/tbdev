@@ -288,7 +288,7 @@ class Cache_Memcache extends Cache_Common {
 	 * @return bool
 	 */
 	function set($name, $value, $ttl = 0) {
-		return $this->_memcache->set($name, serialize($value), , $ttl);
+		return $this->_memcache->set($name, serialize($value), 0, $ttl);
 	}
 
 	/**
