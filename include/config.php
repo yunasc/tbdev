@@ -84,7 +84,24 @@ $allow_guests_details = false; // Разрешить гостям доступ к странице деталей тор
 $admin_email = 'admin@'.$_SERVER['HTTP_HOST']; // Почта администратора трекера, для формы обратной связи
 $website_name = 'TBDev'; // Краткое имя сайта, для формы обратной связи
 
-$cache_type = 'FileCache'; // Драйвер кеша
+$cache_type = 'FileCache'; // Драйвер кеша (FileCache, XCache, eAccelerator, Memcache)
+
+switch ($cache_type) {
+	case 'Memcache':
+		$cache_config = array(
+			'ip' => '127.0.0.1',
+			'port' => 11211,
+		);
+	break;
+	case 'Redis': // Not yet implemented
+		$cache_config = array(
+			'ip' => '127.0.0.1',
+			'port' => 6379,
+		); // Not yet implemented
+	break;
+	default:
+		$cache_config = array();
+}
 
 $enable_adv_antidreg = false; // Использовать продвинутую систему против двойных регистраций. Пояснение внизу:
 
