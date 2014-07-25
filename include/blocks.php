@@ -31,7 +31,7 @@ if(!defined('IN_TRACKER'))
 				$picture = 'plus';
 				$alt = 'Показать';
 			}
-			$blocktitle = $blocktitle . '&nbsp;<span style="cursor: pointer;" onclick="javascript: block_switch(\''.$bid.'\');"><img border="0" src="pic/'.$picture.'.gif" id="picb'.$bid.'" title="'.$alt.'"></span>';
+			$blocktitle = $blocktitle . '&nbsp;<span style="cursor: pointer;"><img border="0" src="pic/'.$picture.'.gif" id="picb" data-bid="'.$bid.'" title="'.$alt.'"></span>';
 			$content = '<span id="sb'.$bid.'" style="display: '.$display.';">' . $content . '</span>';
 		}
 

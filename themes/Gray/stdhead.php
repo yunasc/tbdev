@@ -45,6 +45,9 @@ function initSpoilers(context) {
 $(document).ready(function(){
 	initSpoilers('body');
 	$(function() {$('a[rel*=lightbox]').lightBox();});
+	$('img[id^=picb]').click(function () {
+		block_switch(this);
+    });
 });
 
 //-->

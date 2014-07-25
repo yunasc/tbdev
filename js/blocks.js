@@ -1,37 +1,39 @@
-function block_switch(id) {
+function block_switch(clickTarget) {
 
     /* array with image links */
     var togSrc = [ 'pic/plus.gif', 'pic/minus.gif' ];
 
-    /* some magic i event don't wanna know it */
-    var hb = $.cookie('hb');
-    if (typeof hb == 'undefined') {
-        hb = [];
-        $.cookie('hb', serialize(hb));
+    /* initialize objects */
+    $ = jQuery;
+    var toggleImage = $(clickTarget);
+    var blockId = toggleImage.data('bid');
+
+    /* get cookie, decode it and then toggle block id in array */
+    var hiddenBlocks = $.cookie('hb');
+    if (typeof hiddenBlocks == 'undefined') {
+        hiddenBlocks = [];
+        $.cookie('hb', serialize(hiddenBlocks));
     } else
-        hb = unserialize(hb);
-    var index = hb.indexOf(id);
-    if (index > -1) {
-        hb.splice(index, 1);
-    } else {
-        hb[hb.length] = id;
-    }
-    if (typeof hb == 'boolean')
-        hb = [];
-    /* magic */
+        hiddenBlocks = unserialize(hiddenBlocks);
 
-    /* the work itself */
+    /* check if blockId is in array, and if true remove. otherwise add it to array */
+    if ($.inArray(blockId, hiddenBlocks) > -1) {
+        hiddenBlocks = $.grep(hiddenBlocks, function (value) {
+            return value != blockId;
+        });
+    } else
+        hiddenBlocks = $.merge([blockId], hiddenBlocks);
+
     /* set the cookie to new value */
-    $.cookie('hb', serialize(hb));
+    $.cookie('hb', serialize(hiddenBlocks));
 
-    var toggleImage = $('#picb' + id);
-
-    /* i didn't find better way to implement toggle. sorry, perfectionists ;) */
-    if (toggleImage.attr('src') == togSrc[0])
-        toggleImage.attr('src', togSrc[1]);
-    else
-        toggleImage.attr('src', togSrc[0]);
+    /* this block fixed to perfection by Taras Zakus */
+    (function (togSrc) {
+        toggleImage.attr('src', function (index, value) {
+            return value === togSrc[0] ? togSrc[1] : togSrc[0];
+        });
+    })([ 'pic/plus.gif', 'pic/minus.gif']);
 
     /* use jquery to collapse/show block content */
-    jQuery('#sb' + id).slideToggle("medium");
+    $('#sb' + blockId).slideToggle("medium");
 }
