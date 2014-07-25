@@ -32,7 +32,6 @@ if (!defined('IN_TRACKER') && !defined('IN_ANNOUNCE'))
 
 $cache = Cache_Init::Create($cache_type, $cache_config);
 
-
 class Cache_Init {
 	/**
 	 * @param string $cache_type

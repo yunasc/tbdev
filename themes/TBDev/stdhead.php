@@ -10,7 +10,11 @@ if (!defined('UC_SYSOP'))
 <!--<script language="javascript" type="text/javascript" src="js/tooltips.js"></script>-->
 <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 <script language="javascript" type="text/javascript" src="js/jquery.migrate.js"></script>
-<script language="javascript" type="text/javascript" src="js/jquery.cookies.js"></script>
+
+<!-- Required by blocks.js -->
+<script language="javascript" type="text/javascript" src="js/jquery.cookie.js"></script>
+<!-- Required by blocks.js -->
+<script language="javascript" type="text/javascript" src="js/phpjs.js"></script>
 
 <!-- GreenSock JS -->
 <script language="javascript" type="text/javascript" src="js/TweenMax.min.js"></script>
