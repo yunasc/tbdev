@@ -23,16 +23,16 @@ if(!defined('IN_TRACKER'))
 
 		if ($allow_block_hide && ($allow_hide || get_user_class() >= UC_ADMINISTRATOR)) {
 			$hidden_blocks = (isset($_COOKIE['hb']) && !empty($_COOKIE['hb']) ? unserialize($_COOKIE['hb']) : array());
-			$display = 'block';
+			$class = 'orbitalBlock';
 			$picture = 'minus';
 			$alt = 'Скрыть';
 			if (in_array($bid, $hidden_blocks)) {
-				$display = 'none';
+				$class = 'orbitalBlockHide';
 				$picture = 'plus';
 				$alt = 'Показать';
 			}
 			$blocktitle = $blocktitle . '&nbsp;<span style="cursor: pointer;"><img border="0" src="pic/'.$picture.'.gif" id="picb" data-bid="'.$bid.'" title="'.$alt.'"></span>';
-			$content = '<span id="sb'.$bid.'" style="display: '.$display.';">' . $content . '</span>';
+			$content = '<span id="sb'.$bid.'" class="'.$class.'">' . $content . '</span>';
 		}
 
 		themesidebox($blocktitle, $content, $bposition);

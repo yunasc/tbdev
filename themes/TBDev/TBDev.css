@@ -137,6 +137,16 @@ div#rating_selector > span:only-child {
 }
 /* AJAX css-only rating stars */
 
+/* Some stuff for orbital (around content e.g left right top bottom) blocks */
+.orbitalBlock {
+	display: block;
+}
+
+.orbitalBlockHide {
+	display: none !important;
+}
+/* Some stuff for orbital (around content e.g left right top bottom) blocks */
+
 body {
 	font-family: "tahoma";
 	font-size: 8pt;

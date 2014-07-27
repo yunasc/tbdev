@@ -35,5 +35,5 @@ function block_switch(clickTarget) {
     })([ 'pic/plus.gif', 'pic/minus.gif']);
 
     /* use jquery to collapse/show block content */
-    $('#sb' + blockId).slideToggle("medium");
+    $('#sb' + blockId).toggleClass("orbitalBlockHide orbitalBlock");
 }
