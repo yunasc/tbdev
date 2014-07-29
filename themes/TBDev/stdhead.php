@@ -51,7 +51,7 @@ $(document).ready(function (){
 		block_switch(this);
     });
 
-	if ($.support.transition && false) {
+	if ($.support.transition) {
 		$('span[id^=sb]').each(function() {
 			$(this).addClass('orbitalBlockCSS3');
 			if ($(this).hasClass('orbitalBlockHide')) {
