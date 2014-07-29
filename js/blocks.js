@@ -37,11 +37,18 @@ function block_switch(clickTarget) {
 
     /* use jquery to collapse/show block content */
 
-    if ($.support.transition)
+    if ($.support.transition) {
         block.toggleClass('orbitalBlockHideCSS3');
-    else
+        /* Dark magic. Don't use anymore */
+        block.bind('transitionend', function () { recalc_height(this);});
+    } else
         block.slideToggle({duration: 'medium', step: function f() {
             if ($(this).css('display') == 'inline-block')
                 $(this).css('display', 'block');
         }});
+}
+
+/* Some dark magic. Never ever use anymore anywhere */
+function recalc_height(e) {
+    $(e).css('max-height', $(e).prop('scrollHeight'));
 }

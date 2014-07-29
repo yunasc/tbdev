@@ -44,7 +44,7 @@ function initSpoilers(context) {
 		});
 }
 
-$(document).ready(function (){
+$(window).load(function (){
 	initSpoilers('body');
 	$(function() {$('a[rel*=lightbox]').lightBox();});
 	$('img[id^=picb]').click(function () {
@@ -52,13 +52,15 @@ $(document).ready(function (){
     });
 
 	if ($.support.transition) {
+		/* Dark magic. Single use only */
+		$('span[id^=sb]').click(function () {recalc_height(this)});
 		$('span[id^=sb]').each(function() {
 			$(this).addClass('orbitalBlockCSS3');
 			if ($(this).hasClass('orbitalBlockHide')) {
 				$(this).removeClass('orbitalBlockHide');
 				$(this).addClass('orbitalBlockHideCSS3');
 			}
-			$(this).css('max-height', $(document).outerHeight());
+			$(this).css('max-height', $(this).prop('scrollHeight'));
 		});
 	}
 });
