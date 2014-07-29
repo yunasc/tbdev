@@ -27,7 +27,7 @@ if(!defined('IN_TRACKER'))
 			$picture = 'minus';
 			$alt = 'Скрыть';
 			if (in_array($bid, $hidden_blocks)) {
-				$class = 'orbitalBlockHide';
+				$class .= ' orbitalBlockHide';
 				$picture = 'plus';
 				$alt = 'Показать';
 			}

@@ -145,6 +145,17 @@ div#rating_selector > span:only-child {
 .orbitalBlockHide {
 	display: none;
 }
+
+.orbitalBlockCSS3 {
+	transition: cubic-bezier(0, 1, 0.5, 1) 0.5s,
+				opacity 0.5s ease-in;
+}
+
+.orbitalBlockHideCSS3 {
+	overflow-y: hidden;
+	opacity: 0;
+	max-height: 0px !important;
+}
 /* Some stuff for orbital (around content e.g left right top bottom) blocks */
 
 body {

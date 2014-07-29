@@ -48,6 +48,17 @@ $(document).ready(function(){
 	$('img[id^=picb]').click(function () {
 		block_switch(this);
     });
+
+	if ($.support.transition) {
+		$('span[id^=sb]').each(function() {
+			$(this).addClass('orbitalBlockCSS3');
+			if ($(this).hasClass('orbitalBlockHide')) {
+				$(this).removeClass('orbitalBlockHide');
+				$(this).addClass('orbitalBlockHideCSS3');
+			}
+			$(this).css('max-height', $(this).prop('scrollHeight'));
+		});
+	}
 });
 
 //-->

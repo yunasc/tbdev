@@ -7,6 +7,7 @@ function block_switch(clickTarget) {
     $ = jQuery;
     var toggleImage = $(clickTarget);
     var blockId = toggleImage.data('bid');
+    var block = $('#sb' + blockId);
 
     /* get cookie, decode it and then toggle block id in array */
     var hiddenBlocks = $.cookie('hb');
@@ -35,8 +36,12 @@ function block_switch(clickTarget) {
     })([ 'pic/plus.gif', 'pic/minus.gif']);
 
     /* use jquery to collapse/show block content */
-    $('#sb' + blockId).slideToggle({duration: 'medium', step: function f() {
-    	if ($(this).css('display') == 'inline-block')
-    		$(this).css('display', 'block');
-	}});
+
+    if ($.support.transition)
+        block.toggleClass('orbitalBlockHideCSS3');
+    else
+        block.slideToggle({duration: 'medium', step: function f() {
+            if ($(this).css('display') == 'inline-block')
+                $(this).css('display', 'block');
+        }});
 }
