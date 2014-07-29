@@ -37,7 +37,7 @@ function block_switch(clickTarget) {
 
     /* use jquery to collapse/show block content */
 
-    if ($.support.transition)
+    if ($.support.transition && false)
         block.toggleClass('orbitalBlockHideCSS3');
     else
         block.slideToggle({duration: 'medium', step: function f() {

@@ -44,14 +44,14 @@ function initSpoilers(context) {
 		});
 }
 
-$(document).ready(function(){
+$(document).ready(function (){
 	initSpoilers('body');
 	$(function() {$('a[rel*=lightbox]').lightBox();});
 	$('img[id^=picb]').click(function () {
 		block_switch(this);
     });
 
-	if ($.support.transition) {
+	if ($.support.transition && false) {
 		$('span[id^=sb]').each(function() {
 			$(this).addClass('orbitalBlockCSS3');
 			if ($(this).hasClass('orbitalBlockHide')) {
