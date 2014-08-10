@@ -582,7 +582,7 @@ if ($row["times_completed"] > 0) {
 	if ($row["seeders"] == 0 || ($row["leechers"] / $row["seeders"] >= 2))
 		$reseed_button = "<form action=\"takereseed.php\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
 	if (!$_GET["snatched"]==1)
-		tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="$pic_base_url/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
+		tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="'.$pic_base_url.'/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
 	else
 		tr("Скачавшие<br /><a href=\"details.php?id=$id\" class=\"sublink\" name=\"snatched\">[{$tracker_lang['close_list']}]</a>", $snatched_full,1);
 }
