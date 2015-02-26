@@ -85,7 +85,8 @@ if (!isset($dict))
 
 if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no'))) {
 	$free = $_POST['free'];
-}
+} else
+	$free = 'no';
 
 if ($_POST['not_sticky'] == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
     $not_sticky = "no";
