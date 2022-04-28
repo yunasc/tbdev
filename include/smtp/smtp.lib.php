@@ -87,6 +87,7 @@ class smtp
 	*/
 	function smtp()
 	{
+		$this->_add_hdr('Date', sprintf(date(DateTime::RFC2822)));
 		$this->_add_hdr('X-Mailer', sprintf('LAGNUT-SMTP/%s', $this->_version));
 		$this->_add_hdr('User-Agent', sprintf('LAGNUT-SMTP/%s', $this->_version));
 		$this->_add_hdr('MIME-Version', '1.0');
