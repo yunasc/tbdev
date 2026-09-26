@@ -35,6 +35,8 @@ require_once($rootpath . 'include/init.php');
 require_once($rootpath . 'include/global.php');
 require_once($rootpath . 'include/config.php');
 require_once($rootpath . 'include/config.local.php');
+if (!defined('COOKIE_SALT'))
+    define('COOKIE_SALT', $_COOKIE_SALT);
 require_once($rootpath . 'include/functions.php');
 require_once($rootpath . 'include/blocks.php');
 require_once($rootpath . 'include/secrets.php');

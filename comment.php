@@ -57,7 +57,7 @@ if ($action == "add")
 
 	  $newid = mysql_insert_id();
 
-	sql_query('INSERT INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($newid, md5($text), format_comment($text)))).')') or sqlerr(__FILE__,__LINE__);
+	sql_query('INSERT INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($newid, parsed_comment_hash($text), format_comment($text)))).')') or sqlerr(__FILE__,__LINE__);
 
 	  sql_query("UPDATE torrents SET comments = comments + 1 WHERE id = $torrentid");
 
@@ -185,7 +185,7 @@ elseif ($action == "edit")
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 	  $text = $_POST["text"];
-    $returnto = $_POST["returnto"];
+    $returnto = safe_local_return(isset($_POST["returnto"]) ? $_POST["returnto"] : "");
 
 	  if ($text == "")
 	  	stderr($tracker_lang['error'], $tracker_lang['comment_cant_be_empty']);
@@ -197,7 +197,7 @@ elseif ($action == "edit")
 
 	  sql_query("UPDATE comments SET text=$text, editedat=$editedat, editedby=$CURUSER[id] WHERE id=$commentid") or sqlerr(__FILE__, __LINE__);
 
-	sql_query('REPLACE INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($commentid, md5($orig_text), format_comment($orig_text)))).')') or sqlerr(__FILE__,__LINE__);
+	sql_query('REPLACE INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($commentid, parsed_comment_hash($orig_text), format_comment($orig_text)))).')') or sqlerr(__FILE__,__LINE__);
 
 		if ($returnto)
 	  	header("Location: $returnto");

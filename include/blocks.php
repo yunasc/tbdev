@@ -7,7 +7,7 @@ if(!defined('IN_TRACKER'))
 	function render_blocks($blockfile, $blocktitle, $content, $bid, $bposition, $allow_hide) {
 	global $showbanners, $allow_block_hide;
 	global $foot;
-		if ($blockfile != "") {
+		if ($blockfile != "" && preg_match('/^block-[A-Za-z0-9_-]+\.php$/D', $blockfile)) {
 			if (file_exists ("blocks/".$blockfile."")) {
 				if (!defined('BLOCK_FILE'))
 					define('BLOCK_FILE', 1);
@@ -22,7 +22,13 @@ if(!defined('IN_TRACKER'))
 		}
 
 		if ($allow_block_hide && ($allow_hide || get_user_class() >= UC_ADMINISTRATOR)) {
-			$hidden_blocks = (isset($_COOKIE['hb']) && !empty($_COOKIE['hb']) ? unserialize($_COOKIE['hb']) : array());
+			$hidden_blocks = array();
+			if (isset($_COOKIE['hb']) && is_string($_COOKIE['hb']) && strlen($_COOKIE['hb']) <= 1024 &&
+				preg_match('/\Aa:[0-9]+:\{(?:i:[0-9]+;(?:i:[0-9]+;|s:[0-9]+:"[0-9]+";))*\}\z/D', $_COOKIE['hb'])) {
+				$decoded = @unserialize($_COOKIE['hb']);
+				if (is_array($decoded))
+					$hidden_blocks = $decoded;
+			}
 			$display = 'block';
 			$picture = 'minus';
 			$alt = 'Скрыть';

@@ -130,13 +130,13 @@ if ($CURUSER['warned'] == "yes")
 	$warn = "<img src=\"{$pic_base_url}/warned.gif\" alt=\"Предупрежден\" title=\"Предупрежден\">";
 
 //// check for messages ////////////////// 
-        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1") or print(mysql_error()); 
+        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1") or error_log(mysql_error());
         $arr1 = mysql_fetch_row($res1);
         $messages = $arr1[0];
-        /*$res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1 AND unread='yes'") or print(mysql_error()); 
+        /*$res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1 AND unread='yes'") or error_log(mysql_error());
         $arr1 = mysql_fetch_row($res1);
         $unread = $arr1[0];*/
-        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND saved='yes'") or print(mysql_error()); 
+        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND saved='yes'") or error_log(mysql_error());
         $arr1 = mysql_fetch_row($res1);
         $outmessages = $arr1[0];
         if ($unread)
@@ -144,11 +144,11 @@ if ($CURUSER['warned'] == "yes")
         else
                 $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Нет новых сообщений\" src=\"{$pic_base_url}/pn_inbox.gif\">";
 
-$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='yes'") or print(mysql_error());
+$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='yes'") or error_log(mysql_error());
 $row = mysql_fetch_row($res2);
 $activeseed = $row[0];
 
-$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='no'") or print(mysql_error());
+$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='no'") or error_log(mysql_error());
 $row = mysql_fetch_row($res2);
 $activeleech = $row[0];
 
@@ -278,7 +278,7 @@ if ($messages) {
 
 if ($CURUSER) {
 
-	$userbar = "<center><a href=\"my.php\"><img src=\"" . ( $CURUSER["avatar"] ? $CURUSER["avatar"] : "./themes/$ss_uri/images/default_avatar.gif" ) . "\" width=\"100\" alt=\"{$tracker_lang['avatar']}\" title=\"{$tracker_lang['avatar']}\" border=\"0\" /></a></center>
+	$userbar = "<center><a href=\"my.php\"><img src=\"" . ( $CURUSER["avatar"] && valid_avatar_url($CURUSER["avatar"]) ? htmlspecialchars_uni($CURUSER["avatar"]) : "./themes/$ss_uri/images/default_avatar.gif" ) . "\" width=\"100\" alt=\"{$tracker_lang['avatar']}\" title=\"{$tracker_lang['avatar']}\" border=\"0\" /></a></center>
 	<br />
 	<font color=\"1900D1\">{$tracker_lang['ratio']}:</font>&nbsp;{$ratio}<br />
 	<font color=\"green\">{$tracker_lang['uploaded']}:</font>&nbsp;{$uped}<br />

@@ -10,6 +10,7 @@ function StatusDB() {
 	while (list($name) = mysql_fetch_array($result)) $content .= "<option value=\"".$name."\" selected>".$name."</option>";
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\">"
 	."<form method=\"post\" action=\"".$admin_file.".php\">"
+	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<tr><td><select name=\"datatable[]\" size=\"10\" multiple=\"multiple\" style=\"width:400px\">".$content."</select></td><td>"
 	."<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\">"
 	."<tr><td valign=\"top\"><input type=\"radio\" name=\"type\" value=\"Optimize\" checked></td><td>Оптимизация базы данных<br /><font class=\"small\">Производя оптимизацию базы данных, Вы уменьшаете её размер и соответственно с этим ускоряете её работу. Рекомендуется использовать данную функцию минимум один раз в неделю.</font></td></tr>"

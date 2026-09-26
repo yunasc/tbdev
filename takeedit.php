@@ -192,6 +192,8 @@ if ($update_torrent) {
 		bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
 	$info = $dict['info'];
 	list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
+	if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
+		bark('invalid file length');
 	if (strlen($pieces) % 20 != 0)
 		bark("invalid pieces");
 
@@ -208,7 +210,11 @@ if ($update_torrent) {
 		$totallen = 0;
 		foreach ($flist as $fn) {
 			list($ll, $ff) = array($fn['length'], $fn['path']);
+			if (!is_int($ll) || $ll < 0 || !is_array($ff))
+				bark('invalid file length or path');
 			$totallen += $ll;
+			if (!is_int($totallen))
+				bark('invalid total length');
 			$ffa = array();
 			foreach ($ff as $ffe) {
 				$ffa[] = $ffe;
@@ -264,7 +270,7 @@ if ($update_torrent) {
 
 	@sql_query("DELETE FROM files WHERE torrent = $id");
 	foreach ($filelist as $file) {
-		@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
+		@sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".intval($file[1]).")");
 	}
 
 }
@@ -279,7 +285,7 @@ $updateset[] = "name = " . sqlesc($name);
 
 $updateset[] = "descr = " . sqlesc($descr);
 $updateset[] = "ori_descr = " . sqlesc($descr);
-sql_query('REPLACE INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
+sql_query('REPLACE INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, parsed_comment_hash($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
 
 $updateset[] = "category = " . (intval($type));
 if (get_user_class() >= UC_ADMINISTRATOR) {

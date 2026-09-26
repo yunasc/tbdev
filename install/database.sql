@@ -444,6 +444,18 @@ CREATE TABLE `readtorrents` (
 
 DROP TABLE IF EXISTS `sessions`;
 
+DROP TABLE IF EXISTS `auth_tokens`;
+
+CREATE TABLE `auth_tokens` (
+  `token_hash` char(64) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `passhash_fingerprint` char(64) NOT NULL,
+  `expires` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`token_hash`),
+  KEY `uid` (`uid`),
+  KEY `expires` (`expires`)
+) ENGINE=MyISAM;
+
 CREATE TABLE `sessions` (
   `sid` varchar(32) NOT NULL default '',
   `uid` int(10) NOT NULL default '0',
@@ -633,7 +645,7 @@ CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `username` varchar(40) NOT NULL default '',
   `old_password` varchar(40) NOT NULL default '',
-  `passhash` varchar(32) NOT NULL default '',
+  `passhash` varchar(255) NOT NULL default '',
   `secret` varchar(20) NOT NULL default '',
   `email` varchar(80) NOT NULL default '',
   `status` enum('pending','confirmed') NOT NULL default 'pending',

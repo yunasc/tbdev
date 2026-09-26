@@ -96,9 +96,9 @@ EOD;
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	$newpassword = "";
 	for ($i = 0; $i < 10; $i++)
-		$newpassword .= $chars[mt_rand(0, strlen($chars) - 1)];
+		$newpassword .= $chars[hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % strlen($chars)];
 	$sec = mksecret();
-	$newpasshash = md5($sec . $newpassword . $sec);
+	$newpasshash = make_password_hash($newpassword);
 	sql_query("UPDATE users SET secret = " . sqlesc($sec) . ", editsecret = '', passhash= " . sqlesc($newpasshash) . " WHERE id = $id AND editsecret = " . sqlesc($arr["editsecret"]));
 
 	if (!mysql_affected_rows())

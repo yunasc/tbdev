@@ -71,14 +71,14 @@ function commenttable($rows, $redaktor = "comment") {
 			print("<a name=\"comm" . $row["id"] . "\"><i>[Anonymous]</i></a>\n");
 	       }
 
-	$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars_uni($row["avatar"]) : "");
+	$avatar = ($CURUSER["avatars"] == "yes" && valid_avatar_url($row["avatar"]) ? htmlspecialchars_uni($row["avatar"]) : "");
 	if (!$avatar){$avatar = "pic/default_avatar.gif"; }
 	
-	if (md5($row['text']) == $row['text_hash'])
+	if (parsed_comment_hash($row['text']) == $row['text_hash'])
 		$text = $row['text_parsed'];
 	else {
 		$text = format_comment($row['text']);
-		sql_query('INSERT INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($row['id'], md5($row['text']), $text))).')') or sqlerr(__FILE__,__LINE__);
+		sql_query('REPLACE INTO comments_parsed (cid, text_hash, text_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($row['id'], parsed_comment_hash($row['text']), $text))).')') or sqlerr(__FILE__,__LINE__);
 	}
 
 	if ($row["editedby"]) {
@@ -87,7 +87,7 @@ function commenttable($rows, $redaktor = "comment") {
 	 }
 		print("</td></tr>");
 		print("<tr valign=top>\n");
-		print("<td style=\"padding: 0px; width: 5%;\" align=\"center\"><img src=$avatar width=\"$avatar_max_width\"> </td>\n");
+		print("<td style=\"padding: 0px; width: 5%;\" align=\"center\"><img src=\"$avatar\" width=\"$avatar_max_width\"> </td>\n");
 		print("<td width=100% class=text>");
 		//print("<span style=\"float: right\"><a href=\"#top\"><img title=\"Top\" src=\"pic/top.gif\" alt=\"Top\" border=\"0\" width=\"15\" height=\"13\"></a></span>");
 		print("$text</td>\n");

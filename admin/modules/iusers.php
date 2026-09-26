@@ -12,7 +12,7 @@ function iUsers($iname, $ipass, $imail) {
 			$updateset = array();
 			if (!empty($ipass)) {
 				$secret = mksecret();
-				$hash = md5($secret.$ipass.$secret);
+				$hash = make_password_hash($ipass);
 				$updateset[] = "secret = ".sqlesc($secret);
 				$updateset[] = "passhash = ".sqlesc($hash);
 			}
@@ -27,6 +27,7 @@ function iUsers($iname, $ipass, $imail) {
 		}
 	} else {
 		echo "<form method=\"post\" action=\"".$admin_file.".php?op=iUsers\">"
+			."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 		."<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\">"
 		."<tr><td class=\"colhead\" colspan=\"2\">Смена пароля</td></tr>"
 		."<tr>"

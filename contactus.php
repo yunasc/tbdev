@@ -32,7 +32,7 @@ dbconn();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if ($use_captcha) {
 		$b = get_row_count('captcha', 'WHERE imagehash = '.sqlesc($_POST['imagehash']).' AND imagestring = '.sqlesc($_POST['imagestring']));
-		sql_query('DELETE FROM captcha WHERE imagehash = '.sqlesc($_POST['imagehash'])) or die(mysql_error());
+		sql_query('DELETE FROM captcha WHERE imagehash = '.sqlesc($_POST['imagehash'])) or sqlerr(__FILE__, __LINE__);
 		if ($b == 0)
 			stderr($tracker_lang['error'], 'Вы ввели неправильный код подтверждения.');
 	}

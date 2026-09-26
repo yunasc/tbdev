@@ -126,9 +126,9 @@ function getip() {
 function dbconn() {
     global $mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset;
     if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass)) {
-        err('dbconn: mysql_connect: ' . mysql_error());
+        err('Database error');
     }
-    mysql_select_db($mysql_db) or err('dbconn: mysql_select_db: ' . mysql_error());
+    mysql_select_db($mysql_db) or err('Database error');
 
     mysql_query('SET NAMES ' . $mysql_charset);
 

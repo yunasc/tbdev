@@ -33,6 +33,7 @@ function FaqAdmin() {
 
 		// print the faq table
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=reorder\">");
+		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 
 		foreach ($faq_categ as $id => $temp) {
 		print("<br />\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n");
@@ -104,6 +105,7 @@ function FaqAction() {
 	$arr["answer"] = htmlspecialchars_uni($arr["answer"]);
 	if ($arr[type] == "item") {
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=edititem\">");
+		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=100%>\n");
 		print("<tr><td>ID:</td><td>$arr[id] <input type=\"hidden\" name=\"id\" value=\"$arr[id]\" /></td></tr>\n");
 		print("<tr><td>Вопрос:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"$arr[question]\" size=50 /></td></tr>\n");
@@ -122,6 +124,7 @@ function FaqAction() {
 	}
 	elseif ($arr[type] == "categ") {
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=editsect\">");
+		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" width=100% align=\"center\">\n");
 		print("<tr><td>ID:</td><td>$arr[id] <input type=\"hidden\" name=\"id\" value=\"$arr[id]\" /></td></tr>\n");
 		print("<tr><td>Название:</td><td><input style=\"width: 300px;\" type=\"text\" name=\"title\" value=\"$arr[question]\" id=specialboxn /></td></tr>\n");
@@ -159,7 +162,7 @@ function FaqAction() {
 		}
 		else {
 			print("<h1 align=\"center\">Confirmation required</h1>");
-			print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\">Please click <a href=\"$admin_file.php?op=FaqAction&action=delete&id=$_GET[id]&confirm=yes\">here</a> to confirm.</td></tr>\n</table>\n");
+			print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\">Please click <a href=\"$admin_file.php?op=FaqAction&action=delete&id=$_GET[id]&confirm=yes&csrf_token=".csrf_token()."\">here</a> to confirm.</td></tr>\n</table>\n");
 		}
 	}
 
@@ -167,6 +170,7 @@ function FaqAction() {
 	elseif ($_GET[action] == "additem" && $_GET["inid"]) {
 		print("<h2>Add Item</h2>");
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=addnewitem\">");
+		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"100%\">\n");
 		print("<tr><td>Вопрос:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"\" /></td></tr>\n");
 		print("<tr><td style=\"vertical-align: top;\">Ответ:</td><td><textarea id=specialboxg rows=15 cols=80 name=\"answer\"></textarea></td></tr>\n");
@@ -186,6 +190,7 @@ function FaqAction() {
 	elseif ($_GET[action] == "addsection") {
 		print("<h2>Add Section</h2>");
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=addnewsect\">");
+		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"100%\">\n");
 		print("<tr><td>Title:</td><td><input style=\"width: 600px;\" type=\"text\" name=\"title\" value=\"\" id=specialboxn /></td></tr>\n");
 		print("<tr><td>Status:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">Скрыто</option><option value=\"1\" style=\"color: #000000;\">Обычный</option></select></td></tr>");

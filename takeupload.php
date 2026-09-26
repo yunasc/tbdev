@@ -110,6 +110,8 @@ if (!$description)
 
 $info = $dict['info'];
 list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
+if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
+	bark('invalid file length');
 
 /*if (!in_array($ann, $announce_urls, 1))
 	bark("Неверный Announce URL! Должен быть ".$announce_urls[0]);*/
@@ -134,7 +136,11 @@ if (isset($totallen)) {
 	$totallen = 0;
 	foreach ($flist as $fn) {
 		list($ll, $ff) = array($fn['length'], $fn['path']);
+		if (!is_int($ll) || $ll < 0 || !is_array($ff))
+			bark('invalid file length or path');
 		$totallen += $ll;
+		if (!is_int($totallen))
+			bark('invalid total length');
 		$ffa = array();
 		foreach ($ff as $ffe) {
 			$ffa[] = $ffe;
@@ -268,16 +274,16 @@ $ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, in
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");
-	bark("mysql puked: ".mysql_error());
+	bark('Database error.');
 }
 $id = mysql_insert_id();
 
-sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
+sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, parsed_comment_hash($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
 
 sql_query("INSERT INTO checkcomm (checkid, userid, torrent) VALUES ($id, $CURUSER[id], 1)") or sqlerr(__FILE__,__LINE__);
 sql_query("DELETE FROM files WHERE torrent = $id");
 foreach ($filelist as $file) {
-	sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".$file[1].")");
+	sql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).", ".intval($file[1]).")");
 }
 
 move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");

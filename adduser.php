@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$password = $_POST["password"];
 	$email = sqlesc(htmlspecialchars_uni($_POST["email"]));
 	$secret = mksecret();
-	$passhash = sqlesc(md5($secret . $password . $secret));
+	$passhash = sqlesc(make_password_hash($password));
 	$secret = sqlesc($secret);
 
 	sql_query("INSERT INTO users (added, last_access, secret, username, passhash, status, email) VALUES(".sqlesc(get_date_time()).", ".sqlesc(get_date_time()).", $secret, $username, $passhash, 'confirmed', $email)") or sqlerr(__FILE__, __LINE__);

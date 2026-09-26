@@ -244,8 +244,8 @@ elseif ($CURUSER["id"] <> $user["id"]) {
     print("<p>(<a href=\"friends.php?action=delete&type=block&targetid=$id\">Убрать из блокированых</a>)</p>\n");
   else
   {
-    print("<p>(<a href=\"friends.php?action=add&type=friend&targetid=$id\">Добавить в друзья</a>)");
-    print(" - (<a href=\"friends.php?action=add&type=block&targetid=$id\">Добавить в блокированные</a>)</p>\n");
+    print("<p>(<a href=\"friends.php?action=add&type=friend&targetid=$id&csrf_token=".csrf_token()."\">Добавить в друзья</a>)");
+    print(" - (<a href=\"friends.php?action=add&type=block&targetid=$id&csrf_token=".csrf_token()."\">Добавить в блокированные</a>)</p>\n");
   }
 }
 
@@ -314,13 +314,13 @@ if ($user["mirc"])
 </tr>
 <?
 }
-if ($user["website"])
-	print("<tr><td class=\"rowhead\">Сайт</td><td align=\"left\"><a href=\"$user[website]\" target=\"_blank\">$user[website]</a></td></tr>\n");
+if ($user["website"] && preg_match('/\Ahttps?:\/\//iD', $user["website"]))
+	print("<tr><td class=\"rowhead\">Сайт</td><td align=\"left\"><a href=\"" . htmlspecialchars_uni($user["website"]) . "\" target=\"_blank\" rel=\"noopener noreferrer\">" . htmlspecialchars_uni($user["website"]) . "</a></td></tr>\n");
 //if ($user['donated'] > 0 && (get_user_class() >= UC_MODERATOR || $CURUSER["id"] == $user["id"]))
 //  print("<tr><td class=rowhead>Donated</td><td align=left>$$user[donated]</td></tr>\n");
-if ($user["avatar"])
+if ($user["avatar"] && valid_avatar_url($user["avatar"]))
 	print("<tr><td class=\"rowhead\">Аватар</td><td align=left><img src=\"" . htmlspecialchars_uni($user["avatar"]) . "\"></td></tr>\n");
-print("<tr><td class=\"rowhead\">Класс</td><td align=\"left\"><b>" . get_user_class_color($user["class"], get_user_class_name($user["class"])) . ($user["title"] != "" ? " / <span style=\"color: purple;\">{$user["title"]}</span>" : "") . "</b></td></tr>\n");
+print("<tr><td class=\"rowhead\">Класс</td><td align=\"left\"><b>" . get_user_class_color($user["class"], get_user_class_name($user["class"])) . ($user["title"] != "" ? " / <span style=\"color: purple;\">" . htmlspecialchars_uni($user["title"]) . "</span>" : "") . "</b></td></tr>\n");
 print("<tr><td class=\"rowhead\">Пол</td><td align=\"left\">$gender</td></tr>\n");
 if($user["birthday"]!='0000-00-00') {
         print("<tr><td class=\"rowhead\">Возраст</td><td align=\"left\">$age</td></tr>\n");
@@ -414,6 +414,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
 {
   begin_frame("Редактирование пользователя", true);
   print("<form method=\"post\" action=\"modtask.php\">\n");
+  print("<input type=\"hidden\" name=\"csrf_token\" value=\"" . csrf_token() . "\">\n");
   print("<input type=\"hidden\" name=\"action\" value=\"edituser\">\n");
   print("<input type=\"hidden\" name=\"userid\" value=\"$id\">\n");
   print("<input type=\"hidden\" name=\"returnto\" value=\"userdetails.php?id=$id\">\n");

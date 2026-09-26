@@ -579,8 +579,8 @@ function textbbcode($form, $name, $content = "") {
 function get_row_count($table, $suffix = "") {
 	if ($suffix)
 		$suffix = " $suffix";
-	($r = sql_query("SELECT COUNT(*) FROM $table$suffix")) or die(mysql_error());
-	($a = mysql_fetch_row($r)) or die(mysql_error());
+	($r = sql_query("SELECT COUNT(*) FROM $table$suffix")) or sqlerr(__FILE__, __LINE__);
+	($a = mysql_fetch_row($r)) or sqlerr(__FILE__, __LINE__);
 	return $a[0];
 }
 
@@ -622,11 +622,9 @@ function newerr($heading = '', $text = '', $head = true, $foot = true, $die = tr
 }
 
 function sqlerr($file = '', $line = '') {
-	global $queries;
-	print("<table border=\"0\" bgcolor=\"blue\" align=\"left\" cellspacing=\"0\" cellpadding=\"10\" style=\"background: blue\">" .
-		"<tr><td class=\"embedded\"><font color=\"white\"><h1>Ошибка в SQL</h1>\n" .
-		"<b>Ответ от сервера MySQL: " . htmlspecialchars_uni(mysql_error()) . ($file != '' && $line != '' ? "<p>в $file, линия $line</p>" : "") . "<p>Запрос номер $queries.</p></b></font></td></tr></table>");
-	die;
+	error_log('Database error: ' . mysql_error() . ($file !== '' ? ' in ' . $file . ':' . $line : ''));
+	header('HTTP/1.1 500 Internal Server Error');
+	die('Database error.');
 }
 
 // Returns the current time in GMT in MySQL compatible format.
@@ -862,6 +860,10 @@ function code_nobb($matches) {
 	return '[code]' . $code . '[/code]';
 }
 
+function parsed_comment_hash($text) {
+	return md5('v2:' . $text);
+}
+
 function format_comment($text, $strip_html = true) {
 	global $smilies, $privatesmilies, $pic_base_url;
 	$smiliese = $smilies;
@@ -880,28 +882,24 @@ function format_comment($text, $strip_html = true) {
 	if ($strip_html)
 		$s = htmlspecialchars_uni($s);
 
-	$bb[] = "#\[img\](?!javascript:)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#i";
+	$bb[] = "#\[img\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#i";
 	$html[] = "<img class=\"linked-image\" src=\"\\1\" border=\"0\" alt=\"\\1\" title=\"\\1\" />";
-	$bb[] = "#\[img=([a-zA-Z]+)\](?!javascript:)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
+	$bb[] = "#\[img=([a-zA-Z]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\2\" align=\"\\1\" border=\"0\" alt=\"\\2\" title=\"\\2\" />";
-	$bb[] = "#\[img\ alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?!javascript:)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
+	$bb[] = "#\[img\ alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\2\" align=\"\\1\" border=\"0\" alt=\"\\1\" title=\"\\1\" />";
-	$bb[] = "#\[img=([a-zA-Z]+) alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?!javascript:)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
+	$bb[] = "#\[img=([a-zA-Z]+) alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\3\" align=\"\\1\" border=\"0\" alt=\"\\2\" title=\"\\2\" />";
 	$bb[] = "#\[kp=([0-9]+)\]#is";
 	$html[] = "<a href=\"http://www.kinopoisk.ru/level/1/film/\\1/\" rel=\"nofollow\"><img src=\"http://www.kinopoisk.ru/rating/\\1.gif/\" alt=\"Кинопоиск\" title=\"Кинопоиск\" border=\"0\" /></a>";
-	$bb[] = "#\[url\]([\w]+?://([\w\#$%&~/.\-;:=,?@\]+]+|\[(?!url=))*?)\[/url\]#is";
+	$bb[] = "#\[url\]((?:https?|ftps?)://([\w\#$%&~/.\-;:=,?@\]+]+|\[(?!url=))*?)\[/url\]#is";
 	$html[] = "<a href=\"\\1\" title=\"\\1\">\\1</a>";
 	$bb[] = "#\[url\]((www|ftp)\.([\w\#$%&~/.\-;:=,?@\]+]+|\[(?!url=))*?)\[/url\]#is";
 	$html[] = "<a href=\"http://\\1\" title=\"\\1\">\\1</a>";
-	$bb[] = "#\[url=([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]*?)\]([^?\n\r\t].*?)\[/url\]#is";
+	$bb[] = "#\[url=((?:https?|ftps?)://[\w\#$%&~/.\-;:=,?@\[\]+]*?)\]([^?\n\r\t].*?)\[/url\]#is";
 	$html[] = "<a href=\"\\1\" title=\"\\1\">\\2</a>";
 	$bb[] = "#\[url=((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]*?)\]([^?\n\r\t].*?)\[/url\]#is";
 	$html[] = "<a href=\"http://\\1\" title=\"\\1\">\\3</a>";
-	$bb[] = "/\[url=([^()<>\s]+?)\]((\s|.)+?)\[\/url\]/i";
-	$html[] = "<a href=\"\\1\">\\2</a>";
-	$bb[] = "/\[url\]([^()<>\s]+?)\[\/url\]/i";
-	$html[] = "<a href=\"\\1\">\\1</a>";
 	$bb[] = "#\[mail\](\S+?)\[/mail\]#i";
 	$html[] = "<a href=\"mailto:\\1\">\\1</a>";
 	$bb[] = "#\[mail\s*=\s*([\.\w\-]+\@[\.\w\-]+\.[\w\-]+)\s*\](.*?)\[\/mail\]#i";
@@ -935,7 +933,7 @@ function format_comment($text, $strip_html = true) {
 	$s = nl2br($s);
 
 	// URLs
-	$s = format_urls($s);
+	// Auto-linking rendered HTML can rewrite attributes; explicit [url] links remain supported.
 	//$s = format_local_urls($s);
 
 	// Maintain spacing

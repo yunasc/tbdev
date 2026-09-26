@@ -49,6 +49,10 @@ $user = mysql_fetch_array($res) or stderr($tracker_lang['error'], $tracker_lang[
 
 if ($action == 'add')
 {
+  if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
+    header('HTTP/1.1 403 Forbidden');
+    exit;
+  }
 	$targetid = intval($_GET['targetid']);
 	$type = strval($_GET['type']);
 
@@ -87,8 +91,12 @@ if ($action == 'delete')
   //if ($type == 'friend')
 
   if (!$sure)
-    stderr($tracker_lang['delete']." ".($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),sprintf($tracker_lang['you_want_to_delete_x_click_here'],($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),"?id=$userid&action=delete&type=$type&targetid=$targetid&sure=1"));
+    stderr($tracker_lang['delete']." ".($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),sprintf($tracker_lang['you_want_to_delete_x_click_here'],($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),"?id=$userid&action=delete&type=$type&targetid=$targetid&sure=1&csrf_token=".csrf_token().""));
 
+  if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
+    header('HTTP/1.1 403 Forbidden');
+    exit;
+  }
   if ($type == 'friend')
   {
     sql_query("DELETE FROM friends WHERE userid=$userid AND friendid=$targetid") or sqlerr(__FILE__, __LINE__);
@@ -135,7 +143,7 @@ else
     	"<br />(" . get_et(sql_ts_to_ut($friend[last_access])) . " ".$tracker_lang['ago'].")";
 		$body2 = "<br /><a href=\"friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . "\">".$tracker_lang['delete']."</a>" .
 			"<br /><br /><a href=\"message.php?action=sendmessage&amp;receiver=" . $friend['id'] . "\">".$tracker_lang['pm']."</a>";
-    $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars_uni($friend["avatar"]) : "");
+    $avatar = ($CURUSER["avatars"] == "yes" && valid_avatar_url($friend["avatar"]) ? htmlspecialchars_uni($friend["avatar"]) : "");
 		if (!$avatar)
 			$avatar = "pic/default_avatar.gif";
     if ($i % 2 == 0)

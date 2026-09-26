@@ -107,7 +107,7 @@ function get_themes() {
 function theme_selector($sel_theme = "", $use_fsw = false) {
 	global $DEFAULTBASEURL;
 	$themes = get_themes();
-	$content = "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?theme='+this.options[this.selectedIndex].value\"" : "").">\n";
+	$content = "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?csrf_token=".csrf_token()."&theme='+this.options[this.selectedIndex].value\"" : "").">\n";
 	foreach ($themes as $theme)
 		$content .= "<option value=\"$theme\"".($theme == $sel_theme ? " selected" : "").">$theme</option>\n";
 	$content .= "</select>";
@@ -193,10 +193,10 @@ function dbconn($autoclean = false, $lightmode = false) {
 	global $mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset;
 
 	if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
-		die("[" . mysql_errno() . "] dbconn: mysql_connect: " . mysql_error());
+		die('Database unavailable.');
 
 	mysql_select_db($mysql_db)
-		or die("dbconn: mysql_select_db: " . mysql_error());
+		or die('Database unavailable.');
 
 	mysql_query("SET NAMES $mysql_charset");
 
@@ -233,36 +233,24 @@ function userlogin($lightmode = false) {
 		}
 	}
 
-	$c_uid = $_COOKIE[COOKIE_UID];
-	$c_pass = $_COOKIE[COOKIE_PASSHASH];
-
-	if (!$SITE_ONLINE || empty($c_uid) || empty($c_pass)) {
-		if ($use_lang)
-			include_once('languages/lang_' . $default_language . '/lang_main.php');
-		user_session();
-		return;
+	$c_uid = isset($_COOKIE[COOKIE_UID]) ? $_COOKIE[COOKIE_UID] : '';
+	$c_pass = isset($_COOKIE[COOKIE_PASSHASH]) ? $_COOKIE[COOKIE_PASSHASH] : '';
+	$row = false;
+	if ($SITE_ONLINE && is_string($c_uid) && ctype_digit($c_uid) &&
+		is_string($c_pass) && preg_match('/\A[a-f0-9]{64}\z/D', $c_pass)) {
+		$id = intval($c_uid);
+		$token_hash = hash('sha256', $c_pass);
+		$token_res = sql_query('SELECT passhash_fingerprint FROM auth_tokens WHERE token_hash = '.sqlesc($token_hash).
+			' AND uid = '.$id.' AND expires > '.time().' LIMIT 1') or sqlerr(__FILE__, __LINE__);
+		$token_row = mysql_fetch_assoc($token_res);
+		if ($token_row) {
+			$res = sql_query('SELECT * FROM users WHERE id = '.$id) or sqlerr(__FILE__, __LINE__);
+			$candidate = mysql_fetch_assoc($res);
+			if ($candidate && hash('sha256', $candidate['passhash']) === $token_row['passhash_fingerprint'])
+				$row = $candidate;
+		}
 	}
-	$id = intval($c_uid);
-	if (!$id || strlen($c_pass) != 32) {
-		die("Cokie ID invalid or cookie pass hash problem.");
-		/*if ($use_lang)
-			include_once('languages/lang_' . $default_language . '/lang_main.php');
-		user_session();
-		return;*/
-	}
-	$res = sql_query("SELECT * FROM users WHERE id = $id");// or die(mysql_error());
-	$row = mysql_fetch_array($res);
 	if (!$row) {
-		if ($use_lang)
-			include_once('languages/lang_' . $default_language . '/lang_main.php');
-		user_session();
-		return;
-	}
-
-	$subnet = explode('.', getip());
-	$subnet[2] = $subnet[3] = 0;
-	$subnet = implode('.', $subnet); // 255.255.0.0
-	if ($c_pass !== md5($row["passhash"] . COOKIE_SALT . $subnet)) {
 		if ($use_lang)
 			include_once('languages/lang_' . $default_language . '/lang_main.php');
 		user_session();
@@ -363,7 +351,6 @@ function user_session() {
 	$updateset[] = "time = ".sqlesc($ctime);
 	$updateset[] = "url = ".sqlesc($url);
 	$updateset[] = "useragent = ".sqlesc($agent);
-	session_write_close();
 	if (count($updateset))
 		sql_query("UPDATE sessions SET ".implode(", ", $updateset)." WHERE ".implode(" AND ", $where)) or sqlerr(__FILE__,__LINE__);
 	if (mysql_modified_rows() < 1)
@@ -674,9 +661,9 @@ function stdhead($title = "", $msgalert = true) {
 	header ('Cache-Control: no-cache');
 	header ('Pragma: no-cache');
 	if ($title == '')
-		$title = $SITENAME . (isset($_GET['yuna']) ? ' ('.TBVERSION.')' : '');
+		$title = $SITENAME;
 	else
-		$title = $SITENAME . (isset($_GET['yuna']) ? ' ('.TBVERSION.')' : ''). ' :: ' . htmlspecialchars_uni($title);
+		$title = $SITENAME . ' :: ' . htmlspecialchars_uni($title);
 
 	$ss_uri = select_theme();
 
@@ -699,7 +686,7 @@ function stdfoot() {
 
 	require_once('themes/' . $ss_uri . '/template.php');
 	require_once('themes/' . $ss_uri . '/stdfoot.php');
-	if ((DEBUG_MODE || isset($_GET['yuna'])) && count($query_stat)) {
+	if (DEBUG_MODE && count($query_stat)) {
 		foreach ($query_stat as $key => $value) {
 			print('<div>['.($key+1).'] => <b>'.($value['seconds'] > 0.01 ? '<font color="red" title="Рекомендуется оптимизировать запрос. Время исполнения превышает норму.">'.$value['seconds'].'</font>' : '<font color="green" title="Запрос не нуждается в оптимизации. Время исполнения допустимое.">'.$value['seconds'].'</font>' ).'</b> ['.htmlspecialchars_uni($value['query']).']</div>'."\n");
 		}
@@ -715,15 +702,78 @@ function genbark($x,$y) {
 	exit();
 }
 
+function valid_avatar_url($url) {
+    if (!is_string($url) || strlen($url) > 100 || strpos($url, '\\') !== false ||
+        preg_match('/[\x00-\x20\x7f<>"]/', $url))
+        return false;
+    $parts = @parse_url($url);
+    if ($parts === false || !isset($parts['scheme'], $parts['host']) ||
+        !in_array(strtolower($parts['scheme']), array('http', 'https')) ||
+        isset($parts['user']) || isset($parts['pass']) ||
+        !preg_match('/\A[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+\z/D', $parts['host']) ||
+        !isset($parts['path']) ||
+        !preg_match('/\.(?:gif|jpe?g|png)\z/iD', $parts['path']))
+        return false;
+    return true;
+}
+
+function safe_local_return($url, $fallback = 'index.php') {
+    if (!is_string($url) || strpos($url, '\\') !== false ||
+        !preg_match('/\A(?:\/(?!\/)|[A-Za-z0-9])[^\x00-\x20\x7f]*\z/D', $url))
+        return $fallback;
+    $parts = @parse_url($url);
+    if ($parts === false || isset($parts['scheme']) || isset($parts['host']) ||
+        isset($parts['user']) || isset($parts['pass']))
+        return $fallback;
+    return $url;
+}
+
+function csrf_token() {
+    if (empty($_SESSION['csrf_token'])) {
+        if (!function_exists('openssl_random_pseudo_bytes'))
+            die('Secure random source unavailable.');
+        $strong = false;
+        $bytes = openssl_random_pseudo_bytes(32, $strong);
+        if ($bytes === false || !$strong)
+            die('Secure random source unavailable.');
+        $_SESSION['csrf_token'] = bin2hex($bytes);
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_valid($token) {
+    return is_string($token) && isset($_SESSION['csrf_token']) &&
+        strlen($token) == 64 && $_SESSION['csrf_token'] === $token;
+}
+
+function password_matches($password, $secret, $hash) {
+    if (!is_string($password) || !is_string($hash))
+        return false;
+    if (preg_match('/\A[a-f0-9]{32}\z/iD', $hash))
+        return $hash === md5($secret . $password . $secret) ||
+            $hash === md5($secret . trim($password) . $secret);
+    return password_verify($password, $hash) || password_verify(trim($password), $hash);
+}
+
+function make_password_hash($password) {
+    if (!function_exists('password_hash'))
+        die('Password hashing unavailable.');
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    if ($hash === false)
+        die('Password hashing unavailable.');
+    return $hash;
+}
+
 function mksecret($length = 20) {
-$set = array('a','A','b','B','c','C','d','D','e','E','f','F','g','G','h','H','i','I','j','J','k','K','l','L','m','M','n','N','o','O','p','P','q','Q','r','R','s','S','t','T','u','U','v','V','w','W','x','X','y','Y','z','Z','1','2','3','4','5','6','7','8','9');
-	$str;
-	for($i = 1; $i <= $length; $i++)
-	{
-		$ch = rand(0, count($set)-1);
-		$str .= $set[$ch];
-	}
-	return $str;
+    if (!is_int($length) || $length < 1)
+        die('Invalid secret length.');
+    if (!function_exists('openssl_random_pseudo_bytes'))
+        die('Secure random source unavailable.');
+    $strong = false;
+    $bytes = openssl_random_pseudo_bytes((int)ceil($length / 2), $strong);
+    if ($bytes === false || !$strong)
+        die('Secure random source unavailable.');
+    return substr(bin2hex($bytes), 0, $length);
 }
 
 function httperr($code = 404) {
@@ -740,22 +790,39 @@ function gmtime() {
 	return strtotime(get_date_time());
 }
 
-function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff) {
-
-	$subnet = explode('.', getip());
-	$subnet[2] = $subnet[3] = 0;
-	$subnet = implode('.', $subnet); // 255.255.0.0
-
-	setcookie(COOKIE_UID, $id, $expires, '/');
-	setcookie(COOKIE_PASSHASH, md5($passhash.COOKIE_SALT.$subnet), $expires, '/');
-
+function logincookie($id, $passhash, $updatedb = 1, $expires = 0) {
+	$id = intval($id);
+	if (!$expires)
+		$expires = time() + 30 * 86400;
+	$token = mksecret(64);
+	$token_hash = hash('sha256', $token);
+	$fingerprint = hash('sha256', $passhash);
+	sql_query('INSERT INTO auth_tokens (token_hash, uid, passhash_fingerprint, expires) VALUES ('.
+		implode(', ', array_map('sqlesc', array($token_hash, $id, $fingerprint, $expires))).')') or sqlerr(__FILE__, __LINE__);
+	$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ||
+		(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+	if (session_id()) {
+		unset($_SESSION['csrf_token']);
+		@session_regenerate_id(true);
+	}
+	setcookie(COOKIE_UID, $id, $expires, '/', '', $secure, true);
+	setcookie(COOKIE_PASSHASH, $token, $expires, '/', '', $secure, true);
 	if ($updatedb)
 		sql_query('UPDATE users SET last_login = NOW() WHERE id = '.$id);
 }
 
 function logoutcookie() {
-//	setcookie(COOKIE_UID, '', 0x7fffffff, '/'); // Не стоит убирать комментирование т.к небудет работать система анти-двойной реги
-	setcookie(COOKIE_PASSHASH, '', 0x7fffffff, '/');
+	if (isset($_COOKIE[COOKIE_PASSHASH]) && is_string($_COOKIE[COOKIE_PASSHASH]) &&
+		preg_match('/\A[a-f0-9]{64}\z/D', $_COOKIE[COOKIE_PASSHASH]))
+		sql_query('DELETE FROM auth_tokens WHERE token_hash = '.sqlesc(hash('sha256', $_COOKIE[COOKIE_PASSHASH])))
+			or sqlerr(__FILE__, __LINE__);
+	$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ||
+		(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+	setcookie(COOKIE_UID, '', time() - 3600, '/', '', $secure, true);
+	setcookie(COOKIE_PASSHASH, '', time() - 3600, '/', '', $secure, true);
+	unset($_SESSION['csrf_token']);
+	if (session_id())
+		@session_regenerate_id(true);
 }
 
 function loggedinorreturn($nowarn = false) {

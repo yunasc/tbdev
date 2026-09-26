@@ -223,7 +223,7 @@ if (isset($_GET["hit"])) {
 }
 
 if (!isset($_GET["page"])) {
-	stdhead($tracker_lang['torrent_details']." \"".htmlspecialchars_decode($row["name"])."\"");
+	stdhead($tracker_lang['torrent_details']." \"".$row["name"]."\"");
 
 	if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 		$owned = 1;
@@ -262,7 +262,7 @@ if (!isset($_GET["page"])) {
 	if (count($right_links))
 		$s .= '<span style="float: right;">'.implode('&nbsp;', $right_links).'</span>';
 
-	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>{$row["name"]}</b></a>";
+	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>".htmlspecialchars_uni($row["name"])."</b></a>";
 
 	if ($owned)
 	    $s .= " $spacer<$editlink>[{$tracker_lang['edit']}]</a>";
@@ -293,11 +293,11 @@ if (!isset($_GET["page"])) {
 	}
 
 	if (!empty($row["descr"])) {
-		if (md5($row['descr']) == $row['descr_hash'])
+		if (parsed_comment_hash($row['descr']) == $row['descr_hash'])
 			$descr = $row['descr_parsed'];
 		else {
 			$descr = format_comment($row['descr']);
-			sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, md5($row['descr']), $descr))).')') or sqlerr(__FILE__,__LINE__);
+			sql_query('REPLACE INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, parsed_comment_hash($row['descr']), $descr))).')') or sqlerr(__FILE__,__LINE__);
 		}
 		tr($tracker_lang['description'], $descr, 1, 1);
 	}
@@ -473,7 +473,7 @@ if ($row["type"] == "multi") {
 		$subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
 		$s.="<tr><td class=colhead>{$tracker_lang['path']}</td><td class=colhead align=right>{$tracker_lang['size']}</td></tr>\n";
 		while ($subrow = mysql_fetch_array($subres)) {
-			$s .= "<tr><td>".iconv('utf-8', 'windows-1251', $subrow["filename"])."</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
+			$s .= "<tr><td>".htmlspecialchars_uni(iconv('utf-8', 'windows-1251', $subrow["filename"]))."</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
 		}
 
 		$s .= "</table>\n";
@@ -527,9 +527,9 @@ if ($row["multitracker"] == 'yes') {
 	if (count($announces_a)) {
 		foreach ($announces_a as $announce) {
 			if ($announce['state'] == 'ok')
-				$anns[] = '<li><b>' . $announce['url'] . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
+				$anns[] = '<li><b>' . htmlspecialchars_uni($announce['url']) . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
 			else
-				$anns[] = '<li><font color="red"><b>' . $announce['url'] . '</b></font> - не работает, ошибка: ' . $announce['error'] . '</b>';
+				$anns[] = '<li><font color="red"><b>' . htmlspecialchars_uni($announce['url']) . '</b></font> - не работает, ошибка: ' . htmlspecialchars_uni($announce['error']) . '</b>';
 		}
 		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
 			$update_link = '<br />ƒанные могли устареть. <a href="update_multi.php?id=' . $id . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';
@@ -659,8 +659,8 @@ function update_multi() {
 	print("</table></p>\n");
 
 	} else {
-		stdhead($tracker_lang['comments_for']." \"".htmlspecialchars_decode($row["name"])."\"");
-		print("<h1>{$tracker_lang['comments_for']} <a href=\"details.php?id={$id}\">{$row["name"]}</a></h1>\n");
+		stdhead($tracker_lang['comments_for']." \"".$row["name"]."\"");
+		print("<h1>{$tracker_lang['comments_for']} <a href=\"details.php?id={$id}\">".htmlspecialchars_uni($row["name"])."</a></h1>\n");
 	}
 
 	print("<p><a name=\"startcomments\"></a></p>\n");

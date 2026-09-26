@@ -161,14 +161,19 @@ if (!validusername($wantusername))
 
 if ($year == '0000' || $month == '00' || $day == '00')
     stderr($tracker_lang['error'], "Похоже вы указали неверную дату рождения");
-$birthday = date("$year.$month.$day");
+if (!preg_match('/^[0-9]{4}$/D', $year) ||
+    !preg_match('/^[0-9]{1,2}$/D', $month) ||
+    !preg_match('/^[0-9]{1,2}$/D', $day) ||
+    !checkdate((int)$month, (int)$day, (int)$year))
+    bark('Invalid birthday.');
+$birthday = sprintf('%04d-%02d-%02d', (int)$year, (int)$month, (int)$day);
 
 // make sure user agrees to everything...
 if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ageverify"] != "yes")
     stderr($tracker_lang['error'], "Извините, вы не подходите для того что-бы стать членом этого сайта.");
 
 // check if email addy is already in use
-/*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or die(mysql_error());
+/*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or sqlerr(__FILE__, __LINE__);
 if ($a[0] != 0)
 	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");*/
 
@@ -180,7 +185,7 @@ if ($use_captcha && $users) {
     if (!$_POST['imagestring'])
         bark("Вы должны ввести код подтверждения.");
     $b = get_row_count("captcha", "WHERE imagehash = " . sqlesc($_POST["imagehash"], true) . " AND imagestring = " . sqlesc($_POST["imagestring"], true));
-    sql_query("DELETE FROM captcha WHERE imagehash = " . sqlesc($_POST["imagehash"], true)) or die(mysql_error());
+    sql_query("DELETE FROM captcha WHERE imagehash = " . sqlesc($_POST["imagehash"], true)) or sqlerr(__FILE__, __LINE__);
     if ($b == 0)
         bark("Вы ввели неправильный код подтверждения.");
 }
@@ -206,7 +211,7 @@ if (isset($_COOKIE[COOKIE_UID]) && is_numeric($_COOKIE[COOKIE_UID]) && $users &&
 }
 
 $secret = mksecret();
-$wantpasshash = md5($secret . $wantpassword . $secret);
+$wantpasshash = make_password_hash($wantpassword);
 $editsecret = (!$users ? "" : mksecret());
 
 if ((!$users) || (!$use_email_act == true))
@@ -215,13 +220,13 @@ if ((!$users) || (!$use_email_act == true))
 
 // This is ugly, we but we have it...
 // To-Do rewrite
-$ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gender, country, icq, msn, aim, yahoo, skype, mirc, website, email, status, " . (!$users ? "class, " : "") . "added, birthday, invitedby, invitedroot, theme) VALUES (" . implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $gender, $country, $icq, $msn, $aim, $yahoo, $skype, $mirc, $website, $email, $status))) . ", " . (!$users ? UC_SYSOP . ", " : "") . "'" . get_date_time() . "', '$birthday', '$inviter', '$invitedroot', '" . select_theme() . "')");
+$ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gender, country, icq, msn, aim, yahoo, skype, mirc, website, email, status, " . (!$users ? "class, " : "") . "added, birthday, invitedby, invitedroot, theme) VALUES (" . implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $gender, $country, $icq, $msn, $aim, $yahoo, $skype, $mirc, $website, $email, $status))) . ", " . (!$users ? UC_SYSOP . ", " : "") . "'" . get_date_time() . "', " . sqlesc($birthday) . ", " . intval($inviter) . ", " . intval($invitedroot) . ", " . sqlesc(select_theme()) . ")");
 // or sqlerr(__FILE__, __LINE__);
 
 if (!$ret) {
     if (mysql_errno() == 1062)
         bark("Пользователь $wantusername уже зарегистрирован!");
-    bark("Неизвестная ошибка. Ответ от сервера mySQL: " . htmlspecialchars_uni(mysql_error()));
+    bark('Database error.');
 }
 
 $id = mysql_insert_id();

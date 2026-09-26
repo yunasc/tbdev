@@ -46,6 +46,7 @@ function BlocksNavi() {
 }
 
 function BlocksAdmin() {
+	$token = csrf_token();
 	global $admin_file, $prefix;
 	BlocksNavi();
 	echo "<p /><table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr align=\"center\">"
@@ -77,8 +78,8 @@ function BlocksAdmin() {
 			$bposition = "<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">&nbsp;Нижний баннер&nbsp;<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">";
 		}
 		echo "<td align=\"center\"><nobr>$bposition</nobr></td><td align=\"center\">$weight</td><td align=\"center\">";
-		if ($con1) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&weight=$weight&bidori=$bid&weightrep=$weight_minus&bidrep=$con1\"><img src=\"admin/pic/up.gif\" alt=\"Переместить вверх\" title=\"Переместить вверх\" border=\"0\"></a> ";
-		if ($con2) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&weight=$weight&bidori=$bid&weightrep=$weight_plus&bidrep=$con2\"><img src=\"admin/pic/down.gif\" alt=\"Переместить вниз\" title=\"Переместить вниз\" border=\"0\"></a>";
+		if ($con1) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&csrf_token=$token&weight=$weight&bidori=$bid&weightrep=$weight_minus&bidrep=$con1\"><img src=\"admin/pic/up.gif\" alt=\"Переместить вверх\" title=\"Переместить вверх\" border=\"0\"></a> ";
+		if ($con2) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&csrf_token=$token&weight=$weight&bidori=$bid&weightrep=$weight_plus&bidrep=$con2\"><img src=\"admin/pic/down.gif\" alt=\"Переместить вниз\" title=\"Переместить вниз\" border=\"0\"></a>";
 		echo"</td>";
 		if ($bkey == "") {
 			$type = "HTML";
@@ -106,13 +107,13 @@ function BlocksAdmin() {
 			$who_view = "Только анонимы";
 		}
 		echo "<td align=\"center\"><nobr>$who_view</nobr></td>";
-		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Редактировать\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Редактировать\"></a> <a href=\"".$admin_file.".php?op=BlocksChange&bid=$bid\" $change";
-		if ($bkey == "") echo " <a href=\"".$admin_file.".php?op=BlocksDelete&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\" title=\"Удалить\"><img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"Удалить\"></a>";
+		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Редактировать\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Редактировать\"></a> <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid\" $change";
+		if ($bkey == "") echo " <a href=\"".$admin_file.".php?op=BlocksDelete&csrf_token=$token&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\" title=\"Удалить\"><img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"Удалить\"></a>";
 		if ($block_act == 0) echo " <a href=\"".$admin_file.".php?op=BlocksShow&bid=$bid\" title=\"Показать\"><img src=\"admin/pic/show.gif\" border=\"0\" alt=\"Показать\"></a>";
 	}
 	if (mysql_num_rows($result) == 0)
 		echo "<tr><td colspan=\"9\">Нет блоков.";
-	echo "</td></tr></table><center>[ <a href=\"".$admin_file.".php?op=BlocksFixweight\">Зафиксировать позицию и положение блоков</a> ]</center>";
+	echo "</td></tr></table><center>[ <a href=\"".$admin_file.".php?op=BlocksFixweight&csrf_token=$token\">Зафиксировать позицию и положение блоков</a> ]</center>";
 
 }
 
@@ -121,6 +122,7 @@ function BlocksNew() {
 	BlocksNavi();
 	echo "<h2>Добавить новый блок</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
+	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
 	."<tr><td>Заголовок:</td><td><input type=\"text\" name=\"title\" size=\"65\" style=\"width:400px\" maxlength=\"60\"></td></tr>"
 	."<tr><td>Имя файла:</td><td>"
@@ -180,6 +182,7 @@ function BlocksFile() {
 	BlocksNavi();
 	echo "<h2>Добавить новый файловый блок</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
+	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
 	."<tr><td>Имя файла:</td><td><input type=\"text\" name=\"bf\" size=\"65\" style=\"width:400px\" maxlength=\"200\">"
 	."<tr><td>Тип:</td><td><input type=\"radio\" name=\"flag\" value=\"php\" checked>PHP &nbsp;&nbsp; <input type=\"radio\" name=\"flag\" value=\"html\">HTML</td></tr>"
@@ -274,6 +277,7 @@ function BlocksEdit($bid) {
 	}
 	echo "<h2>Блок: $title $type</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
+	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
 	."<tr><td>Заголовок:</td><td><input type=\"text\" name=\"title\" maxlength=\"50\" size=\"65\" style=\"width:400px\" value=\"$title\"></td></tr>";
 	if ($blockfile != "") {
@@ -430,14 +434,15 @@ function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition,
 }
 
 function BlocksShow($bid) {
+	$token = csrf_token();
 	global $prefix, $db, $admin_file;
 	BlocksNavi();
 	list($bid, $bkey, $title, $content, $bposition, $blockfile) = mysql_fetch_row(sql_query("SELECT bid, bkey, title, content, bposition, blockfile FROM ".$prefix."_blocks WHERE bid='$bid'"));
 	$bid = intval($bid);
 	echo "<p />";
 	render_blocks($blockfile, $title, $content, $bid, 'c', 'no');
-	echo "<h4>[ <a href=\"".$admin_file.".php?op=BlocksChange&bid=$bid\">Включить</a> | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
-	if ($bkey == "") echo " | <a href=\"".$admin_file.".php?op=BlocksDelete&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\">Удалить</a>";
+	echo "<h4>[ <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid\">Включить</a> | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
+	if ($bkey == "") echo " | <a href=\"".$admin_file.".php?op=BlocksDelete&csrf_token=$token&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\">Удалить</a>";
 	echo " | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Главная</a> ]</h4>";
 }
 
@@ -446,6 +451,7 @@ function BlocksFileEdit() {
 	BlocksNavi();
 	echo "<h2>Редактировать блок</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
+	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
 	."<tr><td>Имя файла:</td><td>"
 	."<select name=\"bf\" style=\"width:400px\">";
@@ -462,6 +468,7 @@ function BlocksFileEdit() {
 }
 
 function BlocksChange($bid, $ok=0) {
+	$token = csrf_token();
 	global $prefix, $admin_file;
 	$bid = intval($bid);
 	$row = mysql_fetch_array(sql_query("SELECT active FROM ".$prefix."_blocks WHERE bid='$bid'"));
@@ -481,7 +488,7 @@ function BlocksChange($bid, $ok=0) {
 		} else {
 			echo "<center>Деактивировать блок \"$title\"?<br /><br />";
 		}
-		echo "[ <a href=\"".$admin_file.".php?op=BlocksChange&bid=$bid&ok=1\">Да</a> | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Нет</a> ]</center>";
+		echo "[ <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid&ok=1\">Да</a> | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Нет</a> ]</center>";
 	}
 }
 
@@ -495,6 +502,10 @@ function BlocksbfEdit() {
 			$bf = str_replace(".php", "",$bf);
 			$bf = 'block-'.$bf.'.php';
 		} else {
+			if (!is_string($bf) || !preg_match('/^block-[A-Za-z0-9_-]+\.php$/D', $bf)) {
+				header('HTTP/1.1 400 Bad Request');
+				exit;
+			}
 			$bfstr = file_get_contents('blocks/'.$bf);
 			if (strpos($bfstr,'BLOCKHTML') === false) {
 				$flaged = 'php';
@@ -506,12 +517,17 @@ function BlocksbfEdit() {
 				unset($out[0]);
 			}
 		}
+		if (!preg_match('/^block-[A-Za-z0-9_-]+\.php$/D', $bf)) {
+			header('HTTP/1.1 400 Bad Request');
+			exit;
+		}
 		BlocksNavi();
 		$permtest = end_chmod("blocks", 777);
 		if ($permtest)
 			stdmsg("Ошибка", $permtest, 'error');
 		echo "<h2>Блок: $bf</h2>"
 		."<form action=\"".$admin_file.".php\" method=\"post\">"
+		."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 		."<table border=\"0\" align=\"center\">"
 		."<tr><td>Содержание:</td><td><textarea wrap=\"virtual\" name=\"blocktext\" cols=\"65\" rows=\"25\" style=\"width:400px\">".$out[1]."</textarea></td></tr>"
 		."<tr><td colspan=\"2\" align=\"center\"><br /><input type=\"hidden\" name=\"bf\" value=\"".$bf."\">"
@@ -525,10 +541,18 @@ function BlocksbfEdit() {
 
 function BlocksbfSave() {
 	global $prefix, $db, $admin_file;
+	if ($_SERVER['REQUEST_METHOD'] != 'POST' || !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+		header('HTTP/1.1 403 Forbidden');
+		exit;
+	}
 	if (isset($_POST['blocktext'])) {
 		if (!empty($_POST['blocktext'])) {
 			if (isset($_POST['bf'])) {
 				$bf = $_POST['bf'];
+				if (!is_string($bf) || !preg_match('/^block-[A-Za-z0-9_-]+\.php$/D', $bf)) {
+					header('HTTP/1.1 400 Bad Request');
+					exit;
+				}
 				if ($handle = fopen('blocks/'.$bf, 'w')) {
 					$htmlB = "";
 					$htmlE = "";

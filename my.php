@@ -53,6 +53,7 @@ if (isset($_GET["edited"])) {
 <tr>
 <td colspan="3">
 <form method="post" action="takeprofedit.php">
+<input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="1" cellspacing=0 cellpadding="5">
 <?
 

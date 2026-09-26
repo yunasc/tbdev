@@ -30,6 +30,11 @@
 
 require_once('include/bittorrent.php');
 
+// Remote tracker scraping accepts torrent-supplied destinations. Keep it disabled
+// until a transport that pins validated public addresses is available.
+header('HTTP/1.1 503 Service Unavailable');
+exit('Remote tracker scraping is disabled.');
+
 // Dirty hack to prevent ghost Guests on website
 $old_us = $use_sessions;
 $use_sessions = 0;
@@ -53,10 +58,10 @@ function scrape($tid, $url, $info_hash) {
 		else
 			$data = $http->scrape($url, $info_hash);
 		$data = $data[$info_hash];
-		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or print(mysql_error()."\n");
+		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(mysql_error()."\n");
 		return true;
 	} catch (ScraperException $e) {
-		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or print(mysql_error()."\n");
+		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(mysql_error()."\n");
 		return false;
 	}
 }
@@ -82,6 +87,10 @@ if ($_GET['info_hash'] && $_GET['url']) {
 		die('Invalid len info_hash supplied');
 	if (!check_token($token, $tid, $url, $info_hash))
 		die('Invalid token');
+	$allowed = sql_query('SELECT info_hash FROM torrents_scrape WHERE tid = '.$tid.' AND url = '.sqlesc($url).' LIMIT 1');
+	$row = $allowed ? mysql_fetch_assoc($allowed) : false;
+	if (!$row || $row['info_hash'] !== $info_hash)
+		die('Unknown tracker');
 	echo scrape($tid, $url, $info_hash);
 	exit;
 }
@@ -166,9 +175,9 @@ if ($ajax !== 'yes') {
 	if (count($announces_a)) {
 		foreach ($announces_a as $announce) {
 			if ($announce['state'] == 'ok')
-				$anns[] = '<li><b>' . $announce['url'] . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
+				$anns[] = '<li><b>' . htmlspecialchars_uni($announce['url']) . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
 			else
-				$anns[] = '<li><font color="red"><b>' . $announce['url'] . '</b></font> - не работает, ошибка: ' . $announce['error'] . '</b>';
+				$anns[] = '<li><font color="red"><b>' . htmlspecialchars_uni($announce['url']) . '</b></font> - не работает, ошибка: ' . htmlspecialchars_uni($announce['error']) . '</b>';
 		}
 		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
 			$update_link = '<br />ƒанные могли устареть. <a href="update_multi.php?id=' . $tid . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';

@@ -46,19 +46,15 @@ if (get_user_class() < UC_MODERATOR)
 $action = $_POST["action"];
 
 if ($action == "edituser") {
+	if (!csrf_valid(isset($_POST["csrf_token"]) ? $_POST["csrf_token"] : null)) {
+		header("HTTP/1.1 403 Forbidden");
+		exit;
+	}
 	$userid = $_POST["userid"];
 	$title = $_POST["title"];
 	$avatar = $_POST["avatar"];
-	// Check remote avatar size
-	if ($avatar) {
-		if (!preg_match('#^((http)|(ftp):\/\/[a-zA-Z0-9\-]+?\.([a-zA-Z0-9\-]+\.)+[a-zA-Z]+(:[0-9]+)*\/.*?\.(gif|jpg|jpeg|png)$)#is', $avatar))
-						stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
-		if(!(list($width, $height) = getimagesize($avatar)))
-						stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
-		if ($width > $avatar_max_width || $height > $avatar_max_height)
-						stderr($tracker_lang['error'], sprintf($tracker_lang['avatar_is_too_big'], $avatar_max_width, $avatar_max_height));
-	}
-// Check remote avatar size
+	if ($avatar && !valid_avatar_url($avatar))
+		stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
 	$resetb = $_POST["resetb"];
 	$birthday = ($resetb=='yes'?", birthday = '0000-00-00'":"");
 	$enabled = $_POST["enabled"];
@@ -83,7 +79,7 @@ if ($action == "edituser") {
 		stderr($tracker_lang['error'], "Неверный идентификатор пользователя или класса.");
 	// check target user class
 	$res = sql_query("SELECT warned, enabled, username, class, modcomment, uploaded, downloaded FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
-	$arr = mysql_fetch_assoc($res) or puke("Ошибка MySQL: " . mysql_error());
+	$arr = mysql_fetch_assoc($res) or puke("Ошибка MySQL: " . 'Database error.');
 	$curenabled = $arr["enabled"];
 	$curclass = $arr["class"];
 	$curwarned = $arr["warned"];

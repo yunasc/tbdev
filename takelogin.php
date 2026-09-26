@@ -38,11 +38,7 @@ function bark($text = "Имя пользователя или пароль неверны")
   stderr("Ошибка входа", $text);
 }
 
-function is_password_correct($password, $secret, $hash) {
-	return ($hash == md5($secret . $password . $secret) || $hash == md5($secret . trim($password) . $secret)); // А нахуя вторая часть? Дебилы вводят из писем пароли с пробелом в конце/начале
-}
-
-$res = sql_query("SELECT id, passhash, secret, enabled, status FROM users WHERE username = " . sqlesc($username));
+$res = sql_query("SELECT id, passhash, secret, enabled, status, ip FROM users WHERE username = " . sqlesc($username));
 $row = mysql_fetch_array($res);
 
 if (!$row)
@@ -51,7 +47,7 @@ if (!$row)
 if ($row["status"] == 'pending')
 	bark("Вы еще не активировали свой аккаунт! Активируйте ваш аккаунт и попробуйте снова.");
 
-if (!is_password_correct($password, $row['secret'], $row['passhash']))
+if (!password_matches($password, $row['secret'], $row['passhash']))
 	bark();
 
 if ($row["enabled"] == "no")
@@ -60,13 +56,20 @@ if ($row["enabled"] == "no")
 $peers = sql_query("SELECT COUNT(id) FROM peers WHERE userid = $row[id]");
 $num = mysql_fetch_row($peers);
 $ip = getip();
-if ($num[0] > 0 && $row[ip] != $ip && $row[ip])
+if ($num[0] > 0 && $row["ip"] != $ip && $row["ip"])
 	bark("Этот пользователь на данный момент активен с другого IP. Вход невозможен.");
+
+if (preg_match('/\A[a-f0-9]{32}\z/iD', $row['passhash'])) {
+	$matched_password = $row['passhash'] === md5($row['secret'] . $password . $row['secret'])
+		? $password : trim($password);
+	$row['passhash'] = make_password_hash($matched_password);
+	sql_query('UPDATE users SET passhash = '.sqlesc($row['passhash']).' WHERE id = '.intval($row['id'])) or sqlerr(__FILE__, __LINE__);
+}
 
 logincookie($row["id"], $row["passhash"]);
 
 if (!empty($_POST["returnto"]))
-	header("Location: $DEFAULTBASEURL/$_POST[returnto]");
+	header("Location: $DEFAULTBASEURL/" . ltrim(safe_local_return($_POST["returnto"]), "/"));
 else
 	header("Location: $DEFAULTBASEURL/");
 

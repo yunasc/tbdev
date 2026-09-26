@@ -47,7 +47,7 @@ else {
 	$query = "SELECT $fields FROM torrents WHERE info_hash = " . sqlesc($hash);
 }
 
-$res = mysql_query($query) or err(mysql_error());
+$res = mysql_query($query) or err('Database error');
 
 while ($row = mysql_fetch_assoc($res)) {
 	$r .= "20:" . pack("H*", ($row["info_hash"])) . "d" .

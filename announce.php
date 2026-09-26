@@ -109,7 +109,7 @@ if(substr($peer_id, 0, 4) == "exbc") err("This version of BitComet is banned! Yo
 if(substr($peer_id, 0, 3) == '-FG') err("FlashGet is banned!");
 
 dbconn();
-mysql_query("SELECT id FROM users WHERE passkey = " . sqlesc($passkey)) or err(mysql_error());
+mysql_query("SELECT id FROM users WHERE passkey = " . sqlesc($passkey)) or err('Database error');
 if (mysql_affected_rows() == 0)
 	err('Invalid passkey! Re-download the .torrent from '.$DEFAULTBASEURL);
 $hash = bin2hex($info_hash);
@@ -207,7 +207,7 @@ if (!isset($self)) {
         }
     }
 
-    $res = mysql_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err(mysql_error());
+    $res = mysql_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Database error');
     $check = mysql_fetch_array($res);
     if (!$check)
         mysql_query("INSERT LOW_PRIORITY INTO snatched (torrent, userid, port, startdat, last_action) VALUES ($torrentid, $userid, $port, $dt, $dt)");

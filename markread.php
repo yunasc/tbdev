@@ -34,7 +34,7 @@ stdhead();
 if (mysql_query("INSERT IGNORE INTO readtorrents (userid, torrentid) SELECT ".sqlesc($CURUSER["id"]).", id FROM torrents")) {
 	stdmsg("Успешно", "Новые торренты отмечены как прочитаные.");
 } else {
-	stdmsg("Ошибка", "Отметка новых торрентов произошла с ошибкой: ".mysql_error());
+	stdmsg("Ошибка", "Отметка новых торрентов произошла с ошибкой: ".'Database error.');
 }
 
 stdfoot();

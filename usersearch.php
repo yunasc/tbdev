@@ -788,6 +788,11 @@ if (count($_GET) > 0 && !$_GET['h'])
   		(($where_is == "")?"":" WHERE $where_is ");
 
   $querypm = "FROM ".$from_is.(($where_is == "")?" ":" WHERE $where_is ");
+  $_SESSION["mass_pm_ids"] = array();
+  $_SESSION["mass_pm_key"] = mksecret();
+  $mass_res = sql_query("SELECT DISTINCT u.id ".$querypm) or sqlerr(__FILE__, __LINE__);
+  while ($mass_row = mysql_fetch_row($mass_res))
+      $_SESSION["mass_pm_ids"][] = (int)$mass_row[0];
 
   $select_is = "u.id, u.username, u.email, u.status, u.added, u.last_access, u.ip,
   	u.class, u.uploaded, u.downloaded, u.donor, u.modcomment, u.enabled, u.warned";
@@ -903,10 +908,10 @@ if (count($_GET) > 0 && !$_GET['h'])
           <td> 
             <div align="center"> 
             Рассылка сообщений найденным юзерам<br /> 
-              <input name="pmees" type="hidden" value="<?echo $querypm?>" size=10> 
               <input name="PM" type="submit" value="PM" class=btn> 
               <input name="n_pms" type="hidden" value="<?echo $count?>" size=10> 
               <input name="action" type="hidden" value="mass_pm" size=10> 
+              <input name="mass_pm_key" type="hidden" value="<?echo $_SESSION["mass_pm_key"]?>">
             </div></td> 
         </tr> 
       </table> 

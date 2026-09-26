@@ -49,6 +49,8 @@ if ($row["status"] != "pending") {
 	exit();
 }
 
+if ($row["editsecret"] === '')
+    httperr();
 $sec = hash_pad($row["editsecret"]);
 if ($md5 != md5($sec))
 	httperr();

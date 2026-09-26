@@ -45,7 +45,7 @@ if (!defined('IN_TRACKER')) {
 	// SET PHP ENVIRONMENT
 	@error_reporting(E_ALL & ~E_NOTICE);
 	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
-	@ini_set('display_errors', '1');
+	@ini_set('display_errors', '0');
 	@ini_set('display_startup_errors', '0');
 	@ini_set('ignore_repeated_errors', '1');
 	@ignore_user_abort(1);
@@ -54,43 +54,24 @@ if (!defined('IN_TRACKER')) {
 	@session_start();
 	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
 
-$allowed_referrers = <<<REF
-
-REF;
-
-	// referrer check for POSTs; this is simply designed to prevent self-submitting
-	// forms on foreign hosts from doing nasty things
-	if (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' AND !defined('SKIP_REFERRER_CHECK')) {
-		if ($_SERVER['HTTP_HOST'] OR $_ENV['HTTP_HOST']) {
-			$http_host = ($_SERVER['HTTP_HOST'] ? $_SERVER['HTTP_HOST'] : $_ENV['HTTP_HOST']);
-		} else if ($_SERVER['SERVER_NAME'] OR $_ENV['SERVER_NAME']) {
-			$http_host = ($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : $_ENV['SERVER_NAME']);
-		}
-
-		if ($http_host AND $_SERVER['HTTP_REFERER']) {
-			$http_host = preg_replace('#:80$#', '', trim($http_host));
-			$referrer_parts = @parse_url($_SERVER['HTTP_REFERER']);
-			if (isset($referrer_parts['port']))
-				$ref_port = intval($referrer_parts['port']);
-			else
-				$ref_post = 80;
-			$ref_host = $referrer_parts['host'] . ((!empty($ref_port) AND $ref_port != '80') ? ":$ref_port" : '');
-
-			$allowed = preg_split('#\s+#', $allowed_referrers, -1, PREG_SPLIT_NO_EMPTY);
-			$allowed[] = preg_replace('#^www\.#i', '', $http_host);
-			$allowed[] = '.paypal.com';
-
-			$pass_ref_check = false;
-			foreach ($allowed AS $host) {
-				if (preg_match('#' . preg_quote($host, '#') . '$#siU', $ref_host)) {
-					$pass_ref_check = true;
-					break;
-				}
-			}
-			unset($allowed);
-
-			if ($pass_ref_check == false)
-				die('In order to accept POST request originating from this domain, the admin must add this domain to the whitelist.');
+	// Reject cross-site and source-less browser POSTs on legacy forms.
+	if (isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' &&
+		!defined('SKIP_REFERRER_CHECK')) {
+		$source = !empty($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] :
+			(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+		$destination = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+		$source_parts = @parse_url($source);
+		$destination_parts = @parse_url('http://' . $destination);
+		$valid = is_array($source_parts) && is_array($destination_parts) &&
+			isset($source_parts['scheme'], $source_parts['host'], $destination_parts['host']) &&
+			in_array(strtolower($source_parts['scheme']), array('http', 'https')) &&
+			strtolower($source_parts['host']) === strtolower($destination_parts['host']);
+		if ($valid && (isset($source_parts['port']) || isset($destination_parts['port'])))
+			$valid = isset($source_parts['port'], $destination_parts['port']) &&
+				$source_parts['port'] === $destination_parts['port'];
+		if (!$valid) {
+			header('HTTP/1.1 403 Forbidden');
+			exit('Invalid request origin.');
 		}
 	}
 

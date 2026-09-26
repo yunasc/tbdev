@@ -64,10 +64,15 @@ if ($action == 'add') {
         if (!isset($_POST["description"])) {
         stderr("","<p>Напишите причину, по которой вы выдаете " . ($resp_type == 1?"респект":"антиреспект") . " пользователю:</p>
         <form action=\"" . $_SERVER["PHP_SELF"] . "?action=add&amp;" . ($resp_type == 1?'good':'bad') . "&amp;type=".htmlspecialchars_uni($type)."&amp;targetid=$targetid\" method=\"post\">
+        <input type=hidden name=csrf_token value=\"" . csrf_token() . "\">
         <input type=text name=description maxlength=300 size=100></textarea>
-		".(isset($_GET["returnto"]) ? "<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($_GET["returnto"]) . "\" />\n" : "").
+		".(isset($_GET["returnto"]) ? "<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni(safe_local_return($_GET["returnto"])) . "\" />\n" : "").
         "<input type=submit value=".($resp_type == 1?"Респект":"Антиреспект").">
         </form>");
+        }
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+                header('HTTP/1.1 403 Forbidden');
+                exit;
         }
         sql_query ('INSERT INTO simpaty VALUES (0, ' . $targetid . ', ' . $CURUSER['id'] . ', ' . sqlesc($CURUSER['username']) . ', ' . ($resp_type==0?1:0) . ', ' . ($resp_type==1?1:0) . ', ' . sqlesc($type) . ', ' . sqlesc($current_time) . ', ' . sqlesc(htmlspecialchars_uni($_POST["description"])) . ')') or sqlerr(__FILE__, __LINE__);
         if ($resp_type == 1) {
@@ -82,17 +87,21 @@ if ($action == 'add') {
 		//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0, $targetid, NOW(), $msg, \"Уведомление об изменении репутации\")");
         // mod by StirolXXX (Yuna Scatari)
 		if (isset($_POST["returnto"])) {
-			$returl = $_POST["returnto"];
+			$returl = safe_local_return($_POST["returnto"]);
 			header("Refresh: 2; url=$returl");
 		}
         stdhead(($resp_type == 1?"Респект":"Антиреспект") . " добавлен");
         stdmsg($tracker_lang['success'],"<p>Пользователь успешно получил " . ($resp_type == 1?"респект":"антиреспект") . " от вас.</p>".(isset($_POST["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
         if (isset($_POST["returnto"])) {
-        	print("<p><a href=\"".htmlspecialchars_uni($_POST["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
+			print("<p><a href=\"".htmlspecialchars_uni(safe_local_return($_POST["returnto"]))."\">Нажмите сюда, если вы не были переадресованы</a></p>");
         }
 }
 
 if ($action == 'delete') {
+        if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
+                header('HTTP/1.1 403 Forbidden');
+                exit;
+        }
         if(get_user_class() < UC_SYSOP) {
                 stderr($tracker_lang['error'], "У вас нет прав на удаление респектов.");
         }
@@ -108,13 +117,13 @@ if ($action == 'delete') {
         	stderr($tracker_lang['error'], "Не могу удалить ".($respect_type == 'good'?"респект":"антиреспект").".");
         }*/
         if (isset($_GET["returnto"])) {
-        	$returl = $_GET["returnto"];
+			$returl = safe_local_return($_GET["returnto"]);
 			header("Refresh: 2; url=$returl");
         };
         stdhead();
         stdmsg($tracker_lang['success'], "<p>".($respect_type == 'good' ? "Респект" : "Антиреспект")." удален успешно.</p>".(isset($_GET["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
         if (isset($_GET["returnto"])) {
-        	print("<p><a href=\"".htmlspecialchars_uni($_GET["returnto"])."\">Нажмите сюда, если вы не были переадресованы</a></p>");
+			print("<p><a href=\"".htmlspecialchars_uni(safe_local_return($_GET["returnto"]))."\">Нажмите сюда, если вы не были переадресованы</a></p>");
         }
         stdfoot();
         die();

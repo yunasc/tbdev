@@ -69,11 +69,15 @@
 			$return = '';
 			$pos = 0;
 			while (!feof($rh) && $pos < $this->maxreadsize){
-				$return .= fread($rh,1024);
+				$chunk = fread($rh, min(1024, $this->maxreadsize - $pos));
+				if ($chunk === false || $chunk === '')
+					break;
+				$return .= $chunk;
+				$pos += strlen($chunk);
 			}
 			fclose($rh);
 			
-			if(!substr($return, 0, 1) == 'd'){ throw new ScraperException('Invalid scrape response.'); }
+			if(substr($return, 0, 1) !== 'd'){ throw new ScraperException('Invalid scrape response.'); }
 			$arr_scrape_data = lightbenc::bdecode($return);
 			
 			$torrents = array();

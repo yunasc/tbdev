@@ -28,6 +28,7 @@
 
 require "include/bittorrent.php";
 dbconn();
+loggedinorreturn();
 
 $id = intval($_GET["id"]);
 if (!$id)
@@ -41,6 +42,10 @@ if ($arr["class"] < UC_MODERATOR)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+	if (!csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+		header('HTTP/1.1 403 Forbidden');
+		exit;
+	}
 	$to = $arr["email"];
 
 	$from = substr(trim($_POST["from"]), 0, 80);
@@ -50,10 +55,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	if ($from_email == "") $from_email = $SITEEMAIL;
 	if (!strpos($from_email, "@")) stderr($tracker_lang['error'], "Введеный e-mail адрес не похож на верный.");
 
+	if (preg_match('/[\r\n]/', $from) || preg_match('/[\r\n]/', $from_email) ||
+		!validemail($from_email))
+		stderr($tracker_lang['error'], 'Invalid sender address.');
 	$from = "$from <$from_email>";
 
 	$subject = substr(trim($_POST["subject"]), 0, 80);
 	if ($subject == "") $subject = "(Без темы)";
+	if (preg_match('/[\r\n]/', $subject))
+		stderr($tracker_lang['error'], 'Invalid subject.');
 	$subject = "Fwd: $subject";
 
 	$message = trim($_POST["message"]);
@@ -76,8 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 stdhead("E-mail шлюз");
 ?>
 <table border=1 cellspacing=0 cellpadding=5>
-<tr><td class=colhead colspan=2>Отправить e-mail пользователю <?=$username;?></td></tr>
+<tr><td class=colhead colspan=2>Отправить e-mail пользователю <?=htmlspecialchars_uni($username);?></td></tr>
 <form method=post action=email-gateway.php?id=<?=$id?>>
+<input type=hidden name=csrf_token value="<?=csrf_token()?>">
 <tr><td class=rowhead>Ваше имя</td><td><input type=text name=from size=80></td></tr>
 <tr><td class=rowhead>Ваш e-mail</td><td><input type=text name=from_email size=80></td></tr>
 <tr><td class=rowhead>Тема</td><td><input type=text name=subject size=80></td></tr>

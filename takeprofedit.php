@@ -35,6 +35,11 @@ function bark($msg) {
 dbconn();
 
 loggedinorreturn();
+if ($_SERVER["REQUEST_METHOD"] != "POST" ||
+    !csrf_valid(isset($_POST["csrf_token"]) ? $_POST["csrf_token"] : null)) {
+    header("HTTP/1.1 403 Forbidden");
+    exit;
+}
 
 if (!mkglobal("email:oldpassword:chpassword:passagain"))
 	bark("missing form data");
@@ -49,14 +54,14 @@ if ($chpassword != "") {
 		bark("Извините, ваш пароль слишком длинный (максимум 40 символов)");
 	if ($chpassword != $passagain)
 		bark("Пароли не совпадают. Попробуйте еще раз.");
-    if ($CURUSER["passhash"] != md5($CURUSER["secret"] . $oldpassword . $CURUSER["secret"]))
+    if (!password_matches($oldpassword, $CURUSER["secret"], $CURUSER["passhash"]))
             bark("Вы ввели неправильный старый пароль.");
 
 	$sec = mksecret();
-	$passhash = md5($sec . $chpassword . $sec);
+	$passhash = make_password_hash($chpassword);
 	$updateset[] = "secret = " . sqlesc($sec);
 	$updateset[] = "passhash = " . sqlesc($passhash);
-	logincookie($CURUSER["id"], $passhash);
+
 }
 
 if ($email != $CURUSER["email"]) {
@@ -84,16 +89,8 @@ for ($i = 0; $i < $rows; ++$i)
 	  $notifs .= "[cat$a[id]]";
 }
 $avatar = $_POST["avatar"];
-// Check remote avatar size
-        if ($avatar) {
-                if (!preg_match('#^((http)|(ftp):\/\/[a-zA-Z0-9\-]+?\.([a-zA-Z0-9\-]+\.)+[a-zA-Z]+(:[0-9]+)*\/.*?\.(gif|jpg|jpeg|png)$)#is', $avatar))
-                        stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
-                if(!(list($width, $height) = getimagesize($avatar)))
-                        stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
-                if ($width > $avatar_max_width || $height > $avatar_max_height)
-                        stderr($tracker_lang['error'], sprintf($tracker_lang['avatar_is_too_big'], $avatar_max_width, $avatar_max_height));
-        }
-// Check remote avatar size
+	if ($avatar && !valid_avatar_url($avatar))
+		stderr($tracker_lang['error'], $tracker_lang['avatar_adress_invalid']);
 $avatars = ($_POST["avatars"] != "" ? "yes" : "no");
 $parked = $_POST["parked"];
 $updateset[] = "parked = " . sqlesc($parked);
@@ -104,7 +101,12 @@ $updateset[] = "gender =  " . sqlesc($gender);
 $year = $_POST["year"];
 $month = $_POST["month"];
 $day = $_POST["day"];
-$birthday = date("$year.$month.$day");
+if (!preg_match('/^[0-9]{4}$/D', $year) ||
+    !preg_match('/^[0-9]{1,2}$/D', $month) ||
+    !preg_match('/^[0-9]{1,2}$/D', $day) ||
+    !checkdate((int)$month, (int)$day, (int)$year))
+    stderr($tracker_lang['error'], 'Invalid birthday.');
+$birthday = sprintf('%04d-%02d-%02d', (int)$year, (int)$month, (int)$day);
 ///////////////// BIRTHDAY MOD /////////////////////
 $updateset[] = "birthday = " . sqlesc($birthday);
 
@@ -221,6 +223,8 @@ EOD;
 }
 
 sql_query("UPDATE users SET " . implode(",", $updateset) . " WHERE id = " . $CURUSER["id"]) or sqlerr(__FILE__,__LINE__);
+if (isset($passhash))
+	logincookie($CURUSER["id"], $passhash);
 
 header("Location: $DEFAULTBASEURL/my.php?edited=1" . $urladd);
 

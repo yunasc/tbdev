@@ -285,7 +285,7 @@ if ($action == "sendmessage") {
         if (($auto || $std ) && get_user_class() < UC_MODERATOR)
                 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
 
-        $res = sql_query("SELECT * FROM users WHERE id=$receiver") or die(mysql_error());
+        $res = sql_query("SELECT * FROM users WHERE id=$receiver") or sqlerr(__FILE__, __LINE__);
         $user = mysql_fetch_assoc($res);
         if (!$user)
                 stderr($tracker_lang['error'], "Пользователя с таким ID не существует.");
@@ -442,8 +442,12 @@ EOD;
 if ($action == 'mass_pm') {
         if (get_user_class() < UC_MODERATOR)
                 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
-        $n_pms = intval($_POST['n_pms']);
-        $pmees = $_POST['pmees'];
+        $n_pms = isset($_SESSION["mass_pm_ids"]) ? count($_SESSION["mass_pm_ids"]) : 0;
+        if (!isset($_POST['mass_pm_key'], $_SESSION['mass_pm_key']) ||
+            !is_string($_POST['mass_pm_key']) || $_POST['mass_pm_key'] !== $_SESSION['mass_pm_key'])
+                stderr($tracker_lang["error"], "Recipient selection expired.");
+        if (!$n_pms)
+                stderr($tracker_lang["error"], "No recipients selected.");
         $auto = $_POST['auto'];
 
         if ($auto)
@@ -455,6 +459,8 @@ if ($action == 'mass_pm') {
         <tr><td class=embedded><div align=center>
         <form method=post action=<?=htmlspecialchars_uni($_SERVER['PHP_SELF']);?> name=message>
         <input type=hidden name=action value=takemass_pm>
+        <input type=hidden name=csrf_token value="<?=csrf_token()?>">
+        <input type=hidden name=mass_pm_key value="<?=htmlspecialchars_uni($_SESSION['mass_pm_key'])?>">
         <? if ($_SERVER["HTTP_REFERER"]) { ?>
         <input type=hidden name=returnto value="<?=htmlspecialchars_uni($_SERVER["HTTP_REFERER"]);?>">
         <? } ?>
@@ -480,7 +486,6 @@ if ($action == 'mass_pm') {
          </div></td></tr>
         <tr><td colspan="2" align=center><input type=submit value="Послать!" class=btn>
         </td></tr></table>
-        <input type=hidden name=pmees value="<?=$pmees?>">
         <input type=hidden name=n_pms value=<?=$n_pms?>>
         </form><br /><br />
         </div>
@@ -498,11 +503,22 @@ if ($action == 'mass_pm') {
 if ($action == 'takemass_pm') {
         if (get_user_class() < UC_MODERATOR)
                 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+                header('HTTP/1.1 403 Forbidden');
+                exit;
+        }
         $msg = trim($_POST["msg"]);
         if (!$msg)
                 stderr($tracker_lang['error'],"Пожалуйста введите сообщение.");
         $sender_id = ($_POST['sender'] == 'system' ? 0 : $CURUSER['id']);
-        $from_is = unesc($_POST['pmees']);
+        if (!isset($_POST['mass_pm_key'], $_SESSION['mass_pm_key']) ||
+            !is_string($_POST['mass_pm_key']) || $_POST['mass_pm_key'] !== $_SESSION['mass_pm_key'])
+                stderr($tracker_lang["error"], "Recipient selection expired.");
+        $ids = isset($_SESSION["mass_pm_ids"]) ? array_map("intval", $_SESSION["mass_pm_ids"]) : array();
+        $ids = array_filter($ids);
+        if (!$ids)
+                stderr($tracker_lang["error"], "No recipients selected.");
+        $from_is = "FROM users AS u WHERE u.id IN (" . implode(",", $ids) . ")";
         // Change
         $subject = trim($_POST['subject']);
         $query = "INSERT INTO messages (sender, receiver, added, msg, subject, location, poster) ". "SELECT $sender_id, u.id, '" . get_date_time(time()) . "', " .
@@ -510,7 +526,8 @@ if ($action == 'takemass_pm') {
         // End of Change
         sql_query($query) or sqlerr(__FILE__, __LINE__);
         $n = mysql_affected_rows();
-        $n_pms = $_POST['n_pms'];
+        $n_pms = count($ids);
+        unset($_SESSION["mass_pm_ids"], $_SESSION["mass_pm_key"]);
         $comment = $_POST['comment'];
         $snapshot = $_POST['snap'];
         // add a custom text or stats snapshot to comments in profile

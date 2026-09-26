@@ -33,7 +33,7 @@ function print_array($array, $offset_symbol = "|--", $offset = "", $parent = "")
 {
   if (!is_array($array))
   {
-    echo "[$array] is not an array!<BR>";
+    echo "[invalid value] is not an array!<BR>";
     return;
   }
  
@@ -43,19 +43,19 @@ function print_array($array, $offset_symbol = "|--", $offset = "", $parent = "")
 	switch($array['type'])
 	{
 		case "string":
-			printf("<li><div class=string> - <span class=icon>[STRING]</span> <span class=title>[%s]</span> <span class=length>(%d)</span>: <span class=value>%s</span></div></li>",$parent,$array['strlen'],$array['value']);
+			printf("<li><div class=string> - <span class=icon>[STRING]</span> <span class=title>[%s]</span> <span class=length>(%d)</span>: <span class=value>%s</span></div></li>",htmlspecialchars_uni($parent),$array['strlen'],htmlspecialchars_uni($array['value']));
 			break;
 		case "integer":
-			printf("<li><div class=integer> - <span class=icon>[INT]</span> <span class=title>[%s]</span> <span class=length>(%d)</span>: <span class=value>%s</span></div></li>",$parent,$array['strlen'],$array['value']);
+			printf("<li><div class=integer> - <span class=icon>[INT]</span> <span class=title>[%s]</span> <span class=length>(%d)</span>: <span class=value>%s</span></div></li>",htmlspecialchars_uni($parent),$array['strlen'],htmlspecialchars_uni($array['value']));
 			break;
 		case "list":
-			printf("<li><div class=list> + <span class=icon>[LIST]</span> <span class=title>[%s]</span> <span class=length>(%d)</span></div>",$parent,$array['strlen']);
+			printf("<li><div class=list> + <span class=icon>[LIST]</span> <span class=title>[%s]</span> <span class=length>(%d)</span></div>",htmlspecialchars_uni($parent),$array['strlen']);
 			echo "<ul>";
 			print_array($array['value'], $offset_symbol, $offset.$offset_symbol);
 			echo "</ul></li>";
 			break;
 		case "dictionary":
-			printf("<li><div class=dictionary> + <span class=icon>[DICT]</span> <span class=title>[%s]</span> <span class=length>(%d)</span></div>",$parent,$array['strlen']);
+			printf("<li><div class=dictionary> + <span class=icon>[DICT]</span> <span class=title>[%s]</span> <span class=length>(%d)</span></div>",htmlspecialchars_uni($parent),$array['strlen']);
 			while (list($key, $val) = each($array))
 			{
 				if (is_array($val))
@@ -136,7 +136,7 @@ $dict = bdec_file($fn, (1024*1024));
 
 // Start table
 print("<table width=100% border=1 cellspacing=0 cellpadding=5>");
-print("<tr><td class=colhead colspan=1>Данные о торенте $row[name]</td></tr>\n");
+print("<tr><td class=colhead colspan=1>Данные о торенте ".htmlspecialchars_uni($row["name"])."</td></tr>\n");
 print("<td>");
 
 $dict['value']['info']['value']['pieces']['value'] = "0x".bin2hex(substr($dict['value']['info']['value']['pieces']['value'], 0, 25))."...";

@@ -30,6 +30,11 @@ require_once "include/bittorrent.php";
 dbconn(false);
 loggedinorreturn();
 
+if (!isset($_GET["form"], $_GET["text"]) ||
+    !preg_match("/^[A-Za-z][A-Za-z0-9_]*$/D", $_GET["form"]) ||
+    !preg_match("/^[A-Za-z][A-Za-z0-9_]*$/D", $_GET["text"]))
+    httperr();
+
 $ss_uri = select_theme();
 
 ?><html>

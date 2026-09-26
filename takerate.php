@@ -65,7 +65,7 @@ if (!$res) {
 	if (mysql_errno() == 1062)
 		bark("You have already rated this torrent.");
 	else
-		bark(mysql_error());
+		bark('Database error.');
 }
 
 sql_query("UPDATE torrents SET numratings = numratings + 1, ratingsum = ratingsum + $rating WHERE id = $id");
