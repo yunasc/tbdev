@@ -457,7 +457,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       }
       $where_is .= isset($where_is)?" AND ":"";
       $where_is .= " (u.uploaded/u.downloaded)";
-      $ratiotype = $_GET['rt'];
+      $ratiotype = (int)$_GET['rt'];
       $q .= ($q ? "&amp;" : "") . "rt=$ratiotype";
       if ($ratiotype == "3")
       {
@@ -551,7 +551,7 @@ if (count($_GET) > 0 && !$_GET['h'])
     }
     $where_is .= isset($where_is)?" AND ":"";
     $where_is .= " u.uploaded ";
-    $ultype = $_GET['ult'];
+    $ultype = (int)$_GET['ult'];
     $q .= ($q ? "&amp;" : "") . "ult=$ultype";
     if ($ultype == "3")
     {
@@ -592,7 +592,7 @@ if (count($_GET) > 0 && !$_GET['h'])
     }
     $where_is .= isset($where_is)?" AND ":"";
     $where_is .= " u.downloaded ";
-    $dltype = $_GET['dlt'];
+    $dltype = (int)$_GET['dlt'];
     $q .= ($q ? "&amp;" : "") . "dlt=$dltype";
     if ($dltype == "3")
     {
@@ -632,7 +632,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       die();
     }
     $q .= ($q ? "&amp;" : "") . "d=$date";
-    $datetype = $_GET['dt'];
+    $datetype = (int)$_GET['dt'];
 		$q .= ($q ? "&amp;" : "") . "dt=$datetype";
     if ($datetype == "0")
     // For mySQL 4.1.1 or above use instead
@@ -681,7 +681,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       die();
     }
     $q .= ($q ? "&amp;" : "") . "ls=$last";
-    $lasttype = $_GET['lst'];
+    $lasttype = (int)$_GET['lst'];
     $q .= ($q ? "&amp;" : "") . "lst=$lasttype";
     if ($lasttype == "0")
     // For mySQL 4.1.1 or above use instead
@@ -714,7 +714,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   }
 
   // status
-  $status = $_GET['st'];
+  $status = (int)$_GET['st'];
   if ($status)
   {
   	$where_is .= ((isset($where_is))?" AND ":"");
@@ -726,7 +726,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   }
 
   // account status
-  $accountstatus = $_GET['as'];
+  $accountstatus = (int)$_GET['as'];
   if ($accountstatus)
   {
   	$where_is .= (isset($where_is))?" AND ":"";
@@ -738,7 +738,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   }
 
   //donor
-	$donor = $_GET['do'];
+	$donor = (int)$_GET['do'];
   if ($donor)
   {
 		$where_is .= (isset($where_is))?" AND ":"";
@@ -750,7 +750,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   }
 
   //warned
-	$warned = $_GET['w'];
+	$warned = (int)$_GET['w'];
   if ($warned)
   {
 		$where_is .= (isset($where_is))?" AND ":"";
@@ -762,7 +762,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   }
 
   // disabled IP
-  $disabled = $_GET['dip'];
+  $disabled = (int)$_GET['dip'];
   if ($disabled)
   {
   	$distinct = "DISTINCT ";
@@ -885,7 +885,7 @@ if (count($_GET) > 0 && !$_GET['h'])
 //      		($user["donor"] == "yes" ? "<img src=pic/star.gif alt=\"Donor\">" : "") .
 //					($user["warned"] == "yes" ? "<img src=\"pic/warned.gif\" alt=\"Warned\">" : "") . "</td>
           "<td>" . ratios($user['uploaded'], $user['downloaded']) . "</td>
-          <td>" . $ipstr . "</td><td>" . $user['email'] . "</td>
+          <td>" . $ipstr . "</td><td>" . htmlspecialchars_uni($user['email']) . "</td>
           <td><div align=center>" . $user['added'] . "</div></td>
           <td><div align=center>" . $user['last_access'] . "</div></td>
           <td><div align=center>" . $user['status'] . "</div></td>

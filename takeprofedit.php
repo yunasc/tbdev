@@ -69,7 +69,7 @@ if ($email != $CURUSER["email"]) {
 		bark("Это не похоже на настоящий E-Mail.");
   $r = sql_query("SELECT id FROM users WHERE email=" . sqlesc($email)) or sqlerr(__FILE__, __LINE__);
 	if (mysql_num_rows($r) > 0)
-		bark("Этот e-mail адрес уже используется одним из пользователей трекера. (<b>$email</b>)");
+		bark("Этот e-mail адрес уже используется одним из пользователей трекера. (<b>" . htmlspecialchars_uni($email) . "</b>)");
 	$changedemail = 1;
 }
 
@@ -121,7 +121,7 @@ $info = $_POST["info"];
 $theme = $_POST["theme"];
 $country = $_POST["country"];
 $language = $_POST["language"];
-if (!file_exists('./languages/lang_'.$language.'/lang_main.php')) {
+if (!is_string($language) || !preg_match('/\A[a-z]+\z/D', $language) || !file_exists('./languages/lang_'.$language.'/lang_main.php')) {
     bark('Выбранный язык в системе отсутствует!');
 }
 $updateset[] = "language = " . sqlesc($language);
@@ -136,27 +136,27 @@ $updateset[] = "icq = " . sqlesc($icq);
 $msn = unesc($_POST["msn"]);
 if (strlen($msn) > 30)
     bark("Жаль, Ваш msn слишком длинный  (Макс - 30)");
-$updateset[] = "msn = " . sqlesc(htmlspecialchars_uni($msn));
+$updateset[] = "msn = " . sqlesc($msn);
 
 $aim = unesc($_POST["aim"]);
 if (strlen($aim) > 30)
     bark("Жаль, Ваш aim слишком длинный  (Макс - 30)");
-$updateset[] = "aim = " . sqlesc(htmlspecialchars_uni($aim));
+$updateset[] = "aim = " . sqlesc($aim);
 
 $yahoo = unesc($_POST["yahoo"]);
 if (strlen($yahoo) > 30)
     bark("Жаль, Ваш yahoo слишком длинный  (Макс - 30)");
-$updateset[] = "yahoo = " . sqlesc(htmlspecialchars_uni($yahoo));
+$updateset[] = "yahoo = " . sqlesc($yahoo);
 
 $mirc = unesc($_POST["mirc"]);
 if (strlen($mirc) > 30)
     bark("Жаль, Ваш mirc слишком длинный  (Макс - 30)");
-$updateset[] = "mirc = " . sqlesc(htmlspecialchars_uni($mirc));
+$updateset[] = "mirc = " . sqlesc($mirc);
 
 $skype = unesc($_POST["skype"]);
 if (strlen($skype) > 20)
     bark("Жаль, Ваш skype слишком длинный  (Макс - 20)");
-$updateset[] = "skype = " . sqlesc(htmlspecialchars_uni($skype));
+$updateset[] = "skype = " . sqlesc($skype);
 
 /*
 if ($privacy != "normal" && $privacy != "low" && $privacy != "strong")
@@ -166,7 +166,7 @@ $updateset[] = "privacy = '$privacy'";
 */
 
 $website = unesc($_POST["website"]);
-$updateset[] = "website = " . sqlesc(htmlspecialchars_uni($website));
+$updateset[] = "website = " . sqlesc($website);
 
 $updateset[] = "torrentsperpage = " . min(100, intval($_POST["torrentsperpage"]));
 $updateset[] = "topicsperpage = " . min(100, intval($_POST["topicsperpage"]));
@@ -209,10 +209,10 @@ email address had the IP address {$_SERVER["REMOTE_ADDR"]}. Please do not reply.
 
 To complete the update of your user profile, please follow this link:
 
-http://$thishost/confirmemail.php?id={$CURUSER["id"]}&hash=$hash&email=$obemail
+$DEFAULTBASEURL/confirmemail.php?id={$CURUSER["id"]}&hash=$hash&email=$obemail
 
 If you have AOL browser, please click the following link:
-<a href="http://$thishost/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail">http://$thishost/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail</a>
+<a href="$DEFAULTBASEURL/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail">$DEFAULTBASEURL/confirmemail.php?id={$CURUSER["id"]}&amp;hash=$hash&amp;email=$obemail</a>
 
 Your new email address will appear in your profile after you do this. Otherwise
 your profile will remain unchanged.

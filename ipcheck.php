@@ -79,7 +79,7 @@ if (get_user_class() >= UC_MODERATOR)
                         /*$peer_res = sql_query("SELECT count(*) FROM peers WHERE ip = " . sqlesc($ras['ip']) . " AND userid = " . $arr['id']);
                         $peer_row = mysql_fetch_row($peer_res);*/
                   print("<tr$utc><td align=left><b><a href='userdetails.php?id=" . $arr['id'] . "'>" . get_user_class_color($arr['class'], $arr['username'])."</b></a>" . get_user_icons($arr) . "</td>
-                                  <td align=center>$arr[email]</td>
+                                  <td align=center>" . htmlspecialchars_uni($arr["email"]) . "</td>
                                   <td align=center>$added</td>
                                   <td align=center>$last_access</td>
                                   <td align=center>$downloaded</td>

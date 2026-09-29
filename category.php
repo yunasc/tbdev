@@ -40,9 +40,10 @@ print("<table width=70% border=1 cellspacing=0 cellpadding=2><tr><td align=cente
 
 ///////////////////// D E L E T E C A T E G O R Y \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-$sure = $_GET['sure'];
+$sure = $_POST['sure'];
 if($sure == "yes") {
-$delid = (int) $_GET['delid'];
+csrf_require_post();
+$delid = (int) $_POST['delid'];
 $query = "DELETE FROM categories WHERE id=" .sqlesc($delid) . " LIMIT 1";
 $sql = sql_query($query);
 echo("Категория успешно удалена! [ <a href='category.php'>Назад</a> ]");
@@ -53,7 +54,7 @@ die();
 $delid = (int) $_GET['delid'];
 $name = htmlspecialchars_uni($_GET['cat']);
 if($delid > 0) {
-echo("Вы действителньо хотите удалить эту категорию? ($name) ( <strong><a href=\"". $_SERVER['PHP_SELF'] . "?delid=$delid&cat=$name&sure=yes\">Да</a></strong> / <strong><a href=\"". $_SERVER['PHP_SELF'] . "\">Нет</a></strong> )");
+echo("Вы действителньо хотите удалить эту категорию? ($name) ( <strong>" . post_link('category.php', array('delid' => $delid, 'sure' => 'yes'), 'Да') . "</strong> / <strong><a href=\"". $_SERVER['PHP_SELF'] . "\">Нет</a></strong> )");
 end_frame();
 stdfoot();
 die();
@@ -61,12 +62,13 @@ die();
 }
 
 ///////////////////// E D I T A C A T E G O R Y \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-$edited = $_GET['edited'];
+$edited = $_POST['edited'];
 if($edited == 1) {
-$id = (int) $_GET['id'];
-$cat_name = htmlspecialchars_uni($_GET['cat_name']);
-$cat_img = htmlspecialchars_uni($_GET['cat_img']);
-$cat_sort = (int) $_GET['cat_sort'];
+csrf_require_post();
+$id = (int) $_POST['id'];
+$cat_name = htmlspecialchars_uni($_POST['cat_name']);
+$cat_img = htmlspecialchars_uni($_POST['cat_img']);
+$cat_sort = (int) $_POST['cat_sort'];
 $query = "UPDATE categories SET
 name = ".sqlesc($cat_name).",
 image = ".sqlesc($cat_img).",
@@ -87,7 +89,7 @@ $name = htmlspecialchars_uni($_GET['name']);
 $img = htmlspecialchars_uni($_GET['img']);
 $sort = (int) $_GET['sort'];
 if($editid > 0) {
-echo("<form name='form1' method='get' action='" . $_SERVER['PHP_SELF'] . "'>");
+echo("<form name='form1' method='post' action='category.php'><input type='hidden' name='csrf_token' value='" . csrf_token() . "'>");
 echo("<table class=main cellspacing=0 cellpadding=5 width=50%>");
 echo("<div align='center'><input type='hidden' name='edited' value='1'>Редактирование категории <strong>&quot;$name&quot;</strong></div>");
 echo("<br />");
@@ -103,11 +105,12 @@ die();
 }
 
 ///////////////////// A D D A N E W C A T E G O R Y \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-$add = $_GET['add'];
+$add = $_POST['add'];
 if($add == 'true') {
-$cat_name = htmlspecialchars_uni($_GET['cat_name']);
-$cat_img = htmlspecialchars_uni($_GET['cat_img']);
-$cat_sort = (int) $_GET['cat_sort'];
+csrf_require_post();
+$cat_name = htmlspecialchars_uni($_POST['cat_name']);
+$cat_img = htmlspecialchars_uni($_POST['cat_img']);
+$cat_sort = (int) $_POST['cat_sort'];
 $query = "INSERT INTO categories SET
 name = ".sqlesc($cat_name).",
 image = ".sqlesc($cat_img).",
@@ -122,7 +125,7 @@ $success = FALSE;
 print("<strong>Добавить новую категорию</strong>");
 print("<br />");
 print("<br />");
-echo("<form name='form1' method='get' action='" . $_SERVER['PHP_SELF'] . "'>");
+echo("<form name='form1' method='post' action='category.php'><input type='hidden' name='csrf_token' value='" . csrf_token() . "'>");
 echo("<table class=main cellspacing=0 cellpadding=5 width=50%>");
 echo("<tr><td>Название: </td><td align='right'><input type='text' size=50 name='cat_name'></td></tr>");
 echo("<tr><td>Картинка: </td><td align='right'><input type='text' size=50 name='cat_img'><input type='hidden' name='add' value='true'></td></tr>");
