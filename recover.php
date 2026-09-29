@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$sec = mksecret();
 
-	sql_query("UPDATE users SET editsecret = " . sqlesc($sec) . " WHERE id = " . $arr["id"]) or sqlerr(__FILE__, __LINE__);
+	sql_query("UPDATE users SET editsecret = " . sqlesc($sec) . ", editsecret_added = " . time() . " WHERE id = " . $arr["id"]) or sqlerr(__FILE__, __LINE__);
 	if (!mysql_affected_rows())
 		stderr($tracker_lang['error'], "Ошибка базы данных. Свяжитесь с администратором относительно этой ошибки.");
 
@@ -84,13 +84,13 @@ EOD;
 	$md5 = $_GET["secret"];
 	if (!$id)
 		httperr();
-	$res = sql_query("SELECT username, email, passhash, editsecret FROM users WHERE id = $id");
+	$res = sql_query("SELECT username, email, passhash, editsecret, editsecret_added FROM users WHERE id = $id");
 	$arr = mysql_fetch_array($res) or httperr();
 	$email = $arr["email"];
 	$sec = $arr["editsecret"];
-	if (preg_match('/^ *$/s', $sec))
+	if (preg_match('/^ *$/s', $sec) || $arr["editsecret_added"] < time() - 86400)
 		httperr();
-	if ($md5 != md5($sec . $email . $arr["passhash"] . $sec))
+	if (!is_string($md5) || $md5 !== md5($sec . $email . $arr["passhash"] . $sec))
 		httperr();
 	// generate new password;
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -31,6 +31,7 @@ dbconn(false);
 loggedinorreturn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    csrf_require_post();
 	header("Content-Type: text/html; charset=".$tracker_lang['language_charset']);
 	if (empty($_POST["bonus_id"])) {
 		stdmsg($tracker_lang['error'], "Вы не выбрали тип бонуса!");
@@ -52,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	switch ($type) {
 		case "traffic":
 			$traffic = $arr["quanity"];
-			if (!sql_query("UPDATE users SET bonus = bonus - $points, uploaded = uploaded + $traffic WHERE id = ".sqlesc($CURUSER["id"]))) {
+			if (!sql_query("UPDATE users SET bonus = bonus - $points, uploaded = uploaded + $traffic WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
 				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
 				die();
 			}
@@ -60,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			break;
 		case "invite":
 			$invites = $arr["quanity"];
-			if (!sql_query("UPDATE users SET bonus = bonus - $points, invites = invites + $invites WHERE id = ".sqlesc($CURUSER["id"]))) {
+			if (!sql_query("UPDATE users SET bonus = bonus - $points, invites = invites + $invites WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
 				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
 				die();
 			}
@@ -91,6 +92,7 @@ function send(){
 	var varsString = "";
 	ajax.requestFile = "mybonus.php";
 	ajax.setVar("bonus_id", bonus_type);
+	ajax.setVar("csrf_token", frm.csrf_token.value);
 	ajax.method = 'POST';
 	ajax.element = 'ajax';
 	ajax.sendAJAX(varsString);
@@ -118,7 +120,7 @@ function send(){
 ?>
 	<tr><td class="colhead" colspan="3">Мой бонус (<?=$CURUSER["bonus"];?> бонусов в наличии / <?=$points_per_hour;?> бонусов в час)</td></tr>
 	<tr><td class="colhead">Тип бонуса</td><td class="colhead">Очки</td><td class="colhead">Выбор</td></tr>
-	<form action="mybonus.php" name="mybonus" method="post">
+	<form action="mybonus.php" name="mybonus" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <?=$output;?>
 		<tr><td colspan="3"><input type="submit" onClick="send(); return false;" value="Обменять" /></td></tr>
 	</form>

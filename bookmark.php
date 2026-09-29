@@ -29,6 +29,7 @@
 require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 function bark($msg, $error = true) {
 global $tracker_lang;
@@ -38,7 +39,7 @@ stdfoot();
 exit;
 }
 
-$id = (int) $_GET["torrent"];
+$id = (int) $_POST["torrent"];
 if (!is_valid_id($id))
 	bark($tracker_lang['torrent_not_selected']);
 

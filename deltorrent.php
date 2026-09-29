@@ -31,6 +31,7 @@ require "include/bittorrent.php";
 dbconn();
 
 loggedinorreturn();
+csrf_require_post();
 
 if (get_user_class() < UC_MODERATOR)
 	stderr($tracker_lang["error"], $tracker_lang["access_denied"]);

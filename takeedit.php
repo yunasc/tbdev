@@ -29,6 +29,7 @@
 require_once("include/BDecode.php");
 require_once("include/BEncode.php");
 require_once("include/bittorrent.php");
+require_once("include/upload_image.php");
 
 function bark($msg) {
 	stderr("Ошибка", $msg);
@@ -40,57 +41,19 @@ function uploadimage($x, $imgname, $tid) {
 
 	$maxfilesize = $max_image_size; // default 1mb
 
-	$allowed_types = array(
-	"image/gif" => "gif",
-	"image/pjpeg" => "jpg",
-	"image/jpeg" => "jpg",
-	"image/jpg" => "jpg",
-	"image/png" => "png"
-	// Add more types here if you like
-	);
-
-	if (!($_FILES['image'.$x]['name'] == "")) {
-
-		if ($imgname != "") {
-			// Make sure is same as in takeedit.php (except for the $imgname bit)
-			$img = "torrents/images/$imgname";
-			$del = unlink($img);
-		}
-
-		$y = $x + 1;
-
-		// Is valid filetype?
-		if (!array_key_exists($_FILES['image'.$x]['type'], $allowed_types))
-			bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES['image'.$x]['type']).")");
-
-		if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES['image'.$x]['name']))
-			bark("Неверное имя файла (не картинка).");
-
-		// Is within allowed filesize?
-		if ($_FILES['image'.$x]['size'] > $maxfilesize)
-			bark("Превышен размер файла! Картинка $y - Должна быть меньше ".mksize($maxfilesize));
-
-		// Where to upload?
-		// Make sure is same as on takeupload.php
-		$uploaddir = "torrents/images/";
-
-		// What is the temporary file name?
-		$ifile = $_FILES['image'.$x]['tmp_name'];
-
-		// By what filename should the tracker associate the image with?
-		//$ifilename = $tid . $x . substr($_FILES['image'.$x]['name'], strlen($_FILES['image'.$x]['name'])-4, 4);
-		$ifilename = $tid . $x . '.' . end(explode('.', $_FILES['image'.$x]['name']));
-
-		// Upload the file
-		$copy = copy($ifile, $uploaddir.$ifilename);
-
-		if (!$copy)
-			bark("Error occured uploading image! - Image $y");
-
-		return $ifilename;
-
-	}
-
+	if (!isset($_FILES['image'.$x]) || $_FILES['image'.$x]['name'] == '')
+		bark('Missing image upload.');
+	$upload = $_FILES['image'.$x];
+	$y = $x + 1;
+	if ($upload['error'] != UPLOAD_ERR_OK || $upload['size'] > $maxfilesize ||
+		!is_uploaded_file($upload['tmp_name']))
+		bark("Invalid upload for image $y");
+	$ifilename = store_safe_image($upload['tmp_name'], 'torrents/images', $maxfilesize);
+	if ($ifilename === false)
+		bark("Invalid image format for image $y");
+	if ($imgname != '' && preg_match('/\A[a-zA-Z0-9_-]+\.(?:gif|jpe?g|png)\z/iD', $imgname))
+		@unlink('torrents/images/'.$imgname);
+	return $ifilename;
 }
 ////////////////////////////////////////////////
 
@@ -133,6 +96,7 @@ function dict_get($d, $k, $t) {
 
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 if (!mkglobal("id:name:descr:type"))
 	bark("missing form data");
@@ -163,7 +127,8 @@ for ($x=1; $x <= 5; $x++) {
 		$updateset[] = 'image' . $x . ' = ' .sqlesc(uploadimage($x - 1, $row['image' . $x], $id));
 	if ($_GLOBALS['img'.$x.'action'] == 'delete') {
 		if ($row['image' . $x]) {
-			$del = unlink('torrents/images/' . $row['image' . $x]);
+			if (preg_match('/\A[a-zA-Z0-9_-]+\.(?:gif|jpe?g|png)\z/iD', $row['image' . $x]))
+				@unlink('torrents/images/' . $row['image' . $x]);
 			$updateset[] = 'image' . $x . ' = ""';
 		}
 	}

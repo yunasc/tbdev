@@ -39,6 +39,7 @@ if ($action == "add")
 {
   if ($_SERVER["REQUEST_METHOD"] == "POST")
   {
+    csrf_require_post();
     $torrentid = intval($_POST["tid"]);
 	  if (!is_valid_id($torrentid))
 			stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
@@ -93,6 +94,7 @@ if ($action == "add")
 	stdhead("Добление комментария к \"" . $arr["name"] . "\"");
 
 	print("<p><form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">\n");
+    print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 	print("<input type=\"hidden\" name=\"tid\" value=\"$torrentid\"/>\n");
 ?>
 	<table class=main border=0 cellspacing=0 cellpadding=3>
@@ -143,6 +145,7 @@ elseif ($action == "quote")
 	$text = "[quote=$arr[username]]" . $arr["text"] . "[/quote]\n";
 
 	print("<form method=\"post\" name=\"comment\" action=\"comment.php?action=add\">\n");
+    print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 	print("<input type=\"hidden\" name=\"tid\" value=\"$arr[tid]\" />\n");
 ?>
 
@@ -184,6 +187,7 @@ elseif ($action == "edit")
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
+        csrf_require_post();
 	  $text = $_POST["text"];
     $returnto = safe_local_return(isset($_POST["returnto"]) ? $_POST["returnto"] : "");
 
@@ -209,6 +213,7 @@ elseif ($action == "edit")
  	stdhead("Редактирование комментария к \"" . $arr["name"] . "\"");
 
 	print("<form method=\"post\" name=\"comment\" action=\"comment.php?action=edit&amp;cid=$commentid\">\n");
+    print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 	print("<input type=\"hidden\" name=\"returnto\" value=\"details.php?id={$arr["tid"]}&amp;viewcomm=$commentid#comm$commentid\" />\n");
 	print("<input type=\"hidden\" name=\"cid\" value=\"$commentid\" />\n");
 ?>
@@ -238,6 +243,7 @@ elseif ($action == "edit")
 /////////////////СЛЕЖЕНИЕ ЗА КОММЕНТАМИ///////////////// 
 elseif ($action == "check" || $action == "checkoff")
 {
+    csrf_require_post();
         $tid = intval($_GET["tid"]);
         if (!is_valid_id($tid))
                 stderr($tracker_lang['error'], "Неверный идентификатор $tid.");
@@ -265,13 +271,12 @@ elseif ($action == "delete")
   if (!is_valid_id($commentid))
 		stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
-  $sure = $_GET["sure"];
-
-  if (!$sure)
-  {
-		stderr($tracker_lang['delete']." ".$tracker_lang['comment'], sprintf($tracker_lang['you_want_to_delete_x_click_here'],$tracker_lang['comment'],"?action=delete&cid=$commentid&sure=1"));
-  }
-
+  if ($_SERVER['REQUEST_METHOD'] != 'POST')
+      stderr($tracker_lang['delete'].' '.$tracker_lang['comment'],
+          '<form method="post" action="comment.php?action=delete&amp;cid='.$commentid.'">'
+          .'<input type="hidden" name="csrf_token" value="'.csrf_token().'">'
+          .'<button type="submit">Confirm deletion</button></form>');
+  csrf_require_post();
 
 	$res = sql_query("SELECT torrent FROM comments WHERE id=$commentid")  or sqlerr(__FILE__,__LINE__);
 	$arr = mysql_fetch_array($res);

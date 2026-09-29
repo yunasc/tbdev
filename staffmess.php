@@ -38,7 +38,7 @@ stdhead("Общее сообщение", false);
 <table class=main width=100% border=0 cellspacing=0 cellpadding=0>
 <tr><td class=embedded>
 <div align=center>
-<form method=post name=message action=takestaffmess.php>
+<form method=post name=message action=takestaffmess.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <?
 
 if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])

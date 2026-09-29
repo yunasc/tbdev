@@ -46,7 +46,6 @@ function BlocksNavi() {
 }
 
 function BlocksAdmin() {
-	$token = csrf_token();
 	global $admin_file, $prefix;
 	BlocksNavi();
 	echo "<p /><table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr align=\"center\">"
@@ -78,8 +77,8 @@ function BlocksAdmin() {
 			$bposition = "<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">&nbsp;Нижний баннер&nbsp;<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">";
 		}
 		echo "<td align=\"center\"><nobr>$bposition</nobr></td><td align=\"center\">$weight</td><td align=\"center\">";
-		if ($con1) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&csrf_token=$token&weight=$weight&bidori=$bid&weightrep=$weight_minus&bidrep=$con1\"><img src=\"admin/pic/up.gif\" alt=\"Переместить вверх\" title=\"Переместить вверх\" border=\"0\"></a> ";
-		if ($con2) echo "<a href=\"".$admin_file.".php?op=BlocksOrder&csrf_token=$token&weight=$weight&bidori=$bid&weightrep=$weight_plus&bidrep=$con2\"><img src=\"admin/pic/down.gif\" alt=\"Переместить вниз\" title=\"Переместить вниз\" border=\"0\"></a>";
+		if ($con1) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_minus, 'bidrep' => $con1), "<img src=\"admin/pic/up.gif\" alt=\"Переместить вверх\" title=\"Переместить вверх\" border=\"0\">")." ";
+		if ($con2) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_plus, 'bidrep' => $con2), "<img src=\"admin/pic/down.gif\" alt=\"Переместить вниз\" title=\"Переместить вниз\" border=\"0\">")."";
 		echo"</td>";
 		if ($bkey == "") {
 			$type = "HTML";
@@ -91,10 +90,10 @@ function BlocksAdmin() {
 		$block_act = $active;
 		if ($active == 1) {
 			$active = "<font color=\"#009900\">Вкл.</font>";
-			$change = "title=\"Выкл.\"><img src=\"admin/pic/inactive.gif\" border=\"0\" alt=\"Выкл.\"></a>";
+			$change = "<img src=\"admin/pic/inactive.gif\" border=\"0\" alt=\"Выкл.\" title=\"Выкл.\">";
 		} elseif ($active == 0) {
 			$active = "<font color=\"#FF0000\">Выкл.</font>";
-			$change = "title=\"Вкл.\"><img src=\"admin/pic/activate.gif\" border=\"0\" alt=\"Вкл.\"></a>";
+			$change = "<img src=\"admin/pic/activate.gif\" border=\"0\" alt=\"Вкл.\" title=\"Вкл.\">";
 		}
 		echo "<td align=\"center\">$active</td>";
 		if ($view == 0) {
@@ -107,13 +106,13 @@ function BlocksAdmin() {
 			$who_view = "Только анонимы";
 		}
 		echo "<td align=\"center\"><nobr>$who_view</nobr></td>";
-		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Редактировать\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Редактировать\"></a> <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid\" $change";
-		if ($bkey == "") echo " <a href=\"".$admin_file.".php?op=BlocksDelete&csrf_token=$token&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\" title=\"Удалить\"><img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"Удалить\"></a>";
+		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Редактировать\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Редактировать\"></a> ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), $change);
+		if ($bkey == "") echo " ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "<img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"Удалить\">", "Удалить \"$title\"?")."";
 		if ($block_act == 0) echo " <a href=\"".$admin_file.".php?op=BlocksShow&bid=$bid\" title=\"Показать\"><img src=\"admin/pic/show.gif\" border=\"0\" alt=\"Показать\"></a>";
 	}
 	if (mysql_num_rows($result) == 0)
 		echo "<tr><td colspan=\"9\">Нет блоков.";
-	echo "</td></tr></table><center>[ <a href=\"".$admin_file.".php?op=BlocksFixweight&csrf_token=$token\">Зафиксировать позицию и положение блоков</a> ]</center>";
+	echo "</td></tr></table><center>[ ".post_link($admin_file.".php", array('op' => 'BlocksFixweight'), "Зафиксировать позицию и положение блоков")." ]</center>";
 
 }
 
@@ -192,6 +191,7 @@ function BlocksFile() {
 
 function BlocksOrder($weightrep,$weight,$bidrep,$bidori) {
 	global $prefix, $admin_file;
+	list($weightrep, $weight, $bidrep, $bidori) = array_map('intval', array($weightrep, $weight, $bidrep, $bidori));
 	$result = sql_query("UPDATE ".$prefix."_blocks SET weight='$weight' WHERE bid='$bidrep'");
 	$result2 = sql_query("UPDATE ".$prefix."_blocks SET weight='$weightrep' WHERE bid='$bidori'");
 	Header("Location: ".$admin_file.".php?op=BlocksAdmin");
@@ -434,15 +434,15 @@ function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition,
 }
 
 function BlocksShow($bid) {
-	$token = csrf_token();
 	global $prefix, $db, $admin_file;
 	BlocksNavi();
+	$bid = intval($bid);
 	list($bid, $bkey, $title, $content, $bposition, $blockfile) = mysql_fetch_row(sql_query("SELECT bid, bkey, title, content, bposition, blockfile FROM ".$prefix."_blocks WHERE bid='$bid'"));
 	$bid = intval($bid);
 	echo "<p />";
 	render_blocks($blockfile, $title, $content, $bid, 'c', 'no');
-	echo "<h4>[ <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid\">Включить</a> | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
-	if ($bkey == "") echo " | <a href=\"".$admin_file.".php?op=BlocksDelete&csrf_token=$token&bid=$bid\" OnClick=\"return DelCheck(this, 'Удалить &quot;$title&quot;?');\">Удалить</a>";
+	echo "<h4>[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), "Включить")." | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
+	if ($bkey == "") echo " | ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "Удалить", "Удалить \"$title\"?")."";
 	echo " | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Главная</a> ]</h4>";
 }
 
@@ -468,7 +468,6 @@ function BlocksFileEdit() {
 }
 
 function BlocksChange($bid, $ok=0) {
-	$token = csrf_token();
 	global $prefix, $admin_file;
 	$bid = intval($bid);
 	$row = mysql_fetch_array(sql_query("SELECT active FROM ".$prefix."_blocks WHERE bid='$bid'"));
@@ -488,7 +487,7 @@ function BlocksChange($bid, $ok=0) {
 		} else {
 			echo "<center>Деактивировать блок \"$title\"?<br /><br />";
 		}
-		echo "[ <a href=\"".$admin_file.".php?op=BlocksChange&csrf_token=$token&bid=$bid&ok=1\">Да</a> | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Нет</a> ]</center>";
+		echo "[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid, 'ok' => 1), "Да")." | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Нет</a> ]</center>";
 	}
 }
 

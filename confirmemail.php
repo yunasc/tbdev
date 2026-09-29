@@ -37,16 +37,16 @@ if (!$id)
 
 dbconn();
 
-$res = sql_query("SELECT editsecret FROM users WHERE id = $id");
+$res = sql_query("SELECT editsecret, editsecret_added FROM users WHERE id = $id");
 $row = mysql_fetch_array($res);
 
 if (!$row)
 	httperr();
 
 $sec = hash_pad($row["editsecret"]);
-if (preg_match('/^ *$/s', $sec))
+if (preg_match('/^ *$/s', $sec) || $row["editsecret_added"] < time() - 86400)
 	httperr();
-if ($md5 != md5($sec . $email . $sec))
+if (!is_string($md5) || $md5 !== md5($sec . $email . $sec))
 	httperr();
 
 sql_query("UPDATE users SET editsecret='', email=" . sqlesc($email) . " WHERE id = $id AND editsecret = " . sqlesc($row["editsecret"]));

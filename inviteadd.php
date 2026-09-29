@@ -34,6 +34,7 @@ if (get_user_class() < UC_SYSOP)
     stderr("Error", "Access denied.");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    csrf_require_post();
 
     if ($_POST["username"] == "" || $_POST["invites"] == "" || $_POST["invites"] == "")
         stderr("Error", "Missing form data.");
@@ -58,7 +59,7 @@ stdhead("Update Users Invite Amounts");
 ?>
 
 <h1>Update Users Invite Amounts</h1>
-<form method="post">
+<form method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 	<table border=1 cellspacing=0 cellpadding=5>
 		<tr><td class=rowhead>User name</td><td><input type=text name=username size=40></td></tr>
 		<tr><td class=rowhead>Invites</td><td><input type=uploaded name=invites size=5></td></tr>

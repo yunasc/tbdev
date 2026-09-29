@@ -29,6 +29,10 @@
 require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
+if ($_SERVER['REQUEST_METHOD'] != 'POST' || !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+    header('HTTP/1.1 403 Forbidden');
+    exit;
+}
 
 function bark($msg) {
 	stdhead();
@@ -37,7 +41,7 @@ function bark($msg) {
 	die;
 }
 
-$id = intval($_GET["id"]);
+$id = intval($_POST["id"]);
 
 if ($id == 0) {
 	$id = $CURUSER["id"];
@@ -52,10 +56,12 @@ $tes = mysql_fetch_assoc($re);
 if ($tes[invites] <= 0)
 	bark("” вас больше не осталось приглашений!");
 
-$hash  = md5(mt_rand(1, 1000000));
+$hash = mksecret(32);
 
+sql_query("UPDATE users SET invites = invites - 1 WHERE id = $id AND invites > 0") or sqlerr(__FILE__, __LINE__);
+if (mysql_affected_rows() != 1)
+    bark("No invitations available.");
 sql_query("INSERT INTO invites (inviter, invite, time_invited) VALUES (" . implode(", ", array_map("sqlesc", array($id, $hash, get_date_time()))) . ")") or sqlerr(__FILE__,__LINE__);
-sql_query("UPDATE users SET invites = invites - 1 WHERE id = $id") or sqlerr(__FILE__, __LINE__);
 
 header("Refresh: 0; url=invite.php?id=$id");
 

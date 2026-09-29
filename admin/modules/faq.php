@@ -156,13 +156,13 @@ function FaqAction() {
 
 	// ACTION: delete - delete a section or item
 	elseif ($_GET["action"] == "delete" && isset($_GET["id"])) {
-		if ($_GET["confirm"] == "yes") {
+		if (isset($_POST["confirm"]) && $_POST["confirm"] == "yes") {
 			sql_query("DELETE FROM `faq` WHERE `id`=".sqlesc($_GET["id"])." LIMIT 1") or sqlerr(__FILE__,__LINE__);
 			header("Location: $admin_file.php?op=FaqAdmin"); 
 		}
 		else {
 			print("<h1 align=\"center\">Confirmation required</h1>");
-			print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\">Please click <a href=\"$admin_file.php?op=FaqAction&action=delete&id=$_GET[id]&confirm=yes&csrf_token=".csrf_token()."\">here</a> to confirm.</td></tr>\n</table>\n");
+			print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\">Please click ".post_link("$admin_file.php?op=FaqAction&action=delete&id=".intval($_GET["id"]), array('confirm' => 'yes'), "here")." to confirm.</td></tr>\n</table>\n");
 		}
 	}
 

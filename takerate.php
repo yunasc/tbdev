@@ -29,6 +29,7 @@
 require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 header("Content-Type: text/html; charset=".$tracker_lang['language_charset']);
 

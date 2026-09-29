@@ -43,6 +43,7 @@ if ($action == 'edit') {
 		stderr($tracker_lang["error"], $tracker_lang["invalid_id"]);
 	$release = mysql_fetch_array($res);
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        csrf_require_post();
 		$var_list = "name:poster:torrentid:cat:top:center:bottom";
 		$int_list = "torrentid:cat";
 
@@ -65,7 +66,7 @@ if ($action == 'edit') {
 		if (!empty($imdb))
 			$updateset[] = "imdb = ".sqlesc($imdb);
 		sql_query("UPDATE indexreleases SET " . implode(", ", $updateset) . " WHERE id = $id") or sqlerr(__FILE__, __LINE__);
-		$returnto = htmlentities($_POST['returnto']);
+		$returnto = safe_local_return(isset($_POST['returnto']) ? $_POST['returnto'] : '', 'index.php');
 		if ($returnto != "")
 			header("Location: $returnto");
 		else
@@ -87,7 +88,7 @@ $id = (int) $_GET["id"];
 
 ?>
 
-<form name="index" action="?action=edit&id=<?=$id;?>" method="post">
+<form name="index" action="?action=edit&id=<?=$id;?>" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="0" cellspacing="0" cellpadding="5">
 <?
 tr("Название релиза", "<input type=\"text\" name=\"name\" size=\"80\" value=\"$release[name]\" /><br />Пример: Смерть Президента (2006) DVDRip\n", 1);

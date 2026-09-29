@@ -35,15 +35,16 @@ loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
   die;
 
-$remove = intval($_GET['remove']);
+$remove = isset($_POST['remove']) ? intval($_POST['remove']) : 0;
 if (is_valid_id($remove))
 {
+  csrf_require_post();
   $res = sql_query("SELECT first, last FROM bans WHERE id=$remove") or sqlerr(__FILE__, __LINE__);
   $ip = mysql_fetch_array($res);
   $first = long2ip($ip["first"]);
   $last = long2ip($ip["last"]);
   sql_query("DELETE FROM bans WHERE id=$remove") or sqlerr(__FILE__, __LINE__);
-  write_log("Бан IP адреса номер $remove (".($first == $last?$fisrt:"адреса с $first по $last").") был убран пользователем $CURUSER[username].");
+  write_log("Бан IP адреса номер $remove (".($first == $last?$first:"адреса с $first по $last").") был убран пользователем $CURUSER[username].");
 }
 
 function is_good_ip($ip_addr) {
@@ -58,8 +59,9 @@ function is_good_ip($ip_addr) {
 		return false;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR && !$remove)
 {
+    csrf_require_post();
 	$first = trim($_POST["first"]);
 	$last = trim($_POST["last"]);
 	$comment = trim($_POST["comment"]);
@@ -99,7 +101,7 @@ else
 	$arr["last"] = long2ip($arr["last"]);
 
  	print("<tr><td class=\"row1\">$arr[added]</td><td class=\"row1\" align=\"left\">$arr[first]</td><td  class=\"row1\" align=\"left\">$arr[last]</td><td  class=\"row1\" align=\"left\"><a href=\"userdetails.php?id=$arr[addedby]\">$arr[username]".
- 	    "</a></td><td  class=\"row1\" align=\"left\">".$arr["comment"]."</td><td  class=\"row1\"><a href=\"bans.php?remove=$arr[id]\">Снять бан</a></td></tr>\n");
+	    "</a></td><td  class=\"row1\" align=\"left\">".$arr["comment"]."</td><td  class=\"row1\"><form method=\"post\" action=\"bans.php\"><input type=\"hidden\" name=\"remove\" value=\"$arr[id]\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><button type=\"submit\">Снять бан</button></form></td></tr>\n");
   }
   end_table();
 }
@@ -108,7 +110,7 @@ if (get_user_class() >= UC_ADMINISTRATOR)
 {
 	//print("<table border=1 cellspacing=0 cellpadding=5>\n");
   print("<br />\n");
-  print("<form method=\"post\" action=\"bans.php\">\n");
+  print("<form method=\"post\" action=\"bans.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
   begin_table();
 	print("<tr><td class=\"colhead\" colspan=\"2\">Забанить IP адрес</td></tr>");
 	print("<tr><td class=\"rowhead\">Первый IP</td><td class=\"row1\"><input type=\"text\" name=\"first\" size=\"40\"/></td></tr>\n");

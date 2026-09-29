@@ -136,7 +136,7 @@ $dict = bdec_file($fn, (1024*1024));
 
 // Start table
 print("<table width=100% border=1 cellspacing=0 cellpadding=5>");
-print("<tr><td class=colhead colspan=1>Данные о торенте ".htmlspecialchars_uni($row["name"])."</td></tr>\n");
+print("<tr><td class=colhead colspan=1>Данные о торенте ".$row["name"]."</td></tr>\n");
 print("<td>");
 
 $dict['value']['info']['value']['pieces']['value'] = "0x".bin2hex(substr($dict['value']['info']['value']['pieces']['value'], 0, 25))."...";

@@ -36,10 +36,15 @@ loggedinorreturn();
 if ($CURUSER['class'] < UC_MODERATOR) die(); // No acces to below this rank
 if ($CURUSER['override_class'] != 255) die(); // No access to an overridden user class either - just in case
 
-if ($_GET['action'] == 'editclass') //Process the querystring - No security checks are done as a temporary class higher
+if (isset($_POST['action']) && $_POST['action'] == 'editclass') //Process the querystring - No security checks are done as a temporary class higher
 {                                   //than the actual class mean absoluetly nothing.
-$newclass = 0+$_GET['class'];
-   $returnto = $_GET['returnto'];
+csrf_require_post();
+    $newclass = (int)$_POST['class'];
+    if ($newclass < UC_USER || $newclass >= $CURUSER['class']) {
+        header('HTTP/1.1 400 Bad Request');
+        exit;
+    }
+   $returnto = isset($_POST['returnto']) ? $_POST['returnto'] : '';
 
    sql_query("UPDATE users SET override_class = ".sqlesc($newclass)." WHERE id = ".$CURUSER['id']); // Set temporary class
 
@@ -51,7 +56,8 @@ $newclass = 0+$_GET['class'];
 stdhead("Смена класса");
 ?>
 
-<form method=get action='setclass.php'>
+<form method=post action='setclass.php'>
+<input type=hidden name=csrf_token value="<?=csrf_token()?>">
 <input type=hidden name='action' value='editclass'>
 <input type=hidden name='returnto' value='userdetails.php?id=<?=$CURUSER['id']?>'> <!-- Change to any page you want -->
 <table width=150 border=2 cellspacing=5 cellpadding=5>

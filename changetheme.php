@@ -30,11 +30,8 @@ require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
 
-if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
-    header('HTTP/1.1 403 Forbidden');
-    exit;
-}
-$theme = (string) $_GET["theme"];
+csrf_require_post();
+$theme = (string) $_POST["theme"];
 
 if (is_theme($theme))
 	sql_query("UPDATE users SET theme = ".sqlesc($theme)." WHERE id = {$CURUSER["id"]}") or sqlerr(__FILE__,__LINE__);

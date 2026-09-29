@@ -30,6 +30,7 @@ require "include/bittorrent.php";
 
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 if ($HTTP_SERVER_VARS["REQUEST_METHOD"] != "POST")
  stderr($tracker_lang['error'], "Шутник!");

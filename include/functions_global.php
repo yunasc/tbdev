@@ -861,7 +861,7 @@ function code_nobb($matches) {
 }
 
 function parsed_comment_hash($text) {
-	return md5('v2:' . $text);
+	return md5('v3:' . $text); // bump whenever format_comment()/htmlspecialchars_uni() output changes
 }
 
 function format_comment($text, $strip_html = true) {

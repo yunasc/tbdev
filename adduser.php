@@ -33,6 +33,7 @@ if (get_user_class() < UC_ADMINISTRATOR)
 	stderr($tracker_lang['error'], $tracker_lang['access_denied']);
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+    csrf_require_post();
 	if ($_POST["username"] == "" || $_POST["password"] == "" || $_POST["email"] == "")
 		stderr($tracker_lang['error'], $tracker_lang['missing_form_data']);
 	if ($_POST["password"] != $_POST["password2"])
@@ -55,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 stdhead($tracker_lang['add_user']);
 ?>
 <h1><?=$tracker_lang['add_user'];?></h1>
-<form method=post action=adduser.php>
+<form method=post action=adduser.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border=1 cellspacing=0 cellpadding=5>
 <tr><td class=rowhead><?=$tracker_lang['username'];?></td><td><input type=text name=username size=40></td></tr>
 <tr><td class=rowhead><?=$tracker_lang['password'];?></td><td><input type=password name=password size=40></td></tr>

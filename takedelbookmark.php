@@ -35,6 +35,7 @@ exit;
 }
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 if (!isset($_POST[delbookmark]))
        bark("Ничего не выбрано");
@@ -48,5 +49,5 @@ sql_query("DELETE FROM bookmarks WHERE id = $arr[id]") or sqlerr(__FILE__, __LIN
 bark("Вы пытаетесь удалить не свою закладку!");
 }
 
-header("Refresh: 0; url=" . $_SERVER['HTTP_REFERER']);
+header("Location: ".safe_local_return(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'bookmarks.php'));
 ?>

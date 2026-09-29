@@ -83,7 +83,7 @@ $categories .= "</select>";
 
 ?>
 
-<form name="index" action="takeindex.php" method="post">
+<form name="index" action="takeindex.php" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="0" cellspacing="0" cellpadding="5">
 <tr><td class="colhead" colspan="2">Выбранный шаблон: <?=$types[$type]["name"];?></td></tr>
 <?

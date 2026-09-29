@@ -94,6 +94,7 @@ if ($action == "viewmailbox") {
         <TABLE border="0" cellpadding="4" cellspacing="0" width="100%">
         <FORM action="message.php" method="post" name="form1">
         <INPUT type="hidden" name="action" value="moveordel">
+        <INPUT type="hidden" name="csrf_token" value="<?=csrf_token()?>">
         <TR>
         <TD width="2%" class="colhead">&nbsp;&nbsp;</TD>
         <TD width="51%" class="colhead"><?=$tracker_lang['subject'];?></TD>
@@ -260,7 +261,7 @@ if ($action == "viewmessage") {
         <TD colspan="2"><?=$body?></TD>
         </TR>
         <TR>
-        <TD align="right" colspan=2>[ <A href="message.php?action=deletemessage&id=<?=$pm_id?>">”далить</A> ]<?=$reply?> [ <A href="message.php?action=forward&id=<?=$pm_id?>">ѕереслать</A> ]</TD>
+        <TD align="right" colspan=2><form method="post" action="message.php" style="display:inline"><input type="hidden" name="action" value="deletemessage"><input type="hidden" name="id" value="<?=$pm_id?>"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>"><button type="submit">Delete</button></form> <?=$reply?> [ <A href="message.php?action=forward&id=<?=$pm_id?>">Forward</A> ]</TD>
         </TR>
         </TABLE><?
         stdfoot();
@@ -313,6 +314,7 @@ if ($action == "sendmessage") {
         <table class=main border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
         <form name=message method=post action=message.php>
         <input type=hidden name=action value=takemessage>
+        <input type=hidden name=csrf_token value="<?=csrf_token()?>">
         <table class=message cellspacing=0 cellpadding=5>
         <tr><td colspan=2 class=colhead>—ообщение дл€ <a class=altlink_white href=userdetails.php?id=<?=$receiver?>><?=$user["username"]?></a></td></tr>
         <TR>
@@ -343,11 +345,12 @@ if ($action == "sendmessage") {
 
 // начало прием посланного сообщени€
 if ($action == 'takemessage') {
+        csrf_require_post();
 
         $receiver = $_POST["receiver"];
         $origmsg = $_POST["origmsg"];
         $save = $_POST["save"];
-        $returnto = $_POST["returnto"];
+        $returnto = safe_local_return(isset($_POST["returnto"]) ? $_POST["returnto"] : "", "message.php");
         if (!is_valid_id($receiver) || ($origmsg && !is_valid_id($origmsg)))
                 stderr($tracker_lang['error'],"Ќеверный ID");
         $msg = trim($_POST["msg"]);
@@ -566,6 +569,7 @@ if ($action == 'takemass_pm') {
 
 //начало перемещение, помечание как прочитанного
 if ($action == "moveordel") {
+        csrf_require_post();
         $pm_id = (int) $_POST['id'];
         $pm_box = (int) $_POST['box'];
         $pm_messages = $_POST['messages'];
@@ -634,7 +638,7 @@ if ($action == "moveordel") {
         elseif ($_POST["markread"]) {
                 //помечаем одно сообщение
                 if ($pm_id) {
-                        sql_query("UPDATE messages SET unread='no' WHERE id = " . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);
+                        sql_query("UPDATE messages SET unread='no' WHERE id = " . sqlesc($pm_id) . " AND receiver = " . sqlesc($CURUSER["id"])) or sqlerr(__FILE__,__LINE__);
                 }
                 //помечаем множество сообщений
                 else {
@@ -642,7 +646,7 @@ if ($action == "moveordel") {
                         foreach ($pm_messages as $id) {
                                 $res = sql_query("SELECT * FROM messages WHERE id=" . sqlesc((int) $id));
                                 $message = mysql_fetch_assoc($res);
-                                sql_query("UPDATE messages SET unread='no' WHERE id = " . sqlesc((int) $id)) or sqlerr(__FILE__,__LINE__);
+                                sql_query("UPDATE messages SET unread='no' WHERE id = " . sqlesc((int) $id) . " AND receiver = " . sqlesc($CURUSER["id"])) or sqlerr(__FILE__,__LINE__);
                         }
                 }
                 // ѕровер€ем, были ли помечены сообщени€
@@ -701,6 +705,7 @@ if ($action == "forward") {
 
                 <FORM action="message.php" method="post">
                 <INPUT type="hidden" name="action" value="forward">
+                <INPUT type="hidden" name="csrf_token" value="<?=csrf_token()?>">
                 <INPUT type="hidden" name="id" value="<?=$pm_id?>">
                 <TABLE border="0" cellpadding="4" cellspacing="0">
                 <TR><TD class="colhead" colspan="2"><?=$subject?></TD></TR>
@@ -733,6 +738,7 @@ if ($action == "forward") {
         }
 
         else {
+                csrf_require_post();
 
                 // Forward the message
                 $pm_id = (int) $_POST['id'];
@@ -808,7 +814,8 @@ if ($action == "forward") {
 
 //начало удаление сообщени€
 if ($action == "deletemessage") {
-        $pm_id = (int) $_GET['id'];
+        csrf_require_post();
+        $pm_id = (int) $_POST['id'];
 
         // Delete message
         $res = sql_query("SELECT * FROM messages WHERE id=" . sqlesc($pm_id)) or sqlerr(__FILE__,__LINE__);

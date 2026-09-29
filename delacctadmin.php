@@ -34,6 +34,7 @@ stderr($tracker_lang['error'], "Нет доступа.");
 
 if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST")
 {
+    csrf_require_post();
     $username = trim((string)$_POST["username"]);
 
     if (!$username)
@@ -68,7 +69,7 @@ stdhead("Удалить аккаунт");
 ?>
 <h1>Удалить аккаунт</h1>
 <table border=1 cellspacing=0 cellpadding=5>
-    <form method=post action=delacctadmin.php>
+    <form method=post action=delacctadmin.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
         <tr><td class=rowhead>Пользователь</td><td><input size=40 name=username></td></tr>
         <tr><td colspan=2><input type=submit class=btn value='Удалить'></td></tr>
     </form>

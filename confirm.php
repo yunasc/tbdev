@@ -52,7 +52,7 @@ if ($row["status"] != "pending") {
 if ($row["editsecret"] === '')
     httperr();
 $sec = hash_pad($row["editsecret"]);
-if ($md5 != md5($sec))
+if ($md5 !== md5($sec))
 	httperr();
 
 sql_query("UPDATE users SET status='confirmed', editsecret='' WHERE id = $id AND status = 'pending'");

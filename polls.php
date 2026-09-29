@@ -30,30 +30,28 @@
   dbconn(false);
   loggedinorreturn();
 
-  $action = $_GET["action"];
-  $pollid = $_GET["pollid"];
-  $returnto = $_GET["returnto"];
+  $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
+  $pollid = (int)(isset($_POST['pollid']) ? $_POST['pollid'] : (isset($_GET['pollid']) ? $_GET['pollid'] : 0));
+  $returnto = (isset($_POST['returnto']) ? $_POST['returnto'] : (isset($_GET['returnto']) ? $_GET['returnto'] : '')) == 'main' ? 'main' : '';
 
-  if ($action == "delete")
-  {
-  	if (get_user_class() < UC_MODERATOR)
-  		stderr($tracker_lang['error'], "Permission denied.");
-
-  	if (!is_valid_id($pollid))
-			stderr($tracker_lang['error'], "Invalid ID.");
-
-   	$sure = $_GET["sure"];
-   	if (!$sure)
-    	stderr("Удалить опрос","Вы действительно хотите удалить опрос? Нажмите\n" .
-    		"<a href=?action=delete&pollid=$pollid&returnto=$returnto&sure=1>сюда</a> если вы уверены.");
-
-		sql_query("DELETE FROM pollanswers WHERE pollid = $pollid") or sqlerr(__FILE__, __LINE__);
-		sql_query("DELETE FROM polls WHERE id = $pollid") or sqlerr(__FILE__, __LINE__);
-		if ($returnto == "main")
-			header("Location: $DEFAULTBASEURL");
-		else
-			header("Location: $DEFAULTBASEURL/polls.php?deleted=1");
-		die;
+  if ($action == 'delete') {
+      if (get_user_class() < UC_MODERATOR)
+          stderr($tracker_lang['error'], 'Permission denied.');
+      if (!is_valid_id($pollid))
+          stderr($tracker_lang['error'], 'Invalid ID.');
+      if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+          stderr('Delete poll', '<form method="post" action="polls.php">'
+              . '<input type="hidden" name="action" value="delete">'
+              . '<input type="hidden" name="pollid" value="'.$pollid.'">'
+              . '<input type="hidden" name="returnto" value="'.$returnto.'">'
+              . '<input type="hidden" name="csrf_token" value="'.csrf_token().'">'
+              . '<button type="submit">Confirm deletion</button></form>');
+      }
+      csrf_require_post();
+      sql_query("DELETE FROM pollanswers WHERE pollid = $pollid") or sqlerr(__FILE__, __LINE__);
+      sql_query("DELETE FROM polls WHERE id = $pollid") or sqlerr(__FILE__, __LINE__);
+      header('Location: '.$DEFAULTBASEURL.($returnto == 'main' ? '/' : '/polls.php?deleted=1'));
+      exit;
   }
 
   $rows = sql_query("SELECT COUNT(*) FROM polls") or sqlerr(__FILE__, __LINE__);
