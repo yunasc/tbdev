@@ -55,7 +55,7 @@ print'<input type=hidden name=\'action\' value=\'confirmuser\'>';
 print("<input type=hidden name='userid' value='$id'>");
 print("<input type=hidden name='returnto' value='unco.php'>");
 print'<a href="userdetails.php?id=' . $row['id'] . '"><td><center>' . $row['username'] . '</center></td></a>';
-print'<td align=center>&nbsp;&nbsp;&nbsp;&nbsp;' . $row['email'] . '</td>';
+print'<td align=center>&nbsp;&nbsp;&nbsp;&nbsp;' . htmlspecialchars_uni($row['email']) . '</td>';
 print'<td align=center>&nbsp;&nbsp;&nbsp;&nbsp;' . $row['added'] . '</td>';
 print'<td align=center><select name=confirm><option value=pending>Не подтвержден</option><option value=confirmed>Подтвержден</option></select></td>';
 print'<td align=center><input type=submit value="OK" style=\'height: 20px; width: 40px\'>';

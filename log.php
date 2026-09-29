@@ -44,7 +44,7 @@
 		($type == torrent ? "<b>Торренты</b>" : "<a href=log.php?type=torrent>Торренты</a>") . " | " .
 		($type == error ? "<b>Ошибки</b>" : "<a href=log.php?type=error>Ошибки</a>") . "</p>\n");
 
-   if (($type == 'speed' || $type == 'error') && $CURUSER['class'] < 4) {
+   if (($type == 'speed' || $type == 'error' || $type == 'errors') && $CURUSER['class'] < 4) {
 	stdmsg("Ошибка","Доступ в этот раздел закрыт.");
 	stdfoot();
 	die();

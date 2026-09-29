@@ -35,6 +35,11 @@ require_once($rootpath . 'include/init.php');
 require_once($rootpath . 'include/global.php');
 require_once($rootpath . 'include/config.php');
 require_once($rootpath . 'include/config.local.php');
+// Links in mail must not follow the client-supplied Host header; init.php built these before config was loaded.
+if (!empty($site_url)) {
+	$DEFAULTBASEURL = $BASEURL = rtrim($site_url, '/');
+	$announce_urls[0] = "$DEFAULTBASEURL/announce.php";
+}
 if (!defined('COOKIE_SALT'))
     define('COOKIE_SALT', $_COOKIE_SALT);
 require_once($rootpath . 'include/functions.php');

@@ -128,7 +128,7 @@ if ($type == 'new') {
 			else
 				$status = "<font color=red>Не подтвержден</font>";
 
-			print("<tr class=tableb>$user<td>$arr[email]</td><td>" . mksize($arr[uploaded]) . "</td><td>" . mksize($arr[downloaded]) . "</td><td>$ratio</td><td>$status</td>");
+			print("<tr class=tableb>$user<td>" . htmlspecialchars_uni($arr["email"]) . "</td><td>" . mksize($arr[uploaded]) . "</td><td>" . mksize($arr[downloaded]) . "</td><td>$ratio</td><td>$status</td>");
 
 			if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP) {
 				print("<td align=center>");
@@ -140,7 +140,7 @@ if ($type == 'new') {
 		}
 	}
 	if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP) {
-		print("<input type=hidden name=email value=$arr[email]>");
+		print("<input type=hidden name=email value=\"" . htmlspecialchars_uni($arr["email"]) . "\">");
 		print("<tr class=tableb><td colspan=7 align=right><input type=submit value=\"Подтвердить пользователей\"></form></td></tr>");
 	}
 	print("</table><br>");

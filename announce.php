@@ -118,7 +118,7 @@ $torrent = mysql_fetch_array($res);
 if (!$torrent)
 	err('Torrent not registered with this tracker.');
 $torrentid = $torrent['id'];
-$fields = 'seeder, peer_id, ip, port, uploaded, downloaded, userid, last_action, UNIX_TIMESTAMP(NOW()) AS nowts, UNIX_TIMESTAMP(prev_action) AS prevts';
+$fields = 'seeder, peer_id, ip, port, uploaded, downloaded, userid, passkey, last_action, UNIX_TIMESTAMP(NOW()) AS nowts, UNIX_TIMESTAMP(prev_action) AS prevts';
 $numpeers = $torrent['numpeers'];
 $limit = '';
 if ($numpeers > $rsize)
@@ -128,7 +128,7 @@ $resp = 'd' . benc_str('interval') . 'i' . $announce_interval . 'e' . benc_str('
 $no_peer_id = ($_GET['no_peer_id'] == 1);
 unset($self);
 while ($row = mysql_fetch_array($res)) {
-	if ($row['peer_id'] == $peer_id) {
+	if ($row['peer_id'] === $peer_id) {
 		$userid = $row['userid'];
 		$self = $row;
 		continue;
@@ -153,6 +153,9 @@ if (!isset($self)) {
 		$self = $row;
 	}
 }
+
+if (isset($self) && $self['passkey'] !== $passkey)
+	err('This peer belongs to another passkey.');
 
 $announce_wait = 10;
 $dt = sqlesc(date('Y-m-d H:i:s', time()));

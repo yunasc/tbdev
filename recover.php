@@ -120,7 +120,7 @@ EOD;
 
 	sent_mail($email,$SITENAME,$SITEEMAIL,"Данные аккаунта на $SITENAME",$body)
 		or stderr($tracker_lang['error'], "Невозможно отправить E-mail. Пожалуста сообщите администрации об ошибке.");
-	stderr($tracker_lang['success'], "Новые данные по аккаунту отправлены на E-Mail <b>$email</b>.\n" .
+	stderr($tracker_lang['success'], "Новые данные по аккаунту отправлены на E-Mail <b>" . htmlspecialchars_uni($email) . "</b>.\n" .
 		"Через несколько минут (обычно сразу) вы получите ваши новые данные.");
 } else {
  	stdhead("Восстановление пароля");

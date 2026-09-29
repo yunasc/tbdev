@@ -63,7 +63,7 @@ $a2 = mysql_fetch_assoc($r2);
 print("<tr><td><a href=userdetails.php?id=$arr2[userid]>$a2[username]</a></td><td align=left><a href=details.php?id=$arr2[torrent]&dllist=1#seeders>$arr2[torrent]");
 if ($arr2[seeder] == 'yes')
 print("<font color=red>*</font>");
-print("</a></td><td align=left>$arr2[agent]</td></tr>\n");
+print("</a></td><td align=left>" . htmlspecialchars_uni($arr2["agent"]) . "</td></tr>\n");
 }
 print("</table>\n");
 }

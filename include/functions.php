@@ -272,7 +272,7 @@ function userlogin($lightmode = false) {
 
 	$GLOBALS["CURUSER"] = $row;
 	if ($use_lang)
-		include_once('languages/lang_' . $row['language'] . '/lang_main.php');
+		include_once('languages/lang_' . (preg_match('/\A[a-z]+\z/D', $row['language']) ? $row['language'] : $default_language) . '/lang_main.php');
 
 	if ($row['enabled'] == 'no') {
 		$GLOBALS['use_blocks'] = 0;
@@ -532,7 +532,8 @@ function validfilename($name) {
 }
 
 function validemail($email) {
-	return filter_var($email, FILTER_VALIDATE_EMAIL);
+	// FILTER_VALIDATE_EMAIL accepts quoted local parts, which can carry markup; real mailboxes never need them.
+	return filter_var($email, FILTER_VALIDATE_EMAIL) && strpbrk($email, '"<>') === false;
 }
 
 function mail_possible($email) {

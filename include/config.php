@@ -74,6 +74,7 @@ $use_blocks = 1; // Использовать систему блоков. 1 - да, 0 - нет. Если ее отключ
 $use_gzip = 1; // Использовать сжатие GZip на страницах.
 $use_ipbans = 1; // Использовать функцию блокирования IP-адресов. 0 - нет, 1 - да.
 $trusted_proxies = array(); // Reverse-proxy IPs allowed to set X-Forwarded-For, e.g. array('127.0.0.1'). Empty = use REMOTE_ADDR only.
+$site_url = ''; // Canonical site address for generated links and mail, e.g. 'https://tracker.example.org'. Empty = taken from the request Host header.
 $use_sessions = 1; // Использовать сессии. 0 - нет, 1 - да.
 $smtptype = 'advanced'; // Тип отправки почты, по умолчанию advanced, лучше не менять
 $allow_block_hide = true; // Разрешить сворачивание блоков

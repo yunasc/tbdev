@@ -210,31 +210,31 @@ tr(" ", "    <table cellspacing=\"3\" cellpadding=\"0\" width=\"100%\" border=\"
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_icq']."<br />
         <img alt src=pic/contact/icq.gif width=\"17\" height=\"17\">
-        <input maxLength=\"30\" size=\"25\" name=\"icq\" value=\"" . $CURUSER["icq"] . "\" ></td>
+        <input maxLength=\"30\" size=\"25\" name=\"icq\" value=\"" . htmlspecialchars_uni($CURUSER["icq"]) . "\" ></td>
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_aim']."<br />
         <img alt src=pic/contact/aim.gif width=\"17\" height=\"17\">
-        <input maxLength=\"30\" size=\"25\" name=\"aim\" value=\"" . $CURUSER["aim"] . "\" ></td>
+        <input maxLength=\"30\" size=\"25\" name=\"aim\" value=\"" . htmlspecialchars_uni($CURUSER["aim"]) . "\" ></td>
       </tr>
       <tr>
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_msn']."<br />
         <img alt src=pic/contact/msn.gif width=\"17\" height=\"17\">
-        <input maxLength=\"50\" size=\"25\" name=\"msn\" value=\"" . $CURUSER["msn"] . "\" ></td>
+        <input maxLength=\"50\" size=\"25\" name=\"msn\" value=\"" . htmlspecialchars_uni($CURUSER["msn"]) . "\" ></td>
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_yahoo']."<br />
         <img alt src=pic/contact/yahoo.gif width=\"17\" height=\"17\">
-        <input maxLength=\"30\" size=\"25\" name=\"yahoo\" value=\"" . $CURUSER["yahoo"] . "\" ></td>
+        <input maxLength=\"30\" size=\"25\" name=\"yahoo\" value=\"" . htmlspecialchars_uni($CURUSER["yahoo"]) . "\" ></td>
       </tr>
       <tr>
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_skype']."<br />
         <img alt src=pic/contact/skype.gif width=\"17\" height=\"17\">
-        <input maxLength=\"32\" size=\"25\" name=\"skype\" value=\"" . $CURUSER["skype"] . "\" ></td>
+        <input maxLength=\"32\" size=\"25\" name=\"skype\" value=\"" . htmlspecialchars_uni($CURUSER["skype"]) . "\" ></td>
         <td style=\"font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif\">
         ".$tracker_lang['my_contact_mirc']."<br />
         <img alt src=pic/contact/mirc.gif width=\"17\" height=\"17\">
-        <input maxLength=\"30\" size=\"25\" name=\"mirc\" value=\"" . $CURUSER["mirc"] . "\" ></td>
+        <input maxLength=\"30\" size=\"25\" name=\"mirc\" value=\"" . htmlspecialchars_uni($CURUSER["mirc"]) . "\" ></td>
       </tr>
     </table>",1);
 tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=50 value=\"" . htmlspecialchars_uni($CURUSER["website"]) . "\" /> ", 1);

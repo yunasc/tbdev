@@ -83,7 +83,7 @@ function validusername($username) {
 }
 
 $gender = $_POST["gender"];
-$website = htmlspecialchars_uni($_POST["website"]);
+$website = unesc($_POST["website"]);
 $country = $_POST["country"];
 $year = $_POST["year"];
 $month = $_POST["month"];
@@ -254,7 +254,7 @@ EOD;
 if ($use_email_act && $users) {
     if (!sent_mail($email, $SITENAME, $SITEEMAIL, "Подтверждение регистрации на $SITENAME", $body, false)) {
         //stderr($tracker_lang['error'], "Невозможно отправить E-Mail. Попробуйте позже");
-        write_log("Проблема с отправкой письма для активации на адрес $email", "FF0000", "errors");
+        write_log("Проблема с отправкой письма для активации на адрес " . htmlspecialchars_uni($email), "FF0000", "errors");
         logincookie($id, $wantpasshash);
         sql_query('UPDATE users SET status = "confirmed" WHERE id = ' . $id) or sqlerr(__FILE__, __LINE__);
         header("Location: ok.php?type=confirm");

@@ -256,7 +256,7 @@ begin_main_frame();
 <tr><td class=rowhead>Последний раз был на трекере</td><td align=left><?=$lastseen?></td></tr>
 <?
 if (get_user_class() >= UC_MODERATOR)
-	print("<tr><td class=\"rowhead\">Email</td><td align=\"left\"><a href=\"mailto:$user[email]\">$user[email]</a></td></tr>\n");
+	print("<tr><td class=\"rowhead\">Email</td><td align=\"left\"><a href=\"mailto:" . htmlspecialchars_uni($user["email"]) . "\">" . htmlspecialchars_uni($user["email"]) . "</a></td></tr>\n");
 if ($addr)
 	print("<tr><td class=\"rowhead\">IP</td><td align=\"left\">$addr</td></tr>\n");
 
@@ -298,17 +298,17 @@ if ($user["icq"] || $user["msn"] || $user["aim"] || $user["yahoo"] || $user["sky
 <td class=rowhead><b>Связь</b></td><td align=left>
 <?
 if ($user["icq"])
-    print("<img src=\"http://web.icq.com/whitepages/online?icq=$user[icq]&amp;img=5\" alt=\"icq\" border=\"0\" /> $user[icq] <br />\n");
+    print("<img src=\"http://web.icq.com/whitepages/online?icq=" . htmlspecialchars_uni($user["icq"]) . "&amp;img=5\" alt=\"icq\" border=\"0\" /> " . htmlspecialchars_uni($user["icq"]) . " <br />\n");
 if ($user["msn"])
-    print("<img src=\"pic/contact/msn.gif\" alt=\"msn\" border=\"0\" /> $user[msn]<br />\n");
+    print("<img src=\"pic/contact/msn.gif\" alt=\"msn\" border=\"0\" /> " . htmlspecialchars_uni($user["msn"]) . "<br />\n");
 if ($user["aim"])
-    print("<img src=\"pic/contact/aim.gif\" alt=\"aim\" border=\"0\" /> $user[aim]<br />\n");
+    print("<img src=\"pic/contact/aim.gif\" alt=\"aim\" border=\"0\" /> " . htmlspecialchars_uni($user["aim"]) . "<br />\n");
 if ($user["yahoo"])
-    print("<img src=\"pic/contact/yahoo.gif\" alt=\"yahoo\" border=\"0\" /> $user[yahoo]<br />\n");
+    print("<img src=\"pic/contact/yahoo.gif\" alt=\"yahoo\" border=\"0\" /> " . htmlspecialchars_uni($user["yahoo"]) . "<br />\n");
 if ($user["skype"])
-    print("<img src=\"pic/contact/skype.gif\" alt=\"skype\" border=\"0\" /> $user[skype]<br />\n");
+    print("<img src=\"pic/contact/skype.gif\" alt=\"skype\" border=\"0\" /> " . htmlspecialchars_uni($user["skype"]) . "<br />\n");
 if ($user["mirc"])
-    print("<img src=\"pic/contact/mirc.gif\" alt=\"mirc\" border=\"0\" /> $user[mirc]\n");
+    print("<img src=\"pic/contact/mirc.gif\" alt=\"mirc\" border=\"0\" /> " . htmlspecialchars_uni($user["mirc"]) . "\n");
 ?> 
 </td>
 </tr>
