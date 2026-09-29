@@ -33,8 +33,18 @@ if (!mkglobal("username:password"))
 
 dbconn();
 
+// ponytail: per-IP throttle only; a botnet spreads guesses across IPs, add a per-account delay if that shows up.
+$login_window = time() - 900;
+$login_ip = getip();
+list($login_failures) = mysql_fetch_row(sql_query("SELECT COUNT(*) FROM login_failures WHERE ip = " . sqlesc($login_ip) . " AND added > $login_window"));
+if ($login_failures >= 10)
+	stderr($tracker_lang['error'], "Too many failed login attempts. Try again in 15 minutes.");
+
 function bark($text = "Имя пользователя или пароль неверны")
 {
+  global $login_window, $login_ip;
+  sql_query("DELETE FROM login_failures WHERE added <= $login_window");
+  sql_query("INSERT INTO login_failures (ip, added) VALUES (" . sqlesc($login_ip) . ", " . time() . ")");
   stderr("Ошибка входа", $text);
 }
 
@@ -59,8 +69,8 @@ $ip = getip();
 if ($num[0] > 0 && $row["ip"] != $ip && $row["ip"])
 	bark("Этот пользователь на данный момент активен с другого IP. Вход невозможен.");
 
-if (preg_match('/\A[a-f0-9]{32}\z/iD', $row['passhash'])) {
-	$matched_password = $row['passhash'] === md5($row['secret'] . $password . $row['secret'])
+if (strncmp($row['passhash'], '$2y$', 4) != 0) { // legacy md5, bare or bcrypt-wrapped: store plain bcrypt
+	$matched_password = password_matches_exact($password, $row['secret'], $row['passhash'])
 		? $password : trim($password);
 	$row['passhash'] = make_password_hash($matched_password);
 	sql_query('UPDATE users SET passhash = '.sqlesc($row['passhash']).' WHERE id = '.intval($row['id'])) or sqlerr(__FILE__, __LINE__);

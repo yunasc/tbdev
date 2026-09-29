@@ -29,6 +29,7 @@
 require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
+csrf_require_post();
 
 $id = intval($_GET["id"]);
 if (!is_valid_id($id))

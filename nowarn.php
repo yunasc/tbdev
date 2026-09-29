@@ -36,6 +36,7 @@ exit;
 dbconn();
 loggedinorreturn();
 if(isset($_POST["nowarned"])&&($_POST["nowarned"]=="nowarned")){
+    csrf_require_post();
 //if (get_user_class() >= UC_SYSOP) {
 if (get_user_class() < UC_MODERATOR)
 stderr($tracker_lang['error'], "Отказано в доступе.");

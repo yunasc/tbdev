@@ -31,6 +31,14 @@ require_once("include/bittorrent.php");
 dbconn(false);
 loggedinorreturn();
 
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    stdhead();
+    print('<form method="post" action="restoreclass.php"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><button type="submit">Restore class</button></form>');
+    stdfoot();
+    exit;
+}
+csrf_require_post();
+
 sql_query("UPDATE users SET override_class = 255 WHERE id = ".$CURUSER['id']);
 
 header("Location: $DEFAULTBASEURL/index.php");

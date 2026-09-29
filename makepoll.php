@@ -49,6 +49,7 @@ if ($action == "edit")
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+    csrf_require_post();
 	if ($action=='edit' && !is_valid_id($pollid))
 		stderr($tracker_lang['error'],$tracker_lang['invalid_id']);
   $question = htmlspecialchars_uni($_POST["question"]);
@@ -167,7 +168,7 @@ else
 ?>
 
 <table border=1 cellspacing=0 cellpadding=5>
-<form method=post action=makepoll.php>
+<form method=post action=makepoll.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <tr><td class=rowhead>Вопрос <font color=red>*</font></td><td align=left><input name=question size=80 maxlength=255 value="<?=$poll['question']?>"></td></tr>
 <tr><td class=rowhead>Вопрос 1 <font color=red>*</font></td><td align=left><input name=option0 size=80 maxlength=40 value="<?=$poll['option0']?>"><br /></td></tr>
 <tr><td class=rowhead>Вопрос 2 <font color=red>*</font></td><td align=left><input name=option1 size=80 maxlength=40 value="<?=$poll['option1']?>"><br /></td></tr>

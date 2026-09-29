@@ -40,25 +40,23 @@ $action = (string)$_GET["action"];
 
 if ($action == 'delete')
 {
-	$newsid = (int)$_GET["newsid"];
-
+    $newsid = (int)(isset($_POST['newsid']) ? $_POST['newsid'] : (isset($_GET['newsid']) ? $_GET['newsid'] : 0));
     if (!is_valid_id($newsid))
-  	    stderr($tracker_lang['error'], 'Неверный идентификатор.');
-
-    $sure = $_GET["sure"];
-
-    if (!$sure)
-        stderr('Удалить новость', 'Вы действителньо хотите удалить эту новость? Нажмите <a href="?action=delete&newsid='.$newsid.'&sure=1">сюда</a> если вы уверены.');
-
+        stderr($tracker_lang['error'], 'Invalid ID.');
+    if ($_SERVER['REQUEST_METHOD'] != 'POST')
+        stderr('Delete news', '<form method="post" action="news.php?action=delete">'
+            . '<input type="hidden" name="newsid" value="'.$newsid.'">'
+            . '<input type="hidden" name="csrf_token" value="'.csrf_token().'">'
+            . '<button type="submit">Confirm deletion</button></form>');
+    csrf_require_post();
     sql_query("DELETE FROM news WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
-
-	$warning = 'Новость <b>успешно</b> удалена';
+    header('Location: '.$DEFAULTBASEURL.'/news.php');
+    exit;
 }
-
-///////// Добавления новостей /////////
 
 if ($action == 'add')
 {
+    csrf_require_post();
 	$subject = $_POST["subject"];
 	if (!$subject)
 		stderr($tracker_lang['error'], 'Тема новости не может быть пустой!');
@@ -95,6 +93,7 @@ if ($action == 'edit')
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
+        csrf_require_post();
   	    $body = $_POST['body'];
   	    $subject = $_POST['subject'];
 
@@ -113,17 +112,17 @@ if ($action == 'edit')
 
     } else {
 
- 	    $returnto = htmlentities($_GET['returnto']);
+	    $returnto = htmlspecialchars_uni(safe_local_return(isset($_GET['returnto']) ? $_GET['returnto'] : '', 'news.php'));
 
 	    stdhead("Редактирование новости");
-	        echo '<form name="news" method=post action=?action=edit&newsid='.$newsid.'>';
+	        echo '<form name="news" method=post action=?action=edit&newsid='.$newsid.'><input type="hidden" name="csrf_token" value="'.csrf_token().'">';
 	            echo '<table border=1 cellspacing=0 cellpadding=5>';
 	                echo '<tr><td class=colhead>Редактирование новости</td></tr>';
 	                echo '<tr><td>Тема: <input type=text name=subject maxlength=70 size=50 value="' . htmlspecialchars_uni($arr["subject"]) . '"/></td></tr>';
                     echo '<tr><td>';
                         echo textbbcode("news", "body", htmlspecialchars_uni($arr["body"]));
                     echo '</td></tr>';
-                    echo '<input type=hidden name=returnto value='.$returnto.'>';
+                    echo '<input type="hidden" name="returnto" value="'.$returnto.'">';
 	                echo '<tr><td align=center><input type=submit value="Отредактировать"></td></tr>';
 	            echo '</table>';
 	        echo '</form>';
@@ -137,7 +136,7 @@ stdhead("Новости");
     if ($warning)
 	    echo '<p><font size=-3>('.$warning.')</font></p>';
 
-    echo '<form name="news" method="post" action="?action=add">';
+    echo '<form name="news" method="post" action="?action=add"><input type="hidden" name="csrf_token" value="'.csrf_token().'">';
         echo '<table border=1 cellspacing=0 cellpadding=5>';
             echo '<tr><td class=colhead>Добавить новость</td></tr>';
             echo '<tr><td>Тема: <input type=text name=subject maxlength=40 size=50 value="' . htmlspecialchars_uni($arr["subject"]) . '"/></td></tr>';

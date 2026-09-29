@@ -244,8 +244,8 @@ elseif ($CURUSER["id"] <> $user["id"]) {
     print("<p>(<a href=\"friends.php?action=delete&type=block&targetid=$id\">Убрать из блокированых</a>)</p>\n");
   else
   {
-    print("<p>(<a href=\"friends.php?action=add&type=friend&targetid=$id&csrf_token=".csrf_token()."\">Добавить в друзья</a>)");
-    print(" - (<a href=\"friends.php?action=add&type=block&targetid=$id&csrf_token=".csrf_token()."\">Добавить в блокированные</a>)</p>\n");
+    print("<p>(<a href=\"friends.php?action=add&type=friend&targetid=$id\">Добавить в друзья</a>)");
+    print(" - (<a href=\"friends.php?action=add&type=block&targetid=$id\">Добавить в блокированные</a>)</p>\n");
   }
 }
 

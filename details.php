@@ -223,7 +223,7 @@ if (isset($_GET["hit"])) {
 }
 
 if (!isset($_GET["page"])) {
-	stdhead($tracker_lang['torrent_details']." \"".$row["name"]."\"");
+	stdhead($tracker_lang['torrent_details']." \"".htmlspecialchars_decode($row["name"], ENT_QUOTES)."\"");
 
 	if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 		$owned = 1;
@@ -244,7 +244,7 @@ if (!isset($_GET["page"])) {
 	$s = "";
 
 	print("<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-	print("<tr><td class=\"colhead\" colspan=\"2\"><div style=\"float: left; width: auto;\">:: {$tracker_lang['torrent_details']}</div><div align=\"right\"><a href=\"bookmark.php?torrent=$row[id]\"><b>{$tracker_lang['bookmark']}</b></a></div></td></tr>");
+	print("<tr><td class=\"colhead\" colspan=\"2\"><div style=\"float: left; width: auto;\">:: {$tracker_lang['torrent_details']}</div><div align=\"right\"><form method=\"post\" action=\"bookmark.php\" style=\"display:inline\"><input type=\"hidden\" name=\"torrent\" value=\"$id\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><button type=\"submit\">{$tracker_lang['bookmark']}</button></form></div></td></tr>");
 	$url = "edit.php?id=" . $row["id"];
 	if (isset($_GET["returnto"])) {
 		$addthis = "&amp;returnto=" . urlencode($_GET["returnto"]);
@@ -257,12 +257,12 @@ if (!isset($_GET["page"])) {
 	$right_links[] = "<a href=\"download.php?id={$id}\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"{$tracker_lang['download']}\" title=\"{$tracker_lang['download']}\"></a>";
 	if ($row['multitracker'] == 'yes')
 		$right_links[] = "<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'], $announces_urls)."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>";
-	$right_links[] = "<a href=\"bookmark.php?torrent={$id}\"><img src=\"$pic_base_url/bookmark.gif\" border=\"0\" alt=\"{$tracker_lang['bookmark']}\" title=\"{$tracker_lang['bookmark']}\"></a>";
+	$right_links[] = "<form method=\"post\" action=\"bookmark.php\" style=\"display:inline\"><input type=\"hidden\" name=\"torrent\" value=\"$id\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><button type=\"submit\"><img src=\"$pic_base_url/bookmark.gif\" border=\"0\" alt=\"{$tracker_lang['bookmark']}\"></button></form>";
 
 	if (count($right_links))
 		$s .= '<span style="float: right;">'.implode('&nbsp;', $right_links).'</span>';
 
-	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>".htmlspecialchars_uni($row["name"])."</b></a>";
+	$s .= "<a class=\"index\" href=\"download.php?id=$id\"><b>".$row["name"]."</b></a>";
 
 	if ($owned)
 	    $s .= " $spacer<$editlink>[{$tracker_lang['edit']}]</a>";
@@ -357,7 +357,7 @@ if (!isset($_GET["page"])) {
 			$xrow = mysql_fetch_array($xres);
 			if ($xrow)
 				$s .= "({$tracker_lang['you_have_voted_for_this_torrent']} \"{$xrow["rating"]} - {$ratings[$xrow["rating"]]}\")"; else {
-				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" id=\"ratingtid\" name=\"id\" value=\"$id\" />\n";
+				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" id=\"ratingtid\" name=\"id\" value=\"$id\" />\n";
 				$s .= "<select id=\"ratingselect\" name=\"rating\">\n";
 				$s .= "<option value=\"0\">{$tracker_lang['vote']}</option>\n";
 				foreach ($ratings as $k => $v) {
@@ -389,6 +389,7 @@ function sendrating(){
 	ajax.requestFile = "takerate.php";
 	ajax.setVar("id", tid);
 	ajax.setVar("rating", rating);
+	ajax.setVar("csrf_token", document.ajaxrating.csrf_token.value);
 	ajax.method = 'POST';
 	ajax.element = 'ajaxrate';
 	ajax.sendAJAX(varsString);
@@ -411,7 +412,7 @@ $(document).ready(function(){
 		$.ajax({
 			url: 'takerate.php',
 			type: 'post',
-			data: {rating: rate_value, id: tid},
+			data: {rating: rate_value, id: tid, csrf_token: <?=json_encode(csrf_token())?>},
 			beforeSend: function () {
 				$('div#rating_selector').html('<img src="pic/loading.gif" />');
 			},
@@ -580,7 +581,7 @@ if ($row["times_completed"] > 0) {
     $snatched_full .= "</table>\n";
 	?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?
 	if ($row["seeders"] == 0 || ($row["leechers"] / $row["seeders"] >= 2))
-		$reseed_button = "<form action=\"takereseed.php\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
+		$reseed_button = "<form method=\"post\" action=\"takereseed.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
 	if (!$_GET["snatched"]==1)
 		tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="$pic_base_url/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
 	else
@@ -618,7 +619,7 @@ if ($row["owner"] == $CURUSER["id"] || !$CURUSER)
 	$can_not_thanks = true;
 $thanksby = "<div id=\"ajax\"><form action=\"thanks.php\" method=\"post\">
 <input type=\"submit\" name=\"submit\" onclick=\"send(); return false;\" value=\"{$tracker_lang['thanks']}\"".($can_not_thanks == true ? " disabled" : "").">
-<input type=\"hidden\" name=\"torrentid\" value=\"{$torrentid}\">{$thanksby}
+<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" name=\"torrentid\" value=\"{$torrentid}\">{$thanksby}
 </form></div>";
 ?>
 <script language="javascript" type="text/javascript" src="js/ajax.js"></script>
@@ -630,6 +631,7 @@ function send() {
 	var varsString = "";
 	//ajax.requestFile = "thanks.php";
 	ajax.setVar("torrentid", <?=$torrentid;?>);
+	ajax.setVar("csrf_token", document.querySelector('form[action="thanks.php"] input[name="csrf_token"]').value);
 	ajax.setVar("ajax", "yes");
 	ajax.method = 'POST';
 	ajax.element = 'ajax';
@@ -659,8 +661,8 @@ function update_multi() {
 	print("</table></p>\n");
 
 	} else {
-		stdhead($tracker_lang['comments_for']." \"".$row["name"]."\"");
-		print("<h1>{$tracker_lang['comments_for']} <a href=\"details.php?id={$id}\">".htmlspecialchars_uni($row["name"])."</a></h1>\n");
+		stdhead($tracker_lang['comments_for']." \"".htmlspecialchars_decode($row["name"], ENT_QUOTES)."\"");
+		print("<h1>{$tracker_lang['comments_for']} <a href=\"details.php?id={$id}\">".$row["name"]."</a></h1>\n");
 	}
 
 	print("<p><a name=\"startcomments\"></a></p>\n");
@@ -687,7 +689,7 @@ if (!$count) {
 		print("<tr><td align=\"center\" >");
 		//print("<b>Ваше имя:</b> ");
 		//print("{$CURUSER['username']}<p>");
-		print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\">");
+		print("<form name=\"comment\" method=\"post\" action=\"comment.php?action=add\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<div>");
 		textbbcode("comment","text","");
 		print("</div>");
@@ -731,7 +733,7 @@ if (!$count) {
 		print("<tr><td width=\"100%\" align=\"center\" >");
 		//print("Ваше имя: ");
 		//print("{$CURUSER['username']}<p>");
-		print("<form name=comment method=\"post\" action=\"comment.php?action=add\">");
+		print("<form name=comment method=\"post\" action=\"comment.php?action=add\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<center><table border=\"0\"><tr><td class=\"clear\">");
 		print("<div align=\"center\">". textbbcode("comment","text","", 1) ."</div>");
 		print("</td></tr></table></center>");

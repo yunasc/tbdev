@@ -98,34 +98,25 @@ if ($action == 'add') {
 }
 
 if ($action == 'delete') {
-        if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
-                header('HTTP/1.1 403 Forbidden');
-                exit;
-        }
-        if(get_user_class() < UC_SYSOP) {
-                stderr($tracker_lang['error'], "У вас нет прав на удаление респектов.");
-        }
-        $respect_id = intval($_GET['respect_id']);
-        $respect_type = $_GET['respect_type'];
-        $touserid = intval($_GET['touserid']);
-        sql_query ('DELETE FROM simpaty WHERE id = ' . $respect_id) or sqlerr(__LINE__,__FILE__);
-        if ($respect_type == 'bad')
-        	sql_query ('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = ' . $touserid) or sqlerr(__LINE__,__FILE__);
-        else
-			sql_query ('UPDATE users SET simpaty = simpaty + 1 WHERE id = ' . $touserid) or sqlerr(__LINE__,__FILE__);
-        /*if (mysql_affected_rows != 1) {
-        	stderr($tracker_lang['error'], "Не могу удалить ".($respect_type == 'good'?"респект":"антиреспект").".");
-        }*/
-        if (isset($_GET["returnto"])) {
-			$returl = safe_local_return($_GET["returnto"]);
-			header("Refresh: 2; url=$returl");
-        };
-        stdhead();
-        stdmsg($tracker_lang['success'], "<p>".($respect_type == 'good' ? "Респект" : "Антиреспект")." удален успешно.</p>".(isset($_GET["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
-        if (isset($_GET["returnto"])) {
-			print("<p><a href=\"".htmlspecialchars_uni(safe_local_return($_GET["returnto"]))."\">Нажмите сюда, если вы не были переадресованы</a></p>");
-        }
-        stdfoot();
-        die();
+        csrf_require_post();
+        if (get_user_class() < UC_SYSOP)
+                stderr($tracker_lang['error'], $tracker_lang['access_denied']);
+        $respect_id = isset($_POST['respect_id']) ? (int)$_POST['respect_id'] : 0;
+        if (!is_valid_id($respect_id))
+                stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
+        $res = sql_query('SELECT touserid, good, bad FROM simpaty WHERE id = '.$respect_id) or sqlerr(__FILE__, __LINE__);
+        $respect = mysql_fetch_assoc($res);
+        if (!$respect)
+                stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
+        $touserid = (int)$respect['touserid'];
+        sql_query('DELETE FROM simpaty WHERE id = '.$respect_id) or sqlerr(__FILE__, __LINE__);
+        if (mysql_affected_rows() != 1)
+                stderr($tracker_lang['error'], 'Vote no longer exists.');
+        if ($respect['good'] == 1)
+                sql_query('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = '.$touserid) or sqlerr(__FILE__, __LINE__);
+        elseif ($respect['bad'] == 1)
+                sql_query('UPDATE users SET simpaty = simpaty + 1 WHERE id = '.$touserid) or sqlerr(__FILE__, __LINE__);
+        header('Location: '.safe_local_return(isset($_POST['returnto']) ? $_POST['returnto'] : '', 'mysimpaty.php'));
+        exit;
 }
 ?>

@@ -70,6 +70,7 @@ print("</table>\n");
 }
 
 if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST"){
+    csrf_require_post();
 $dt = sqlesc(get_date_time());
 $msg = $_POST['msg'];
 if (!$msg)
@@ -93,13 +94,13 @@ stdhead("ѕиры с которыми нельз€ соединитьс€");
 <table class=main width=750 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
 <div align=center>
 <h1>ќбщее сообщение дл€ пользователей с которыми нельз€ соединитьс€</a></h1>
-<form method=post action=findnotconnectable.php>
+<form method=post action=findnotconnectable.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <?
 
 if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 {
 ?>
-<input type=hidden name=returnto value=<?=$_GET["returnto"] ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
+<input type=hidden name=returnto value="<?=htmlspecialchars_uni($_GET["returnto"] ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"])?>">
 <?
 }
 //default message

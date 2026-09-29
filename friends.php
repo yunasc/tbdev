@@ -30,8 +30,8 @@ require_once("include/bittorrent.php");
 dbconn(false);
 loggedinorreturn();
 
-$userid = intval($_GET['id']);
-$action = strval($_GET['action']);
+$userid = intval(isset($_POST['id']) ? $_POST['id'] : (isset($_GET['id']) ? $_GET['id'] : 0));
+$action = isset($_POST['action']) ? strval($_POST['action']) : (isset($_GET['action']) ? strval($_GET['action']) : '');
 
 if (!$userid)
 	$userid = $CURUSER['id'];
@@ -49,12 +49,8 @@ $user = mysql_fetch_array($res) or stderr($tracker_lang['error'], $tracker_lang[
 
 if ($action == 'add')
 {
-  if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
-    header('HTTP/1.1 403 Forbidden');
-    exit;
-  }
-	$targetid = intval($_GET['targetid']);
-	$type = strval($_GET['type']);
+	$targetid = intval(isset($_POST['targetid']) ? $_POST['targetid'] : (isset($_GET['targetid']) ? $_GET['targetid'] : 0));
+	$type = isset($_POST['type']) ? strval($_POST['type']) : (isset($_GET['type']) ? strval($_GET['type']) : '');
 
   if (!is_valid_id($targetid))
 		stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
@@ -67,6 +63,10 @@ if ($action == 'add')
     $field_is = 'blockid';
   } else
 		stderr($tracker_lang['error'], "Unknown type.");
+
+  if ($_SERVER['REQUEST_METHOD'] != 'POST')
+    stderr('Add to list', '<form method="post" action="friends.php"><input type="hidden" name="action" value="add"><input type="hidden" name="id" value="'.$userid.'"><input type="hidden" name="type" value="'.$type.'"><input type="hidden" name="targetid" value="'.$targetid.'"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><button type="submit">Confirm</button></form>');
+  csrf_require_post();
 
   $r = sql_query("SELECT id FROM $table_is WHERE userid=$userid AND $field_is=$targetid") or sqlerr(__FILE__, __LINE__);
   if (mysql_num_rows($r) == 1)
@@ -81,22 +81,13 @@ if ($action == 'add')
 
 if ($action == 'delete')
 {
-	$targetid = intval($_GET['targetid']);
-	$sure = htmlentities($_GET['sure']);
-	$type = htmlentities($_GET['type']);
-
-  if (!is_valid_id($targetid))
-		stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
-
-  //if ($type == 'friend')
-
-  if (!$sure)
-    stderr($tracker_lang['delete']." ".($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),sprintf($tracker_lang['you_want_to_delete_x_click_here'],($type == 'friend'?$tracker_lang['friend']:$tracker_lang['block']),"?id=$userid&action=delete&type=$type&targetid=$targetid&sure=1&csrf_token=".csrf_token().""));
-
-  if (!csrf_valid(isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null)) {
-    header('HTTP/1.1 403 Forbidden');
-    exit;
-  }
+  $targetid = intval(isset($_POST['targetid']) ? $_POST['targetid'] : (isset($_GET['targetid']) ? $_GET['targetid'] : 0));
+  $type = isset($_POST['type']) ? strval($_POST['type']) : (isset($_GET['type']) ? strval($_GET['type']) : '');
+  if (!is_valid_id($targetid) || !in_array($type, array('friend', 'block')))
+    stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
+  if ($_SERVER['REQUEST_METHOD'] != 'POST')
+    stderr('Delete from list', '<form method="post" action="friends.php"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="'.$userid.'"><input type="hidden" name="type" value="'.$type.'"><input type="hidden" name="targetid" value="'.$targetid.'"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><button type="submit">Confirm deletion</button></form>');
+  csrf_require_post();
   if ($type == 'friend')
   {
     sql_query("DELETE FROM friends WHERE userid=$userid AND friendid=$targetid") or sqlerr(__FILE__, __LINE__);

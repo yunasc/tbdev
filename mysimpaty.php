@@ -129,7 +129,7 @@ if ($admin)
 <td align="center"><?=$respect_time;?></td>
 <?
 if ($admin)
-	print('<td><a href="simpaty.php?action=delete&amp;csrf_token='.csrf_token().'&amp;respect_id='.$respect_id.'&amp;touserid='.$touserid.'&amp;respect_type='.$respect_type.'&amp;returnto='.urlencode($_SERVER["REQUEST_URI"]).'"><img src="pic/warned2.gif" border="0" /></a></td>');
+	print('<td><form method="post" action="simpaty.php?action=delete"><input type="hidden" name="respect_id" value="'.$respect_id.'"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><input type="hidden" name="returnto" value="'.htmlspecialchars_uni(safe_local_return($_SERVER['REQUEST_URI'], 'mysimpaty.php')).'"><button type="submit"><img src="pic/warned2.gif" border="0" alt="Delete vote"></button></form></td>');
 ?>
 </tr>
 <?

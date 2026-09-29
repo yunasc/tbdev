@@ -196,6 +196,7 @@ if ($changedemail) {
 	$hash = md5($sec . $email . $sec);
 	$obemail = urlencode($email);
 	$updateset[] = "editsecret = " . sqlesc($sec);
+	$updateset[] = "editsecret_added = " . time();
 	$thishost = $_SERVER["HTTP_HOST"];
 	$thisdomain = preg_replace('/^www\./is', "", $thishost);
 	$body = <<<EOD

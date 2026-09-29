@@ -444,6 +444,15 @@ CREATE TABLE `readtorrents` (
 
 DROP TABLE IF EXISTS `sessions`;
 
+DROP TABLE IF EXISTS `login_failures`;
+
+CREATE TABLE `login_failures` (
+  `ip` varchar(64) NOT NULL,
+  `added` int(10) unsigned NOT NULL,
+  KEY `ip_added` (`ip`,`added`),
+  KEY `added` (`added`)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS `auth_tokens`;
 
 CREATE TABLE `auth_tokens` (
@@ -653,6 +662,7 @@ CREATE TABLE `users` (
   `last_login` datetime NOT NULL default '0000-00-00 00:00:00',
   `last_access` datetime NOT NULL default '0000-00-00 00:00:00',
   `editsecret` varchar(20) NOT NULL default '',
+  `editsecret_added` int(10) unsigned NOT NULL default '0',
   `privacy` enum('strong','normal','low') NOT NULL default 'normal',
   `theme` varchar(40) NOT NULL default '',
   `info` text,

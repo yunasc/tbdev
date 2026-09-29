@@ -29,6 +29,9 @@
 require_once("include/bittorrent.php");
 dbconn(false);
 loggedinorreturn();
+if ($_SERVER["REQUEST_METHOD"] != "POST")
+    stderr("Mark read", '<form method="post" action="markread.php"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><button type="submit">Mark all torrents read</button></form>');
+csrf_require_post();
 stdhead();
 
 if (mysql_query("INSERT IGNORE INTO readtorrents (userid, torrentid) SELECT ".sqlesc($CURUSER["id"]).", id FROM torrents")) {

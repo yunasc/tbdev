@@ -42,7 +42,7 @@ begin_table();
 
 $res = sql_query("SELECT * FROM users WHERE warned=1 AND enabled='yes' ORDER BY (users.uploaded/users.downloaded)") or sqlerr(__FILE__, __LINE__);
 $num = mysql_num_rows($res);
-print("<table border=1 width=675 cellspacing=0 cellpadding=2><form action=\"nowarn.php\" method=post>\n");
+print("<table border=1 width=675 cellspacing=0 cellpadding=2><form action=\"nowarn.php\" method=post><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 print("<tr align=center><td class=colhead width=90>Пользователь</td>
 <td class=colhead width=70>Зарегистрирован</td>
 <td class=colhead width=75>Последний&nbsp;раз&nbsp;был&nbsp;на&nbsp;трекере</td>

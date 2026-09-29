@@ -185,7 +185,7 @@ if (count($wherecatina) > 1)
 $wherebase = $wherea;
 
 if (isset($cleansearchstr)) {
-    $wherea[] = "t.name LIKE '%" . sqlwildcardesc($searchstr) . "%'";
+    $wherea[] = "(t.name LIKE '%" . sqlwildcardesc($searchstr) . "%' OR t.name LIKE '%" . sqlwildcardesc(htmlspecialchars_uni($searchstr)) . "%')"; // names are stored HTML-escaped
     $addparam .= "search=" . urlencode($searchstr) . "&amp;";
 }
 
@@ -213,7 +213,7 @@ if (!$count && isset($cleansearchstr)) {
         if ($sc > 5)
             break;
         $ssa = array();
-        $ssa[] = "t.name LIKE '%" . sqlwildcardesc($searchss) . "%'";
+        $ssa[] = "(t.name LIKE '%" . sqlwildcardesc($searchss) . "%' OR t.name LIKE '%" . sqlwildcardesc(htmlspecialchars_uni($searchss)) . "%')";
     }
     if ($sc) {
         $where = implode(" AND ", $wherea);

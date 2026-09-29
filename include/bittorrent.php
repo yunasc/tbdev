@@ -54,6 +54,10 @@ if (!defined('IN_TRACKER')) {
 	@session_start();
 	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
 
+	// PHP_SELF carries attacker-controlled PATH_INFO and is echoed unescaped in many pages; nothing uses PATH_INFO.
+	if (isset($_SERVER['SCRIPT_NAME']))
+		$_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
+
 	// Reject cross-site and source-less browser POSTs on legacy forms.
 	if (isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' &&
 		!defined('SKIP_REFERRER_CHECK')) {

@@ -32,10 +32,12 @@ if(!defined('IN_TRACKER') && !defined('IN_ANNOUNCE'))
 
 if (!function_exists("htmlspecialchars_uni")) {
 	function htmlspecialchars_uni($message) {
-		$message = preg_replace("#&(?!\#[0-9]+;)#si", "&amp;", $message); // Fix & but allow unicode
+		// Fix & but allow unicode: keep only non-ASCII numeric refs (>= 128); ASCII ones like &#60; decode back into markup
+		$message = preg_replace("#&(?!\#0*(?:12[89]|1[3-9][0-9]|[2-9][0-9]{2}|[1-9][0-9]{3,});)#", "&amp;", $message);
 		$message = str_replace("<","&lt;",$message);
 		$message = str_replace(">","&gt;",$message);
 		$message = str_replace("\"","&quot;",$message);
+		$message = str_replace("'","&#39;",$message);
 		$message = str_replace("  ", "&nbsp;&nbsp;", $message);
 		return $message;
 	}

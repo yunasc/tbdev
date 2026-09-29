@@ -7,19 +7,10 @@ if (get_user_class() < UC_ADMINISTRATOR)
 
 require_once("admin/core.php");
 
+// Writes are POST-only with the token in the body; GET only renders lists, edit forms and confirm pages.
 $write_ops = array('BlocksOrder', 'BlocksFixweight', 'BlocksChange', 'BlocksDelete');
-if ($_SERVER['REQUEST_METHOD'] == 'POST' ||
-    (in_array($op, $write_ops) ||
-     ($op == 'FaqAction' && isset($_GET['action'], $_GET['confirm']) &&
-      $_GET['action'] == 'delete' && $_GET['confirm'] == 'yes'))) {
-    $submitted = $_SERVER['REQUEST_METHOD'] == 'POST'
-        ? (isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)
-        : (isset($_GET['csrf_token']) ? $_GET['csrf_token'] : null);
-    if (!csrf_valid($submitted)) {
-        header('HTTP/1.1 403 Forbidden');
-        exit;
-    }
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || in_array($op, $write_ops))
+    csrf_require_post();
 
 
 function BuildMenu($url, $title, $image = '') {

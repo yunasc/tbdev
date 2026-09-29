@@ -120,7 +120,20 @@ function validip($ip) {
 }
 
 function getip() {
-    return $_SERVER['REMOTE_ADDR'];
+    global $trusted_proxies;
+    $ip = $_SERVER['REMOTE_ADDR'];
+    // X-Forwarded-For is client-controlled; only a proxy in $trusted_proxies may name the client.
+    // Walk right to left past trusted hops and take the first untrusted one; anything left of it is spoofable.
+    // ponytail: exact-IP match, add CIDR support if a proxy pool outgrows a list.
+    if (empty($trusted_proxies) || !in_array($ip, $trusted_proxies, true) || empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        return $ip;
+    foreach (array_reverse(array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']))) as $hop) {
+        if (in_array($hop, $trusted_proxies, true))
+            continue;
+        // IPv4 only: userlogin() feeds ip2long() into the bans query.
+        return filter_var($hop, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $hop : $ip;
+    }
+    return $ip;
 }
 
 function dbconn() {

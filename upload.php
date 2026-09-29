@@ -50,7 +50,7 @@ sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 ?>
 <div align="center">
 <p><span style="color: green; font-weight: bold;">После загрузки торрента, вам нужно будет скачать торрент и поставить качаться в папку где лежат оригиналы файлов.</span></p>
-<form name="upload" enctype="multipart/form-data" action="takeupload.php" method="post">
+<form name="upload" enctype="multipart/form-data" action="takeupload.php" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?=$max_torrent_size?>" />
 <table border="1" cellspacing="0" cellpadding="5">
 <tr><td class="colhead" colspan="2"><?=$tracker_lang['upload_torrent'];?></td></tr>

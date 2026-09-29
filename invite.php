@@ -30,15 +30,15 @@ require_once("include/bittorrent.php");
 dbconn();
 loggedinorreturn();
 
-$id = intval($_GET["id"]);
-$type = unesc($_GET["type"]);
-$invite = $_GET["invite"];
-
-stdhead("Приглашения");
+$id = intval(isset($_POST["id"]) ? $_POST["id"] : (isset($_GET["id"]) ? $_GET["id"] : 0));
+$type = isset($_POST["type"]) ? $_POST["type"] : (isset($_GET["type"]) ? $_GET["type"] : "");
+$invite = isset($_POST["invite"]) ? $_POST["invite"] : "";
 
 function bark($msg) {
+    stdhead();
 	stdmsg("Ошибка", $msg);
 	stdfoot();
+    exit;
 }
 
 if ($id == 0) {
@@ -56,26 +56,39 @@ if ($inv["invites"] != 1) {
 }
 
 if ($type == 'new') {
-	print("<form method=get action=takeinvite.php>".
+    stdhead();
+	print("<form method=post action=takeinvite.php>".
+	"<input type=hidden name=csrf_token value=\"".csrf_token()."\" />".
 	"<input type=hidden name=id value=$id />".
 	"<table border=1 width=100% cellspacing=0 cellpadding=5>".
 	"<tr class=tabletitle><td colspan=2><b>Создать пригласительный код (осталось $inv[invites] приглаше$_s)</b></td></tr>".
 	"<tr class=tableb><td align=center colspan=2><input type=submit value=\"Создать\"></td></tr>".
 	"</form></table>");
 } elseif ($type == 'del') {
-	$ret = sql_query("SELECT * FROM invites WHERE invite = ".sqlesc($invite)) or sqlerr(__FILE__,__LINE__);
-	$num = mysql_fetch_assoc($ret);
-	if ($num[inviter]==$id) {
-		sql_query("DELETE FROM invites WHERE invite = ".sqlesc($invite)) or sqlerr(__FILE__,__LINE__);
-		sql_query("UPDATE users SET invites = invites + 1 WHERE id = $CURUSER[id]") or sqlerr(__FILE__,__LINE__);
-		stdmsg("Успешно", "Приглашение удалено. Сейчас мы вас переадресуем на страницу приглашений...");
-	} else
-		stdmsg("Ошибка", "Вам не разрешено удалять приглашения.");
-	header("Refresh: 3; url=invite.php?id=$id");
+    if ($_SERVER["REQUEST_METHOD"] != "POST" || !csrf_valid(isset($_POST["csrf_token"]) ? $_POST["csrf_token"] : null)) {
+        header("HTTP/1.1 403 Forbidden");
+        exit;
+    }
+    if (!is_string($invite) || !preg_match("/\A[a-f0-9]{32}\z/iD", $invite))
+        stderr($tracker_lang["error"], "Invalid invitation code.");
+    if ($id != $CURUSER["id"] && get_user_class() < UC_ADMINISTRATOR)
+        stderr($tracker_lang["error"], $tracker_lang["access_denied"]);
+    $ret = sql_query("SELECT inviter FROM invites WHERE invite = ".sqlesc($invite)) or sqlerr(__FILE__, __LINE__);
+    $num = mysql_fetch_assoc($ret);
+    if (!$num || $num["inviter"] != $id)
+        stderr($tracker_lang["error"], "Invitation not found for this user.");
+    sql_query("DELETE FROM invites WHERE invite = ".sqlesc($invite)." AND inviter = $id") or sqlerr(__FILE__, __LINE__);
+    if (mysql_affected_rows() != 1)
+        stderr($tracker_lang["error"], "Invitation no longer exists.");
+    sql_query("UPDATE users SET invites = invites + 1 WHERE id = $id") or sqlerr(__FILE__, __LINE__);
+    header("Location: invite.php?id=$id");
+    exit;
+
 } else {
 	if (get_user_class() <= UC_UPLOADER && !($id == $CURUSER["id"])) {
 		bark("У вас нет права видеть приглашения этого пользователя.");
 	}
+    stdhead();
 
 	$rel = sql_query("SELECT COUNT(*) FROM users WHERE invitedby = $id") or sqlerr(__FILE__,__LINE__);
 	$arro = mysql_fetch_row($rel);
@@ -84,7 +97,7 @@ if ($type == 'new') {
 	$ret = sql_query("SELECT id, username, class, email, uploaded, downloaded, status, warned, enabled, donor, email FROM users WHERE invitedby = $id") or sqlerr(__FILE__,__LINE__);
 	$num = mysql_num_rows($ret);
 
-	print("<form method=post action=takeconfirm.php?id=$id><table border=1 width=100% cellspacing=0 cellpadding=5>".
+	print("<form method=post action=takeconfirm.php?id=$id><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><table border=1 width=100% cellspacing=0 cellpadding=5>".
 	"<tr class=tabletitle><td colspan=7><b>Статус приглашенных вами</b> ($number)</td></tr>");
 
 	if(!$num) {
@@ -148,7 +161,7 @@ if ($type == 'new') {
 		for ($i = 0; $i < $num1; ++$i) {
 			$arr1 = mysql_fetch_assoc($rer);
 			print("<tr class=tableb><td>$arr1[invite]</td><td>$arr1[time_invited]</td>");
-			print ("<td><a href=\"invite.php?invite=$arr1[invite]&type=del\">Удалить приглашение</a></td></tr>");
+			print ("<td><form method=\"post\" action=\"invite.php\"><input type=\"hidden\" name=\"type\" value=\"del\"><input type=\"hidden\" name=\"id\" value=\"$id\"><input type=\"hidden\" name=\"invite\" value=\"".htmlspecialchars_uni($arr1["invite"])."\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"Delete invitation\"></form></td></tr>");
 		}
 	}
 

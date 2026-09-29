@@ -29,6 +29,14 @@
 require_once("include/bittorrent.php");
 dbconn();
 
+// Logout links stay plain GET; only the POST from this button logs out.
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+	stdhead($tracker_lang['logout']);
+	print('<p align="center">' . post_link('logout.php', array(), $tracker_lang['logout']) . '</p>');
+	stdfoot();
+	exit;
+}
+csrf_require_post();
 logoutcookie();
 
 //header("Refresh: 0; url=./");

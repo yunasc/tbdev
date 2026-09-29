@@ -198,12 +198,6 @@ print("</tr>\n");
 
 print("<tbody id=\"highlighted\">");
 
-if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
-	print("<form method=\"post\" action=\"deltorrent.php?mode=delete\">");
-
-	if ($variant == "bookmarks")
-		print ("<form method=\"post\" action=\"takedelbookmark.php\">");
-
 	while ($row = mysql_fetch_assoc($res)) {
 		$id = $row["id"];
 		print("<tr".($row["not_sticky"] == "no" ? " class=\"highlight\"" : "").">\n");
@@ -242,7 +236,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 		print("\"><b>$dispname</b></a> $thisisfree\n");
 
 			if ($variant != "bookmarks" && $CURUSER)
-				print("<a href=\"bookmark.php?torrent=$row[id]\"><img border=\"0\" src=\"$pic_base_url/bookmark.gif\" alt=\"".$tracker_lang['bookmark_this']."\" title=\"".$tracker_lang['bookmark_this']."\" /></a>\n");
+				print("<form method=\"post\" action=\"bookmark.php\" style=\"display:inline\"><input type=\"hidden\" name=\"torrent\" value=\"$row[id]\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><button type=\"submit\"><img border=\"0\" src=\"$pic_base_url/bookmark.gif\" alt=\"".$tracker_lang['bookmark_this']."\"></button></form>\n");
 
 			print("<a href=\"download.php?id=$id\"><img src=\"$pic_base_url/download.gif\" border=\"0\" alt=\"".$tracker_lang['download']."\" title=\"".$tracker_lang['download']."\"></a>\n");
 
@@ -358,7 +352,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 			print("<td align=\"center\">" . (isset($row["username"]) ? ("<a href=\"userdetails.php?id=" . $row["owner"] . "\"><b>" . get_user_class_color($row["class"], htmlspecialchars_uni($row["username"])) . "</b></a>") : "<i>(unknown)</i>") . "</td>\n");
 
 		if ($variant == "bookmarks")
-			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" value=\"" . $row[bookmarkid] . "\" /></td>");
+			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" form=\"bulk-bookmark-delete\" value=\"" . $row[bookmarkid] . "\" /></td>");
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index") {
 			if ($row["moderated"] == "no")
@@ -368,7 +362,7 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 		}
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
-			print("<td align=\"center\"><input type=\"checkbox\" name=\"delete[]\" value=\"" . $id . "\" /></td>\n");
+			print("<td align=\"center\"><input type=\"checkbox\" name=\"delete[]\" form=\"bulk-torrent-delete\" value=\"" . $id . "\" /></td>\n");
 
 	print("</tr>\n");
 
@@ -383,18 +377,12 @@ if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 
 	if ($variant == "index") {
 		if (get_user_class() >= UC_MODERATOR) {
-			print("<tr><td align=\"right\" colspan=\"12\"><input type=\"submit\" value=\"Удалить\"></td></tr>\n");
+			print("<tr><td align=\"right\" colspan=\"12\"><form id=\"bulk-torrent-delete\" method=\"post\" action=\"deltorrent.php?mode=delete\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"Удалить\"></form></td></tr>\n");
 		}
 	}
 
 	if ($variant == "bookmarks")
-		print("<tr><td colspan=\"12\" align=\"right\"><input type=\"submit\" value=\"".$tracker_lang['delete']."\"></td></tr>\n");
-
-	if ($variant == "index" || $variant == "bookmarks") {
-		if (get_user_class() >= UC_MODERATOR) {
-			print("</form>\n");
-		}
-	}
+		print("<tr><td colspan=\"12\" align=\"right\"><form id=\"bulk-bookmark-delete\" method=\"post\" action=\"takedelbookmark.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"".$tracker_lang['delete']."\"></form></td></tr>\n");
 
 	return $rows;
 }

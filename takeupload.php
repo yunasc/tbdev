@@ -29,6 +29,7 @@
 require_once("include/BDecode.php");
 require_once("include/BEncode.php");
 require_once("include/bittorrent.php");
+require_once("include/upload_image.php");
 
 ini_set("upload_max_filesize",$max_torrent_size);
 
@@ -39,6 +40,7 @@ function bark($msg) {
 dbconn(); 
 
 loggedinorreturn();
+csrf_require_post();
 parked();
 
 if (get_user_class() < UC_UPLOADER)
@@ -214,55 +216,21 @@ die;*/
 
 $maxfilesize = $max_image_size; // default 1mb
 
-$allowed_types = array(
-"image/gif" => "gif",
-"image/pjpeg" => "jpg",
-"image/jpeg" => "jpg",
-"image/jpg" => "jpg",
-"image/png" => "png"
-// Add more types here if you like
-);
-
-for ($x=0; $x < 5; $x++) {
-if (!($_FILES['image'.$x]['name'] == "")) {
-	$y = $x + 1;
-
-	// Is valid filetype?
-	if (!array_key_exists($_FILES['image'.$x]['type'], $allowed_types))
-		bark("Invalid file type! Image $y (".htmlspecialchars_uni($_FILES['image'.$x]['type']).")");
-
-	if (!preg_match('/^(.+)\.(jpg|jpeg|png|gif)$/si', $_FILES['image'.$x]['name']))
-		bark("Неверное имя файла (не картинка).");
-
-	// Is within allowed filesize?
-	if ($_FILES['image'.$x]['size'] > $maxfilesize)
-		bark("Превышен размер файла! Картинка $y - Должна быть меньше ".mksize($maxfilesize));
-		//bark("Invalid file size! Image $y - Must be less than 500kb");
-
-	// Where to upload?
-	// Update for your own server. Make sure the folder has chmod write permissions. Remember this director
-	$uploaddir = "torrents/images/";
-
-	// What is the temporary file name?
-	$ifile = $_FILES['image'.$x]['tmp_name'];
-
-	// Calculate what the next torrent id will be
-	/*$ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
-	$row = mysql_fetch_array($ret);
-	$next_id = $row['Auto_increment'];*/
-
-	// By what filename should the tracker associate the image with?
-	$ifilename = $next_id . $x . '.' . end(explode('.', $_FILES['image'.$x]['name']));
-
-	// Upload the file
-	$copy = copy($ifile, $uploaddir.$ifilename);
-
-	if (!$copy)
-	    bark("Error occured uploading image! - Image $y");
-
-	$inames[] = $ifilename;
-
-}}
+$extensions = array(IMAGETYPE_GIF => 'gif', IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png');
+$inames = array('', '', '', '', '');
+for ($x = 0; $x < 5; $x++) {
+    if (!isset($_FILES['image'.$x]) || $_FILES['image'.$x]['name'] == '')
+        continue;
+    $upload = $_FILES['image'.$x];
+    $y = $x + 1;
+    if ($upload['error'] != UPLOAD_ERR_OK || $upload['size'] > $maxfilesize ||
+        !is_uploaded_file($upload['tmp_name']))
+        bark("Invalid upload for image $y");
+    $ifilename = store_safe_image($upload['tmp_name'], 'torrents/images', $maxfilesize);
+    if ($ifilename === false)
+        bark("Invalid image format for image $y");
+    $inames[$x] = $ifilename;
+}
 
 //////////////////////////////////////////////
 

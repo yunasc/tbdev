@@ -87,7 +87,7 @@ function check_port($host, $port, $timeout, $force_fsock = false) {
 
 function is_theme($theme = "") {
 	global $rootpath;
-	return file_exists($rootpath . "themes/$theme/stdhead.php") && file_exists($rootpath . "themes/$theme/stdfoot.php") && file_exists($rootpath . "themes/$theme/template.php");
+	return is_string($theme) && preg_match('/\A[A-Za-z0-9_-]+\z/D', $theme) && file_exists($rootpath . "themes/$theme/stdhead.php") && file_exists($rootpath . "themes/$theme/stdfoot.php") && file_exists($rootpath . "themes/$theme/template.php");
 }
 
 function get_themes() {
@@ -104,10 +104,9 @@ function get_themes() {
 	return $themelist;
 }
 
-function theme_selector($sel_theme = "", $use_fsw = false) {
-	global $DEFAULTBASEURL;
+function theme_selector($sel_theme = "") {
 	$themes = get_themes();
-	$content = "<select name=\"theme\"".($use_fsw ? " onchange=\"window.location='$DEFAULTBASEURL/changetheme.php?csrf_token=".csrf_token()."&theme='+this.options[this.selectedIndex].value\"" : "").">\n";
+	$content = "<select name=\"theme\">\n";
 	foreach ($themes as $theme)
 		$content .= "<option value=\"$theme\"".($theme == $sel_theme ? " selected" : "").">$theme</option>\n";
 	$content .= "</select>";
@@ -402,29 +401,19 @@ function validip($ip) {
 }
 
 function getip() {
-
-	// Code commented due to possible hackers/banned users to fake their ip with http headers
-
-	/*if (isset($_SERVER)) {
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && validip($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} elseif (isset($_SERVER['HTTP_CLIENT_IP']) && validip($_SERVER['HTTP_CLIENT_IP'])) {
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-	} else {
-		if (getenv('HTTP_X_FORWARDED_FOR') && validip(getenv('HTTP_X_FORWARDED_FOR'))) {
-			$ip = getenv('HTTP_X_FORWARDED_FOR');
-		} elseif (getenv('HTTP_CLIENT_IP') && validip(getenv('HTTP_CLIENT_IP'))) {
-			$ip = getenv('HTTP_CLIENT_IP');
-		} else {
-			$ip = getenv('REMOTE_ADDR');
-		 }
-	}*/
-
-	$ip = getenv('REMOTE_ADDR');
-
+	global $trusted_proxies;
+	$ip = $_SERVER['REMOTE_ADDR'];
+	// X-Forwarded-For is client-controlled; only a proxy in $trusted_proxies may name the client.
+	// Walk right to left past trusted hops and take the first untrusted one; anything left of it is spoofable.
+	// ponytail: exact-IP match, add CIDR support if a proxy pool outgrows a list.
+	if (empty($trusted_proxies) || !in_array($ip, $trusted_proxies, true) || empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+		return $ip;
+	foreach (array_reverse(array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']))) as $hop) {
+		if (in_array($hop, $trusted_proxies, true))
+			continue;
+		// IPv4 only: userlogin() feeds ip2long() into the bans query.
+		return filter_var($hop, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $hop : $ip;
+	}
 	return $ip;
 }
 
@@ -746,13 +735,39 @@ function csrf_valid($token) {
         strlen($token) == 64 && $_SESSION['csrf_token'] === $token;
 }
 
+function csrf_require_post() {
+    if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] != 'POST' ||
+        !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
+        header('HTTP/1.1 403 Forbidden');
+        exit;
+    }
+}
+
+// Inline POST form for a state-changing link: the CSRF token travels in the body, never in a URL.
+// $label_html is trusted markup; $fields values and $confirm are escaped here.
+function post_link($action, $fields, $label_html, $confirm = '') {
+    $html = '<form method="post" action="' . htmlspecialchars_uni($action) . '" style="display: inline; margin: 0"' .
+        ($confirm !== '' ? ' onsubmit="return confirm(\'' . htmlspecialchars_uni(addslashes($confirm)) . '\');"' : '') .
+        '><input type="hidden" name="csrf_token" value="' . csrf_token() . '">';
+    foreach ($fields as $name => $value)
+        $html .= '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars_uni($value) . '">';
+    return $html . '<button type="submit" style="border: 0; background: none; padding: 0; cursor: pointer; color: inherit; font: inherit; text-decoration: underline">' . $label_html . '</button></form>';
+}
+
 function password_matches($password, $secret, $hash) {
     if (!is_string($password) || !is_string($hash))
         return false;
+    return password_matches_exact($password, $secret, $hash) || password_matches_exact(trim($password), $secret, $hash);
+}
+
+// Legacy hashes are md5(secret.password.secret), stored bare or wrapped in bcrypt as "md5:<bcrypt>"
+// by migrations/2026-wrap-legacy-hashes.php; takelogin.php rewrites both as plain bcrypt on next login.
+function password_matches_exact($password, $secret, $hash) {
     if (preg_match('/\A[a-f0-9]{32}\z/iD', $hash))
-        return $hash === md5($secret . $password . $secret) ||
-            $hash === md5($secret . trim($password) . $secret);
-    return password_verify($password, $hash) || password_verify(trim($password), $hash);
+        return $hash === md5($secret . $password . $secret);
+    if (strncmp($hash, 'md5:', 4) == 0)
+        return password_verify(md5($secret . $password . $secret), substr($hash, 4));
+    return password_verify($password, $hash);
 }
 
 function make_password_hash($password) {

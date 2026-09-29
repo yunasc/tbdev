@@ -49,7 +49,7 @@ stdhead("Редактирование торрента \"" . $row["name"] . "\"");
 if (!isset($CURUSER) || ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)) {
 	stdmsg($tracker_lang['error'],"Вы не можете редактировать этот торрент.");
 } else {
-	print("<form name=\"edit\" method=post action=takeedit.php enctype=multipart/form-data>\n");
+	print("<form name=\"edit\" method=post action=takeedit.php enctype=multipart/form-data><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 	print("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
 	if (isset($_GET["returnto"]))
 		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($_GET["returnto"]) . "\" />\n");
@@ -102,7 +102,7 @@ else
 	print("</table>\n");
 	print("</form>\n");
 	print("<p>\n");
-	print("<form method=\"post\" action=\"delete.php\">\n");
+	print("<form method=\"post\" action=\"delete.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
   print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
   print("<tr><td class=embedded style='background-color: #F5F4EA;padding-bottom: 5px' colspan=\"2\"><b>Удалить торрент</b> Причина:</td></tr>");
   print("<td><input name=\"reasontype\" type=\"radio\" value=\"1\">&nbsp;Мертвяк </td><td> 0 раздающих, 0 качающих = 0 соединений</td></tr>\n");

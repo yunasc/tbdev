@@ -30,6 +30,7 @@ require_once("include/bittorrent.php");
 dbconn();
 
 loggedinorreturn();
+csrf_require_post();
 parked();
 
 $userid = $CURUSER["id"];
@@ -64,7 +65,7 @@ if ($ajax == "yes") {
 	}
 	$thanksby = "<div id=\"ajax\"><form action=\"thanks.php\" method=\"post\">
 	<input type=\"submit\" name=\"submit\" onclick=\"send(); return false;\" value=\"".$tracker_lang['thanks']."\"".($can_not_thanks ? " disabled" : "").">
-	<input type=\"hidden\" name=\"torrentid\" value=\"$torrentid\">".$thanksby."
+	<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" name=\"torrentid\" value=\"$torrentid\">".$thanksby."
 	</form></div>";
 	header ("Content-Type: text/html; charset=" . $tracker_lang['language_charset']);
 	print $thanksby;
