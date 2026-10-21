@@ -31,15 +31,28 @@ dbconn(false);
 
 loggedinorreturn();
 
-$pic = htmlspecialchars_uni((string) $_GET["pic"]);
+$pic = html_uni($_GET["pic"]);
 
-stdhead("�������� ��������");
-print("<h1>$pic</h1>\n");
-print("<p align=center><img src=\"torrents/images/$pic\"></p>\n");
-?>
+if(empty($pic))
+stderr("Внимание, обнаружена ошибка", "По данному адресу публикаций на сайте не найдено, либо у вас нет доступа для просмотра информации по данному адресу.");
 
-<h3 align=center><a href="javascript: history.go(-1)">�����</a></h3>
+$allowed_image_types = array("image/gif" => "gif", "image/png" => "png", "image/jpeg" => "jpeg", "image/jpg" => "jpg");
 
-<?
+$file_extension = pathinfo($pic, PATHINFO_EXTENSION);
+
+if (!in_array($file_extension, $allowed_image_types))
+stderr("Внимание, обнаружена ошибка", "По данному адресу публикаций на сайте не найдено, либо у вас нет доступа для просмотра информации по данному адресу.");
+
+
+stdhead("Просмотр картинки");
+
+
+
+print("<h1>".$pic."</h1>\n");
+
+
+print("<p align=center><img width=\"100%\" src=\"".(file_exists("torrents/images/".$pic) ? "torrents/images/".$pic : $pic_base_url."/default_torrent.png")."
+\"></p>\n");
+echo "<h3 align=center><a href=\"javascript: history.go(-1)\">Назад</a></h3>";
 stdfoot();
 ?>
