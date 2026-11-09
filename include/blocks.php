@@ -110,7 +110,7 @@ function themesidebox($title, $content, $pos) {
 				$bl_mass[$bl_name]['m'] = true;
 				$f_str = file_get_contents("themes/".$ss_uri."/html/".$bl_name.".html");
 				$f_str = 'global $ss_uri, $tracker_lang; '.$func.' "'.addslashes($f_str)." \"".$func2.";";
-				$bl_mass[$bl_name]['f'] = create_function('$title, $content', $f_str);
+				$bl_mass[$bl_name]['f'] = eval('return function ($title, $content) {' . $f_str . '};');
 			} else {
 				$bl_mass[$bl_name]['m'] = false;
 			}
@@ -128,7 +128,7 @@ function themesidebox($title, $content, $pos) {
 					$bl_mass[$bl_name]['m'] = true;
 					$f_str = file_get_contents("themes/".$ss_uri."/html/".$bl_name.".html");
 					$f_str = 'global $ss_uri, $tracker_lang; '.$func.' "'.addslashes($f_str)." \"".$func2.";";
-					$bl_mass[$bl_name]['f'] = create_function('$title, $content', $f_str);
+					$bl_mass[$bl_name]['f'] = eval('return function ($title, $content) {' . $f_str . '};');
 				} else {
 					$bl_mass[$bl_name]['m'] = false;
 				}
@@ -156,7 +156,7 @@ function show_blocks($position) {
 
 		if (!$already_used) {
 			$blocks_res = sql_query("SELECT * FROM orbital_blocks WHERE active = 1 ORDER BY weight ASC") or sqlerr(__FILE__,__LINE__);
-			while ($blocks_row = mysql_fetch_array($blocks_res))
+			while ($blocks_row = mysqli_fetch_array($blocks_res))
 				$orbital_blocks[] = $blocks_row;
 			if (!$orbital_blocks)
 				$orbital_blocks = array();

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		die();
 	}
 	$res = sql_query("SELECT * FROM bonus WHERE id = $id") or sqlerr(__FILE__,__LINE__);
-	$arr = mysql_fetch_array($res);
+	$arr = mysqli_fetch_array($res);
 	$points = $arr["points"];
 	$type = $arr["type"];
 	if ($CURUSER["bonus"] < $points) {
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	switch ($type) {
 		case "traffic":
 			$traffic = $arr["quanity"];
-			if (!sql_query("UPDATE users SET bonus = bonus - $points, uploaded = uploaded + $traffic WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
+			if (!sql_query("UPDATE users SET bonus = bonus - $points, uploaded = uploaded + $traffic WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || db_affected_rows() != 1) {
 				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
 				die();
 			}
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			break;
 		case "invite":
 			$invites = $arr["quanity"];
-			if (!sql_query("UPDATE users SET bonus = bonus - $points, invites = invites + $invites WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
+			if (!sql_query("UPDATE users SET bonus = bonus - $points, invites = invites + $invites WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || db_affected_rows() != 1) {
 				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
 				die();
 			}
@@ -104,10 +104,10 @@ function send(){
 </div>
 <div id="ajax">
 <table class="embedded" width="550" border="1" cellspacing="0" cellpadding="5">
-<?
+<?php
 	$my_points = $CURUSER["bonus"];
 	$res = sql_query("SELECT * FROM bonus") or sqlerr(__FILE__,__LINE__);
-	while ($arr = mysql_fetch_assoc($res)) {
+	while ($arr = mysqli_fetch_assoc($res)) {
 		$id = $arr["id"];
 		$bonus = $arr["name"];
 		$points = $arr["points"];
@@ -126,7 +126,7 @@ function send(){
 	</form>
 </table>
 </div>
-<?
+<?php
 stdfoot();
 }
 ?>

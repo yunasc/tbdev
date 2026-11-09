@@ -30,10 +30,14 @@
 if (!defined('IN_ANNOUNCE'))
     die('Hacking attempt!');
 
+require_once __DIR__ . '/db.php';
 require_once($rootpath . 'include/config.php');
 require_once($rootpath . 'include/config.local.php');
 require_once($rootpath . 'include/secrets.php');
 require_once($rootpath . 'include/secrets.local.php');
+
+if (!empty($site_url))
+    $DEFAULTBASEURL = $BASEURL = rtrim($site_url, '/');
 
 function err($msg) {
     benc_resp(array("failure reason" => array('type' => 'string', 'value' => $msg)));
@@ -58,18 +62,6 @@ function get_date_time($timestamp = 0) {
 
 function gmtime() {
     return strtotime(get_date_time());
-}
-
-function strip_magic_quotes($arr) {
-    foreach ($arr as $k => $v) {
-        if (is_array($v)) {
-            $arr[$k] = strip_magic_quotes($v);
-        } else {
-            $arr[$k] = stripslashes($v);
-        }
-    }
-
-    return $arr;
 }
 
 function mksize($bytes) {
@@ -138,25 +130,14 @@ function getip() {
 
 function dbconn() {
     global $mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset;
-    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass)) {
+    if (!db_connect($mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset))
         err('Database error');
-    }
-    mysql_select_db($mysql_db) or err('Database error');
-
-    mysql_query('SET NAMES ' . $mysql_charset);
-
-    register_shutdown_function('mysql_close');
-
 }
 
-function sqlesc($value) {
-    // Stripslashes
-    /*if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }*/
+function sqlesc($value, $force = false) {
     // Quote if not a number or a numeric string
-    if (!is_numeric($value)) {
-        $value = "'" . mysql_real_escape_string($value) . "'";
+    if (!is_numeric($value) || $force) {
+        $value = "'" . db_real_escape_string($value) . "'";
     }
     return $value;
 }
@@ -174,8 +155,6 @@ function hash_pad($hash) {
 }*/
 
 function unesc($x) {
-    if (get_magic_quotes_gpc())
-        return stripslashes($x);
     return $x;
 }
 
@@ -185,53 +164,13 @@ function gzip() {
     }
 }
 
-// Check open port, requires --enable-sockets
+// A connected stream means the peer is reachable. Close it before returning.
 function check_port($host, $port, $timeout) {
-    if (function_exists('socket_create')) {
-        // Create a TCP/IP socket.
-        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        if ($socket == false) {
-            return false;
-        }
-        //
-        if (socket_set_nonblock($socket) == false) {
-            socket_close($socket);
-            return false;
-        }
-        //
-        @socket_connect($socket, $host, $port); // will return FALSE as it's async, so no check
-        //
-        if (socket_set_block($socket) == false) {
-            socket_close($socket);
-            return false;
-        }
-
-        switch (socket_select($r = array($socket), $w = array($socket), $f = array($socket), $timeout)) {
-            case 2:
-                // Refused
-                $result = false;
-                break;
-            case 1:
-                $result = true;
-                break;
-            case 0:
-                // Timeout
-                $result = false;
-                break;
-        }
-
-        // cleanup
-        socket_close($socket);
-    } else {
-        $socket = @fsockopen($host, $port, $errno, $errstr, $timeout);
-        if (!$socket)
-            $result = false; else {
-            $result = true;
-            @fclose($socket);
-        }
-    }
-
-    return $result;
+    $socket = @fsockopen($host, $port, $errno, $errstr, $timeout);
+    if (!$socket)
+        return false;
+    fclose($socket);
+    return true;
 }
 
 ?>

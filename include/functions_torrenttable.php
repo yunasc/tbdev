@@ -51,8 +51,8 @@ print("<tr>\n");
 $count_get = 0;
 
 foreach ($_GET as $get_name => $get_value) {
-	$get_name = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
-	$get_value = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
+	$get_name = db_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
+	$get_value = db_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
 	if ($get_name != "sort" && $get_name != "type") {
 		if ($count_get > 0)
 			$oldlink = $oldlink . "&" . $get_name . "=" . $get_value;
@@ -198,7 +198,7 @@ print("</tr>\n");
 
 print("<tbody id=\"highlighted\">");
 
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		$id = $row["id"];
 		print("<tr".($row["not_sticky"] == "no" ? " class=\"highlight\"" : "").">\n");
 
@@ -352,7 +352,7 @@ print("<tbody id=\"highlighted\">");
 			print("<td align=\"center\">" . (isset($row["username"]) ? ("<a href=\"userdetails.php?id=" . $row["owner"] . "\"><b>" . get_user_class_color($row["class"], htmlspecialchars_uni($row["username"])) . "</b></a>") : "<i>(unknown)</i>") . "</td>\n");
 
 		if ($variant == "bookmarks")
-			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" form=\"bulk-bookmark-delete\" value=\"" . $row[bookmarkid] . "\" /></td>");
+			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" form=\"bulk-bookmark-delete\" value=\"" . $row['bookmarkid'] . "\" /></td>");
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index") {
 			if ($row["moderated"] == "no")

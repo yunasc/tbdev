@@ -63,8 +63,8 @@ function display_date_time($timestamp = 0, $tzoffset = 0) {
 }
 
 function cut_text($txt, $car) {
-	while (strlen($txt) > $car) {
-		return substr($txt, 0, $car) . "...";
+	if (mb_strlen($txt, 'UTF-8') > $car) {
+		return mb_substr($txt, 0, $car, 'UTF-8') . "...";
 	}
 	return $txt;
 }
@@ -580,7 +580,7 @@ function get_row_count($table, $suffix = "") {
 	if ($suffix)
 		$suffix = " $suffix";
 	($r = sql_query("SELECT COUNT(*) FROM $table$suffix")) or sqlerr(__FILE__, __LINE__);
-	($a = mysql_fetch_row($r)) or sqlerr(__FILE__, __LINE__);
+	($a = mysqli_fetch_row($r)) or sqlerr(__FILE__, __LINE__);
 	return $a[0];
 }
 
@@ -622,7 +622,7 @@ function newerr($heading = '', $text = '', $head = true, $foot = true, $die = tr
 }
 
 function sqlerr($file = '', $line = '') {
-	error_log('Database error: ' . mysql_error() . ($file !== '' ? ' in ' . $file . ':' . $line : ''));
+	error_log('Database error: ' . db_error() . ($file !== '' ? ' in ' . $file . ':' . $line : ''));
 	header('HTTP/1.1 500 Internal Server Error');
 	die('Database error.');
 }

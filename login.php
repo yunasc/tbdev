@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -49,7 +49,7 @@ if (!empty($_GET["returnto"])) {
 <form method="post" action="takelogin.php">
 <p><b>Внимание</b>: для успешного входа активизируйте cookies.</p>
 <table border="0" cellpadding="5" width="100%">
-<?
+<?php
 if (isset($error)) {
 	echo $error;
 }
@@ -58,7 +58,7 @@ if (isset($error)) {
 <tr><td class="rowhead">Пароль:</td><td align="left"><input type="password" size="40" name="password" style="width: 200px; border: 1px solid gray" /></td></tr>
 <tr><td colspan="2" align="center"><input type="submit" value="Войти" class="btn"></td></tr>
 </table>
-<?
+<?php
 
 if (isset($returnto))
 	print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni($returnto) . "\" />\n");
@@ -68,7 +68,7 @@ if (isset($returnto))
 <p>Если Вы забыли пароль или Вы не можете зайти - попытайтесь воспользоваться формой <a href="recover.php">восстановления паролей</a></p>
 <p>Ещё не зарегистрированы ? Вы можете <a href="signup.php">зарегистрироваться</a> прямо сейчас!</p>
 </div>
-<?
+<?php
 
 stdfoot();
 

@@ -46,7 +46,7 @@ if($_GET['imagehash'] == "test" || strlen($_GET['imagehash']) != 32) {
 	$query = sql_query("SELECT * FROM captcha WHERE imagehash=".sqlesc($_GET['imagehash'])." LIMIT 1");
 	if (!$query)
 		die('Something bad hapened...');
-	$regimage = mysql_fetch_array($query);
+	$regimage = mysqli_fetch_array($query);
 	$imagestring = $regimage['imagestring'];
 	if (!$imagestring)
 		$imagestring = 'ERROR';

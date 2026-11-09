@@ -58,10 +58,10 @@ function scrape($tid, $url, $info_hash) {
 		else
 			$data = $http->scrape($url, $info_hash);
 		$data = $data[$info_hash];
-		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(mysql_error()."\n");
+		sql_query('UPDATE torrents_scrape SET state = "ok", error = "", seeders = '.intval($data['seeders']).', leechers = '.intval($data['leechers']).' WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(db_error()."\n");
 		return true;
 	} catch (ScraperException $e) {
-		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(mysql_error()."\n");
+		sql_query('UPDATE torrents_scrape SET state = "error", error = '.sqlesc($e->getMessage()).', seeders = 0, leechers = 0 WHERE tid = '.$tid.' AND url = '.sqlesc($url)) or error_log(db_error()."\n");
 		return false;
 	}
 }
@@ -88,14 +88,14 @@ if ($_GET['info_hash'] && $_GET['url']) {
 	if (!check_token($token, $tid, $url, $info_hash))
 		die('Invalid token');
 	$allowed = sql_query('SELECT info_hash FROM torrents_scrape WHERE tid = '.$tid.' AND url = '.sqlesc($url).' LIMIT 1');
-	$row = $allowed ? mysql_fetch_assoc($allowed) : false;
+	$row = $allowed ? mysqli_fetch_assoc($allowed) : false;
 	if (!$row || $row['info_hash'] !== $info_hash)
 		die('Unknown tracker');
 	echo scrape($tid, $url, $info_hash);
 	exit;
 }
 
-list($name, $cur_visible, $multitracker, $last_mt_update) = mysql_fetch_row(sql_query('SELECT name, visible, multitracker, last_mt_update FROM torrents WHERE id = '.$tid));
+list($name, $cur_visible, $multitracker, $last_mt_update) = mysqli_fetch_row(sql_query('SELECT name, visible, multitracker, last_mt_update FROM torrents WHERE id = '.$tid));
 if ($name == '' || $multitracker == 'no')
 	stderr($tracker_lang['error'], "Такого торрента нет, или он не мультитрекерный.");
 
@@ -107,7 +107,7 @@ $anns_r = sql_query('SELECT info_hash, url FROM torrents_scrape WHERE tid = '.$t
 $s_sum = $l_sum = $errors = $success = 0;
 $pids = $works = array();
 
-while ($ann = mysql_fetch_array($anns_r))
+while ($ann = mysqli_fetch_array($anns_r))
 	$works[] = $ann;
 
 if (function_exists('curl_multi_init')) {
@@ -164,13 +164,13 @@ if ($ajax !== 'yes') {
 
 	$announces_a = $announces_urls = array();
 	$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$tid);
-	while ($announce = mysql_fetch_array($announces_r)) {
+	while ($announce = mysqli_fetch_array($announces_r)) {
 		$announces_a[] = $announce;
 		$announces_urls[] = $announce['url'];
 	}
 	unset($announce);
 
-	$row = mysql_fetch_array(sql_query('SELECT last_mt_update FROM torrents WHERE id = '.$tid));
+	$row = mysqli_fetch_array(sql_query('SELECT last_mt_update FROM torrents WHERE id = '.$tid));
 
 	if (count($announces_a)) {
 		foreach ($announces_a as $announce) {

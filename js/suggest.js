@@ -38,7 +38,7 @@ function suggest(key,query) {
 	} else if (key != 13) {
 		if (query.length > 3) {
 			t = new Date();
-			ajax.get('suggest.php?q='+query+'&bla='+t.getTime(),update);
+			ajax.get('suggest.php?q='+encodeURIComponent(query)+'&bla='+t.getTime(),update);
 		} else {
 			update('');
 		}

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -54,7 +54,7 @@ if ($action == 'add') {
         }
 
         $r = sql_query('SELECT id FROM simpaty WHERE touserid=' . $targetid . ' AND type = ' . sqlesc($type) . ' AND fromuserid = ' . $CURUSER['id']) or sqlerr(__FILE__, __LINE__);
-        if (mysql_num_rows($r) == 1) {
+        if (mysqli_num_rows($r) == 1) {
                 stderr ($tracker_lang['error'],"Вы уже давали респект за это действие этому пользователю.");
         }
 
@@ -105,12 +105,12 @@ if ($action == 'delete') {
         if (!is_valid_id($respect_id))
                 stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
         $res = sql_query('SELECT touserid, good, bad FROM simpaty WHERE id = '.$respect_id) or sqlerr(__FILE__, __LINE__);
-        $respect = mysql_fetch_assoc($res);
+        $respect = mysqli_fetch_assoc($res);
         if (!$respect)
                 stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
         $touserid = (int)$respect['touserid'];
         sql_query('DELETE FROM simpaty WHERE id = '.$respect_id) or sqlerr(__FILE__, __LINE__);
-        if (mysql_affected_rows() != 1)
+        if (db_affected_rows() != 1)
                 stderr($tracker_lang['error'], 'Vote no longer exists.');
         if ($respect['good'] == 1)
                 sql_query('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = '.$touserid) or sqlerr(__FILE__, __LINE__);

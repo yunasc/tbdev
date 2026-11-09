@@ -1,4 +1,4 @@
-<? require "include/bittorrent.php";
+<?php require "include/bittorrent.php";
 
 /*
 // +--------------------------------------------------------------------------+
@@ -30,7 +30,7 @@ dbconn();
 loggedinorreturn();
 
 $res = sql_query("SELECT id, name FROM categories ORDER BY name");
-while($cat = mysql_fetch_assoc($res))
+while($cat = mysqli_fetch_assoc($res))
 $catoptions .= "<input type=\"checkbox\" name=\"cat[]\" value=\"$cat[id]\" ".(strpos($CURUSER['notifs'], "[cat$cat[id]]") !== false ? " checked" : "") . "/>$cat[name]<br />";
 $category[$cat['id']] = $cat['name'];
 
@@ -91,6 +91,6 @@ die();
 </TABLE>
 </FORM>
 
-<?
+<?php
 stdfoot();
 ?>

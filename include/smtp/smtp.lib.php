@@ -77,7 +77,7 @@ class smtp
 	* @var string
 	* @access private
 	*/
-	var $_charset = 'cp1251';
+	var $_charset = 'UTF-8';
 
 
 	/**
@@ -85,7 +85,7 @@ class smtp
 	*
 	* @access public
 	*/
-	function smtp()
+	function __construct()
 	{
 		$this->_add_hdr('Date', sprintf(date(DateTime::RFC2822)));
 		$this->_add_hdr('X-Mailer', sprintf('LAGNUT-SMTP/%s', $this->_version));
@@ -209,7 +209,7 @@ class smtp
 		if (!$this->_connection) {
 			return true;
 		}
-		if (isset($response{0}) && ($response{0} == 4|| $response{0}== 5)) {
+		if (isset($response[0]) && ($response[0] == 4|| $response[0]== 5)) {
 			$this->close();
 			return true;
 		}
@@ -275,11 +275,11 @@ class smtp
 	* @param string $password password
 	* @param int authentication mecanism
 	*/
-	function auth($username, $password, $type = LOGIN)
+	function auth($username, $password, $type = 'LOGIN')
 	{
 		global $rootpath;		
 		include_once ($rootpath . 'include/smtp/sasl.lib.php');
-		$sasl =& new sasl($sasl, $username, $password);
+		$sasl  = new sasl();
 		switch ($type) {
 			case PLAIN:
 				$this->_cmd('AUTH PLAIN');
@@ -423,7 +423,7 @@ class smtp
 			printf("\r\n.\r\n");
 			printf('%s', $resp);
 		}
-		if ((int)$resp{0} != 2) {
+		if ((int)$resp[0] != 2) {
 			return false;
 		} else {
 			return true;
@@ -440,9 +440,7 @@ class smtp
 	*/
 	function encode_hdrs($input)
 	{
-		$replacement = preg_replace('/([\x80-\xFF])/e', '"=" . strtoupper(dechex(ord("\1")))', $input);
-		$input = str_replace($input, sprintf('=?%s?Q?%s?=', $this->_charset, $replacement), $input);
-		return $input;
+		return mb_encode_mimeheader($input, $this->_charset);
 	}
 
 

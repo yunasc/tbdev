@@ -147,7 +147,7 @@ echo("<table class=main cellspacing=0 cellpadding=5>");
 echo("<td>ID</td><td>Сортировка</td><td>Название</td><td>Картинка</td><td>Просмотр категории</td><td>Редактировать</td><td>Удалить</td>");
 $query = "SELECT * FROM categories WHERE 1=1 ORDER BY sort";
 $sql = sql_query($query) or sqlerr(__FILE__, __LINE__);
-while ($row = mysql_fetch_array($sql)) {
+while ($row = mysqli_fetch_array($sql)) {
 $id = (int) $row['id'];
 $sort = $row['sort'];
 $name = $row['name'];

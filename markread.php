@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST")
 csrf_require_post();
 stdhead();
 
-if (mysql_query("INSERT IGNORE INTO readtorrents (userid, torrentid) SELECT ".sqlesc($CURUSER["id"]).", id FROM torrents")) {
+if (db_query("INSERT IGNORE INTO readtorrents (userid, torrentid) SELECT ".sqlesc($CURUSER["id"]).", id FROM torrents")) {
 	stdmsg("Успешно", "Новые торренты отмечены как прочитаные.");
 } else {
 	stdmsg("Ошибка", "Отметка новых торрентов произошла с ошибкой: ".'Database error.');

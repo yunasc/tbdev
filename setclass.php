@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -62,7 +62,7 @@ stdhead("Смена класса");
 <input type=hidden name='returnto' value='userdetails.php?id=<?=$CURUSER['id']?>'> <!-- Change to any page you want -->
 <table width=150 border=2 cellspacing=5 cellpadding=5>
 <tr><td>Класс</td><td align=left><select name=class> <!-- Populate drop down box with all lower classes -->
-<?
+<?php
 $maxclass = get_user_class() - 1;
 for ($i = 0; $i <= $maxclass; ++$i)
 print("<option value=$i" .">" . get_user_class_name($i) . "\n");
@@ -73,6 +73,6 @@ print("<option value=$i" .">" . get_user_class_name($i) . "\n");
 </form>
 </table>
 <br />
-<?
+<?php
 stdfoot();
 ?>

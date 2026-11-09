@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ function maketable($res)
   $ret = "<table class=main border=1 cellspacing=0 cellpadding=5>" .
     "<tr><td class=colhead align=left>".$tracker_lang['type']."</td><td class=colhead>".$tracker_lang['name']."</td>".($use_ttl ? "<td class=colhead align=center>".$tracker_lang['ttl']."</td>" : "")."<td class=colhead align=center>".$tracker_lang['size']."</td><td class=colhead align=right>".$tracker_lang['details_seeding']."</td><td class=colhead align=right>".$tracker_lang['details_leeching']."</td><td class=colhead align=center>".$tracker_lang['uploaded']."</td>\n" .
     "<td class=colhead align=center>".$tracker_lang['downloaded']."</td><td class=colhead align=center>".$tracker_lang['ratio']."</td></tr>\n";
-  while ($arr = mysql_fetch_assoc($res))
+  while ($arr = mysqli_fetch_assoc($res))
   {
     if ($arr["downloaded"] > 0)
     {
@@ -83,17 +83,17 @@ if (!is_valid_id($id))
   bark($tracker_lang['invalid_id']);
 
 $r = @sql_query("SELECT * FROM users WHERE id=$id") or sqlerr(__FILE__, __LINE__);
-$user = mysql_fetch_array($r) or bark("Нет пользователя с таким ID $id.");
+$user = mysqli_fetch_array($r) or bark("Нет пользователя с таким ID $id.");
 if ($user["status"] == "pending") die;
 $r = sql_query("SELECT torrents.id, torrents.name, torrents.seeders, torrents.added, torrents.leechers, torrents.category, categories.name AS catname, categories.image AS catimage, categories.id AS catid FROM torrents LEFT JOIN categories ON torrents.category = categories.id WHERE owner=$id ORDER BY name") or sqlerr(__FILE__, __LINE__);
-if (mysql_num_rows($r) > 0) {
+if (mysqli_num_rows($r) > 0) {
   $torrents = "<table class=main border=1 cellspacing=0 cellpadding=5>\n" .
     "<tr><td class=colhead>".$tracker_lang['type']."</td><td class=colhead>".$tracker_lang['name']."</td>".($use_ttl ? "<td class=colhead align=center>".$tracker_lang['ttl']."</td>" : "")."<td class=colhead>".$tracker_lang['tracker_seeders']."</td><td class=colhead>".$tracker_lang['tracker_leechers']."</td></tr>\n";
-  while ($a = mysql_fetch_assoc($r)) {
+  while ($a = mysqli_fetch_assoc($r)) {
 	$ttl = ($ttl_days*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($a["added"])) / 3600);
 	if ($ttl == 1) $ttl .= "&nbsp;час"; else $ttl .= "&nbsp;часов";
 		//$r2 = sql_query("SELECT name, image FROM categories WHERE id=$a[category]") or sqlerr(__FILE__, __LINE__);
-		//$a2 = mysql_fetch_assoc($r2);
+		//$a2 = mysqli_fetch_assoc($r2);
 		$cat = "<a href=\"browse.php?cat=$a[catid]\"><img src=\"pic/cats/$a[catimage]\" alt=\"$a[catname]\" border=\"0\" /></a>";
       $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href=\"details.php?id=" . $a["id"] . "&hit=1\"><b>" . $a["name"] . "</b></a></td>"
       	.($use_ttl ? "<td align=center>$ttl</td>" : "")
@@ -103,10 +103,10 @@ if (mysql_num_rows($r) > 0) {
 }
 
 $it = sql_query("SELECT u.id, u.username, u.class, i.id AS invitedid, i.username AS invitedname, i.class AS invitedclass FROM users AS u LEFT JOIN users AS i ON i.id = u.invitedby WHERE u.invitedroot = $id OR u.invitedby = $id ORDER BY u.invitedby");
-if (mysql_num_rows($it) >= 1) {
+if (mysqli_num_rows($it) >= 1) {
 	$invitetree = "<table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\"><tr>".
 		"<td class=\"colhead\">Пользователь</td><td class=\"colhead\">Пригласил</td>";
-	while ($inviter = mysql_fetch_array($it))
+	while ($inviter = mysqli_fetch_array($it))
 		$invitetree .= "<tr><td><a href=\"userdetails.php?id=$inviter[id]\">".get_user_class_color($inviter["class"], $inviter["username"])."</a></td><td><a href=\"userdetails.php?id=$inviter[invitedid]\">".get_user_class_color($inviter["invitedclass"], $inviter["invitedname"])."</a></td></tr>";
 	$invitetree .= "</table>";
 }
@@ -130,10 +130,10 @@ if ($user["ip"] && (get_user_class() >= UC_MODERATOR || $user["id"] == $CURUSER[
 }
 
 $r = sql_query("SELECT snatched.torrent AS id, snatched.uploaded, snatched.seeder, snatched.downloaded, snatched.startdat, snatched.completedat, snatched.last_action, categories.name AS catname, categories.image AS catimage, categories.id AS catid, torrents.name, torrents.seeders, torrents.leechers FROM snatched JOIN torrents ON torrents.id = snatched.torrent JOIN categories ON torrents.category = categories.id WHERE snatched.finished='yes' AND userid = $id ORDER BY torrent") or sqlerr(__FILE__,__LINE__);
-if (mysql_num_rows($r) > 0) {
+if (mysqli_num_rows($r) > 0) {
 $completed = "<table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n" .
   "<tr><td class=\"colhead\">Тип</td><td class=\"colhead\">Название</td><td class=\"colhead\">Раздающих</td><td class=\"colhead\">Качающих</td><td class=\"colhead\">Раздал</td><td class=\"colhead\">Скачал</td><td class=\"colhead\">Рейтинг</td><td class=\"colhead\">Начал / Закончил</td><td class=\"colhead\">Действие</td><td class=\"colhead\">Сидирует</td></tr>\n";
-while ($a = mysql_fetch_array($r)) {
+while ($a = mysqli_fetch_array($r)) {
 if ($a["downloaded"] > 0) {
       $ratio = number_format($a["uploaded"] / $a["downloaded"], 3);
       $ratio = "<font color=\"" . get_ratio_color($ratio) . "\">$ratio</font>";
@@ -155,7 +155,7 @@ else
 $completed .= "</table>";
 }
 
-if ($user[added] == "0000-00-00 00:00:00")
+if ($user['added'] == "0000-00-00 00:00:00")
 	$joindate = 'N/A';
 else
 	$joindate = "$user[added] (" . get_et(sql_timestamp_to_unix_timestamp($user["added"])) . " ".$tracker_lang['ago'].")";
@@ -165,17 +165,17 @@ if ($lastseen == "0000-00-00 00:00:00")
 else {
   $lastseen .= " (" . get_et(sql_timestamp_to_unix_timestamp($lastseen)) . " ".$tracker_lang['ago'].")";
 }
-  $res = sql_query("SELECT COUNT(*) FROM comments WHERE user = " . $user[id]) or sqlerr(__FILE__, __LINE__);
-  $arr3 = mysql_fetch_row($res);
+  $res = sql_query("SELECT COUNT(*) FROM comments WHERE user = " . $user['id']) or sqlerr(__FILE__, __LINE__);
+  $arr3 = mysqli_fetch_row($res);
   $torrentcomments = $arr3[0];
 
 //if ($user['donated'] > 0)
 //  $don = "<img src=pic/starbig.gif>";
 
 $res = sql_query("SELECT name, flagpic FROM countries WHERE id = $user[country] LIMIT 1") or sqlerr(__FILE__, __LINE__);
-if (mysql_num_rows($res) == 1)
+if (mysqli_num_rows($res) == 1)
 {
-  $arr = mysql_fetch_assoc($res);
+  $arr = mysqli_fetch_assoc($res);
   $country = "<td class=\"embedded\"><img src=\"pic/flag/$arr[flagpic]\" alt=\"$arr[name]\" style=\"margin-left: 8pt\"></td>";
 }
 
@@ -187,14 +187,14 @@ elseif ($user["gender"] == "2") $gender = "<img src=\"".$pic_base_url."/female.g
 //elseif ($user["gender"] == "Н/Д") $gender = "<td class=embedded><img src=".$pic_base_url."/na.gif alt='Н/Д' style='margin-left: 4pt'></td>";
 
 $res = sql_query("SELECT torrent, added, uploaded, downloaded, torrents.name AS torrentname, categories.name AS catname, categories.id AS catid, size, image, category, seeders, leechers FROM peers LEFT JOIN torrents ON peers.torrent = torrents.id LEFT JOIN categories ON torrents.category = categories.id WHERE userid = $id AND seeder='no'") or sqlerr(__FILE__, __LINE__);
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
   $leeching = maketable($res);
 $res = sql_query("SELECT torrent, added, uploaded, downloaded, torrents.name AS torrentname, categories.name AS catname, categories.id AS catid, size, image, category, seeders, leechers FROM peers LEFT JOIN torrents ON peers.torrent = torrents.id LEFT JOIN categories ON torrents.category = categories.id WHERE userid = $id AND seeder='yes'") or sqlerr(__FILE__, __LINE__);
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
   $seeding = maketable($res);
 
 ///////////////// BIRTHDAY MOD /////////////////////
-if ($user[birthday] != "0000-00-00")
+if ($user['birthday'] != "0000-00-00")
 {
         //$current = date("Y-m-d", time());
         $current = date("Y-m-d", time() + $CURUSER['tzoffset'] * 60);
@@ -234,9 +234,9 @@ if (!$enabled)
   print("<p><b>Этот аккаунт отключен</b></p>\n");
 elseif ($CURUSER["id"] <> $user["id"]) {
   $r = sql_query("SELECT id FROM friends WHERE userid=$CURUSER[id] AND friendid = $id") or sqlerr(__FILE__, __LINE__);
-  $friend = mysql_num_rows($r);
+  $friend = mysqli_num_rows($r);
   $r = sql_query("SELECT id FROM blocks WHERE userid=$CURUSER[id] AND blockid = $id") or sqlerr(__FILE__, __LINE__);
-  $block = mysql_num_rows($r);
+  $block = mysqli_num_rows($r);
 
   if ($friend)
     print("<p>(<a href=\"friends.php?action=delete&type=friend&targetid=$id\">Убрать из друзей</a>)</p>\n");
@@ -254,7 +254,7 @@ begin_main_frame();
 <table width=100% border=1 cellspacing=0 cellpadding=5>
 <tr><td class=rowhead width=1%>Зарегистрирован</td><td align=left width=99%><?=$joindate?></td></tr>
 <tr><td class=rowhead>Последний раз был на трекере</td><td align=left><?=$lastseen?></td></tr>
-<?
+<?php
 if (get_user_class() >= UC_MODERATOR)
 	print("<tr><td class=\"rowhead\">Email</td><td align=\"left\"><a href=\"mailto:" . htmlspecialchars_uni($user["email"]) . "\">" . htmlspecialchars_uni($user["email"]) . "</a></td></tr>\n");
 if ($addr)
@@ -265,11 +265,11 @@ if ($addr)
 ?>
 <tr><td class=rowhead>Раздал</td><td align=left><?=mksize($user["uploaded"])?></td></tr>
 <tr><td class=rowhead>Скачал</td><td align=left><?=mksize($user["downloaded"])?></td></tr>
-<?
+<?php
 if (get_user_class() >= UC_MODERATOR)
 	print("<tr><td class=\"rowhead\">Приглашений</td><td align=left><a href=\"invite.php?id=$id\">".$user["invites"]."</a></td></tr>");
 if ($user["invitedby"] != 0) {
-	$inviter = mysql_fetch_assoc(sql_query("SELECT username FROM users WHERE id = ".sqlesc($user["invitedby"])));
+	$inviter = mysqli_fetch_assoc(sql_query("SELECT username FROM users WHERE id = ".sqlesc($user["invitedby"])));
 	print("<tr><td class=\"rowhead\">Пригласил</td><td align=\"left\"><a href=\"userdetails.php?id=$user[invitedby]\">$inviter[username]</a></td></tr>");
 }
 if ($user["downloaded"] > 0) {
@@ -296,7 +296,7 @@ if ($user["icq"] || $user["msn"] || $user["aim"] || $user["yahoo"] || $user["sky
 ?>
 <tr>
 <td class=rowhead><b>Связь</b></td><td align=left>
-<?
+<?php
 if ($user["icq"])
     print("<img src=\"http://web.icq.com/whitepages/online?icq=" . htmlspecialchars_uni($user["icq"]) . "&amp;img=5\" alt=\"icq\" border=\"0\" /> " . htmlspecialchars_uni($user["icq"]) . " <br />\n");
 if ($user["msn"])
@@ -312,7 +312,7 @@ if ($user["mirc"])
 ?> 
 </td>
 </tr>
-<?
+<?php
 }
 if ($user["website"] && preg_match('/\Ahttps?:\/\//iD', $user["website"]))
 	print("<tr><td class=\"rowhead\">Сайт</td><td align=\"left\"><a href=\"" . htmlspecialchars_uni($user["website"]) . "\" target=\"_blank\" rel=\"noopener noreferrer\">" . htmlspecialchars_uni($user["website"]) . "</a></td></tr>\n");
@@ -372,7 +372,7 @@ if ($torrentcomments && (($user["class"] >= UC_POWER_USER && $user["id"] == $CUR
 else
 	print("<td align=\"left\">$torrentcomments</td></tr>\n");
 
-?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?
+?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?php
 
 if ($torrents)
  print("<tr valign=\"top\"><td class=\"rowhead\">Залитые&nbsp;торренты</td><td align=\"left\"><a href=\"javascript: show_hide('s1')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics1\" title=\"Показать\"></a><div id=\"ss1\" style=\"display: none;\">$torrents</div></td></tr>\n");
@@ -394,12 +394,12 @@ if ($CURUSER["id"] != $user["id"])
 	elseif ($user["acceptpms"] == "yes")
 	{
 		$r = sql_query("SELECT id FROM blocks WHERE userid = $user[id] AND blockid = $CURUSER[id]") or sqlerr(__FILE__,__LINE__);
-		$showpmbutton = (mysql_num_rows($r) == 1 ? 0 : 1);
+		$showpmbutton = (mysqli_num_rows($r) == 1 ? 0 : 1);
 	}
 	elseif ($user["acceptpms"] == "friends")
 	{
 		$r = sql_query("SELECT id FROM friends WHERE userid = $user[id] AND friendid = $CURUSER[id]") or sqlerr(__FILE__,__LINE__);
-		$showpmbutton = (mysql_num_rows($r) == 1 ? 1 : 0);
+		$showpmbutton = (mysqli_num_rows($r) == 1 ? 1 : 0);
 	}
 if ($showpmbutton)
 	print("<tr><td colspan=2 align=center><form method=\"get\" action=\"message.php\"> 
@@ -419,7 +419,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
   print("<input type=\"hidden\" name=\"userid\" value=\"$id\">\n");
   print("<input type=\"hidden\" name=\"returnto\" value=\"userdetails.php?id=$id\">\n");
   print("<table class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-  print("<tr><td class=\"rowhead\">Заголовок</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"title\" value=\"" . htmlspecialchars_uni($user[title]) . "\"></tr>\n");
+  print("<tr><td class=\"rowhead\">Заголовок</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"title\" value=\"" . htmlspecialchars_uni($user['title']) . "\"></tr>\n");
 	$avatar = htmlspecialchars_uni($user["avatar"]);
   print("<tr><td class=\"rowhead\">Аватар</td><td colspan=\"2\" align=\"left\"><input type=\"text\" size=\"60\" name=\"avatar\" value=\"$avatar\"></tr>\n");
 	// we do not want mods to be able to change user classes or amount donated...
@@ -526,7 +526,7 @@ function togglepic(bu, picid, formid)
 }
 
 </script>
-<?
+<?php
   print("<tr><td class=\"rowhead\">Изменить раздачу</td><td align=\"left\"><img src=\"pic/plus.gif\" id=\"uppic\" onClick=\"togglepic('$DEFAULTBASEURL','uppic','upchange')\" style=\"cursor: pointer;\">&nbsp;<input type=\"text\" name=\"amountup\" size=\"10\" /><td>\n<select name=\"formatup\">\n<option value=\"mb\">MB</option>\n<option value=\"gb\">GB</option></select></td></tr>");
   print("<tr><td class=\"rowhead\">Изменить скачку</td><td align=\"left\"><img src=\"pic/plus.gif\" id=\"downpic\" onClick=\"togglepic('$DEFAULTBASEURL','downpic','downchange')\" style=\"cursor: pointer;\">&nbsp;<input type=\"text\" name=\"amountdown\" size=\"10\" /><td>\n<select name=\"formatdown\">\n<option value=\"mb\">MB</option>\n<option value=\"gb\">GB</option></select></td></tr>");
   print("<tr><td class=\"rowhead\">Сбросить passkey</td><td colspan=\"2\" align=\"left\"><input name=\"resetkey\" value=\"1\" type=\"checkbox\"></td></tr>\n");

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $invites = sqlesc($_POST["invites"]);
 
     $res = sql_query("SELECT id FROM users WHERE username = $username");
-    $arr = mysql_fetch_row($res);
+    $arr = mysqli_fetch_row($res);
 
     if (!$arr)
         stderr("Error", "Unable to update account.");
@@ -67,4 +67,4 @@ stdhead("Update Users Invite Amounts");
 	</table>
 </form>
 
-<? stdfoot(); ?>
+<?php stdfoot(); ?>

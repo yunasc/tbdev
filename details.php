@@ -190,7 +190,7 @@ if (!isset($id) || !$id)
 	die();
 
 $res = sql_query("SELECT td.descr_hash, td.descr_parsed, t.multitracker, t.last_mt_update, t.keywords, t.description, t.free, t.seeders, t.banned, t.leechers, t.info_hash, t.filename, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(t.last_action) AS lastseed, t.numratings, t.name, IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, t.owner, t.save_as, t.descr, t.visible, t.size, t.added, t.views, t.hits, t.times_completed, t.id, t.type, t.numfiles, t.image1, t.image2, t.image3, t.image4, t.image5, c.name AS cat_name, u.username FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id LEFT JOIN torrents_descr AS td ON td.tid = $id WHERE t.id = $id") or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 
 $keywords = $row['keywords'];
 $description = $row['description'];
@@ -233,7 +233,7 @@ if (!isset($_GET["page"])) {
 	if ($row['multitracker'] == 'yes') {
 		$announces_a = $announces_urls = array();
 		$announces_r = sql_query('SELECT url, seeders, leechers, last_update, state, error FROM torrents_scrape WHERE tid = '.$id);
-		while ($announce = mysql_fetch_array($announces_r)) {
+		while ($announce = mysqli_fetch_array($announces_r)) {
 			$announces_a[] = $announce;
 			$announces_urls[] = $announce['url'];
 		}
@@ -354,7 +354,7 @@ if (!isset($_GET["page"])) {
 						 1 => $tracker_lang['vote_1'],);
 		if (!$owned || $moderator) {
 			$xres = sql_query("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . $CURUSER["id"]);
-			$xrow = mysql_fetch_array($xres);
+			$xrow = mysqli_fetch_array($xres);
 			if ($xrow)
 				$s .= "({$tracker_lang['you_have_voted_for_this_torrent']} \"{$xrow["rating"]} - {$ratings[$xrow["rating"]]}\")"; else {
 				$s .= "<form method=\"post\" action=\"takerate.php\" name=\"ajaxrating\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" id=\"ratingtid\" name=\"id\" value=\"$id\" />\n";
@@ -397,7 +397,7 @@ function sendrating(){
 	return false;
 }
 </script>
-<?
+<?php
 
 	tr($tracker_lang['rating'], $s, 1);*/
 
@@ -423,7 +423,7 @@ $(document).ready(function(){
 	});
 });	
 </script>
-<?
+<?php
 
 /* Sorry, but heredoc is not possible to indent */
 $rating_selector = <<<SELECTOR
@@ -438,8 +438,8 @@ $rating_selector = <<<SELECTOR
 </div>
 SELECTOR;
 
-		$is_voted = mysql_fetch_array(sql_query('SELECT rating FROM ratings WHERE torrent = ' . $id . ' AND user = ' . $CURUSER['id']));
-		if (mysql_error())
+		$is_voted = mysqli_fetch_array(sql_query('SELECT rating FROM ratings WHERE torrent = ' . $id . ' AND user = ' . $CURUSER['id']));
+		if (db_error())
 			sqlerr();
 		if ($is_voted) {
 			$stars .= ratingpic($row['rating']) . "(" . $row["rating"] . " " . $tracker_lang['from'] . " 5 ".$tracker_lang['with'] . " " . $row["numratings"] . " " . getWord($row["numratings"], array($tracker_lang['votes_1'], $tracker_lang['votes_2'], $tracker_lang['votes_3'])).")".' Ваша оценка <b>' . $is_voted['rating'] . '</b> - <b>' . $tracker_lang['vote_' . $is_voted['rating']] . '</b>';
@@ -473,8 +473,8 @@ if ($row["type"] == "multi") {
 
 		$subres = sql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
 		$s.="<tr><td class=colhead>{$tracker_lang['path']}</td><td class=colhead align=right>{$tracker_lang['size']}</td></tr>\n";
-		while ($subrow = mysql_fetch_array($subres)) {
-			$s .= "<tr><td>".htmlspecialchars_uni(iconv('utf-8', 'windows-1251', $subrow["filename"]))."</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
+		while ($subrow = mysqli_fetch_array($subres)) {
+			$s .= "<tr><td>".htmlspecialchars_uni($subrow["filename"])."</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
 		}
 
 		$s .= "</table>\n";
@@ -488,7 +488,7 @@ if (!isset($_GET["dllist"])) {
 	$downloaders = array();
 	$seeders = array();
 	$subres = sql_query("SELECT seeder, finishedat, downloadoffset, uploadoffset, peers.ip, port, peers.uploaded, peers.downloaded, to_go, UNIX_TIMESTAMP(started) AS st, connectable, agent, peer_id, UNIX_TIMESTAMP(last_action) AS la, UNIX_TIMESTAMP(prev_action) AS pa, userid, users.username, users.class FROM peers INNER JOIN users ON peers.userid = users.id WHERE torrent = $id") or sqlerr(__FILE__, __LINE__);
-	while ($subrow = mysql_fetch_array($subres)) {
+	while ($subrow = mysqli_fetch_array($subres)) {
 		if ($subrow["seeder"] == "yes")
 			$seeders[] = $subrow;
 		else
@@ -548,7 +548,7 @@ if ($row["times_completed"] > 0) {
 	$snatched_full = "<table width=\"100%\" class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
 	$snatched_full .= "<tr><td class=colhead>Юзер</td><td class=colhead>Раздал</td><td class=colhead>Скачал</td><td class=colhead>Рейтинг</td><td class=colhead align=center>Начал / Закончил</td><td class=colhead align=center>Действие</td><td class=colhead align=center>Сидирует</td><td class=colhead align=center>ЛС</td></tr>";
 
-	while ($arr = mysql_fetch_assoc($res)) {
+	while ($arr = mysqli_fetch_assoc($res)) {
 		//start Global
 		if ($arr["downloaded"] > 0) {
 		        $ratio = number_format($arr["uploaded"] / $arr["downloaded"], 2);
@@ -579,7 +579,7 @@ if ($row["times_completed"] > 0) {
 			"</td><td align=center><a href=\"message.php?action=sendmessage&amp;receiver={$arr['userid']}\"><img src=\"$pic_base_url/button_pm.gif\" border=\"0\"></a></td></tr>\n";
     }
     $snatched_full .= "</table>\n";
-	?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?
+	?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?php
 	if ($row["seeders"] == 0 || ($row["leechers"] / $row["seeders"] >= 2))
 		$reseed_button = "<form method=\"post\" action=\"takereseed.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
 	if (!$_GET["snatched"]==1)
@@ -593,18 +593,18 @@ tr($tracker_lang['torrent_info'], "<a href=\"torrent_info.php?id={$id}\">{$track
 
 $torrentid = (int) $_GET["id"];
 /*$count_sql = sql_query("SELECT COUNT(*) FROM thanks WHERE torrentid = $torrentid");
-$count_row = mysql_fetch_array($count_sql);
+$count_row = mysqli_fetch_array($count_sql);
 $count = $count_row[0];*/
 
 $thanked_sql = sql_query("SELECT thanks.userid, users.username, users.class FROM thanks INNER JOIN users ON thanks.userid = users.id WHERE thanks.torrentid = $torrentid");
-$count = mysql_num_rows($thanked_sql);
+$count = mysqli_num_rows($thanked_sql);
 
 if ($count == 0) {
 	$thanksby = $tracker_lang['none_yet'];
 } else {
 	//$thanked_sql = sql_query("SELECT thanks.userid, users.username FROM thanks INNER JOIN users ON thanks.userid = users.id WHERE thanks.torrentid = $torrentid");
 	$thanksby = array();
-	while ($thanked_row = mysql_fetch_assoc($thanked_sql)) {
+	while ($thanked_row = mysqli_fetch_assoc($thanked_sql)) {
 		if ($thanked_row["userid"] == $CURUSER["id"])
 			$can_not_thanks = true;
 		$userid = $thanked_row["userid"];
@@ -654,7 +654,7 @@ function update_multi() {
      <div style="font-weight:bold" id="loading-layer-text"><?=$tracker_lang['ajax_loading'];?></div><br />
      <img src="<?=$pic_base_url;?>/loading.gif" border="0" />
 </div>
-<?
+<?php
 
 	tr($tracker_lang['said_thanks'], $thanksby, 1);
 
@@ -668,7 +668,7 @@ function update_multi() {
 	print("<p><a name=\"startcomments\"></a></p>\n");
 
 	$subres = sql_query("SELECT COUNT(*) FROM comments WHERE torrent = $id");
-	$subrow = mysql_fetch_array($subres);
+	$subrow = mysqli_fetch_array($subres);
 	$count = $subrow[0];
 
 	$limited = 10;
@@ -705,7 +705,7 @@ if (!$count) {
 	"u.username, u.title, u.class, u.donor, u.downloaded, u.uploaded, u.gender, u.last_access, e.username AS editedbyname FROM comments AS c LEFT JOIN users AS u ON c.user = u.id LEFT JOIN users AS e ON c.editedby = e.id LEFT JOIN comments_parsed AS cp ON cp.cid = c.id WHERE torrent = " .
 	"$id ORDER BY c.id $limit") or sqlerr(__FILE__, __LINE__);
 	$allrows = array();
-	while ($subrow = mysql_fetch_array($subres))
+	while ($subrow = mysqli_fetch_array($subres))
 	    $allrows[] = $subrow;
 
 

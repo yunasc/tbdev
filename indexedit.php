@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -39,9 +39,9 @@ if ($action == 'edit') {
 	if (!is_valid_id($id))
 		stderr($tracker_lang["error"], $tracker_lang["invalid_id"]);
 	$res = sql_query("SELECT * FROM indexreleases WHERE id = ".sqlesc($id)) or sqlerr(__FILE__,__LINE__);
-	if (mysql_num_rows($res) != 1)
+	if (mysqli_num_rows($res) != 1)
 		stderr($tracker_lang["error"], $tracker_lang["invalid_id"]);
-	$release = mysql_fetch_array($res);
+	$release = mysqli_fetch_array($res);
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         csrf_require_post();
 		$var_list = "name:poster:torrentid:cat:top:center:bottom";
@@ -90,26 +90,26 @@ $id = (int) $_GET["id"];
 
 <form name="index" action="?action=edit&id=<?=$id;?>" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="0" cellspacing="0" cellpadding="5">
-<?
+<?php
 tr("Название релиза", "<input type=\"text\" name=\"name\" size=\"80\" value=\"$release[name]\" /><br />Пример: Смерть Президента (2006) DVDRip\n", 1);
 tr("Постер", "<input type=\"text\" name=\"poster\" size=\"80\" value=\"$release[poster]\" /><br />Залить картинку на <a href=\"http://www.imageshack.us\">ImageShack</a>", 1);
 ?>
 <tr><td width="" class="heading" valign="top" align="right">Верхний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "top", $release["top"]);?></td></tr>
 <tr><td width="" class="heading" valign="top" align="right">Средний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "center", $release["center"]);?></td></tr>
 <tr><td width="" class="heading" valign="top" align="right">Нижний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "bottom", $release["bottom"]);?></td></tr>
-<?
+<?php
 tr("Номер торрента", "<input type=\"text\" name=\"torrentid\" size=\"60\" value=\"$release[torrentid]\" /><br />Пример: $DEFAULTBASEURL/details.php?id=<b>6764</b><br />Выделенное жирным - и есть номер торрента\n", 1);
 tr("URL IMDB", "<input type=\"text\" name=\"imdb\" size=\"60\" value=\"$release[imdb]\" /><br />Пример: http://www.imdb.com/title/tt0408306/\n", 1);
 tr("Категория", $categories, 1);
 ?>
 <tr><td align="center" colspan="2"><input type="submit" value="Изменить" /></td></tr>
 </table>
-<? if ($_GET["returnto"])
+<?php if ($_GET["returnto"])
 	print "<input type=\"hidden\" name=\"returnto\" value=\"".htmlentities($_GET["returnto"])."\" />";
 ?>
 </form>
 
-<?
+<?php
 		stdfoot();
 	}
 }

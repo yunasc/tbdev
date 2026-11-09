@@ -9,23 +9,24 @@ chdir(dirname(__FILE__) . '/..');
 require 'include/secrets.php';
 require 'include/secrets.local.php';
 
-mysql_connect($mysql_host, $mysql_user, $mysql_pass) or exit("Cannot connect: " . mysql_error() . "\n");
-mysql_select_db($mysql_db) or exit("Cannot select database: " . mysql_error() . "\n");
+require_once __DIR__ . '/../include/db.php';
+if (!db_connect($mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset))
+    exit("Database unavailable.\n");
 
 // A wrapped hash is 64 chars; writing it into the old varchar(32) column would truncate it and lock the user out.
-$col = mysql_fetch_row(mysql_query("SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS " .
+$col = mysqli_fetch_row(db_query("SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS " .
     "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'passhash'"));
 if (!$col || $col[0] < 64)
     exit("users.passhash is too short; apply migrations/2026-security-auth.sql first.\n");
 
-$res = mysql_query("SELECT id, passhash FROM users WHERE passhash REGEXP '^[0-9a-f]{32}$'") or exit(mysql_error() . "\n");
+$res = db_query("SELECT id, passhash FROM users WHERE passhash REGEXP '^[0-9a-f]{32}$'") or exit(db_error() . "\n");
 $wrapped = 0;
-while ($row = mysql_fetch_assoc($res)) {
+while ($row = mysqli_fetch_assoc($res)) {
     $hash = password_hash($row['passhash'], PASSWORD_BCRYPT);
     if ($hash === false)
         exit("password_hash() failed\n");
-    mysql_query("UPDATE users SET passhash = '" . mysql_real_escape_string('md5:' . $hash) . "' WHERE id = " . (int)$row['id'] .
-        " AND passhash = '" . mysql_real_escape_string($row['passhash']) . "'") or exit(mysql_error() . "\n");
-    $wrapped += mysql_affected_rows();
+    db_query("UPDATE users SET passhash = '" . db_real_escape_string('md5:' . $hash) . "' WHERE id = " . (int)$row['id'] .
+        " AND passhash = '" . db_real_escape_string($row['passhash']) . "'") or exit(db_error() . "\n");
+    $wrapped += db_affected_rows();
 }
 echo "Wrapped $wrapped legacy password hashes.\n";

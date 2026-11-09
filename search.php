@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -42,7 +42,7 @@ stdhead("Search");
 в
 <select name="cat">
 <option value="0">(Все типы)</option>
-<?
+<?php
 
 
 $cats = genrelist();
@@ -67,7 +67,7 @@ $deadchkbox .= " /> включая мертвяки\n";
 </p>
 </form>
 </td></tr></table>
-<?
+<?php
 
 stdfoot();
 

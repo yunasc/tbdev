@@ -35,7 +35,7 @@ csrf_require_post();
 $id = (int) $_POST["torrent"];
 
 $res = sql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.name, torrents.filename, torrents.times_completed, torrents.id, UNIX_TIMESTAMP(torrents.last_reseed) AS lr, categories.name AS cat_name FROM torrents LEFT JOIN categories ON torrents.category = categories.id WHERE torrents.id = $id") or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 
 if (!$row || $row["banned"] == "yes")
 	stderr($tracker_lang['error'], $tracker_lang['no_torrent_with_such_id']);

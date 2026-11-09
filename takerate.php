@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -50,7 +50,7 @@ if ($rating <= 0 || $rating > 5)
 	bark("invalid rating");
 
 $res = sql_query("SELECT owner FROM torrents WHERE id = $id");
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 if (!$row)
 	bark("no such torrent");
 
@@ -58,12 +58,12 @@ if (!$row)
 	bark("You can't vote on your own torrents.");*/
 
 $own = sql_query("SELECT id FROM ratings WHERE torrent = $id AND user = $CURUSER[id]");
-if (mysql_num_rows($own) != 0)
+if (mysqli_num_rows($own) != 0)
     bark("Вы уже голосовали за этот торрент!"); 
 
 $res = sql_query("INSERT INTO ratings (torrent, user, rating, added) VALUES ($id, " . $CURUSER["id"] . ", $rating, NOW())");
 if (!$res) {
-	if (mysql_errno() == 1062)
+	if (db_errno() == 1062)
 		bark("You have already rated this torrent.");
 	else
 		bark('Database error.');

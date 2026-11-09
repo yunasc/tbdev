@@ -50,7 +50,6 @@ if (!defined('IN_TRACKER')) {
 	@ini_set('ignore_repeated_errors', '1');
 	@ignore_user_abort(1);
 	@set_time_limit(0);
-	@set_magic_quotes_runtime(0);
 	@session_start();
 	define ('ROOT_PATH', dirname(dirname(__FILE__))."/");
 
@@ -98,9 +97,6 @@ if (!defined('IN_TRACKER')) {
 		die('После установки нужно обязательно удалить папку install.');*/
 	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
 		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
-	if ((int) ini_get('short_open_tag') == '0')
-		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
-
 	if (!file_exists('include/secrets.local.php'))
 		die('Создайте файл include/secrets.local.php и переместите в него свои локальные настройки из include/secrets.php (техническое требование)');
 

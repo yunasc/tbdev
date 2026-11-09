@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -43,12 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	if (!$email)
 		stderr($tracker_lang['error'], "Вы должны ввести email адрес");
 	$res = sql_query("SELECT * FROM users WHERE email = " . sqlesc($email) . " LIMIT 1") or sqlerr(__FILE__, __LINE__);
-	$arr = mysql_fetch_assoc($res) or stderr($tracker_lang['error'], "Email адрес не найден в базе данных.\n");
+	$arr = mysqli_fetch_assoc($res) or stderr($tracker_lang['error'], "Email адрес не найден в базе данных.\n");
 
 	$sec = mksecret();
 
 	sql_query("UPDATE users SET editsecret = " . sqlesc($sec) . ", editsecret_added = " . time() . " WHERE id = " . $arr["id"]) or sqlerr(__FILE__, __LINE__);
-	if (!mysql_affected_rows())
+	if (!db_affected_rows())
 		stderr($tracker_lang['error'], "Ошибка базы данных. Свяжитесь с администратором относительно этой ошибки.");
 
 	// Защита от козлов что ввели почту с разным регистром т.е не проходило восстановление пароля если у пользователя в базе почта например
@@ -85,7 +85,7 @@ EOD;
 	if (!$id)
 		httperr();
 	$res = sql_query("SELECT username, email, passhash, editsecret, editsecret_added FROM users WHERE id = $id");
-	$arr = mysql_fetch_array($res) or httperr();
+	$arr = mysqli_fetch_array($res) or httperr();
 	$email = $arr["email"];
 	$sec = $arr["editsecret"];
 	if (preg_match('/^ *$/s', $sec) || $arr["editsecret_added"] < time() - 86400)
@@ -101,7 +101,7 @@ EOD;
 	$newpasshash = make_password_hash($newpassword);
 	sql_query("UPDATE users SET secret = " . sqlesc($sec) . ", editsecret = '', passhash= " . sqlesc($newpasshash) . " WHERE id = $id AND editsecret = " . sqlesc($arr["editsecret"]));
 
-	if (!mysql_affected_rows())
+	if (!db_affected_rows())
 		stderr($tracker_lang['error'], "Невозможно обновить данные пользователя. Пожалуста свяжитесь с администратором относительно этой ошибки.");
 
 	$body = <<<EOD
@@ -132,7 +132,7 @@ EOD;
 	Вы должны будете подтвердить запрос.</td></tr>
 	<tr><td class="rowhead">Зарегистрированый email</td>
 	<td><input type="text" size="40" name="email"></td></tr>
-<?
+<?php
 
 if ($use_captcha) {
 	include_once("include/captcha.php");
@@ -156,7 +156,7 @@ if ($use_captcha) {
 ?>
 	<tr><td colspan="2" align="center"><input type="submit" value="Восстановить"></td></tr>
 	</table>
-	<?
+	<?php
 	stdfoot();
 }
 

@@ -110,7 +110,7 @@ EOD;
 			<textarea name="message" cols="100" rows="10"></textarea>
 		</td>
 	</tr>
-<? if ($use_captcha) { ?>
+<?php if ($use_captcha) { ?>
 	<tr>
 		<td align="right" width="20%" valign="top">
 			<b>Код безопасности:</b>
@@ -124,7 +124,7 @@ EOD;
 			<input type="hidden" name="imagehash" value="<?=$hash; ?>" />
 		</td>
 	</tr>
-<? } ?>
+<?php } ?>
 	<tr>
 		<td colspan="2" align="center">
 			<input type="submit" value="Отправить" name="cbutton">
@@ -133,7 +133,7 @@ EOD;
 	</tr>
 </table>
 </form>
-<?
+<?php
 	stdfoot();
 }
 

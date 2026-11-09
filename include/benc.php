@@ -96,7 +96,7 @@ function bdec($s) {
 			return;
 		return array('type' => "integer", 'value' => $v, 'strlen' => strlen($ss), 'string' => $ss);
 	}
-	switch ($s[0]) {
+	switch ($s[0] ?? '') {
 		case "l":
 			return bdec_list($s);
 		case "d":

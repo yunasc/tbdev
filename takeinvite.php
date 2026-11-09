@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -51,15 +51,15 @@ if (get_user_class() <= UC_MODERATOR)
 	$id = $CURUSER["id"];
 
 $re = sql_query("SELECT invites FROM users WHERE id = $id") or sqlerr(__FILE__,__LINE__);
-$tes = mysql_fetch_assoc($re);
+$tes = mysqli_fetch_assoc($re);
 
-if ($tes[invites] <= 0)
+if ($tes['invites'] <= 0)
 	bark("У вас больше не осталось приглашений!");
 
 $hash = mksecret(32);
 
 sql_query("UPDATE users SET invites = invites - 1 WHERE id = $id AND invites > 0") or sqlerr(__FILE__, __LINE__);
-if (mysql_affected_rows() != 1)
+if (db_affected_rows() != 1)
     bark("No invitations available.");
 sql_query("INSERT INTO invites (inviter, invite, time_invited) VALUES (" . implode(", ", array_map("sqlesc", array($id, $hash, get_date_time()))) . ")") or sqlerr(__FILE__,__LINE__);
 

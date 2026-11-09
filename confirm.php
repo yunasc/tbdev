@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -39,7 +39,7 @@ dbconn();
 
 
 $res = sql_query("SELECT passhash, editsecret, status FROM users WHERE id = $id");
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 
 if (!$row)
 	httperr();
@@ -57,7 +57,7 @@ if ($md5 !== md5($sec))
 
 sql_query("UPDATE users SET status='confirmed', editsecret='' WHERE id = $id AND status = 'pending'");
 
-if (!mysql_affected_rows())
+if (!db_affected_rows())
 	httperr();
 
 logincookie($id, $row["passhash"]);

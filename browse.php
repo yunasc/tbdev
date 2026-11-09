@@ -151,9 +151,9 @@ if (!$all)
     if (!$_GET && $CURUSER["notifs"]) {
         $all = True;
         foreach ($cats as $cat) {
-            $all &= $cat[id];
-            if (strpos($CURUSER["notifs"], "[cat" . $cat[id] . "]") !== false) {
-                $wherecatina[] = $cat[id];
+            $all &= $cat['id'];
+            if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== false) {
+                $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
             }
         }
@@ -167,7 +167,7 @@ if (!$all)
         foreach ($cats as $cat) {
             $all &= $_GET["cr$car[id]"];
             if (isset($_GET["c$cat[id]"])) {
-                $wherecatina[] = $cat[id];
+                $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
             }
         }
@@ -197,7 +197,7 @@ if ($where != "")
     $where = "WHERE $where";
 
 $res = sql_query("SELECT COUNT(*) FROM torrents AS t $where") or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $count = $row[0];
 $num_torrents = $count;
 
@@ -220,7 +220,7 @@ if (!$count && isset($cleansearchstr)) {
         if ($where != "")
             $where = "WHERE $where";
         $res = sql_query("SELECT COUNT(*) FROM torrents AS t $where");
-        $row = mysql_fetch_array($res);
+        $row = mysqli_fetch_array($res);
         $count = $row[0];
     }
 }
@@ -278,7 +278,7 @@ if (isset($cleansearchstr))
                                 <table class="bottom">
                                     <tr>
 
-                                        <?
+                                        <?php
                                         $i = 0;
                                         foreach ($cats as $cat) {
                                             $catsperrow = 5;
@@ -316,17 +316,17 @@ if (isset($cleansearchstr))
                                     <select name="incldead">
                                         <option value="0"><?= $tracker_lang['active']; ?></option>
                                         <option
-                                            value="1"<? print($incldead == 1 ? " selected" : ""); ?>><?= $tracker_lang['including_dead']; ?></option>
+                                            value="1"<?php print($incldead == 1 ? " selected" : ""); ?>><?= $tracker_lang['including_dead']; ?></option>
                                         <option
-                                            value="2"<? print($incldead == 2 ? " selected" : ""); ?>><?= $tracker_lang['only_dead']; ?></option>
+                                            value="2"<?php print($incldead == 2 ? " selected" : ""); ?>><?= $tracker_lang['only_dead']; ?></option>
                                         <option
-                                            value="3"<? print($incldead == 3 ? " selected" : ""); ?>><?= $tracker_lang['golden_torrents']; ?></option>
+                                            value="3"<?php print($incldead == 3 ? " selected" : ""); ?>><?= $tracker_lang['golden_torrents']; ?></option>
                                         <option
-                                            value="4"<? print($incldead == 4 ? " selected" : ""); ?>><?= $tracker_lang['no_seeds']; ?></option>
+                                            value="4"<?php print($incldead == 4 ? " selected" : ""); ?>><?= $tracker_lang['no_seeds']; ?></option>
                                     </select>
                                     <select name="cat">
                                         <option value="0">(<?= $tracker_lang['all_types']; ?>)</option>
-                                        <?
+                                        <?php
 
                                         //$cats = genrelist();
                                         $catdropdown = "";
@@ -352,7 +352,7 @@ if (isset($cleansearchstr))
         </tr>
     </table>
 
-<?
+<?php
 
 if (isset($cleansearchstr))
     print('<tr><td class="index" colspan="12">' . $tracker_lang['search_results_for'] . ' "' . htmlspecialchars_uni($searchstr) . '"</td></tr>');

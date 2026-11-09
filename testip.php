@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -41,13 +41,13 @@ if ($ip)
 	if ($nip == -1)
 	  stderr($tracker_lang['error'], "Bad IP.");
 	$res = sql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-	if (mysql_num_rows($res) == 0)
+	if (mysqli_num_rows($res) == 0)
 	  stderr("Результат", "IP адрес <b>$ip</b> не забанен.");
 	else
 	{
 	  $banstable = "<table class=main border=0 cellspacing=0 cellpadding=5>\n" .
 	    "<tr><td class=colhead>Первый</td><td class=colhead>Последний</td><td class=colhead>Комментарий</td></tr>\n";
-	  while ($arr = mysql_fetch_assoc($res))
+	  while ($arr = mysqli_fetch_assoc($res))
 	  {
 	    $first = long2ip($arr["first"]);
 	    $last = long2ip($arr["last"]);
@@ -69,6 +69,6 @@ stdhead("Проверка IP");
 </form>
 </table>
 
-<?
+<?php
 stdfoot();
 ?>

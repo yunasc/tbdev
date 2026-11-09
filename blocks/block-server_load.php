@@ -7,7 +7,7 @@ exit;
 
 global $tracker_lang;
 $con = sql_query("SELECT userid FROM peers GROUP by userid");
-$connected = mysql_num_rows($con);
+$connected = mysqli_num_rows($con);
 $blocktitle = $tracker_lang['server_load'];
 $avgload = get_server_load();
 if (strtolower(substr(PHP_OS, 0, 3)) != 'win')

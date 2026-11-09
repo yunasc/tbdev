@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -79,7 +79,7 @@ if ($action == "edituser") {
 		stderr($tracker_lang['error'], "Неверный идентификатор пользователя или класса.");
 	// check target user class
 	$res = sql_query("SELECT warned, enabled, username, class, modcomment, uploaded, downloaded FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
-	$arr = mysql_fetch_assoc($res) or puke("Ошибка MySQL: " . 'Database error.');
+	$arr = mysqli_fetch_assoc($res) or puke("Ошибка MySQL: " . 'Database error.');
 	$curenabled = $arr["enabled"];
 	$curclass = $arr["class"];
 	$curwarned = $arr["warned"];
@@ -198,7 +198,7 @@ if ($action == "edituser") {
 	sql_query("UPDATE users SET	" . implode(", ", $updateset) . " $birthday WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
 	if (!empty($_POST["deluser"])) {
 		$res=@sql_query("SELECT * FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
-		$user = mysql_fetch_array($res);
+		$user = mysqli_fetch_array($res);
 		$username = $user["username"];
 		$email=$user["email"];
 		sql_query("DELETE FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);

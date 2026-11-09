@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -53,10 +53,10 @@ function SmileIT(smile,form,text){
 <table width="100%" border=1 cellspacing="2" cellpadding="2">
 <h2>Смайлики</h2>
 <tr align="center">
-<?
+<?php
 $ctr=0;
 global $smilies;
-while ((list($code, $url) = each($smilies))) {
+foreach ($smilies as $code => $url) {
    if ($count % 3==0)
       print("\n<tr>");
       print("<td align=\"center\"><a href=\"javascript: SmileIT('".str_replace("'","\'",$code)."','".htmlentities($_GET["form"])."','".htmlentities($_GET["text"])."')\"><img border=\"0\" src=\"pic/smilies/".$url."\"></a></td>");
@@ -69,5 +69,5 @@ while ((list($code, $url) = each($smilies))) {
 </tr>
 </table>
 <div align="center">
-<a class="altlink_green" href="javascript: window.close()"><? echo Закрыть; ?></a>
+<a class="altlink_green" href="javascript: window.close()"><?php echo Закрыть; ?></a>
 </div>

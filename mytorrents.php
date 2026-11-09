@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -36,7 +36,7 @@ stdhead("Мои торренты");
 
 $where = "WHERE owner = " . $CURUSER["id"] . " AND banned != 'yes'";
 $res = sql_query("SELECT COUNT(*) FROM torrents $where");
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $count = $row[0];
 
 if (!$count) {
@@ -48,7 +48,7 @@ else {
 ?>
 <table class="embedded" cellspacing="0" cellpadding="3" width="100%">
 <tr><td class="colhead" align="center" colspan="12">Мои торренты</td></tr>
-<?
+<?php
 
 	list($pagertop, $pagerbottom, $limit) = pager(20, $count, "mytorrents.php?");
 

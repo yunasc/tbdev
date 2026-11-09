@@ -39,13 +39,13 @@ stdhead("Общее сообщение", false);
 <tr><td class=embedded>
 <div align=center>
 <form method=post name=message action=takestaffmess.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
-<?
+<?php
 
 if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 {
 ?>
 <input type=hidden name=returnto value=<?=$_GET["returnto"] ? htmlspecialchars_uni($_GET["returnto"]) : htmlspecialchars_uni($_SERVER["HTTP_REFERER"])?>>
-<?
+<?php
 }
 ?>
 <table cellspacing=0 cellpadding=5>
@@ -54,18 +54,18 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 <td>Кому отправлять:<br />
   <table style="border: 0" width="100%" cellpadding="0" cellspacing="0">
     <tr>
-<?
+<?php
 	$per_line = 4;
 	for ($class = UC_USER; $class <= UC_SYSOP; $class++) {
 	if ($class % $per_line == 0 && $class > 0)
 		echo '</tr><tr>';
 ?><td style="border: 0" width="20"><input type="checkbox" name="clases[]" value="<?=$class;?>">
 </td>
-<td style="border: 0"><?=get_user_class_name($class);?></td><?
+<td style="border: 0"><?=get_user_class_name($class);?></td><?php
 	}
 	while ($class % $per_line != 0) {
 		$class++;
-		?><td style="border: 0">&nbsp;</td><?
+		?><td style="border: 0">&nbsp;</td><?php
 	}
      ?></tr>
     </table>
@@ -91,6 +91,6 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 </form>
 
  </div></td></tr></table>
-<?
+<?php
 stdfoot();
 ?>

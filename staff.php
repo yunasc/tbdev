@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -35,7 +35,7 @@ begin_frame("");
 ?>
 
 
-<?
+<?php
 $act = $_GET["act"];
 if (!$act) {
 // Get current datetime
@@ -44,7 +44,7 @@ $dt = sqlesc(get_date_time($dt));
 // Search User Database for Moderators and above and display in alphabetical order
 $res = sql_query("SELECT * FROM users WHERE class>=".UC_UPLOADER." AND status='confirmed' ORDER BY username" ) or sqlerr(__FILE__, __LINE__);
 
-while ($arr = mysql_fetch_assoc($res))
+while ($arr = mysqli_fetch_assoc($res))
 {
 
 $staff_table[$arr['class']]=$staff_table[$arr['class']].
@@ -109,13 +109,13 @@ begin_frame("Администрация");
 <?=$staff_table[UC_UPLOADER]?>
 </tr>
 </table>
-<?
+<?php
 end_frame();
 }
 ?>
 
-<? if (get_user_class() >= UC_SYSOP) { ?>
-<? begin_frame("Инструменты владельца<font color=#FF0000> - Видно сис. администраторам.</font>"); ?>
+<?php if (get_user_class() >= UC_SYSOP) { ?>
+<?php begin_frame("Инструменты владельца<font color=#FF0000> - Видно сис. администраторам.</font>"); ?>
 <table width=100% cellspacing=10 align=center>
 <tr>
 <td class=embedded><form method=get action=staffmess.php><input type=submit value="Масовое ПМ" style='height: 20px; width: 100px'></form></td>
@@ -125,11 +125,11 @@ end_frame();
 <td class=embedded><form method=get action=status.php><input type=submit value="Статус сервера" style='height: 20px; width: 100px' disabled></form></td>
 </tr>
 </table>
-<? end_frame();
+<?php end_frame();
 }
 
 if (get_user_class() >= UC_ADMINISTRATOR) { ?>
-<? begin_frame("Инструменты владельца<font color=#009900> - Видно администраторам.</font>"); ?>
+<?php begin_frame("Инструменты владельца<font color=#009900> - Видно администраторам.</font>"); ?>
 <table width=100% cellspacing=10 align=center>
 <tr>
 <td class=embedded><form method=get action=unco.php><input type=submit value="Неподтв. юзеры" style='height: 20px; width: 100px'></form></td>
@@ -141,16 +141,16 @@ if (get_user_class() >= UC_ADMINISTRATOR) { ?>
 <td class=embedded><form method=get action=findnotconnectable.php><input type=submit value="Юзеры за NAT" style='height: 20px; width: 100px'></form></td>
 </tr>
 </table>
-<? end_frame();
+<?php end_frame();
 }
 
 if (get_user_class() >= UC_MODERATOR) { ?>
-<? begin_frame("Средства персонала - <font color=#004E98>Видно модераторам.</font>"); ?>
+<?php begin_frame("Средства персонала - <font color=#004E98>Видно модераторам.</font>"); ?>
 
 
 <table width=100% cellspacing=3>
 <tr>
-<? if (get_user_class() >= UC_MODERATOR) { ?>
+<?php if (get_user_class() >= UC_MODERATOR) { ?>
 </tr>
 <tr>
 <td class=embedded><a class=altlink href=staff.php?act=users>Пользователи с рейтингом ниже 0.20</a></td>
@@ -170,9 +170,9 @@ if (get_user_class() >= UC_MODERATOR) { ?>
 </tr>
 </table>
 
-<? end_frame(); ?>
+<?php end_frame(); ?>
 <br />
-<? begin_frame("Модераторы и средства - <font color=#004E98>Видно модераторам.</font>"); ?>
+<?php begin_frame("Модераторы и средства - <font color=#004E98>Видно модераторам.</font>"); ?>
 
 <br />
 <table width=100% cellspacing=3>
@@ -205,9 +205,9 @@ if (get_user_class() >= UC_MODERATOR) { ?>
 </table>
 <br />
 
-<? end_frame(); ?>
+<?php end_frame(); ?>
 
-<? begin_frame("Искать пользователя - <font color=#004E98>Видно модераторам.</font>"); ?>
+<?php begin_frame("Искать пользователя - <font color=#004E98>Видно модераторам.</font>"); ?>
 
 
 <table width=100% cellspacing=3>
@@ -232,9 +232,9 @@ if (get_user_class() >= UC_MODERATOR) { ?>
 <tr><td class=embedded><li><a href="usersearch.php">Административный поиск</li></a></td></tr>
 </table>
 
-<? end_frame(); ?>
+<?php end_frame(); ?>
 <br />
-<? if ($act == "users") {
+<?php if ($act == "users") {
 begin_frame("Пользователи с рейтингом ниже 0.20");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
@@ -242,7 +242,7 @@ echo "<tr><td class=colhead align=left>Пользователь</td><td class=co
 
 
 $result = sql_query ("SELECT * FROM users WHERE uploaded / downloaded <= 0.20 AND enabled = 'yes' ORDER BY downloaded DESC ");
-if ($row = mysql_fetch_array($result)) {
+if ($row = mysqli_fetch_array($result)) {
 do {
 if ($row["uploaded"] == "0") { $ratio = "inf"; }
 elseif ($row["downloaded"] == "0") { $ratio = "inf"; }
@@ -250,19 +250,19 @@ $ratio = "<font color=" . get_ratio_color($ratio) . ">$ratio</font>";
 echo "<tr><td><a href=userdetails.php?id=".$row["id"]."><b>".$row["username"]."</b></a></td><td><strong>".$ratio."</strong></td><td>".$row["ip"]."</td><td>".$row["added"]."</td><td>".$row["last_access"]."</td><td>".mksize($row["downloaded"])."</td><td>".mksize($row["uploaded"])."</td></tr>";
 
 
-} while($row = mysql_fetch_array($result));
+} while($row = mysqli_fetch_array($result));
 } else {print "<tr><td colspan=7>Извините, записей не обнаружено!</td></tr>";}
 echo "</table>";
 end_frame(); }?>
 
-<? if ($act == "last") {
+<?php if ($act == "last") {
 begin_frame("Последние пользователи");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
 echo "<tr><td class=colhead align=left>Пользователь</td><td class=colhead>Рейтинг</td><td class=colhead>IP</td><td class=colhead>Зарегистрирован</td><td class=colhead>Последний&nbsp;раз&nbsp;был&nbsp;на&nbsp;трекере</td><td class=colhead>Скачал</td><td class=colhead>Раздал</td></tr>";
 
 $result = sql_query ("SELECT * FROM users WHERE enabled = 'yes' AND status = 'confirmed' ORDER BY added DESC limit 100");
-if ($row = mysql_fetch_array($result)) {
+if ($row = mysqli_fetch_array($result)) {
 do {
 if ($row["uploaded"] == "0") { $ratio = "inf"; }
 elseif ($row["downloaded"] == "0") { $ratio = "inf"; }
@@ -273,19 +273,19 @@ $ratio = "<font color=" . get_ratio_color($ratio) . ">$ratio</font>";
 echo "<tr><td><a href=userdetails.php?id=".$row["id"]."><b>".$row["username"]."</b></a></td><td><strong>".$ratio."</strong></td><td>".$row["ip"]."</td><td>".$row["added"]."</td><td>".$row["last_access"]."</td><td>".mksize($row["downloaded"])."</td><td>".mksize($row["uploaded"])."</td></tr>";
 
 
-} while($row = mysql_fetch_array($result));
+} while($row = mysqli_fetch_array($result));
 } else {print "<tr><td>Sorry, no records were found!</td></tr>";}
 echo "</table>";
 end_frame(); }?>
 
 
-<? if ($act == "banned") {
+<?php if ($act == "banned") {
 begin_frame("Забаненые пользователи");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
 echo "<tr><td class=colhead align=left>Пользователь</td><td class=colhead>Рейтинг</td><td class=colhead>IP</td><td class=colhead>Зарегистрирован</td><td class=colhead>Последний раз был</td><td class=colhead>Скачал</td><td class=colhead>Раздал</td></tr>";
 $result = sql_query ("SELECT * FROM users WHERE enabled = 'no' ORDER BY last_access DESC ");
-if ($row = mysql_fetch_array($result)) {
+if ($row = mysqli_fetch_array($result)) {
 do {
 if ($row["uploaded"] == "0") { $ratio = "inf"; }
 elseif ($row["downloaded"] == "0") { $ratio = "inf"; }
@@ -296,7 +296,7 @@ $ratio = "<font color=" . get_ratio_color($ratio) . ">$ratio</font>";
 echo "<tr><td><a href=userdetails.php?id=".$row["id"]."><b>".$row["username"]."</b></a></td><td><strong>".$ratio."</strong></td><td>".$row["ip"]."</td><td>".$row["added"]."</td><td>".$row["last_access"]."</td><td>".mksize($row["downloaded"])."</td><td>".mksize($row["uploaded"])."</td></tr>";
 
 
-} while($row = mysql_fetch_array($result));
+} while($row = mysqli_fetch_array($result));
 } else {print "<tr><td colspan=7>Извините, записей не обнаружено!</td></tr>";}
 echo "</table>";
 end_frame(); } }
@@ -312,10 +312,10 @@ $dt = sqlesc(get_date_time($dt));
 // LIST ALL FIRSTLINE SUPPORTERS
 // Search User Database for Firstline Support and display in alphabetical order
 $res = sql_query("SELECT * FROM users WHERE support='yes' AND status='confirmed' ORDER BY username LIMIT 10") or sqlerr(__FILE__, __LINE__);
-while ($arr = mysql_fetch_assoc($res))
+while ($arr = mysqli_fetch_assoc($res))
 {
 $land = sql_query("SELECT name,flagpic FROM countries WHERE id=$arr[country]") or sqlerr(__FILE__, __LINE__);
-$arr2 = mysql_fetch_assoc($land);
+$arr2 = mysqli_fetch_assoc($land);
 $firstline .= "<tr height=15><td class=embedded><a class=altlink href=userdetails.php?id=".$arr['id'].">".$arr['username']."</a></td>
 <td class=embedded> ".("'".$arr['last_access']."'">$dt?"<img src=".$pic_base_url."/button_online.gif border=0 alt=\"online\">":"<img src=".$pic_base_url."/button_offline.gif border=0 alt=\"offline\">" )."</td>".
 "<td class=embedded><a href=message.php?action=sendmessage&amp;receiver=".$arr['id'].">"."<img src=".$pic_base_url."/button_pm.gif border=0></a></td>".
@@ -347,12 +347,12 @@ begin_frame("Первая линия поддержки");
 
 </tr>
 </table>
-<?
+<?php
 end_frame();
 }
 
 ?>
-<?
+<?php
 }
 end_frame();
 end_main_frame();

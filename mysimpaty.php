@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -45,7 +45,7 @@ if (!is_valid_id($userid))
 stdhead("Мои респекты");
 
         $count_res = sql_query("SELECT COUNT(*) FROM simpaty WHERE touserid = $userid");
-		$count_row = mysql_fetch_array($count_res);
+		$count_row = mysqli_fetch_array($count_res);
 		$count = $count_row[0];
 
 if (!$count) {
@@ -56,7 +56,7 @@ die();
 ?>
 <table class="embedded" cellspacing="0" cellpadding="5" width="100%">
 <tr><td class="colhead" align="center" colspan="12">Список респектов</td></tr>
-<?
+<?php
         unset ($admin);
         if (get_user_class()>=UC_ADMINISTRATOR) {
                 $admin = true;
@@ -73,14 +73,14 @@ die();
 <td class=colhead>За что</td>
 <td class=colhead>Причина</td>
 <td class=colhead align=center width="10%">Дата</td>
-<?
+<?php
 if ($admin)
 	print("<td class=colhead width=5></td>");
 ?>
 </tr>
-<?
+<?php
         $res = sql_query("SELECT * FROM simpaty WHERE touserid = $userid ORDER BY respect_time DESC $limit");
-        while ($arr = mysql_fetch_assoc($res)) {
+        while ($arr = mysqli_fetch_assoc($res)) {
                 $respect_id = $arr["id"];
                 $touserid = $arr["touserid"];
                 $respect_type = ($arr["bad"]==1?"bad":"good");
@@ -127,12 +127,12 @@ if ($admin)
 <td><?=$from_what;?></td>
 <td><?=$description;?></td>
 <td align="center"><?=$respect_time;?></td>
-<?
+<?php
 if ($admin)
 	print('<td><form method="post" action="simpaty.php?action=delete"><input type="hidden" name="respect_id" value="'.$respect_id.'"><input type="hidden" name="csrf_token" value="'.csrf_token().'"><input type="hidden" name="returnto" value="'.htmlspecialchars_uni(safe_local_return($_SERVER['REQUEST_URI'], 'mysimpaty.php')).'"><button type="submit"><img src="pic/warned2.gif" border="0" alt="Delete vote"></button></form></td>');
 ?>
 </tr>
-<?
+<?php
         }
 }
 

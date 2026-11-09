@@ -67,7 +67,7 @@ if ($action == 'add')
 
     sql_query("INSERT INTO news (userid, added, body, subject) VALUES (" . $CURUSER['id'] . ", NOW(), " . sqlesc($body) . ", " . sqlesc($subject) . ")") or sqlerr(__FILE__, __LINE__);
 
-    if (mysql_affected_rows() == 1)
+    if (db_affected_rows() == 1)
 		$warning = 'Новость <b>успешно добавлена</b>';
 	else
 		stderr($tracker_lang['error'], 'Ошибка запроса.');
@@ -86,10 +86,10 @@ if ($action == 'edit')
 
     $res = sql_query("SELECT * FROM news WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
-	if (mysql_num_rows($res) != 1)
+	if (mysqli_num_rows($res) != 1)
 	  stderr($tracker_lang['error'], "Новость не найдено.");
 
-	$arr = mysql_fetch_array($res);
+	$arr = mysqli_fetch_array($res);
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
@@ -149,12 +149,12 @@ stdhead("Новости");
 
 $query = sql_query("SELECT news.*, users.username FROM news LEFT JOIN users ON news.userid = users.id ORDER BY news.added DESC") or sqlerr(__FILE__, __LINE__);
 
-if (mysql_num_rows($query) > 0)
+if (mysqli_num_rows($query) > 0)
 {
  	begin_main_frame();
 	begin_frame();
 
-	while ($result = mysql_fetch_array($query))
+	while ($result = mysqli_fetch_array($query))
 	{
 	    $newsid = $result["id"];
 		$body = $result["body"];

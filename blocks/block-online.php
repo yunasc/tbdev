@@ -8,7 +8,7 @@ global $CURUSER, $use_sessions, $tracker_lang;
 
 $blocktitle = $tracker_lang['whos_online'];
 
-$a = mysql_fetch_array(sql_query("SELECT id, username FROM users WHERE status='confirmed' ORDER BY id DESC LIMIT 1"));
+$a = mysqli_fetch_array(sql_query("SELECT id, username FROM users WHERE status='confirmed' ORDER BY id DESC LIMIT 1"));
 
 if ($CURUSER)
 	$latestuser = "<a href=userdetails.php?id=" . $a["id"] . " class=\"online\">" . $a["username"] . "</a>";
@@ -29,7 +29,7 @@ $users = $guests = $staff = $total = 0;
 $parsed = array();
 $parsed_id = array();
 
-while (list($uid, $uname, $class) = mysql_fetch_row($result)) {
+while (list($uid, $uname, $class) = mysqli_fetch_row($result)) {
     if (!empty($uname) && !in_array($uname, $parsed)) {
     	$parsed[] = $uname;
     	$title_who[] = "<a href=\"userdetails.php?id=".$uid."\" class=\"online\">".get_user_class_color($class, $uname)."</a>";

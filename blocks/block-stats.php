@@ -19,7 +19,7 @@ $torrents = number_format(get_row_count("torrents"));
 $dead = number_format(get_row_count("torrents", "WHERE visible='no'"));
 $seeders = get_row_count("peers", "WHERE seeder='yes'");
 $leechers = get_row_count("peers", "WHERE seeder='no'");
-list($external_seeders, $external_leechers) = array_map('number_format', mysql_fetch_row(sql_query('SELECT SUM(seeders), SUM(leechers) FROM torrents_scrape')));
+list($external_seeders, $external_leechers) = array_map('number_format', mysqli_fetch_row(sql_query('SELECT SUM(seeders), SUM(leechers) FROM torrents_scrape')));
 $warned_users = number_format(get_row_count("users", "WHERE warned = 'yes'"));
 $disabled = number_format(get_row_count("users", "WHERE enabled = 'no'"));
 $uploaders = number_format(get_row_count("users", "WHERE class = ".UC_UPLOADER));

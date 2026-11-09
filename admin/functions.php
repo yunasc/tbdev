@@ -1,4 +1,4 @@
-<?
+<?php
 
 function end_chmod($dir, $chm) {
 	if (file_exists($dir) && intval($chm)) {

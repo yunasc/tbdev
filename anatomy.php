@@ -94,6 +94,6 @@ when stopping in the middle of a download, e.g. by pressing 'Cancel' in Shad0w's
 </td></tr></table>
 </td></tr></table>
 <br />
-<?
+<?php
 stdfoot();
 ?>

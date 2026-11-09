@@ -1,3 +1,6 @@
+SET NAMES utf8mb4;
+SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';
+
 #
 # Structure for the `avps` table :
 #
@@ -10,7 +13,7 @@ CREATE TABLE `avps` (
   `value_i` int(11) NOT NULL default '0',
   `value_u` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`arg`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `bans` table :
@@ -27,7 +30,7 @@ CREATE TABLE `bans` (
   `last` bigint(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `first_last` (`first`,`last`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `blocks` table :
@@ -41,7 +44,7 @@ CREATE TABLE `blocks` (
   `blockid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `userfriend` (`userid`,`blockid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `bonus` table :
@@ -57,7 +60,7 @@ CREATE TABLE `bonus` (
   `type` varchar(10) NOT NULL default 'traffic',
   `quanity` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `bookmarks` table :
@@ -70,7 +73,7 @@ CREATE TABLE `bookmarks` (
   `userid` int(10) unsigned NOT NULL default '0',
   `torrentid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `captcha` table :
@@ -84,7 +87,7 @@ CREATE TABLE `captcha` (
   `dateline` bigint(30) NOT NULL default '0',
   KEY `imagehash` (`imagehash`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `categories` table :
@@ -98,7 +101,7 @@ CREATE TABLE `categories` (
   `name` varchar(30) NOT NULL default '',
   `image` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `checkcomm` table :
@@ -112,7 +115,7 @@ CREATE TABLE `checkcomm` (
   `userid` int(11) NOT NULL default '0',
   `torrent` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `comments` table :
@@ -133,7 +136,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY  (`id`),
   KEY `user` (`user`),
   KEY `torrent` (`torrent`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `comments_parsed` table :
@@ -146,7 +149,7 @@ CREATE TABLE `comments_parsed` (
   `text_hash` varchar(32) NOT NULL DEFAULT '',
   `text_parsed` text NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `countries` table :
@@ -159,7 +162,7 @@ CREATE TABLE `countries` (
   `name` varchar(50) default NULL,
   `flagpic` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `faq` table :
@@ -176,7 +179,7 @@ CREATE TABLE `faq` (
   `categ` int(10) NOT NULL default '0',
   `order` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `files` table :
@@ -191,7 +194,7 @@ CREATE TABLE `files` (
   `size` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `torrent` (`torrent`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `friends` table :
@@ -205,7 +208,7 @@ CREATE TABLE `friends` (
   `friendid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `userfriend` (`userid`,`friendid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `indexreleases` table :
@@ -225,7 +228,7 @@ CREATE TABLE `indexreleases` (
   `bottom` text NOT NULL,
   `added` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `invites` table :
@@ -242,7 +245,7 @@ CREATE TABLE `invites` (
   `confirmed` char(3) NOT NULL default 'no',
   PRIMARY KEY  (`id`),
   KEY `inviter` (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `messages` table :
@@ -265,7 +268,7 @@ CREATE TABLE `messages` (
   KEY `receiver` (`receiver`),
   KEY `sender` (`sender`),
   KEY `poster` (`poster`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `news` table :
@@ -281,7 +284,7 @@ CREATE TABLE `news` (
   `subject` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `added` (`added`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `notconnectablepmlog` table :
@@ -294,7 +297,7 @@ CREATE TABLE `notconnectablepmlog` (
   `user` int(10) unsigned NOT NULL default '0',
   `date` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `orbital_blocks` table :
@@ -321,7 +324,7 @@ CREATE TABLE `orbital_blocks` (
   KEY `title` (`title`),
   KEY `weight` (`weight`),
   KEY `active` (`active`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `peers` table :
@@ -332,7 +335,7 @@ DROP TABLE IF EXISTS `peers`;
 CREATE TABLE `peers` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `torrent` int(10) unsigned NOT NULL default '0',
-  `peer_id` varchar(20) NOT NULL default '',
+  `peer_id` varbinary(20) NOT NULL default '',
   `ip` varchar(64) NOT NULL default '',
   `port` smallint(5) unsigned NOT NULL default '0',
   `uploaded` bigint(20) unsigned NOT NULL default '0',
@@ -356,7 +359,7 @@ CREATE TABLE `peers` (
   KEY `last_action` (`last_action`),
   KEY `connectable` (`connectable`),
   KEY `userid` (`userid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `pollanswers` table :
@@ -373,7 +376,7 @@ CREATE TABLE `pollanswers` (
   KEY `pollid` (`pollid`),
   KEY `selection` (`selection`),
   KEY `userid` (`userid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `polls` table :
@@ -407,7 +410,7 @@ CREATE TABLE `polls` (
   `option19` varchar(40) NOT NULL default '',
   `sort` enum('yes','no') NOT NULL default 'yes',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `ratings` table :
@@ -422,7 +425,7 @@ CREATE TABLE `ratings` (
   `rating` int(1) NOT NULL default '0',
   `added` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `readtorrents` table :
@@ -436,7 +439,7 @@ CREATE TABLE `readtorrents` (
   `torrentid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `read` (`userid`,`torrentid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `sessions` table :
@@ -451,7 +454,7 @@ CREATE TABLE `login_failures` (
   `added` int(10) unsigned NOT NULL,
   KEY `ip_added` (`ip`,`added`),
   KEY `added` (`added`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `auth_tokens`;
 
@@ -463,7 +466,7 @@ CREATE TABLE `auth_tokens` (
   PRIMARY KEY (`token_hash`),
   KEY `uid` (`uid`),
   KEY `expires` (`expires`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `sessions` (
   `sid` varchar(32) NOT NULL default '',
@@ -478,7 +481,7 @@ CREATE TABLE `sessions` (
   KEY `time` (`time`),
   KEY `uid` (`uid`),
   KEY `url` (`url`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `simpaty` table :
@@ -500,7 +503,7 @@ CREATE TABLE `simpaty` (
   KEY `touserid` (`touserid`),
   KEY `fromuserid` (`fromuserid`),
   KEY `fromusername` (`fromusername`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `sitelog` table :
@@ -516,7 +519,7 @@ CREATE TABLE `sitelog` (
   `type` varchar(8) NOT NULL default 'tracker',
   PRIMARY KEY  (`id`),
   KEY `added` (`added`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `snatched` table :
@@ -540,7 +543,7 @@ CREATE TABLE `snatched` (
   `finished` enum('yes','no') NOT NULL default 'no',
   PRIMARY KEY  (`id`),
   KEY `snatch` (`torrent`,`userid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `thanks` table :
@@ -554,7 +557,7 @@ CREATE TABLE `thanks` (
   `userid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `thank` (`torrentid`,`userid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `torrents` table :
@@ -609,7 +612,7 @@ CREATE TABLE `torrents` (
   KEY `visible` (`visible`),
   KEY `category_visible` (`category`,`visible`),
   KEY `vnsi` (`visible`, `not_sticky`, `id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `torrents_descr` table :
@@ -622,7 +625,7 @@ CREATE TABLE `torrents_descr` (
   `descr_hash` varchar(32) NOT NULL DEFAULT '',
   `descr_parsed` text NOT NULL,
   PRIMARY KEY (`tid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `torrents_scrape` table :
@@ -642,7 +645,7 @@ CREATE TABLE `torrents_scrape` (
   `error` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`info_hash`,`url`),
   KEY `tid` (`tid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `users` table :
@@ -719,7 +722,7 @@ CREATE TABLE `users` (
   KEY `warned` (`warned`),
   KEY `passkey` (`passkey`),
   KEY `user` (`id`,`status`,`enabled`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Structure for the `users_ban` table :
@@ -733,7 +736,7 @@ CREATE TABLE `users_ban` (
   `disby` int(10) unsigned NOT NULL default '0',
   `reason` text NOT NULL,
   UNIQUE KEY `userid` (`userid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #
 # Data for the `bonus` table  (LIMIT 0,100)

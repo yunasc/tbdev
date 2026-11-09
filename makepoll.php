@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -42,9 +42,9 @@ if ($action == "edit")
 		stderr($tracker_lang['error'],$tracker_lang['invalid_id']);
 	$res = sql_query("SELECT * FROM polls WHERE id = $pollid")
 			or sqlerr(__FILE__, __LINE__);
-	if (mysql_num_rows($res) == 0)
+	if (mysqli_num_rows($res) == 0)
 		stderr($tracker_lang['error'],"No poll found with ID.");
-	$poll = mysql_fetch_array($res);
+	$poll = mysqli_fetch_array($res);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -148,7 +148,7 @@ else
 {
 	// Warn if current poll is less than 3 days old
 	$res = sql_query("SELECT question,added FROM polls ORDER BY added DESC LIMIT 1") or sqlerr(__FILE__, __LINE__);
-	$arr = mysql_fetch_assoc($res);
+	$arr = mysqli_fetch_assoc($res);
 	if ($arr)
 	{
 	  $hours = floor((gmtime() - sql_timestamp_to_unix_timestamp($arr["added"])) / 3600);
@@ -202,4 +202,4 @@ else
 <input type=hidden name=returnto value=<?=htmlspecialchars_uni($_GET["returnto"]);?>>
 </form>
 
-<? stdfoot(); ?>
+<?php stdfoot(); ?>
