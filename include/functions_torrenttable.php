@@ -245,8 +245,7 @@ print("<tbody id=\"highlighted\">");
 		if ($row["leechers"]) {
 			if ($variant == "index")
 				print("<b><a href=\"details.php?id=$id&amp;hit=1&amp;todlers=1\">" .
-				   number_format($row["leechers"]) . ($peerlink ? "</a>" : "") .
-				   "</b>\n");
+				   number_format($row["leechers"]) . "</a></b>\n");
 			else
 				print("<b><a class=\"" . linkcolor($row["leechers"]) . "\" href=\"details.php?id=$id&amp;dllist=1#leechers\">" .
 				  $row["leechers"] . "</a></b>\n");
