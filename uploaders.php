@@ -29,7 +29,7 @@
 require "include/bittorrent.php";
 dbconn(true);
 
-stdhead("Аплоадеры");
+stdhead("РђРїР»РѕР°РґРµСЂС‹");
 
 loggedinorreturn;
 
@@ -40,8 +40,8 @@ if ($CURUSER['class'] >= UC_MODERATOR)
 $query = "SELECT id, username, added, uploaded, downloaded, donor, warned FROM users WHERE class = ".UC_UPLOADER;
 $result = sql_query($query);
 $num = mysql_num_rows($result); // how many uploaders
-echo "<h2>Информация о аплоадерах</h2>";
-echo "<p>У нас " . $num . " аплоадер" . ($num > 1 ? "ов" : "") . "</p>";
+echo "<h2>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р°РїР»РѕР°РґРµСЂР°С…</h2>";
+echo "<p>РЈ РЅР°СЃ " . $num . " Р°РїР»РѕР°РґРµСЂ" . ($num > 1 ? "РѕРІ" : "") . "</p>";
 
 $zerofix = $num - 1; // remove one row because mysql starts at zero
 
@@ -49,13 +49,13 @@ if ($num > 0)
 {
 echo "<table cellpadding=4 align=center border=1>";
 echo "<tr>";
-echo "<td class=colhead>Номер</td>";
-echo "<td class=colhead>Пользователь</td>";
-echo "<td class=colhead>Раздал&nbsp;/&nbsp;Скачал</td>";
-echo "<td class=colhead>Рейтинг</td>";
-echo "<td class=colhead>Залил&nbsp;торрентов</td>";
-echo "<td class=colhead>Последняя&nbsp;заливка</td>";
-echo "<td class=colhead>Отправить ЛС</td>";
+echo "<td class=colhead>РќРѕРјРµСЂ</td>";
+echo "<td class=colhead>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td>";
+echo "<td class=colhead>Р Р°Р·РґР°Р»&nbsp;/&nbsp;РЎРєР°С‡Р°Р»</td>";
+echo "<td class=colhead>Р РµР№С‚РёРЅРі</td>";
+echo "<td class=colhead>Р—Р°Р»РёР»&nbsp;С‚РѕСЂСЂРµРЅС‚РѕРІ</td>";
+echo "<td class=colhead>РџРѕСЃР»РµРґРЅСЏСЏ&nbsp;Р·Р°Р»РёРІРєР°</td>";
+echo "<td class=colhead>РћС‚РїСЂР°РІРёС‚СЊ Р›РЎ</td>";
 echo "</tr>";
 
 for ($i = 0; $i <= $zerofix; $i++)
@@ -112,12 +112,12 @@ echo "<td align=center>$counter</td>";
 echo "<td><a href=userdetails.php?id=$id>$username</a> $star $klicaj</td>";
 echo "<td>$uploaded / $downloaded</td>";
 echo "<td>$ratio</td>";
-echo "<td>$numtorrents торрентов</td>";
+echo "<td>$numtorrents С‚РѕСЂСЂРµРЅС‚РѕРІ</td>";
 if ($numtorrents > 0)
 {
 //$lastadded = mysql_result($upperresult, $numtorrents - 1, "added");
 
-echo "<td>" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastadded)) . " назад (" . date("d. M Y",strtotime($lastadded)) . ")</td>";
+echo "<td>" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastadded)) . " РЅР°Р·Р°Рґ (" . date("d. M Y",strtotime($lastadded)) . ")</td>";
 }
 else
 echo "<td>---</td>";

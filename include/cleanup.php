@@ -198,13 +198,13 @@ function docleanup() {
 
 	//remove expired warnings
 	$now = sqlesc(get_date_time());
-	$modcomment = sqlesc(date("Y-m-d") . " - Предупреждение снято системой по таймауту.\n");
-	$msg = sqlesc("Ваше предупреждение снято по таймауту. Постарайтесь больше не получать предупреждений и сделовать правилам.\n");
+	$modcomment = sqlesc(date("Y-m-d") . " - РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ СЃРЅСЏС‚Рѕ СЃРёСЃС‚РµРјРѕР№ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ.\n");
+	$msg = sqlesc("Р’Р°С€Рµ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ СЃРЅСЏС‚Рѕ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ. РџРѕСЃС‚Р°СЂР°Р№С‚РµСЃСЊ Р±РѕР»СЊС€Рµ РЅРµ РїРѕР»СѓС‡Р°С‚СЊ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёР№ Рё СЃРґРµР»РѕРІР°С‚СЊ РїСЂР°РІРёР»Р°Рј.\n");
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster) SELECT 0, id, $now, $msg, 0 FROM users WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET warned='no', warneduntil = '0000-00-00 00:00:00', modcomment = CONCAT($modcomment, modcomment) WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 
 	//remove expired bans
-	$modcomment = sqlesc(date("Y-m-d") . " - Включен системой по истечению бана.\n");
+	$modcomment = sqlesc(date("Y-m-d") . " - Р’РєР»СЋС‡РµРЅ СЃРёСЃС‚РµРјРѕР№ РїРѕ РёСЃС‚РµС‡РµРЅРёСЋ Р±Р°РЅР°.\n");
 	sql_query("UPDATE users SET enabled = 'yes', modcomment = CONCAT($modcomment, modcomment) WHERE id IN (SELECT userid FROM users_ban WHERE disuntil < NOW() AND disuntil != '0000-00-00 00:00:00')") or sqlerr(__FILE__,__LINE__);
 	sql_query("DELETE FROM users_ban WHERE disuntil < NOW() AND disuntil != '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
 
@@ -213,18 +213,18 @@ function docleanup() {
 	$minratio = 1.05;
 	$maxdt = sqlesc(get_date_time(gmtime() - 86400*28));
 	$now = sqlesc(get_date_time());
-	$msg = sqlesc("Наши поздравления, вы были авто-повышены до ранга [b]Опытный пользовать[/b].");
-	$subject = sqlesc("Вы были повышены");
-	$modcomment = sqlesc(date("Y-m-d") . " - Повышен до уровня \"".$tracker_lang["class_power_user"]."\" системой.\n");
+	$msg = sqlesc("РќР°С€Рё РїРѕР·РґСЂР°РІР»РµРЅРёСЏ, РІС‹ Р±С‹Р»Рё Р°РІС‚Рѕ-РїРѕРІС‹С€РµРЅС‹ РґРѕ СЂР°РЅРіР° [b]РћРїС‹С‚РЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚СЊ[/b].");
+	$subject = sqlesc("Р’С‹ Р±С‹Р»Рё РїРѕРІС‹С€РµРЅС‹");
+	$modcomment = sqlesc(date("Y-m-d") . " - РџРѕРІС‹С€РµРЅ РґРѕ СѓСЂРѕРІРЅСЏ \"".$tracker_lang["class_power_user"]."\" СЃРёСЃС‚РµРјРѕР№.\n");
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = ".UC_USER." AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET class = ".UC_POWER_USER.", modcomment = CONCAT($modcomment, modcomment) WHERE class = ".UC_USER." AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__,__LINE__);
 
 	// demote from power users
 	$minratio = 0.95;
 	$now = sqlesc(get_date_time());
-	$msg = sqlesc("Вы были авто-понижены с ранга [b]Опытный пользователь[/b] до ранга [b]Пользователь[/b] потому-что ваш рейтинг упал ниже [b]{$minratio}[/b].");
-	$subject = sqlesc("Вы были понижены");
-	$modcomment = sqlesc(date("Y-m-d") . " - Понижен до уровня \"".$tracker_lang["class_user"]."\" системой.\n");
+	$msg = sqlesc("Р’С‹ Р±С‹Р»Рё Р°РІС‚Рѕ-РїРѕРЅРёР¶РµРЅС‹ СЃ СЂР°РЅРіР° [b]РћРїС‹С‚РЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ[/b] РґРѕ СЂР°РЅРіР° [b]РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ[/b] РїРѕС‚РѕРјСѓ-С‡С‚Рѕ РІР°С€ СЂРµР№С‚РёРЅРі СѓРїР°Р» РЅРёР¶Рµ [b]{$minratio}[/b].");
+	$subject = sqlesc("Р’С‹ Р±С‹Р»Рё РїРѕРЅРёР¶РµРЅС‹");
+	$modcomment = sqlesc(date("Y-m-d") . " - РџРѕРЅРёР¶РµРЅ РґРѕ СѓСЂРѕРІРЅСЏ \"".$tracker_lang["class_user"]."\" СЃРёСЃС‚РµРјРѕР№.\n");
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, poster, subject) SELECT 0, id, $now, $msg, 0, $subject FROM users WHERE class = ".UC_POWER_USER." AND uploaded / downloaded < $minratio") or sqlerr(__FILE__,__LINE__);
 	sql_query("UPDATE users SET class = ".UC_USER.", modcomment = CONCAT($modcomment, modcomment) WHERE class = ".UC_POWER_USER." AND uploaded / downloaded < $minratio") or sqlerr(__FILE__,__LINE__);
 
@@ -246,7 +246,7 @@ function docleanup() {
 			sql_query("DELETE FROM ratings WHERE torrent=$arr[id]") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM checkcomm WHERE checkid=$arr[id] AND torrent = 1") or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM bookmarks WHERE torrentid=$arr[id]") or sqlerr(__FILE__,__LINE__);
-			write_log("Торрент $arr[id] ($arr[name]) был удален системой (старше чем $ttl_days дней)","","torrent");
+			write_log("РўРѕСЂСЂРµРЅС‚ $arr[id] ($arr[name]) Р±С‹Р» СѓРґР°Р»РµРЅ СЃРёСЃС‚РµРјРѕР№ (СЃС‚Р°СЂС€Рµ С‡РµРј $ttl_days РґРЅРµР№)","","torrent");
 		}
 	}
 

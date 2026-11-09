@@ -35,9 +35,9 @@ csrf_require_post();
 stdhead();
 
 if (mysql_query("INSERT IGNORE INTO readtorrents (userid, torrentid) SELECT ".sqlesc($CURUSER["id"]).", id FROM torrents")) {
-	stdmsg("Успешно", "Новые торренты отмечены как прочитаные.");
+	stdmsg("РЈСЃРїРµС€РЅРѕ", "РќРѕРІС‹Рµ С‚РѕСЂСЂРµРЅС‚С‹ РѕС‚РјРµС‡РµРЅС‹ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅС‹Рµ.");
 } else {
-	stdmsg("Ошибка", "Отметка новых торрентов произошла с ошибкой: ".'Database error.');
+	stdmsg("РћС€РёР±РєР°", "РћС‚РјРµС‚РєР° РЅРѕРІС‹С… С‚РѕСЂСЂРµРЅС‚РѕРІ РїСЂРѕРёР·РѕС€Р»Р° СЃ РѕС€РёР±РєРѕР№: ".'Database error.');
 }
 
 stdfoot();

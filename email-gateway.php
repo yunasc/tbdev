@@ -35,7 +35,7 @@ if (!$id)
 	stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
 $res = sql_query("SELECT username, class, email FROM users WHERE id=$id");
-$arr = mysql_fetch_assoc($res) or stderr($tracker_lang['error'], "Нет такого пользователя.");
+$arr = mysql_fetch_assoc($res) or stderr($tracker_lang['error'], "РќРµС‚ С‚Р°РєРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.");
 $username = $arr["username"];
 if ($arr["class"] < UC_MODERATOR)
 	stderr($tracker_lang['error'], $tracker_lang['access_denied']);
@@ -49,11 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$to = $arr["email"];
 
 	$from = substr(trim($_POST["from"]), 0, 80);
-	if ($from == "") $from = "Анонимно";
+	if ($from == "") $from = "РђРЅРѕРЅРёРјРЅРѕ";
 
 	$from_email = substr(trim($_POST["from_email"]), 0, 80);
 	if ($from_email == "") $from_email = $SITEEMAIL;
-	if (!strpos($from_email, "@")) stderr($tracker_lang['error'], "Введеный e-mail адрес не похож на верный.");
+	if (!strpos($from_email, "@")) stderr($tracker_lang['error'], "Р’РІРµРґРµРЅС‹Р№ e-mail Р°РґСЂРµСЃ РЅРµ РїРѕС…РѕР¶ РЅР° РІРµСЂРЅС‹Р№.");
 
 	if (preg_match('/[\r\n]/', $from) || preg_match('/[\r\n]/', $from_email) ||
 		!validemail($from_email))
@@ -61,43 +61,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$from = "$from <$from_email>";
 
 	$subject = substr(trim($_POST["subject"]), 0, 80);
-	if ($subject == "") $subject = "(Без темы)";
+	if ($subject == "") $subject = "(Р‘РµР· С‚РµРјС‹)";
 	if (preg_match('/[\r\n]/', $subject))
 		stderr($tracker_lang['error'], 'Invalid subject.');
 	$subject = "Fwd: $subject";
 
 	$message = trim($_POST["message"]);
-	if ($message == "") stderr($tracker_lang['error'], "Вы не ввели сообщение!");
+	if ($message == "") stderr($tracker_lang['error'], "Р’С‹ РЅРµ РІРІРµР»Рё СЃРѕРѕР±С‰РµРЅРёРµ!");
 
-	$message = "Сообщение отправлено с IP адреса $_SERVER[REMOTE_ADDR] в " . date("Y-m-d H:i:s") . " GMT.\n" .
-		"Внимание: Отвечая на это письмо, вы раскроете вам e-mail адрес.\n" .
+	$message = "РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ СЃ IP Р°РґСЂРµСЃР° $_SERVER[REMOTE_ADDR] РІ " . date("Y-m-d H:i:s") . " GMT.\n" .
+		"Р’РЅРёРјР°РЅРёРµ: РћС‚РІРµС‡Р°СЏ РЅР° СЌС‚Рѕ РїРёСЃСЊРјРѕ, РІС‹ СЂР°СЃРєСЂРѕРµС‚Рµ РІР°Рј e-mail Р°РґСЂРµСЃ.\n" .
 		"---------------------------------------------------------------------\n\n" .
 		$message . "\n\n" .
-		"---------------------------------------------------------------------\n$SITENAME E-Mail Шлюз\n";
+		"---------------------------------------------------------------------\n$SITENAME E-Mail РЁР»СЋР·\n";
 
 	$success = @mail($to, $subject, $message, "From: $from", "-f$SITEEMAIL");
 
 	if ($success)
-		stderr($tracker_lang['success'], "E-mail успешно отправлен.");
+		stderr($tracker_lang['success'], "E-mail СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅ.");
 	else
-		stderr($tracker_lang['error'], "Письмо не может быть отправлено. Пожалуйста, попробуйте позже.");
+		stderr($tracker_lang['error'], "РџРёСЃСЊРјРѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚РїСЂР°РІР»РµРЅРѕ. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.");
 }
 
-stdhead("E-mail шлюз");
+stdhead("E-mail С€Р»СЋР·");
 ?>
 <table border=1 cellspacing=0 cellpadding=5>
-<tr><td class=colhead colspan=2>Отправить e-mail пользователю <?=htmlspecialchars_uni($username);?></td></tr>
+<tr><td class=colhead colspan=2>РћС‚РїСЂР°РІРёС‚СЊ e-mail РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ <?=htmlspecialchars_uni($username);?></td></tr>
 <form method=post action=email-gateway.php?id=<?=$id?>>
 <input type=hidden name=csrf_token value="<?=csrf_token()?>">
-<tr><td class=rowhead>Ваше имя</td><td><input type=text name=from size=80></td></tr>
-<tr><td class=rowhead>Ваш e-mail</td><td><input type=text name=from_email size=80></td></tr>
-<tr><td class=rowhead>Тема</td><td><input type=text name=subject size=80></td></tr>
-<tr><td class=rowhead>Сообщение</td><td><textarea name=message cols=80 rows=20></textarea></td></tr>
+<tr><td class=rowhead>Р’Р°С€Рµ РёРјСЏ</td><td><input type=text name=from size=80></td></tr>
+<tr><td class=rowhead>Р’Р°С€ e-mail</td><td><input type=text name=from_email size=80></td></tr>
+<tr><td class=rowhead>РўРµРјР°</td><td><input type=text name=subject size=80></td></tr>
+<tr><td class=rowhead>РЎРѕРѕР±С‰РµРЅРёРµ</td><td><textarea name=message cols=80 rows=20></textarea></td></tr>
 <tr><td colspan=2 align=center><input type=submit value="Send" class=btn></td></tr>
 </form>
 </table>
 <p>
-<font class=small><b>Внимание:</b> Ваш IP-адрес будет записан и будет виден получателю, для предотвращения обмана.<br />
-Убедитесь что вы ввели правильный e-mail адрес если вы ожидаете ответа.</font>
+<font class=small><b>Р’РЅРёРјР°РЅРёРµ:</b> Р’Р°С€ IP-Р°РґСЂРµСЃ Р±СѓРґРµС‚ Р·Р°РїРёСЃР°РЅ Рё Р±СѓРґРµС‚ РІРёРґРµРЅ РїРѕР»СѓС‡Р°С‚РµР»СЋ, РґР»СЏ РїСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёСЏ РѕР±РјР°РЅР°.<br />
+РЈР±РµРґРёС‚РµСЃСЊ С‡С‚Рѕ РІС‹ РІРІРµР»Рё РїСЂР°РІРёР»СЊРЅС‹Р№ e-mail Р°РґСЂРµСЃ РµСЃР»Рё РІС‹ РѕР¶РёРґР°РµС‚Рµ РѕС‚РІРµС‚Р°.</font>
 </p>
 <? stdfoot(); ?>

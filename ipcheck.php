@@ -31,22 +31,22 @@ dbconn();
 
 loggedinorreturn();
 
-stdhead("Повторяющиеся IP пользователей");
-begin_frame("Повторяющиеся IP пользователей:", true);
+stdhead("РџРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ IP РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№");
+begin_frame("РџРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ IP РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№:", true);
 begin_table();
 
 if (get_user_class() >= UC_MODERATOR)
 {
  $res = sql_query("SELECT count(*) AS dupl, ip FROM users WHERE enabled = 'yes' AND ip <> '' AND ip <> '127.0.0.0' GROUP BY ip ORDER BY dupl DESC, ip") or sqlerr(__FILE__, __LINE__);
-  print("<tr align=center><td class=colhead width=90>Пользователь</td>
+  print("<tr align=center><td class=colhead width=90>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td>
  <td class=colhead width=70>Email</td>
- <td class=colhead width=70>Регистрация</td>
- <td class=colhead width=75>Посл.&nbsp;Активность</td>
- <td class=colhead width=70>Скачал</td>
- <td class=colhead width=70>Раздал</td>
- <td class=colhead width=45>Рейтинг</td>
+ <td class=colhead width=70>Р РµРіРёСЃС‚СЂР°С†РёСЏ</td>
+ <td class=colhead width=75>РџРѕСЃР».&nbsp;РђРєС‚РёРІРЅРѕСЃС‚СЊ</td>
+ <td class=colhead width=70>РЎРєР°С‡Р°Р»</td>
+ <td class=colhead width=70>Р Р°Р·РґР°Р»</td>
+ <td class=colhead width=45>Р РµР№С‚РёРЅРі</td>
  <td class=colhead width=125>IP</td>
- <td class=colhead width=40>Пир</td></tr>\n");
+ <td class=colhead width=40>РџРёСЂ</td></tr>\n");
  $uc = 0;
   while($ras = mysql_fetch_assoc($res)) {
         if ($ras["dupl"] <= 1)
@@ -86,7 +86,7 @@ if (get_user_class() >= UC_MODERATOR)
                                   <td align=center>$uploaded</td>
                                   <td align=center>$ratio</td>
                                   <td align=center><span style=\"font-weight: bold;\">$arr[ip]</span></td>\n<td align=center>" .
-                                  ($arr['peer_count'] > 0 ? "<span style=\"color: red; font-weight: bold;\">Да</span>" : "<span style=\"color: green; font-weight: bold;\">Нет</span>") . "</td></tr>\n");
+                                  ($arr['peer_count'] > 0 ? "<span style=\"color: red; font-weight: bold;\">Р”Р°</span>" : "<span style=\"color: green; font-weight: bold;\">РќРµС‚</span>") . "</td></tr>\n");
                   $ip = $arr["ip"];
                 }
           }
@@ -94,7 +94,7 @@ if (get_user_class() >= UC_MODERATOR)
   }
 } else {
  print("<br /><table width=60% border=1 cellspacing=0 cellpadding=9><tr><td align=center>");
- print("<h2>Извините, только для администрации</h2></table></td></tr>");
+ print("<h2>РР·РІРёРЅРёС‚Рµ, С‚РѕР»СЊРєРѕ РґР»СЏ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё</h2></table></td></tr>");
 }
 end_frame();
 end_table();

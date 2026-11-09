@@ -32,7 +32,7 @@ require_once("include/bittorrent.php");
 require_once("include/upload_image.php");
 
 function bark($msg) {
-	stderr("Ошибка", $msg);
+	stderr("РћС€РёР±РєР°", $msg);
 }
 
 ////////////////////////////////////////////////
@@ -142,19 +142,19 @@ if ($update_torrent) {
 	$f = $_FILES["tfile"];
 	$fname = unesc($f["name"]);
 	if (empty($fname))
-		bark("Файл не загружен. Пустое имя файла!");
+		bark("Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ. РџСѓСЃС‚РѕРµ РёРјСЏ С„Р°Р№Р»Р°!");
 	if (!validfilename($fname))
-		bark("Неверное имя файла!");
+		bark("РќРµРІРµСЂРЅРѕРµ РёРјСЏ С„Р°Р№Р»Р°!");
 	if (!preg_match('/^(.+)\.torrent$/si', $fname, $matches))
-		bark("Неверное имя файла (не .torrent).");
+		bark("РќРµРІРµСЂРЅРѕРµ РёРјСЏ С„Р°Р№Р»Р° (РЅРµ .torrent).");
 	$tmpname = $f["tmp_name"];
 	if (!is_uploaded_file($tmpname))
 		bark("eek");
 	if (!filesize($tmpname))
-		bark("Пустой файл!");
+		bark("РџСѓСЃС‚РѕР№ С„Р°Р№Р»!");
 	$dict = bdecode(file_get_contents($tmpname));
 	if (!isset($dict))
-		bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
+		bark("Р§С‚Рѕ Р·Р° С…СЂРµРЅСЊ С‚С‹ Р·Р°РіСЂСѓР¶Р°РµС€СЊ? Р­С‚Рѕ РЅРµ Р±РёРЅР°СЂРЅРѕ-РєРѕРґРёСЂРѕРІР°РЅС‹Р№ С„Р°Р№Р»!");
 	$info = $dict['info'];
 	list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
 	if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
@@ -190,7 +190,7 @@ if ($update_torrent) {
 			$filelist[] = array($ffe, $ll);
 		if ($ffe == 'Thumbs.db')
 	        {
-	            stderr("Ошибка", "В торрентах запрещено держать файлы Thumbs.db!");
+	            stderr("РћС€РёР±РєР°", "Р’ С‚РѕСЂСЂРµРЅС‚Р°С… Р·Р°РїСЂРµС‰РµРЅРѕ РґРµСЂР¶Р°С‚СЊ С„Р°Р№Р»С‹ Thumbs.db!");
 	            die;
 	        }
 		}
@@ -209,7 +209,7 @@ if ($update_torrent) {
 	unset($dict['info']['tiger']); // remove tiger
 	unset($dict['azureus_properties']); // remove azureus properties
 	$dict = BDecode(BEncode($dict)); // double up on the becoding solves the occassional misgenerated infohash
-	$dict['comment'] = "Торрент создан для '$SITENAME'"; // change torrent comment
+	$dict['comment'] = "РўРѕСЂСЂРµРЅС‚ СЃРѕР·РґР°РЅ РґР»СЏ '$SITENAME'"; // change torrent comment
 	$dict['created by'] = "$CURUSER[username]"; // change created by
 	$dict['publisher'] = "$CURUSER[username]"; // change publisher
 	$dict['publisher.utf-8'] = "$CURUSER[username]"; // change publisher.utf-8
@@ -244,7 +244,7 @@ $name = html_uni($name);
 
 $descr = unesc($_POST["descr"]);
 if (!$descr)
-	bark("Вы должны ввести описание!");
+	bark("Р’С‹ РґРѕР»Р¶РЅС‹ РІРІРµСЃС‚Рё РѕРїРёСЃР°РЅРёРµ!");
 
 $updateset[] = "name = " . sqlesc($name);
 
@@ -275,7 +275,7 @@ $updateset[] = "moderatedby = ".sqlesc($CURUSER["id"]);
 
 sql_query("UPDATE torrents SET " . join(", ", $updateset) . " WHERE id = $id") or sqlerr(__FILE__,__LINE__);
 
-write_log("Торрент '$name' был отредактирован пользователем {$CURUSER['username']}", "F25B61", "torrent");
+write_log("РўРѕСЂСЂРµРЅС‚ '$name' Р±С‹Р» РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј {$CURUSER['username']}", "F25B61", "torrent");
 
 $returl = "details.php?id=$id";
 if (isset($_POST["returnto"]))

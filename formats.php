@@ -41,14 +41,14 @@ if ($_GET["format"])
  exit();
 }
 
-stdhead("Форматы");
+stdhead("Р¤РѕСЂРјР°С‚С‹");
 ?>
 
 
 <form action="<?=$PHP_SELF;?>" method="get" name="form1">
 <table border="1" cellspacing="0" cellpadding="10" width=20%>
 
-<tr><td align="center" colspan="2"><p align=center><select name=format><option value='1' >Форматы видео</option><option value='2' >Форматы файлов</option></select></p><br /><input type="submit" class=btn value="Посмотреть!"></td></tr>
+<tr><td align="center" colspan="2"><p align=center><select name=format><option value='1' >Р¤РѕСЂРјР°С‚С‹ РІРёРґРµРѕ</option><option value='2' >Р¤РѕСЂРјР°С‚С‹ С„Р°Р№Р»РѕРІ</option></select></p><br /><input type="submit" class=btn value="РџРѕСЃРјРѕС‚СЂРµС‚СЊ!"></td></tr>
 </table>
 </form>
 

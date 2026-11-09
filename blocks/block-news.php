@@ -11,13 +11,13 @@ $blocktitle = $tracker_lang['news'].(get_user_class() >= UC_ADMINISTRATOR ? "<fo
 $resource = sql_query("SELECT * FROM news WHERE ADDDATE(news.added, INTERVAL 45 DAY) > NOW() ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 
 $content .= "<script language=\"javascript\" type=\"text/javascript\" src=\"js/show_hide.js\"></script>";
-//<a href=\"javascript: show_hide('s1')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics1\" title=\"Ïîêàçàòü\"></a>
+//<a href=\"javascript: show_hide('s1')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics1\" title=\"ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ\"></a>
 if (mysql_num_rows($resource)) {
     $content .= "<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"10\"><tr><td class=\"text\">\n<ul>";
     while($array = mysql_fetch_array($resource)) {
 		if ($news_flag == 0) {
 			$content .=
-			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/minus.gif\" id=\"pics".$array["id"]."\" title=\"Ñêðûòü\"></span>&nbsp;"
+			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/minus.gif\" id=\"pics".$array["id"]."\" title=\"Ð¡ÐºÑ€Ñ‹Ñ‚ÑŒ\"></span>&nbsp;"
 			."<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\">".date("d.m.Y",strtotime($array['added']))." - \n"
 			."<b>".htmlspecialchars_uni($array['subject'])."</b></span>\n"
 			."<span id=\"ss".$array["id"]."\" style=\"display: block;\">".format_comment($array['body'])."</span>";
@@ -29,7 +29,7 @@ if (mysql_num_rows($resource)) {
 	    	$news_flag = 1;
     	} else {
 		$content .=
-			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics".$array["id"]."\" title=\"Ïîêàçàòü\"></span>&nbsp;"
+			"<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\"><img border=\"0\" src=\"pic/plus.gif\" id=\"pics".$array["id"]."\" title=\"ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ\"></span>&nbsp;"
 			."<span style=\"cursor: pointer;\" onclick=\"javascript: show_hide('s".$array["id"]."')\">".date("d.m.Y",strtotime($array['added']))." - \n"
 			."<b>".htmlspecialchars_uni($array['subject'])."</b></span>\n"
 			."<span id=\"ss".$array["id"]."\" style=\"display: none;\">".format_comment($array['body'])."</span>";

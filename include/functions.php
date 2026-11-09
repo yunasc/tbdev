@@ -213,10 +213,10 @@ function userlogin($lightmode = false) {
 	unset($GLOBALS["CURUSER"]);
 
 	if ($_COOKIE_SALT == 'default' && $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR'])
-		die('Скрипт заблокирован! Измените значение переменной $_COOKIE_SALT в файле include/config.local.php на случайное');
+		die('РЎРєСЂРёРїС‚ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ! РР·РјРµРЅРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ $_COOKIE_SALT РІ С„Р°Р№Р»Рµ include/config.local.php РЅР° СЃР»СѓС‡Р°Р№РЅРѕРµ');
 
 	if (empty($_COOKIE_SALT) || !isset($_COOKIE_SALT))
-		die('Идите и учите <a href="http://www.php.net">PHP</a>... Сказано было ИЗМЕНИТЬ значение, а не удалить переменную!');
+		die('РРґРёС‚Рµ Рё СѓС‡РёС‚Рµ <a href="http://www.php.net">PHP</a>... РЎРєР°Р·Р°РЅРѕ Р±С‹Р»Рѕ РР—РњР•РќРРўР¬ Р·РЅР°С‡РµРЅРёРµ, Р° РЅРµ СѓРґР°Р»РёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ!');
 
 	$ip = getip();
 	$nip = ip2long($ip);
@@ -277,7 +277,7 @@ function userlogin($lightmode = false) {
 	if ($row['enabled'] == 'no') {
 		$GLOBALS['use_blocks'] = 0;
 		list($reason, $disuntil) = mysql_fetch_row(sql_query('SELECT reason, disuntil FROM users_ban WHERE userid = '.$row['id']));
-		stderr($tracker_lang['error'], 'Вы забанены на трекере.' . ($disuntil != '0000-00-00 00:00:00' ? '<br />Дата снятия бана: '.$disuntil : '<br />Дата снятия бана: никогда') . '<br />Причина: '.$reason);
+		stderr($tracker_lang['error'], 'Р’С‹ Р·Р°Р±Р°РЅРµРЅС‹ РЅР° С‚СЂРµРєРµСЂРµ.' . ($disuntil != '0000-00-00 00:00:00' ? '<br />Р”Р°С‚Р° СЃРЅСЏС‚РёСЏ Р±Р°РЅР°: '.$disuntil : '<br />Р”Р°С‚Р° СЃРЅСЏС‚РёСЏ Р±Р°РЅР°: РЅРёРєРѕРіРґР°') . '<br />РџСЂРёС‡РёРЅР°: '.$reason);
 	}
 
 	if (!$lightmode)
@@ -678,7 +678,7 @@ function stdfoot() {
 	require_once('themes/' . $ss_uri . '/stdfoot.php');
 	if (DEBUG_MODE && count($query_stat)) {
 		foreach ($query_stat as $key => $value) {
-			print('<div>['.($key+1).'] => <b>'.($value['seconds'] > 0.01 ? '<font color="red" title="Рекомендуется оптимизировать запрос. Время исполнения превышает норму.">'.$value['seconds'].'</font>' : '<font color="green" title="Запрос не нуждается в оптимизации. Время исполнения допустимое.">'.$value['seconds'].'</font>' ).'</b> ['.htmlspecialchars_uni($value['query']).']</div>'."\n");
+			print('<div>['.($key+1).'] => <b>'.($value['seconds'] > 0.01 ? '<font color="red" title="Р РµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ Р·Р°РїСЂРѕСЃ. Р’СЂРµРјСЏ РёСЃРїРѕР»РЅРµРЅРёСЏ РїСЂРµРІС‹С€Р°РµС‚ РЅРѕСЂРјСѓ.">'.$value['seconds'].'</font>' : '<font color="green" title="Р—Р°РїСЂРѕСЃ РЅРµ РЅСѓР¶РґР°РµС‚СЃСЏ РІ РѕРїС‚РёРјРёР·Р°С†РёРё. Р’СЂРµРјСЏ РёСЃРїРѕР»РЅРµРЅРёСЏ РґРѕРїСѓСЃС‚РёРјРѕРµ.">'.$value['seconds'].'</font>' ).'</b> ['.htmlspecialchars_uni($value['query']).']</div>'."\n");
 		}
 		print('<br />');
 	}
@@ -887,19 +887,19 @@ function pager($rpp, $count, $href, $opts = array()) {
 	else
 		$page = $pagedefault;
 
-	$pager = "<td class=\"pager\">Страницы:</td><td class=\"pagebr\">&nbsp;</td>";
+	$pager = "<td class=\"pager\">РЎС‚СЂР°РЅРёС†С‹:</td><td class=\"pagebr\">&nbsp;</td>";
 	$pager2 = "";
 	$bregs = "";
 
 	$mp = $pages - 1;
-	$as = "<b>«</b>";
+	$as = "<b>В«</b>";
 	if ($page >= 1) {
 		$pager .= "<td class=\"pager\">";
 		$pager .= "<a href=\"{$href}page=" . ($page - 1) . "\" style=\"text-decoration: none;\">$as</a>";
 		$pager .= "</td><td class=\"pagebr\">&nbsp;</td>";
 	}
 
-	$as = "<b>»</b>";
+	$as = "<b>В»</b>";
 	if ($page < $mp && $mp >= 0) {
 		$pager2 .= "<td class=\"pager\">";
 		$pager2 .= "<a href=\"{$href}page=" . ($page + 1) . "\" style=\"text-decoration: none;\">$as</a>";
@@ -936,7 +936,7 @@ function pager($rpp, $count, $href, $opts = array()) {
 				  }
 		$pagerstr = join("", $pagerarr);
 		$pagertop = "<table class=\"main\"><tr>$pager $pagerstr $pager2</tr></table>\n";
-		$pagerbottom = "Всего $count на $i страницах по $rpp на каждой странице.<br /><br /><table class=\"main\">$pager $pagerstr $pager2</table>\n";
+		$pagerbottom = "Р’СЃРµРіРѕ $count РЅР° $i СЃС‚СЂР°РЅРёС†Р°С… РїРѕ $rpp РЅР° РєР°Р¶РґРѕР№ СЃС‚СЂР°РЅРёС†Рµ.<br /><br /><table class=\"main\">$pager $pagerstr $pager2</table>\n";
 	}
 	else {
 		$pagertop = $pager;
@@ -1047,7 +1047,7 @@ function get_user_icons($arr, $big = false) {
 function parked() {
 	   global $CURUSER;
 	   if ($CURUSER['parked'] == 'yes')
-		  stderr($tracker_lang['error'], 'Ваш аккаунт припаркован.');
+		  stderr($tracker_lang['error'], 'Р’Р°С€ Р°РєРєР°СѓРЅС‚ РїСЂРёРїР°СЂРєРѕРІР°РЅ.');
 }
 
 function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
@@ -1055,10 +1055,10 @@ function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
 	return sprintf('magnet:?xt=urn:btih:%2$s%1$sdn=%3$s%1$sxl=%4$d%1$str=%5$s', $ampersand, $info_hash, urlencode($name), $size, implode($ampersand . 'tr=', $announces));
 }
 
-// В этой строке забит копирайт. При его убирании можешь поплатиться рабочим трекером ;) В данном случае - убирая строчки ниже ты не сможешь использовать трекер.
+// Р’ СЌС‚РѕР№ СЃС‚СЂРѕРєРµ Р·Р°Р±РёС‚ РєРѕРїРёСЂР°Р№С‚. РџСЂРё РµРіРѕ СѓР±РёСЂР°РЅРёРё РјРѕР¶РµС€СЊ РїРѕРїР»Р°С‚РёС‚СЊСЃСЏ СЂР°Р±РѕС‡РёРј С‚СЂРµРєРµСЂРѕРј ;) Р’ РґР°РЅРЅРѕРј СЃР»СѓС‡Р°Рµ - СѓР±РёСЂР°СЏ СЃС‚СЂРѕС‡РєРё РЅРёР¶Рµ С‚С‹ РЅРµ СЃРјРѕР¶РµС€СЊ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚СЂРµРєРµСЂ.
 define ('VERSION', '');
 define ('NUM_VERSION', '2.1.18');
-define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Бесплатная OpenSource база" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="Сайт разработчика движка" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
+define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Р‘РµСЃРїР»Р°С‚РЅР°СЏ OpenSource Р±Р°Р·Р°" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="РЎР°Р№С‚ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР° РґРІРёР¶РєР°" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
 
 function mysql_modified_rows () {
 	$info_str = mysql_info();

@@ -37,7 +37,7 @@ $action = ( in_array($_GET['action'], $valid_actions) ? $_GET['action'] : '');
 // action: add -------------------------------------------------------------
 if ($action == 'add') {
         if ($CURUSER["warned"] == 'yes') {
-                stderr($tracker_lang['error'], "У вас предупреждение и вы не можете ставить людям респекты.");
+                stderr($tracker_lang['error'], "РЈ РІР°СЃ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ Рё РІС‹ РЅРµ РјРѕР¶РµС‚Рµ СЃС‚Р°РІРёС‚СЊ Р»СЋРґСЏРј СЂРµСЃРїРµРєС‚С‹.");
         }
         $current_time = get_date_time();
         $targetid = intval($_GET['targetid']);
@@ -45,29 +45,29 @@ if ($action == 'add') {
         $type = $_GET['type'];
 
         if (!is_valid_id($targetid)) {
-                stderr($tracker_lang['error'], "Неправильный ID $targetid.");
+                stderr($tracker_lang['error'], "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ ID $targetid.");
         }
         if (get_row_count("users", "WHERE id = $targetid") == 0)
-        		stderr($tracker_lang['error'],"Такого пользователя не существует!");
+        		stderr($tracker_lang['error'],"РўР°РєРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!");
         if ($CURUSER["id"] == $targetid) {
-                stderr($tracker_lang['error'],"Вы не можете давать респект или антиреспект себе.");
+                stderr($tracker_lang['error'],"Р’С‹ РЅРµ РјРѕР¶РµС‚Рµ РґР°РІР°С‚СЊ СЂРµСЃРїРµРєС‚ РёР»Рё Р°РЅС‚РёСЂРµСЃРїРµРєС‚ СЃРµР±Рµ.");
         }
 
         $r = sql_query('SELECT id FROM simpaty WHERE touserid=' . $targetid . ' AND type = ' . sqlesc($type) . ' AND fromuserid = ' . $CURUSER['id']) or sqlerr(__FILE__, __LINE__);
         if (mysql_num_rows($r) == 1) {
-                stderr ($tracker_lang['error'],"Вы уже давали респект за это действие этому пользователю.");
+                stderr ($tracker_lang['error'],"Р’С‹ СѓР¶Рµ РґР°РІР°Р»Рё СЂРµСЃРїРµРєС‚ Р·Р° СЌС‚Рѕ РґРµР№СЃС‚РІРёРµ СЌС‚РѕРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ.");
         }
 
         if (isset($_POST["description"]) && trim($_POST["description"]) == '') {
-                stderr($tracker_lang['error'], "Комментарий не может быть пустым.");
+                stderr($tracker_lang['error'], "РљРѕРјРјРµРЅС‚Р°СЂРёР№ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.");
         }
         if (!isset($_POST["description"])) {
-        stderr("","<p>Напишите причину, по которой вы выдаете " . ($resp_type == 1?"респект":"антиреспект") . " пользователю:</p>
+        stderr("","<p>РќР°РїРёС€РёС‚Рµ РїСЂРёС‡РёРЅСѓ, РїРѕ РєРѕС‚РѕСЂРѕР№ РІС‹ РІС‹РґР°РµС‚Рµ " . ($resp_type == 1?"СЂРµСЃРїРµРєС‚":"Р°РЅС‚РёСЂРµСЃРїРµРєС‚") . " РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ:</p>
         <form action=\"" . $_SERVER["PHP_SELF"] . "?action=add&amp;" . ($resp_type == 1?'good':'bad') . "&amp;type=".htmlspecialchars_uni($type)."&amp;targetid=$targetid\" method=\"post\">
         <input type=hidden name=csrf_token value=\"" . csrf_token() . "\">
         <input type=text name=description maxlength=300 size=100></textarea>
 		".(isset($_GET["returnto"]) ? "<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars_uni(safe_local_return($_GET["returnto"])) . "\" />\n" : "").
-        "<input type=submit value=".($resp_type == 1?"Респект":"Антиреспект").">
+        "<input type=submit value=".($resp_type == 1?"Р РµСЃРїРµРєС‚":"РђРЅС‚РёСЂРµСЃРїРµРєС‚").">
         </form>");
         }
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !csrf_valid(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : null)) {
@@ -81,19 +81,19 @@ if ($action == 'add') {
                 sql_query('UPDATE users SET simpaty = IF(simpaty > 0, simpaty - 1, 0) WHERE id = ' . $targetid) or sqlerr(__FILE__, __LINE__);
         }
         // mod by StirolXXX (Yuna Scatari)
-		$msg = "Пользователь [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] поставил вам " . ($resp_type == 1?'респект':'антиреспект') . " в репутацию со следующим сообщением: \n[quote]" . htmlspecialchars_uni($_POST["description"]) . "[/quote]";
-		$subject = "Уведомление об изменении репутации";
+		$msg = "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ [url=userdetails.php?id=" . $CURUSER['id'] ."]" . $CURUSER['username'] . "[/url] РїРѕСЃС‚Р°РІРёР» РІР°Рј " . ($resp_type == 1?'СЂРµСЃРїРµРєС‚':'Р°РЅС‚РёСЂРµСЃРїРµРєС‚') . " РІ СЂРµРїСѓС‚Р°С†РёСЋ СЃРѕ СЃР»РµРґСѓСЋС‰РёРј СЃРѕРѕР±С‰РµРЅРёРµРј: \n[quote]" . htmlspecialchars_uni($_POST["description"]) . "[/quote]";
+		$subject = "РЈРІРµРґРѕРјР»РµРЅРёРµ РѕР± РёР·РјРµРЅРµРЅРёРё СЂРµРїСѓС‚Р°С†РёРё";
 		send_pm(0, $targetid, get_date_time(), $subject, $msg);
-		//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0, $targetid, NOW(), $msg, \"Уведомление об изменении репутации\")");
+		//sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0, $targetid, NOW(), $msg, \"РЈРІРµРґРѕРјР»РµРЅРёРµ РѕР± РёР·РјРµРЅРµРЅРёРё СЂРµРїСѓС‚Р°С†РёРё\")");
         // mod by StirolXXX (Yuna Scatari)
 		if (isset($_POST["returnto"])) {
 			$returl = safe_local_return($_POST["returnto"]);
 			header("Refresh: 2; url=$returl");
 		}
-        stdhead(($resp_type == 1?"Респект":"Антиреспект") . " добавлен");
-        stdmsg($tracker_lang['success'],"<p>Пользователь успешно получил " . ($resp_type == 1?"респект":"антиреспект") . " от вас.</p>".(isset($_POST["returnto"]) ? "Сейчас вы будете переадресованы на страницу, откуда вы пришли." : ""));
+        stdhead(($resp_type == 1?"Р РµСЃРїРµРєС‚":"РђРЅС‚РёСЂРµСЃРїРµРєС‚") . " РґРѕР±Р°РІР»РµРЅ");
+        stdmsg($tracker_lang['success'],"<p>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РёР» " . ($resp_type == 1?"СЂРµСЃРїРµРєС‚":"Р°РЅС‚РёСЂРµСЃРїРµРєС‚") . " РѕС‚ РІР°СЃ.</p>".(isset($_POST["returnto"]) ? "РЎРµР№С‡Р°СЃ РІС‹ Р±СѓРґРµС‚Рµ РїРµСЂРµР°РґСЂРµСЃРѕРІР°РЅС‹ РЅР° СЃС‚СЂР°РЅРёС†Сѓ, РѕС‚РєСѓРґР° РІС‹ РїСЂРёС€Р»Рё." : ""));
         if (isset($_POST["returnto"])) {
-			print("<p><a href=\"".htmlspecialchars_uni(safe_local_return($_POST["returnto"]))."\">Нажмите сюда, если вы не были переадресованы</a></p>");
+			print("<p><a href=\"".htmlspecialchars_uni(safe_local_return($_POST["returnto"]))."\">РќР°Р¶РјРёС‚Рµ СЃСЋРґР°, РµСЃР»Рё РІС‹ РЅРµ Р±С‹Р»Рё РїРµСЂРµР°РґСЂРµСЃРѕРІР°РЅС‹</a></p>");
         }
 }
 

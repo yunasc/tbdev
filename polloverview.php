@@ -47,9 +47,9 @@ $pollid = cleanit($_GET, "id", 2);
 //$returnto = $_GET["returnto"];
 
 if (get_user_class() < UC_MODERATOR)
-  stderr($tracker_lang['error'], "Нет доступа.");
+  stderr($tracker_lang['error'], "РќРµС‚ РґРѕСЃС‚СѓРїР°.");
  
-stdhead("Обзор опросов");
+stdhead("РћР±Р·РѕСЂ РѕРїСЂРѕСЃРѕРІ");
 
 if (!(isset($_GET['id']))) {
  
@@ -57,20 +57,20 @@ $sql = sql_query("SELECT id, added, question FROM polls ORDER BY id DESC") or sq
 //$sql = db_query("SELECT id, added, question FROM polls ORDER BY id DESC");
 
 
-print("<h1>Обзор опросов</h1>\n");
+print("<h1>РћР±Р·РѕСЂ РѕРїСЂРѕСЃРѕРІ</h1>\n");
 
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
-"<td class=colhead align=center>ID</td><td class=colhead>Добавлен</td><td class=colhead>Вопрос</td></tr>\n");
+"<td class=colhead align=center>ID</td><td class=colhead>Р”РѕР±Р°РІР»РµРЅ</td><td class=colhead>Р’РѕРїСЂРѕСЃ</td></tr>\n");
 
 if (mysql_num_rows($sql) == 0) {
- print("<tr><td colspan=3>Извините...Нет голосовавших пользователей!</td></tr></table>");
+ print("<tr><td colspan=3>РР·РІРёРЅРёС‚Рµ...РќРµС‚ РіРѕР»РѕСЃРѕРІР°РІС€РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№!</td></tr></table>");
  stdfoot();
  exit;
  }
  
 while ($poll = mysql_fetch_assoc($sql))
 {
- $added = date("Y-m-d h-i-s",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " назад)";
+ $added = date("Y-m-d h-i-s",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " РЅР°Р·Р°Рґ)";
  print("<tr><td align=center><a href=\"polloverview.php?id={$poll['id']}\">{$poll['id']}</a></td><td>{$added}</td><td><a href=\"polloverview.php?id={$poll['id']}\">{$poll['question']}</a></td></tr>\n");
  
 }
@@ -85,13 +85,13 @@ $sql = sql_query("SELECT * FROM polls WHERE id = {$pollid} ORDER BY id DESC") or
 
 
 
-print("<h1>Обзор опроса</h1>\n");
+print("<h1>РћР±Р·РѕСЂ РѕРїСЂРѕСЃР°</h1>\n");
 
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
-"<td class=colhead align=center>ID</td><td class=colhead>Добавлен</td><td class=colhead>Вопрос</td></tr>\n");
+"<td class=colhead align=center>ID</td><td class=colhead>Р”РѕР±Р°РІР»РµРЅ</td><td class=colhead>Р’РѕРїСЂРѕСЃ</td></tr>\n");
 
 if (mysql_num_rows($sql) == 0) {
- print("<tr><td colspan=2>Извините...Нет опроса с таким ID!</td></tr></table>");
+ print("<tr><td colspan=2>РР·РІРёРЅРёС‚Рµ...РќРµС‚ РѕРїСЂРѕСЃР° СЃ С‚Р°РєРёРј ID!</td></tr></table>");
  stdfoot();
  exit;
  }
@@ -110,8 +110,8 @@ while ($poll = mysql_fetch_assoc($sql))
 
 print("</table><br />\n");
 
-print("<h1>Обзор ответов</h1><br />\n");
-print("<table width=750 border=1 cellspacing=0 cellpadding=5><tr><td class=colhead>Опция №</td><td class=colhead>Ответ</td></tr>\n");
+print("<h1>РћР±Р·РѕСЂ РѕС‚РІРµС‚РѕРІ</h1><br />\n");
+print("<table width=750 border=1 cellspacing=0 cellpadding=5><tr><td class=colhead>РћРїС†РёСЏ в„–</td><td class=colhead>РћС‚РІРµС‚</td></tr>\n");
 foreach($o as $key=>$value) {
  if($value != "")
  print("<tr><td>{$key}</td><td>{$value}</td></tr>\n");
@@ -121,20 +121,20 @@ print("</table>\n");
 
 $sql2 = sql_query("SELECT pollanswers. * , users.username FROM pollanswers LEFT JOIN users ON users.id = pollanswers.userid WHERE pollid = {$pollid} AND selection < 20 ORDER  BY users.id DESC ") or sqlerr(__FILE__, __LINE__);
 
-print("<h1>Обзор голосовавших пользователей</h1>\n");
+print("<h1>РћР±Р·РѕСЂ РіРѕР»РѕСЃРѕРІР°РІС€РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h1>\n");
 
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
-"<td class=colhead align=center>Пользователь</td><td class=colhead>Выбор</td></tr>\n");
+"<td class=colhead align=center>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>Р’С‹Р±РѕСЂ</td></tr>\n");
 
 if (mysql_num_rows($sql2) == 0) {
- print("<tr><td colspan=2>Извините...Нет голосовавших пользователей!</td></tr></table>");
+ print("<tr><td colspan=2>РР·РІРёРЅРёС‚Рµ...РќРµС‚ РіРѕР»РѕСЃРѕРІР°РІС€РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№!</td></tr></table>");
  stdfoot();
  exit;
  }
  
 while ($useras = mysql_fetch_assoc($sql2))
 {
- $username  = ($useras['username'] ? $useras['username'] : "Неизвестно");
+ $username  = ($useras['username'] ? $useras['username'] : "РќРµРёР·РІРµСЃС‚РЅРѕ");
  //$useras['selection']--;
  print("<tr><td>{$username}</td><td>{$o[$useras['selection']]}</td></tr>\n");
 }

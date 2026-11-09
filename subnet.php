@@ -53,7 +53,7 @@ if (substr($mask,0,1) == "/")
 $n = substr($mask, 1, strlen($mask) - 1);
 if (!is_numeric($n) or $n < 0 or $n > 32)
 {
-stdmsg($tracker_lang['error'], "Неверная маска подсети.");
+stdmsg($tracker_lang['error'], "РќРµРІРµСЂРЅР°СЏ РјР°СЃРєР° РїРѕРґСЃРµС‚Рё.");
 stdfoot();
 die();
 }
@@ -62,20 +62,20 @@ $mask = long2ip(pow(2,32) - pow(2,32-$n));
 }
 elseif (!preg_match($regex, $mask))
 {
-stdmsg("Оишбка", "Неверная маска подсети.");
+stdmsg("РћРёС€Р±РєР°", "РќРµРІРµСЂРЅР°СЏ РјР°СЃРєР° РїРѕРґСЃРµС‚Рё.");
 stdfoot();
 die();
 }
 $res = sql_query("SELECT id, username, class, last_access, added, uploaded, downloaded FROM users WHERE enabled='yes' AND status='confirmed' AND id <> $CURUSER[id] AND INET_ATON(ip) & INET_ATON('$mask') = INET_ATON('$ip') & INET_ATON('$mask')") or sqlerr(__FILE__, __LINE__);
 if (mysql_num_rows($res)){
-stdhead("Сетевые соседи");
+stdhead("РЎРµС‚РµРІС‹Рµ СЃРѕСЃРµРґРё");
 
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
-print("<tr><td class=colhead align=center colspan=8>:: Сетевые соседи ::</td></tr><tr><td colspan=8>Эти пользователи ваши сетевые соседи, что означает что вы получите от них скорость выше.</td></tr>");
-print("<tr><td class=colhead align=left>Пользователь</td>
-<td class=colhead>Раздал</td><td class=colhead>Скачал</td>
-<td class=colhead>Рейтинг</td><td class=colhead>Зарегистрирован</td>
-<td class=colhead>Последний доступ</td><td class=colhead align=left>Класс</td>
+print("<tr><td class=colhead align=center colspan=8>:: РЎРµС‚РµРІС‹Рµ СЃРѕСЃРµРґРё ::</td></tr><tr><td colspan=8>Р­С‚Рё РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РІР°С€Рё СЃРµС‚РµРІС‹Рµ СЃРѕСЃРµРґРё, С‡С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ С‡С‚Рѕ РІС‹ РїРѕР»СѓС‡РёС‚Рµ РѕС‚ РЅРёС… СЃРєРѕСЂРѕСЃС‚СЊ РІС‹С€Рµ.</td></tr>");
+print("<tr><td class=colhead align=left>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td>
+<td class=colhead>Р Р°Р·РґР°Р»</td><td class=colhead>РЎРєР°С‡Р°Р»</td>
+<td class=colhead>Р РµР№С‚РёРЅРі</td><td class=colhead>Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</td>
+<td class=colhead>РџРѕСЃР»РµРґРЅРёР№ РґРѕСЃС‚СѓРї</td><td class=colhead align=left>РљР»Р°СЃСЃ</td>
 <td class=colhead>IP</td></tr>\n");
 while($arr=mysql_fetch_assoc($res)){
 print("<tr><td align=left><b><a href=userdetails.php?id=$arr[id]>".get_user_class_color($arr["class"], $arr["username"])."</a></b></td>
@@ -89,5 +89,5 @@ print("<tr><td align=left><b><a href=userdetails.php?id=$arr[id]>".get_user_clas
 print("</table>");
 stdfoot();}
 else
-stderr("Информация","Сетевых соседей не обнаружено.");
+stderr("РРЅС„РѕСЂРјР°С†РёСЏ","РЎРµС‚РµРІС‹С… СЃРѕСЃРµРґРµР№ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ.");
 ?>

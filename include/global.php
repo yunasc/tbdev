@@ -30,18 +30,18 @@
 if(!defined('IN_TRACKER'))
   die('Hacking attempt!');
 
-$zodiac[] = array("Êîçåðîã", "capricorn.gif", "22-12");
-$zodiac[] = array("Ñòðåëåö", "sagittarius.gif", "23-11");
-$zodiac[] = array("Ñêîðïèîí", "scorpio.gif", "24-10");
-$zodiac[] = array("Âåñû", "libra.gif", "24-09");
-$zodiac[] = array("Äåâà", "virgo.gif", "24-08");
-$zodiac[] = array("Ëåâ", "leo.gif", "23-07");
-$zodiac[] = array("Ðàê", "cancer.gif", "22-06");
-$zodiac[] = array("Áëèçíåöû", "gemini.gif", "22-05");
-$zodiac[] = array("Òåëåö", "taurus.gif", "21-04");
-$zodiac[] = array("Îâåí", "aries.gif", "22-03");
-$zodiac[] = array("Ðûáû", "pisces.gif", "21-02");
-$zodiac[] = array("Âîäîëåé", "aquarius.gif", "21-01");
+$zodiac[] = array("ÐšÐ¾Ð·ÐµÑ€Ð¾Ð³", "capricorn.gif", "22-12");
+$zodiac[] = array("Ð¡Ñ‚Ñ€ÐµÐ»ÐµÑ†", "sagittarius.gif", "23-11");
+$zodiac[] = array("Ð¡ÐºÐ¾Ñ€Ð¿Ð¸Ð¾Ð½", "scorpio.gif", "24-10");
+$zodiac[] = array("Ð’ÐµÑÑ‹", "libra.gif", "24-09");
+$zodiac[] = array("Ð”ÐµÐ²Ð°", "virgo.gif", "24-08");
+$zodiac[] = array("Ð›ÐµÐ²", "leo.gif", "23-07");
+$zodiac[] = array("Ð Ð°Ðº", "cancer.gif", "22-06");
+$zodiac[] = array("Ð‘Ð»Ð¸Ð·Ð½ÐµÑ†Ñ‹", "gemini.gif", "22-05");
+$zodiac[] = array("Ð¢ÐµÐ»ÐµÑ†", "taurus.gif", "21-04");
+$zodiac[] = array("ÐžÐ²ÐµÐ½", "aries.gif", "22-03");
+$zodiac[] = array("Ð Ñ‹Ð±Ñ‹", "pisces.gif", "21-02");
+$zodiac[] = array("Ð’Ð¾Ð´Ð¾Ð»ÐµÐ¹", "aquarius.gif", "21-01");
 
 $smilies = array(
   ":-)" => "smile1.gif",

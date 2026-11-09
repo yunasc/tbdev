@@ -33,19 +33,19 @@
 
 // delete items older than a week
   $secs = 7 * 86400;
-  stdhead("Логи");
+  stdhead("Р›РѕРіРё");
   $type = htmlspecialchars_uni((string)$_GET["type"]);
    if(!$type || $type == 'simp') $type = "tracker";
  	print("<p align=center>"  .
-		($type == tracker || !$type ? "<b>Трекер</b>" : "<a href=log.php?type=tracker>Трекер</a>") . " | " .
- 		($type == bans ? "<b>Баны</b>" : "<a href=log.php?type=bans>Баны</a>") . " | " .
- 		($type == release ? "<b>Релизы</b>" : "<a href=log.php?type=release>Релизы</a>") . " | " .
- 		($type == exchange ? "<b>Обменник</b>" : "<a href=log.php?type=exchange>Обменник</a>") . " | " .
-		($type == torrent ? "<b>Торренты</b>" : "<a href=log.php?type=torrent>Торренты</a>") . " | " .
-		($type == error ? "<b>Ошибки</b>" : "<a href=log.php?type=error>Ошибки</a>") . "</p>\n");
+		($type == tracker || !$type ? "<b>РўСЂРµРєРµСЂ</b>" : "<a href=log.php?type=tracker>РўСЂРµРєРµСЂ</a>") . " | " .
+ 		($type == bans ? "<b>Р‘Р°РЅС‹</b>" : "<a href=log.php?type=bans>Р‘Р°РЅС‹</a>") . " | " .
+ 		($type == release ? "<b>Р РµР»РёР·С‹</b>" : "<a href=log.php?type=release>Р РµР»РёР·С‹</a>") . " | " .
+ 		($type == exchange ? "<b>РћР±РјРµРЅРЅРёРє</b>" : "<a href=log.php?type=exchange>РћР±РјРµРЅРЅРёРє</a>") . " | " .
+		($type == torrent ? "<b>РўРѕСЂСЂРµРЅС‚С‹</b>" : "<a href=log.php?type=torrent>РўРѕСЂСЂРµРЅС‚С‹</a>") . " | " .
+		($type == error ? "<b>РћС€РёР±РєРё</b>" : "<a href=log.php?type=error>РћС€РёР±РєРё</a>") . "</p>\n");
 
    if (($type == 'speed' || $type == 'error' || $type == 'errors') && $CURUSER['class'] < 4) {
-	stdmsg("Ошибка","Доступ в этот раздел закрыт.");
+	stdmsg("РћС€РёР±РєР°","Р”РѕСЃС‚СѓРї РІ СЌС‚РѕС‚ СЂР°Р·РґРµР» Р·Р°РєСЂС‹С‚.");
 	stdfoot();
 	die();
 }
@@ -53,13 +53,13 @@
   sql_query("DELETE FROM sitelog WHERE " . gmtime() . " - UNIX_TIMESTAMP(added) > $secs") or sqlerr(__FILE__, __LINE__);
   $limit = ($type == 'announce' ? "LIMIT 1000" : "");
   $res = sql_query("SELECT txt, added, color FROM `sitelog` WHERE type = ".sqlesc($type)." ORDER BY `added` DESC $limit") or sqlerr(__FILE__, __LINE__);
-  print("<h1>Логи</h1>\n");
+  print("<h1>Р›РѕРіРё</h1>\n");
   if (mysql_num_rows($res) == 0)
-    print("<b>Лог файл пустой</b>\n");
+    print("<b>Р›РѕРі С„Р°Р№Р» РїСѓСЃС‚РѕР№</b>\n");
   else
   {
     print("<table border=1 cellspacing=0 cellpadding=5>\n");
-    print("<tr><td class=colhead align=left>Дата</td><td class=colhead align=left>Время</td><td class=colhead align=left>Событие</td></tr>\n");
+    print("<tr><td class=colhead align=left>Р”Р°С‚Р°</td><td class=colhead align=left>Р’СЂРµРјСЏ</td><td class=colhead align=left>РЎРѕР±С‹С‚РёРµ</td></tr>\n");
     while ($arr = mysql_fetch_assoc($res))
     {
       $date = substr($arr['added'], 0, strpos($arr['added'], " "));

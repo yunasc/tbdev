@@ -2,6 +2,6 @@
 
 if (!defined("ADMIN_FILE")) die("Illegal File Access");
 
-BuildMenu("".$admin_file.".php?op=StatusDB", "Áàçà äàííûõ", "db.png");
+BuildMenu("".$admin_file.".php?op=StatusDB", "Ð‘Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…", "db.png");
 
 ?>

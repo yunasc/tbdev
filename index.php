@@ -33,19 +33,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $choice = (int) $_POST["choice"];  
   if ($CURUSER && $choice >= 0 && $choice < 256) {
     $res = sql_query("SELECT * FROM polls ORDER BY added DESC LIMIT 1") or sqlerr(__FILE__, __LINE__);
-    $arr = mysql_fetch_assoc($res) or die("Нет опроса");
+    $arr = mysql_fetch_assoc($res) or die("РќРµС‚ РѕРїСЂРѕСЃР°");
     $pollid = $arr["id"];
     $userid = $CURUSER["id"];
     $res = sql_query("SELECT * FROM pollanswers WHERE pollid=$pollid && userid=$userid") or sqlerr(__FILE__, __LINE__);
     $arr = mysql_fetch_assoc($res);
-    if ($arr) die("Двойной голос");
+    if ($arr) die("Р”РІРѕР№РЅРѕР№ РіРѕР»РѕСЃ");
     sql_query("INSERT INTO pollanswers VALUES(0, $pollid, $userid, $choice)") or sqlerr(__FILE__, __LINE__);
     if (mysql_affected_rows() != 1)
-      stderr($tracker_lang['error'], "Произошла ошибка. Ваш голос не был принят.");
+      stderr($tracker_lang['error'], "РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°. Р’Р°С€ РіРѕР»РѕСЃ РЅРµ Р±С‹Р» РїСЂРёРЅСЏС‚.");
     header("Location: $DEFAULTBASEURL/");
     die;
   } else
-    stderr($tracker_lang['error'], "Пожалуйста, выберите вариант ответа.");
+    stderr($tracker_lang['error'], "РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РІР°СЂРёР°РЅС‚ РѕС‚РІРµС‚Р°.");
 }
 
 stdhead($tracker_lang['homepage']);
@@ -55,7 +55,7 @@ stdhead($tracker_lang['homepage']);
 ?>
 
 <div align="center"><font class="small"><img src="./themes/<?=$ss_uri;?>/images/ru.gif" width="20" height="15"></font></div>
-<p align="justify"><font class="small" style="font-weight: normal;">Предупреждение! Информация, расположенная на данном сервере, предназначена исключительно для частного использования в образовательных целях и не может быть загружена/перенесена на другой компьютер. Ни владелец сайта, ни хостинг-провайдер, ни любые другие физические или юридические лица не могут нести никакой отвественности за любое использование материалов данного сайта. Входя на сайт, Вы, как пользователь, тем самым подтверждаете полное и безоговорочное согласие со всеми условиями использования. Авторы проекта относятся особо негативно к нелегальному использованию информации, полученной на сайте.</font></p>
+<p align="justify"><font class="small" style="font-weight: normal;">РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ! РРЅС„РѕСЂРјР°С†РёСЏ, СЂР°СЃРїРѕР»РѕР¶РµРЅРЅР°СЏ РЅР° РґР°РЅРЅРѕРј СЃРµСЂРІРµСЂРµ, РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РёСЃРєР»СЋС‡РёС‚РµР»СЊРЅРѕ РґР»СЏ С‡Р°СЃС‚РЅРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РѕР±СЂР°Р·РѕРІР°С‚РµР»СЊРЅС‹С… С†РµР»СЏС… Рё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РіСЂСѓР¶РµРЅР°/РїРµСЂРµРЅРµСЃРµРЅР° РЅР° РґСЂСѓРіРѕР№ РєРѕРјРїСЊСЋС‚РµСЂ. РќРё РІР»Р°РґРµР»РµС† СЃР°Р№С‚Р°, РЅРё С…РѕСЃС‚РёРЅРі-РїСЂРѕРІР°Р№РґРµСЂ, РЅРё Р»СЋР±С‹Рµ РґСЂСѓРіРёРµ С„РёР·РёС‡РµСЃРєРёРµ РёР»Рё СЋСЂРёРґРёС‡РµСЃРєРёРµ Р»РёС†Р° РЅРµ РјРѕРіСѓС‚ РЅРµСЃС‚Рё РЅРёРєР°РєРѕР№ РѕС‚РІРµСЃС‚РІРµРЅРЅРѕСЃС‚Рё Р·Р° Р»СЋР±РѕРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РјР°С‚РµСЂРёР°Р»РѕРІ РґР°РЅРЅРѕРіРѕ СЃР°Р№С‚Р°. Р’С…РѕРґСЏ РЅР° СЃР°Р№С‚, Р’С‹, РєР°Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, С‚РµРј СЃР°РјС‹Рј РїРѕРґС‚РІРµСЂР¶РґР°РµС‚Рµ РїРѕР»РЅРѕРµ Рё Р±РµР·РѕРіРѕРІРѕСЂРѕС‡РЅРѕРµ СЃРѕРіР»Р°СЃРёРµ СЃРѕ РІСЃРµРјРё СѓСЃР»РѕРІРёСЏРјРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ. РђРІС‚РѕСЂС‹ РїСЂРѕРµРєС‚Р° РѕС‚РЅРѕСЃСЏС‚СЃСЏ РѕСЃРѕР±Рѕ РЅРµРіР°С‚РёРІРЅРѕ Рє РЅРµР»РµРіР°Р»СЊРЅРѕРјСѓ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ РёРЅС„РѕСЂРјР°С†РёРё, РїРѕР»СѓС‡РµРЅРЅРѕР№ РЅР° СЃР°Р№С‚Рµ.</font></p>
 <div align="center"><font class="small"><img src="./themes/<?=$ss_uri;?>/images/en.gif" width="20" height="15"></font></div>
 <p align="justify"><font class="small" style="font-weight: normal;">No files you see here are hosted on the server. Links available are provided by site users and administation is not responsible for them. It is strictly prohibited to upload any copyrighted material without explicit permission from copyright holders. If you find that some content is abusing you feel free to contact administation.</font></p>
 

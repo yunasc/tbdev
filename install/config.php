@@ -5,7 +5,7 @@ define('CWD', (($getcwd = getcwd()) ? $getcwd : '.'));
 require_once(CWD . '/../include/secrets.php');
 require_once(CWD . '/../include/secrets.local.php');
 
-// Åñëè âû òàêîé á...í, ÷òî çàëåçëè ñşäà - òî áğûñü íà 2 ñòğîêè âûøå
+// Ğ•ÑĞ»Ğ¸ Ğ²Ñ‹ Ñ‚Ğ°ĞºĞ¾Ğ¹ Ğ±...Ğ½, Ñ‡Ñ‚Ğ¾ Ğ·Ğ°Ğ»ĞµĞ·Ğ»Ğ¸ ÑÑĞ´Ğ° - Ñ‚Ğ¾ Ğ±Ñ€Ñ‹ÑÑŒ Ğ½Ğ° 2 ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ²Ñ‹ÑˆĞµ
 $_DB_CONFIG = array(
 	'host' => $mysql_host,
 	'user' => $mysql_user,

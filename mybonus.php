@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     csrf_require_post();
 	header("Content-Type: text/html; charset=".$tracker_lang['language_charset']);
 	if (empty($_POST["bonus_id"])) {
-		stdmsg($tracker_lang['error'], "Вы не выбрали тип бонуса!");
+		stdmsg($tracker_lang['error'], "Р’С‹ РЅРµ РІС‹Р±СЂР°Р»Рё С‚РёРї Р±РѕРЅСѓСЃР°!");
 		die();
 	}
 	$id = (int) $_POST["bonus_id"];
@@ -47,25 +47,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$points = $arr["points"];
 	$type = $arr["type"];
 	if ($CURUSER["bonus"] < $points) {
-		stdmsg($tracker_lang['error'], "У вас недостаточно бонусов!");
+		stdmsg($tracker_lang['error'], "РЈ РІР°СЃ РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±РѕРЅСѓСЃРѕРІ!");
 		die();
 	}
 	switch ($type) {
 		case "traffic":
 			$traffic = $arr["quanity"];
 			if (!sql_query("UPDATE users SET bonus = bonus - $points, uploaded = uploaded + $traffic WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
-				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
+				stdmsg($tracker_lang['error'], "РќРµ РјРѕРіСѓ РѕР±РЅРѕРІРёС‚СЊ Р±РѕРЅСѓСЃ!");
 				die();
 			}
-			stdmsg($tracker_lang['success'], "Бонус обменян на траффик!");
+			stdmsg($tracker_lang['success'], "Р‘РѕРЅСѓСЃ РѕР±РјРµРЅСЏРЅ РЅР° С‚СЂР°С„С„РёРє!");
 			break;
 		case "invite":
 			$invites = $arr["quanity"];
 			if (!sql_query("UPDATE users SET bonus = bonus - $points, invites = invites + $invites WHERE id = ".sqlesc($CURUSER["id"])." AND bonus >= $points") || mysql_affected_rows() != 1) {
-				stdmsg($tracker_lang['error'], "Не могу обновить бонус!");
+				stdmsg($tracker_lang['error'], "РќРµ РјРѕРіСѓ РѕР±РЅРѕРІРёС‚СЊ Р±РѕРЅСѓСЃ!");
 				die();
 			}
-			stdmsg($tracker_lang['success'], "Бонус обменян на приглашения!");
+			stdmsg($tracker_lang['success'], "Р‘РѕРЅСѓСЃ РѕР±РјРµРЅСЏРЅ РЅР° РїСЂРёРіР»Р°С€РµРЅРёСЏ!");
 			break;
 		default:
 			stdmsg($tracker_lang['error'], "Unknown bonus type!");
@@ -118,11 +118,11 @@ function send(){
 		$output .= "<tr><td><b>$bonus</b><br />$descr</td><td><center><font style=\"color: $color\">$points&nbsp;/&nbsp;$my_points</font></center></td><td><center><input type=\"radio\" name=\"bonus_id\" value=\"$id\"".($color == 'red' ? ' disabled' : '')." /></center></td></tr>\n";
 	}
 ?>
-	<tr><td class="colhead" colspan="3">Мой бонус (<?=$CURUSER["bonus"];?> бонусов в наличии / <?=$points_per_hour;?> бонусов в час)</td></tr>
-	<tr><td class="colhead">Тип бонуса</td><td class="colhead">Очки</td><td class="colhead">Выбор</td></tr>
+	<tr><td class="colhead" colspan="3">РњРѕР№ Р±РѕРЅСѓСЃ (<?=$CURUSER["bonus"];?> Р±РѕРЅСѓСЃРѕРІ РІ РЅР°Р»РёС‡РёРё / <?=$points_per_hour;?> Р±РѕРЅСѓСЃРѕРІ РІ С‡Р°СЃ)</td></tr>
+	<tr><td class="colhead">РўРёРї Р±РѕРЅСѓСЃР°</td><td class="colhead">РћС‡РєРё</td><td class="colhead">Р’С‹Р±РѕСЂ</td></tr>
 	<form action="mybonus.php" name="mybonus" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <?=$output;?>
-		<tr><td colspan="3"><input type="submit" onClick="send(); return false;" value="Обменять" /></td></tr>
+		<tr><td colspan="3"><input type="submit" onClick="send(); return false;" value="РћР±РјРµРЅСЏС‚СЊ" /></td></tr>
 	</form>
 </table>
 </div>

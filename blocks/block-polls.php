@@ -23,7 +23,7 @@ global $CURUSER, $tracker_lang, $ss_uri;
           $arr2 = mysql_fetch_assoc($res);
   }
 
-  $blocktitle = $tracker_lang['poll'].(get_user_class() >= UC_MODERATOR ? "<font class=\"small\"> - [<a class=\"altlink\" href=\"makepoll.php?returnto=main\"><b>".$tracker_lang['create']."</b></a>]".($pollok ? " - [<a class=\"altlink\" href=\"makepoll.php?action=edit&pollid=$arr[id]&returnto=main\"><b>Редактировать</b></a>] - [<a class=\"altlink\" href=\"polls.php?action=delete&pollid=$arr[id]&returnto=main\"><b>Удалить</b></a>]" : "")."</font>" : "");
+  $blocktitle = $tracker_lang['poll'].(get_user_class() >= UC_MODERATOR ? "<font class=\"small\"> - [<a class=\"altlink\" href=\"makepoll.php?returnto=main\"><b>".$tracker_lang['create']."</b></a>]".($pollok ? " - [<a class=\"altlink\" href=\"makepoll.php?action=edit&pollid=$arr[id]&returnto=main\"><b>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</b></a>] - [<a class=\"altlink\" href=\"polls.php?action=delete&pollid=$arr[id]&returnto=main\"><b>РЈРґР°Р»РёС‚СЊ</b></a>]" : "")."</font>" : "");
 
         if($pollok) {
           $content .= ("<p align=\"center\"><b>$question</b></p>\n");
@@ -81,7 +81,7 @@ global $CURUSER, $tracker_lang, $ss_uri;
             }
             $content .= ("</table>\n");
             $tvotes = number_format($tvotes);
-            $content .= ("<p align=\"center\">Голосов: $tvotes</p>\n");
+            $content .= ("<p align=\"center\">Р“РѕР»РѕСЃРѕРІ: $tvotes</p>\n");
           } else {
             $content .= ("<form method=\"post\" action=\"index.php\">\n");
             $i = 0;

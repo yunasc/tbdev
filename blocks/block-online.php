@@ -59,17 +59,17 @@ if ($guests == "") $guests = 0;
 if ($users == "")  $users = 0;
 if ($total == "")  $total = 0;*/
 
-$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>Последний пользователь: </b> $latestuser<hr></td></tr></table>\n";
+$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>РџРѕСЃР»РµРґРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ: </b> $latestuser<hr></td></tr></table>\n";
 
 if (count($title_who)) {
-	$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>Кто онлайн: </b><hr></td></tr><tr><td class=\"embedded\">".@implode(", ", $title_who)."<hr></td></tr></table>\n";
+	$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>РљС‚Рѕ РѕРЅР»Р°Р№РЅ: </b><hr></td></tr><tr><td class=\"embedded\">".@implode(", ", $title_who)."<hr></td></tr></table>\n";
 } else {
-	$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>Кто онлайн: </b>Нет пользователей за последние 10 минут.<hr></td></tr></table>\n";
+	$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td align=\"left\" class=\"embedded\"><b>РљС‚Рѕ РѕРЅР»Р°Р№РЅ: </b>РќРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р·Р° РїРѕСЃР»РµРґРЅРёРµ 10 РјРёРЅСѓС‚.<hr></td></tr></table>\n";
 }
-$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td colspan=\"2\" align=\"left\" class=\"embedded\"><b>В сети: </b></td></tr>\n";
-$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/admin.gif\"></td><td width=\"90%\" class=\"embedded\">Админы: $staff</td></tr>\n";
-$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/member.gif\"></td><td width=\"90%\" class=\"embedded\">Пользователи: $users</td></tr>\n";
-$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/guest.gif\"></td><td width=\"90%\" class=\"embedded\">Гости: $guests</td></tr>\n";
-$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/group.gif\"></td><td width=\"90%\" class=\"embedded\">Всего: $total</td></tr></table>\n";
+$content .= "<table border=\"0\" width=\"100%\"><tr valign=\"middle\"><td colspan=\"2\" align=\"left\" class=\"embedded\"><b>Р’ СЃРµС‚Рё: </b></td></tr>\n";
+$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/admin.gif\"></td><td width=\"90%\" class=\"embedded\">РђРґРјРёРЅС‹: $staff</td></tr>\n";
+$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/member.gif\"></td><td width=\"90%\" class=\"embedded\">РџРѕР»СЊР·РѕРІР°С‚РµР»Рё: $users</td></tr>\n";
+$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/guest.gif\"></td><td width=\"90%\" class=\"embedded\">Р“РѕСЃС‚Рё: $guests</td></tr>\n";
+$content .= "<tr><td class=\"embedded\"><img src=\"pic/info/group.gif\"></td><td width=\"90%\" class=\"embedded\">Р’СЃРµРіРѕ: $total</td></tr></table>\n";
 
 ?>

@@ -2,6 +2,6 @@
 
 if (!defined('ADMIN_FILE')) die("Illegal File Access");
 
-BuildMenu("".$admin_file.".php?op=BlocksAdmin", "Áëîêè è áàííåðû", "block.png");
+BuildMenu("".$admin_file.".php?op=BlocksAdmin", "Ð‘Ð»Ð¾ÐºÐ¸ Ð¸ Ð±Ð°Ð½Ð½ÐµÑ€Ñ‹", "block.png");
 
 ?>

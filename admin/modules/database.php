@@ -13,11 +13,11 @@ function StatusDB() {
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<tr><td><select name=\"datatable[]\" size=\"10\" multiple=\"multiple\" style=\"width:400px\">".$content."</select></td><td>"
 	."<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\">"
-	."<tr><td valign=\"top\"><input type=\"radio\" name=\"type\" value=\"Optimize\" checked></td><td>Оптимизация базы данных<br /><font class=\"small\">Производя оптимизацию базы данных, Вы уменьшаете её размер и соответственно с этим ускоряете её работу. Рекомендуется использовать данную функцию минимум один раз в неделю.</font></td></tr>"
-	."<tr><td valign=\"top\"><input type=\"radio\" name=\"type\" value=\"Repair\"></td><td>Ремонт базы данных<br /><font class=\"small\">При неожиданной остановке MySQL сервера, во время выполнения каких-либо действий, может произойти повреждение структуры таблиц базы данных, использование этой функции произведёт ремонт повреждённых таблиц.</font></td></tr></table>"
+	."<tr><td valign=\"top\"><input type=\"radio\" name=\"type\" value=\"Optimize\" checked></td><td>РћРїС‚РёРјРёР·Р°С†РёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…<br /><font class=\"small\">РџСЂРѕРёР·РІРѕРґСЏ РѕРїС‚РёРјРёР·Р°С†РёСЋ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, Р’С‹ СѓРјРµРЅСЊС€Р°РµС‚Рµ РµС‘ СЂР°Р·РјРµСЂ Рё СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ СЃ СЌС‚РёРј СѓСЃРєРѕСЂСЏРµС‚Рµ РµС‘ СЂР°Р±РѕС‚Сѓ. Р РµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР°РЅРЅСѓСЋ С„СѓРЅРєС†РёСЋ РјРёРЅРёРјСѓРј РѕРґРёРЅ СЂР°Р· РІ РЅРµРґРµР»СЋ.</font></td></tr>"
+	."<tr><td valign=\"top\"><input type=\"radio\" name=\"type\" value=\"Repair\"></td><td>Р РµРјРѕРЅС‚ Р±Р°Р·С‹ РґР°РЅРЅС‹С…<br /><font class=\"small\">РџСЂРё РЅРµРѕР¶РёРґР°РЅРЅРѕР№ РѕСЃС‚Р°РЅРѕРІРєРµ MySQL СЃРµСЂРІРµСЂР°, РІРѕ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РєР°РєРёС…-Р»РёР±Рѕ РґРµР№СЃС‚РІРёР№, РјРѕР¶РµС‚ РїСЂРѕРёР·РѕР№С‚Рё РїРѕРІСЂРµР¶РґРµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС† Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЌС‚РѕР№ С„СѓРЅРєС†РёРё РїСЂРѕРёР·РІРµРґС‘С‚ СЂРµРјРѕРЅС‚ РїРѕРІСЂРµР¶РґС‘РЅРЅС‹С… С‚Р°Р±Р»РёС†.</font></td></tr></table>"
 	."</td></tr>"
 	."<input type=\"hidden\" name=\"op\" value=\"StatusDB\">"
-	."<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Выполнить действие\"></td></tr></form></table>";
+	."<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Р’С‹РїРѕР»РЅРёС‚СЊ РґРµР№СЃС‚РІРёРµ\"></td></tr></form></table>";
 
 	if ($_POST['type'] == "Optimize") {
 		$result = sql_query("SHOW TABLE STATUS FROM ".$dbname."");
@@ -28,14 +28,14 @@ function StatusDB() {
 			$free = ($row['Data_free']) ? $row['Data_free'] : 0;
 			$totalfree += $free;
 			$i++;
-			$otitle = (!$free) ? "<font color=\"#FF0000\">Не нуждается</font>" : "<font color=\"#009900\">Оптимизирована</font>";
+			$otitle = (!$free) ? "<font color=\"#FF0000\">РќРµ РЅСѓР¶РґР°РµС‚СЃСЏ</font>" : "<font color=\"#009900\">РћРїС‚РёРјРёР·РёСЂРѕРІР°РЅР°</font>";
 			//sql_query("OPTIMIZE TABLE ".$row[0]."");
 			$tables[] = $row[0];
 			$content3 .= "<tr class=\"bgcolor1\"><td align=\"center\">".$i."</td><td>".$row[0]."</td><td>".mksize($total)."</td><td align=\"center\">".$otitle."</td><td align=\"center\">".mksize($free)."</td></tr>";
 		}
 		sql_query("OPTIMIZE TABLE ".implode(", ", $tables));
-		echo "<center><font class=\"option\">Оптимизация базы данных: ".$dbname."<br />Общий размер базы данных: ".mksize($totaltotal)."<br />Общие накладные расходы: ".mksize($totalfree)."<br /><br />"
-		."<table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr><td class=\"colhead\" align=\"center\">№</td><td class=\"colhead\">Таблица</td><td class=\"colhead\">Размер</td><td class=\"colhead\">Статус</td><td class=\"colhead\">Накладные расходы</td></tr>"
+		echo "<center><font class=\"option\">РћРїС‚РёРјРёР·Р°С†РёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…: ".$dbname."<br />РћР±С‰РёР№ СЂР°Р·РјРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С…: ".mksize($totaltotal)."<br />РћР±С‰РёРµ РЅР°РєР»Р°РґРЅС‹Рµ СЂР°СЃС…РѕРґС‹: ".mksize($totalfree)."<br /><br />"
+		."<table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr><td class=\"colhead\" align=\"center\">в„–</td><td class=\"colhead\">РўР°Р±Р»РёС†Р°</td><td class=\"colhead\">Р Р°Р·РјРµСЂ</td><td class=\"colhead\">РЎС‚Р°С‚СѓСЃ</td><td class=\"colhead\">РќР°РєР»Р°РґРЅС‹Рµ СЂР°СЃС…РѕРґС‹</td></tr>"
 		."".$content3."</table>";
 	} elseif ($_POST['type'] == "Repair") {
 		$result = sql_query("SHOW TABLE STATUS FROM ".$dbname."");
@@ -44,11 +44,11 @@ function StatusDB() {
 			$totaltotal += $total;
 			$i++;
 			$rresult = sql_query("REPAIR TABLE ".$row[0]."");
-			$otitle = (!$rresult) ? "<font color=\"#FF0000\">Ошибка</font>" : "<font color=\"#009900\">OK</font>";
+			$otitle = (!$rresult) ? "<font color=\"#FF0000\">РћС€РёР±РєР°</font>" : "<font color=\"#009900\">OK</font>";
 			$content4 .= "<tr class=\"bgcolor1\"><td align=\"center\">".$i."</td><td>".$row[0]."</td><td>".mksize($total)."</td><td align=\"center\">".$otitle."</td></tr>";
 		}
-		echo "<center><font class=\"option\">Ремонт базы данных: ".$dbname."<br />Общий размер базы данных: ".mksize($totaltotal)."<br /><br />"
-		."<table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr><td class=\"colhead\" align=\"center\">№</td><td class=\"colhead\">Таблица</td><td class=\"colhead\">Размер</td><td class=\"colhead\">Статус</td></tr>"
+		echo "<center><font class=\"option\">Р РµРјРѕРЅС‚ Р±Р°Р·С‹ РґР°РЅРЅС‹С…: ".$dbname."<br />РћР±С‰РёР№ СЂР°Р·РјРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С…: ".mksize($totaltotal)."<br /><br />"
+		."<table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr><td class=\"colhead\" align=\"center\">в„–</td><td class=\"colhead\">РўР°Р±Р»РёС†Р°</td><td class=\"colhead\">Р Р°Р·РјРµСЂ</td><td class=\"colhead\">РЎС‚Р°С‚СѓСЃ</td></tr>"
 		."".$content4."</table>";
 	}
 }

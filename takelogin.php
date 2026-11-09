@@ -40,34 +40,34 @@ list($login_failures) = mysql_fetch_row(sql_query("SELECT COUNT(*) FROM login_fa
 if ($login_failures >= 10)
 	stderr($tracker_lang['error'], "Too many failed login attempts. Try again in 15 minutes.");
 
-function bark($text = "Имя пользователя или пароль неверны")
+function bark($text = "РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРЅС‹")
 {
   global $login_window, $login_ip;
   sql_query("DELETE FROM login_failures WHERE added <= $login_window");
   sql_query("INSERT INTO login_failures (ip, added) VALUES (" . sqlesc($login_ip) . ", " . time() . ")");
-  stderr("Ошибка входа", $text);
+  stderr("РћС€РёР±РєР° РІС…РѕРґР°", $text);
 }
 
 $res = sql_query("SELECT id, passhash, secret, enabled, status, ip FROM users WHERE username = " . sqlesc($username));
 $row = mysql_fetch_array($res);
 
 if (!$row)
-	bark("Вы не зарегистрированы в системе.");
+	bark("Р’С‹ РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅС‹ РІ СЃРёСЃС‚РµРјРµ.");
 
 if ($row["status"] == 'pending')
-	bark("Вы еще не активировали свой аккаунт! Активируйте ваш аккаунт и попробуйте снова.");
+	bark("Р’С‹ РµС‰Рµ РЅРµ Р°РєС‚РёРІРёСЂРѕРІР°Р»Рё СЃРІРѕР№ Р°РєРєР°СѓРЅС‚! РђРєС‚РёРІРёСЂСѓР№С‚Рµ РІР°С€ Р°РєРєР°СѓРЅС‚ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.");
 
 if (!password_matches($password, $row['secret'], $row['passhash']))
 	bark();
 
 if ($row["enabled"] == "no")
-	bark("Этот аккаунт отключен.");
+	bark("Р­С‚РѕС‚ Р°РєРєР°СѓРЅС‚ РѕС‚РєР»СЋС‡РµРЅ.");
 
 $peers = sql_query("SELECT COUNT(id) FROM peers WHERE userid = $row[id]");
 $num = mysql_fetch_row($peers);
 $ip = getip();
 if ($num[0] > 0 && $row["ip"] != $ip && $row["ip"])
-	bark("Этот пользователь на данный момент активен с другого IP. Вход невозможен.");
+	bark("Р­С‚РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р°РєС‚РёРІРµРЅ СЃ РґСЂСѓРіРѕРіРѕ IP. Р’С…РѕРґ РЅРµРІРѕР·РјРѕР¶РµРЅ.");
 
 if (strncmp($row['passhash'], '$2y$', 4) != 0) { // legacy md5, bare or bcrypt-wrapped: store plain bcrypt
 	$matched_password = password_matches_exact($password, $row['secret'], $row['passhash'])

@@ -39,14 +39,14 @@ loggedinorreturn();
     begin_table();
 ?>
 <tr>
-<td class=colhead>Место</td>
-<td class=colhead align=left>Пользователь</td>
-<td class=colhead>Раздач</td>
-<td class=colhead align=left>Скорость раздачи</td>
-<td class=colhead>Закачал</td>
-<td class=colhead align=left>Скорость закачки</td>
-<td class=colhead align=right>Рейтинг</td>
-<td class=colhead align=left>Зарегистрирован</td>
+<td class=colhead>РњРµСЃС‚Рѕ</td>
+<td class=colhead align=left>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td>
+<td class=colhead>Р Р°Р·РґР°С‡</td>
+<td class=colhead align=left>РЎРєРѕСЂРѕСЃС‚СЊ СЂР°Р·РґР°С‡Рё</td>
+<td class=colhead>Р—Р°РєР°С‡Р°Р»</td>
+<td class=colhead align=left>РЎРєРѕСЂРѕСЃС‚СЊ Р·Р°РєР°С‡РєРё</td>
+<td class=colhead align=right>Р РµР№С‚РёРЅРі</td>
+<td class=colhead align=left>Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</td>
 
 </tr>
 <?
@@ -73,7 +73,7 @@ loggedinorreturn();
       		"</td><td align=right$highlight>" . mksize($a["downspeed"]) . "/s" .
       		"</td><td align=right$highlight>" . $ratio .
       		"</td><td align=left>" . date("Y-m-d",strtotime($a["added"])) . " (" .
-      		get_elapsed_time(sql_timestamp_to_unix_timestamp($a["added"])) . " назад)</td></tr>");
+      		get_elapsed_time(sql_timestamp_to_unix_timestamp($a["added"])) . " РЅР°Р·Р°Рґ)</td></tr>");
     }
     end_table();
     end_frame();
@@ -85,14 +85,14 @@ loggedinorreturn();
     begin_table();
 ?>
 <tr>
-<td class=colhead align=center>Место</td>
-<td class=colhead align=left>Название</td>
-<td class=colhead align=right>Скачено</td>
-<td class=colhead align=right>Данные</td>
-<td class=colhead align=right>Раздающих</td>
-<td class=colhead align=right>Качающих</td>
-<td class=colhead align=right>Всего</td>
-<td class=colhead align=right>Рейтинг</td>
+<td class=colhead align=center>РњРµСЃС‚Рѕ</td>
+<td class=colhead align=left>РќР°Р·РІР°РЅРёРµ</td>
+<td class=colhead align=right>РЎРєР°С‡РµРЅРѕ</td>
+<td class=colhead align=right>Р”Р°РЅРЅС‹Рµ</td>
+<td class=colhead align=right>Р Р°Р·РґР°СЋС‰РёС…</td>
+<td class=colhead align=right>РљР°С‡Р°СЋС‰РёС…</td>
+<td class=colhead align=right>Р’СЃРµРіРѕ</td>
+<td class=colhead align=right>Р РµР№С‚РёРЅРі</td>
 </tr>
 <?
     $num = 0;
@@ -123,8 +123,8 @@ loggedinorreturn();
     begin_table();
 ?>
 <tr>
-<td class=colhead>Место</td>
-<td class=colhead align=left>Страна</td>
+<td class=colhead>РњРµСЃС‚Рѕ</td>
+<td class=colhead align=left>РЎС‚СЂР°РЅР°</td>
 <td class=colhead align=right><?=$what?></td>
 </tr>
 <?
@@ -132,13 +132,13 @@ loggedinorreturn();
 		while ($a = mysql_fetch_assoc($res))
 		{
 	    ++$num;
-	    if ($what == "Пользователи")
+	    if ($what == "РџРѕР»СЊР·РѕРІР°С‚РµР»Рё")
 	      $value = number_format($a["num"]);
-	    elseif ($what == "Раздача")
+	    elseif ($what == "Р Р°Р·РґР°С‡Р°")
 	      $value = mksize($a["ul"]);
-	    elseif ($what == "Среднее")
+	    elseif ($what == "РЎСЂРµРґРЅРµРµ")
 	    	$value = mksize($a["ul_avg"]);
- 	    elseif ($what == "Рейтинг")
+ 	    elseif ($what == "Р РµР№С‚РёРЅРі")
  	    	$value = number_format($a["r"],2);
 	    print("<tr><td align=center>$num</td><td align=left><table border=0 class=main cellspacing=0 cellpadding=0><tr><td class=embedded>".
 	      "<img align=center src=pic/flag/$a[flagpic]></td><td class=embedded style='padding-left: 5px'><b>$a[name]</b></td>".
@@ -178,10 +178,10 @@ loggedinorreturn();
 	$subtype = isset($_GET["subtype"]) ? $_GET["subtype"] : false;
 
 	print("<p align=center>"  .
-		($type == 1 && !$limit ? "<b>Пользователи</b>" : "<a href=topten.php?type=1>Пользователи</a>") .	" | " .
- 		($type == 2 && !$limit ? "<b>Торренты</b>" : "<a href=topten.php?type=2>Торренты</a>") . " | " .
-		($type == 3 && !$limit ? "<b>Страны</b>" : "<a href=topten.php?type=3>Страны</a>") . " | " .
-		($type == 4 && !$limit ? "<b>Пиры</b>" : "<a href=topten.php?type=4>Пиры</a>") . "</p>\n");
+		($type == 1 && !$limit ? "<b>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё</b>" : "<a href=topten.php?type=1>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё</a>") .	" | " .
+ 		($type == 2 && !$limit ? "<b>РўРѕСЂСЂРµРЅС‚С‹</b>" : "<a href=topten.php?type=2>РўРѕСЂСЂРµРЅС‚С‹</a>") . " | " .
+		($type == 3 && !$limit ? "<b>РЎС‚СЂР°РЅС‹</b>" : "<a href=topten.php?type=3>РЎС‚СЂР°РЅС‹</a>") . " | " .
+		($type == 4 && !$limit ? "<b>РџРёСЂС‹</b>" : "<a href=topten.php?type=4>РџРёСЂС‹</a>") . "</p>\n");
 
 	$pu = get_user_class() >= UC_POWER_USER;
 
@@ -199,28 +199,28 @@ loggedinorreturn();
   	{
 			$order = "uploaded DESC";
 			$r = sql_query($mainquery . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-	  	usertable($r, "Top $limit заливающих" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=ul>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=ul>Top 250</a>]</font>" : ""));
+	  	usertable($r, "Top $limit Р·Р°Р»РёРІР°СЋС‰РёС…" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=ul>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=ul>Top 250</a>]</font>" : ""));
 	  }
 
     if ($limit == 10 || $subtype == "dl")
   	{
 			$order = "downloaded DESC";
 		  $r = sql_query($mainquery . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-		  usertable($r, "Top $limit качающих" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=dl>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=dl>Top 250</a>]</font>" : ""));
+		  usertable($r, "Top $limit РєР°С‡Р°СЋС‰РёС…" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=dl>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=dl>Top 250</a>]</font>" : ""));
 	  }
 
     if ($limit == 10 || $subtype == "uls")
   	{
 			$order = "upspeed DESC";
 			$r = sql_query($mainquery . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-	  	usertable($r, "Top $limit быстрейших заливающих <font class=small>(среднее, включая период неактивности)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=uls>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=uls>Top 250</a>]</font>" : ""));
+	  	usertable($r, "Top $limit Р±С‹СЃС‚СЂРµР№С€РёС… Р·Р°Р»РёРІР°СЋС‰РёС… <font class=small>(СЃСЂРµРґРЅРµРµ, РІРєР»СЋС‡Р°СЏ РїРµСЂРёРѕРґ РЅРµР°РєС‚РёРІРЅРѕСЃС‚Рё)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=uls>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=uls>Top 250</a>]</font>" : ""));
 	  }
 
     if ($limit == 10 || $subtype == "dls")
   	{
 			$order = "downspeed DESC";
 			$r = sql_query($mainquery . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-	  	usertable($r, "Top $limit быстрейших качающих <font class=small>(среднее, включая период неактивности)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=dls>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=dls>Top 250</a>]</font>" : ""));
+	  	usertable($r, "Top $limit Р±С‹СЃС‚СЂРµР№С€РёС… РєР°С‡Р°СЋС‰РёС… <font class=small>(СЃСЂРµРґРЅРµРµ, РІРєР»СЋС‡Р°СЏ РїРµСЂРёРѕРґ РЅРµР°РєС‚РёРІРЅРѕСЃС‚Рё)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=dls>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=dls>Top 250</a>]</font>" : ""));
 	  }
 
     if ($limit == 10 || $subtype == "bsh")
@@ -228,7 +228,7 @@ loggedinorreturn();
 			$order = "uploaded / downloaded DESC";
 			$extrawhere = " AND downloaded > 1073741824";
 	  	$r = sql_query($mainquery . $extrawhere . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-	  	usertable($r, "Top $limit лучших раздающих <font class=small>(минимум 1 GB скачано)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=bsh>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=bsh>Top 250</a>]</font>" : ""));
+	  	usertable($r, "Top $limit Р»СѓС‡С€РёС… СЂР°Р·РґР°СЋС‰РёС… <font class=small>(РјРёРЅРёРјСѓРј 1 GB СЃРєР°С‡Р°РЅРѕ)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=bsh>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=bsh>Top 250</a>]</font>" : ""));
 		}
 
     if ($limit == 10 || $subtype == "wsh")
@@ -236,7 +236,7 @@ loggedinorreturn();
 			$order = "uploaded / downloaded ASC, downloaded DESC";
   		$extrawhere = " AND downloaded > 1073741824";
 	  	$r = sql_query($mainquery . $extrawhere . " ORDER BY $order " . " LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-	  	usertable($r, "Top $limit худших раздающих <font class=small>(минимум 1 GB скачано)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=wsh>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=wsh>Top 250</a>]</font>" : ""));
+	  	usertable($r, "Top $limit С…СѓРґС€РёС… СЂР°Р·РґР°СЋС‰РёС… <font class=small>(РјРёРЅРёРјСѓРј 1 GB СЃРєР°С‡Р°РЅРѕ)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=1&amp;lim=100&amp;subtype=wsh>Top 100</a>] - [<a href=topten.php?type=1&amp;lim=250&amp;subtype=wsh>Top 250</a>]</font>" : ""));
 	  }
   }
 
@@ -283,25 +283,25 @@ loggedinorreturn();
    	if ($limit == 10 || $subtype == "us")
    	{
 		  $r = sql_query("SELECT name, flagpic, COUNT(users.country) as num FROM countries LEFT JOIN users ON users.country = countries.id GROUP BY name ORDER BY num DESC LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-		  countriestable($r, "Top $limit Countries<font class=small> (users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=us>Top 25</a>]</font>" : ""),"Пользователи");
+		  countriestable($r, "Top $limit Countries<font class=small> (users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=us>Top 25</a>]</font>" : ""),"РџРѕР»СЊР·РѕРІР°С‚РµР»Рё");
     }
 
    	if ($limit == 10 || $subtype == "ul")
    	{
 	  	$r = sql_query("SELECT c.name, c.flagpic, sum(u.uploaded) AS ul FROM users AS u LEFT JOIN countries AS c ON u.country = c.id WHERE u.enabled = 'yes' GROUP BY c.name ORDER BY ul DESC LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-		  countriestable($r, "Top $limit Countries<font class=small> (total uploaded)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=ul>Top 25</a>]</font>" : ""),"Раздача");
+		  countriestable($r, "Top $limit Countries<font class=small> (total uploaded)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=ul>Top 25</a>]</font>" : ""),"Р Р°Р·РґР°С‡Р°");
     }
 
 		if ($limit == 10 || $subtype == "avg")
 		{
 		  $r = sql_query("SELECT c.name, c.flagpic, sum(u.uploaded)/count(u.id) AS ul_avg FROM users AS u LEFT JOIN countries AS c ON u.country = c.id WHERE u.enabled = 'yes' GROUP BY c.name HAVING sum(u.uploaded) > 1099511627776 AND count(u.id) >= 100 ORDER BY ul_avg DESC LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-		  countriestable($r, "Top $limit Countries<font class=small> (average total uploaded per user, with minimum 1TB uploaded and 100 users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=avg>Top 25</a>]</font>" : ""),"Среднее");
+		  countriestable($r, "Top $limit Countries<font class=small> (average total uploaded per user, with minimum 1TB uploaded and 100 users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=avg>Top 25</a>]</font>" : ""),"РЎСЂРµРґРЅРµРµ");
     }
 
 		if ($limit == 10 || $subtype == "r")
 		{
 		  $r = sql_query("SELECT c.name, c.flagpic, sum(u.uploaded)/sum(u.downloaded) AS r FROM users AS u LEFT JOIN countries AS c ON u.country = c.id WHERE u.enabled = 'yes' GROUP BY c.name HAVING sum(u.uploaded) > 1099511627776 AND sum(u.downloaded) > 1099511627776 AND count(u.id) >= 100 ORDER BY r DESC LIMIT $limit") or sqlerr(__FILE__, __LINE__);
-		  countriestable($r, "Top $limit Countries<font class=small> (ratio, with minimum 1TB uploaded, 1TB downloaded and 100 users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=r>Top 25</a>]</font>" : ""),"Рейитнг");
+		  countriestable($r, "Top $limit Countries<font class=small> (ratio, with minimum 1TB uploaded, 1TB downloaded and 100 users)</font>" . ($limit == 10 && $pu ? " <font class=small> - [<a href=topten.php?type=3&amp;lim=25&amp;subtype=r>Top 25</a>]</font>" : ""),"Р РµР№РёС‚РЅРі");
 	  }
   }
 	elseif ($type == 4)

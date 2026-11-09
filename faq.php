@@ -49,8 +49,8 @@
 
 require "include/bittorrent.php";
 dbconn();
-stdhead("◊‡¬Ó Ò‡ÈÚ‡ $SITENAME");
-begin_frame("◊‡¬Ó Ò‡ÈÚ‡ $SITENAME");
+stdhead("–ß–∞–í–æ —Å–∞–π—Ç–∞ $SITENAME");
+begin_frame("–ß–∞–í–æ —Å–∞–π—Ç–∞ $SITENAME");
 end_frame();
 
 $res = sql_query("SELECT `id`, `question`, `flag` FROM `faq` WHERE `type`='categ' ORDER BY `order` ASC");
@@ -79,7 +79,7 @@ if (isset($faq_categ)) {
 		}
 	}
 
-	begin_frame("—Ó‰ÂÊ‡ÌËÂ");
+	begin_frame("–°–æ–¥–µ—Ä–∂–∞–Ω–∏–µ");
 	foreach ($faq_categ as $id => $temp) {
 		if ($faq_categ[$id][flag] == "1") {
 			print("<ul>\n<li><a href=\"#". $id ."\"><b>". $faq_categ[$id][title] ."</b></a>\n<ul>\n");
@@ -88,9 +88,9 @@ if (isset($faq_categ)) {
 					if ($faq_categ[$id][items][$id2][flag] == "1")
 						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a></li>\n");
 					elseif ($faq_categ[$id][items][$id2][flag] == "2")
-						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/updated.png\" alt=\"Œ·ÌÓ‚ÎÂÌÓ\" title=\"Œ·ÌÓ‚ÎÂÌÓ\" align=\"absbottom\"></li>\n");
+						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/updated.png\" alt=\"–û–±–Ω–æ–≤–ª–µ–Ω–æ\" title=\"–û–±–Ω–æ–≤–ª–µ–Ω–æ\" align=\"absbottom\"></li>\n");
 					elseif ($faq_categ[$id][items][$id2][flag] == "3")
-						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/new.png\" alt=\"ÕÓ‚ÓÂ\" title=\"ÕÓ‚ÓÂ\" align=\"absbottom\"></li>\n");
+						print("<li><a href=\"#". $id2 ."\" class=\"altlink\">". $faq_categ[$id][items][$id2][question] ."</a> <img src=\"".$pic_base_url."/new.png\" alt=\"–ù–æ–≤–æ–µ\" title=\"–ù–æ–≤–æ–µ\" align=\"absbottom\"></li>\n");
 				}
 			}
 			print("</ul>\n</li>\n</ul>\n<br />\n");
@@ -100,7 +100,7 @@ if (isset($faq_categ)) {
 
 	foreach ($faq_categ as $id => $temp) {
 		if ($faq_categ[$id][flag] == "1") {
-			$frame = $faq_categ[$id][title] ." - <a href=\"#top\">Õ‡‚Âı</a>";
+			$frame = $faq_categ[$id][title] ." - <a href=\"#top\">–ù–∞–≤–µ—Ä—Ö</a>";
 			begin_frame($frame);
 			print("<a name=\"#". $id ."\" id=\"". $id ."\"></a>\n");
 			if (array_key_exists("items", $faq_categ[$id])) {

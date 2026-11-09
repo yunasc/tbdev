@@ -33,7 +33,7 @@ csrf_require_post();
 
 $id = intval($_GET["id"]);
 if (!is_valid_id($id))
-	stderr("Ошибка", "А вот этого лучше не делать...");
+	stderr("РћС€РёР±РєР°", "Рђ РІРѕС‚ СЌС‚РѕРіРѕ Р»СѓС‡С€Рµ РЅРµ РґРµР»Р°С‚СЊ...");
 if (isset($_POST["conusr"]))
 	sql_query("UPDATE users SET status = 'confirmed' WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST["conusr"])) . ") AND status = 'pending'".( get_user_class() < UC_SYSOP ? " AND invitedby = $CURUSER[id]" : "")) or sqlerr(__FILE__,__LINE__);
 else

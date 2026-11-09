@@ -53,7 +53,7 @@ if ($search != '' || $class) {
 		$letter = "a";
 	$q = "letter=$letter";*/
 
-	if ($letter != "" && strpos("abcdefghijklmnopqrstuvwxyz" . "абвгдеёжзийклмнопрстуфхцчшщъыьэюя", $letter) === false)
+	if ($letter != "" && strpos("abcdefghijklmnopqrstuvwxyz" . "Р°Р±РІРіРґРµС‘Р¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏ", $letter) === false)
 		$letter = "";
 	$query = ( $letter != "" ? "username LIKE '$letter%' AND " : "") . "status='confirmed'";
 	if ($letter != "")
@@ -66,14 +66,14 @@ if (is_valid_user_class($class)) {
 	$q .= ($q ? "&amp;" : "") . "class=$class";
 }
 
-stdhead("Пользователи");
+stdhead("РџРѕР»СЊР·РѕРІР°С‚РµР»Рё");
 
-print("<h1>Пользователи</h1>\n");
+print("<h1>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё</h1>\n");
 
 print("<form method=\"get\" action=\"users.php\">\n");
-print("Поиск: <input type=\"text\" size=\"30\" name=\"search\" value=\"".htmlspecialchars_uni($search)."\">\n");
+print("РџРѕРёСЃРє: <input type=\"text\" size=\"30\" name=\"search\" value=\"".htmlspecialchars_uni($search)."\">\n");
 print("<select name=\"class\">\n");
-print("<option value=\"-\">(Все уровни)</option>\n");
+print("<option value=\"-\">(Р’СЃРµ СѓСЂРѕРІРЅРё)</option>\n");
 for ($i = 0;;++$i) {
 if ($c = get_user_class_name($i))
 	print("<option value=\"$i\"" . (is_valid_user_class($class) && $class == $i ? " selected" : "") . ">$c</option>\n");
@@ -81,7 +81,7 @@ else
 	break;
 }
 print("</select>\n");
-print("<input type=\"submit\" value=\"Вперед\">\n");
+print("<input type=\"submit\" value=\"Р’РїРµСЂРµРґ\">\n");
 print("</form>\n");
 
 print("<p>\n");
@@ -100,8 +100,8 @@ print("</p>\n");
 
 print("<p>\n");
 
-$russian_letters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"; // Да, Я догадываюсь что слова не могут начинатся с ьъы, но Юзернеймы могут!
-$russian_upperscase_letters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+$russian_letters = "Р°Р±РІРіРґРµС‘Р¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏ"; // Р”Р°, РЇ РґРѕРіР°РґС‹РІР°СЋСЃСЊ С‡С‚Рѕ СЃР»РѕРІР° РЅРµ РјРѕРіСѓС‚ РЅР°С‡РёРЅР°С‚СЃСЏ СЃ СЊСЉС‹, РЅРѕ Р®Р·РµСЂРЅРµР№РјС‹ РјРѕРіСѓС‚!
+$russian_upperscase_letters = "РђР‘Р’Р“Р”Р•РЃР–Р—РР™РљР›РњРќРћРџР РЎРўРЈР¤РҐР¦Р§РЁР©РЄР«Р¬Р­Р®РЇ";
 foreach (str_split($russian_letters) as $key => $l)
 {
 $L = $russian_upperscase_letters[$key];
@@ -136,16 +136,16 @@ else
 $pagemenu .= "<a href=\"users.php?{$q}page=$i\"><b>$i</b></a>\n";
 
 if ($page == 1)
-$browsemenu .= "<b>&lt;&lt; Пред</b>";
+$browsemenu .= "<b>&lt;&lt; РџСЂРµРґ</b>";
 else
-$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page - 1) . "\"><b>&lt;&lt; Пред</b></a>";
+$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page - 1) . "\"><b>&lt;&lt; РџСЂРµРґ</b></a>";
 
 $browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 if ($page == $pages || (($page * $perpage) > $arr[0]))
-$browsemenu .= "<b>След &gt;&gt;</b>";
+$browsemenu .= "<b>РЎР»РµРґ &gt;&gt;</b>";
 else
-$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page + 1) . "\"><b>След &gt;&gt;</b></a>";
+$browsemenu .= "<a href=\"users.php?{$q}page=" . ($page + 1) . "\"><b>РЎР»РµРґ &gt;&gt;</b></a>";
 
 print("<p>$browsemenu<br />$pagemenu</p>");
 
@@ -155,7 +155,7 @@ $res = sql_query("SELECT u.*, c.name, c.flagpic FROM users AS u LEFT JOIN countr
 $num = mysql_num_rows($res);
 
 print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-print("<tr><td class=\"colhead\" align=\"left\">Имя</td><td class=\"colhead\">Зарегестрирован</td><td class=\"colhead\">Последний вход</td><td class=\"colhead\">Рейтинг</td><td class=\"colhead\">Пол</td><td class=\"colhead\" align=\"left\">Уровень</td><td class=\"colhead\">Страна</td></tr>\n");
+print("<tr><td class=\"colhead\" align=\"left\">РРјСЏ</td><td class=\"colhead\">Р—Р°СЂРµРіРµСЃС‚СЂРёСЂРѕРІР°РЅ</td><td class=\"colhead\">РџРѕСЃР»РµРґРЅРёР№ РІС…РѕРґ</td><td class=\"colhead\">Р РµР№С‚РёРЅРі</td><td class=\"colhead\">РџРѕР»</td><td class=\"colhead\" align=\"left\">РЈСЂРѕРІРµРЅСЊ</td><td class=\"colhead\">РЎС‚СЂР°РЅР°</td></tr>\n");
 for ($i = 0; $i < $num; ++$i)
 {
 $arr = mysql_fetch_assoc($res);
@@ -180,8 +180,8 @@ else
 	else
 		$ratio = "------";
 
-if ($arr["gender"] == "1") $gender = "<img src=\"".$pic_base_url."/male.gif\" alt=\"Парень\" style=\"margin-left: 4pt\">";
-elseif ($arr["gender"] == "2") $gender = "<img src=\"".$pic_base_url."/female.gif\" alt=\"Девушка\" style=\"margin-left: 4pt\">";
+if ($arr["gender"] == "1") $gender = "<img src=\"".$pic_base_url."/male.gif\" alt=\"РџР°СЂРµРЅСЊ\" style=\"margin-left: 4pt\">";
+elseif ($arr["gender"] == "2") $gender = "<img src=\"".$pic_base_url."/female.gif\" alt=\"Р”РµРІСѓС€РєР°\" style=\"margin-left: 4pt\">";
 
 print("<tr><td align=\"left\"><a href=\"userdetails.php?id=$arr[id]\"><b>".get_user_class_color($arr["class"], $arr["username"])."</b></a>" .($arr["donated"] > 0 ? "<img src=\"pic/star.gif\" border=\"0\" alt=\"Donor\">" : "")."</td>" .
 "<td>$arr[added]</td><td>$arr[last_access]</td><td>$ratio</td><td>$gender</td>".

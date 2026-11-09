@@ -57,20 +57,20 @@ if (!isset($_FILES["tfile"]))
 $f = $_FILES["tfile"];
 $fname = unesc($f["name"]);
 if (empty($fname))
-	bark("Ôàéë íå çàãðóæåí. Ïóñòîå èìÿ ôàéëà!");
+	bark("Ð¤Ð°Ð¹Ð» Ð½Ðµ Ð·Ð°Ð³Ñ€ÑƒÐ¶ÐµÐ½. ÐŸÑƒÑÑ‚Ð¾Ðµ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð°!");
 
 $descr = unesc(strval($_POST["descr"]));
 if (!$descr)
-	bark("Âû äîëæíû ââåñòè îïèñàíèå!");
+	bark("Ð’Ñ‹ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð²Ð²ÐµÑÑ‚Ð¸ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ!");
 
 $catid = intval($_POST["type"]);
 if (!is_valid_id($catid))
-	bark("Âû äîëæíû âûáðàòü êàòåãîðèþ, â êîòîðóþ ïîìåñòèòü òîððåíò!");
+	bark("Ð’Ñ‹ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð²Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸ÑŽ, Ð² ÐºÐ¾Ñ‚Ð¾Ñ€ÑƒÑŽ Ð¿Ð¾Ð¼ÐµÑÑ‚Ð¸Ñ‚ÑŒ Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚!");
 
 if (!validfilename($fname))
-	bark("Íåâåðíîå èìÿ ôàéëà!");
+	bark("ÐÐµÐ²ÐµÑ€Ð½Ð¾Ðµ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð°!");
 if (!preg_match('/^(.+)\.torrent$/si', $fname, $matches))
-	bark("Íåâåðíîå èìÿ ôàéëà (íå .torrent).");
+	bark("ÐÐµÐ²ÐµÑ€Ð½Ð¾Ðµ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° (Ð½Ðµ .torrent).");
 $shortfname = $torrent = $matches[1];
 if (!empty($_POST["name"]))
 	$torrent = unesc($_POST["name"]);
@@ -79,11 +79,11 @@ $tmpname = $f["tmp_name"];
 if (!is_uploaded_file($tmpname))
 	bark("eek");
 if (!filesize($tmpname))
-	bark("Ïóñòîé ôàéë!");
+	bark("ÐŸÑƒÑÑ‚Ð¾Ð¹ Ñ„Ð°Ð¹Ð»!");
 
 $dict = bdecode(file_get_contents($tmpname));
 if (!isset($dict))
-	bark("×òî çà õðåíü òû çàãðóæàåøü? Ýòî íå áèíàðíî-êîäèðîâàíûé ôàéë!");
+	bark("Ð§Ñ‚Ð¾ Ð·Ð° Ñ…Ñ€ÐµÐ½ÑŒ Ñ‚Ñ‹ Ð·Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÑˆÑŒ? Ð­Ñ‚Ð¾ Ð½Ðµ Ð±Ð¸Ð½Ð°Ñ€Ð½Ð¾-ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ñ‹Ð¹ Ñ„Ð°Ð¹Ð»!");
 
 if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no'))) {
 	$free = $_POST['free'];
@@ -116,7 +116,7 @@ if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
 	bark('invalid file length');
 
 /*if (!in_array($ann, $announce_urls, 1))
-	bark("Íåâåðíûé Announce URL! Äîëæåí áûòü ".$announce_urls[0]);*/
+	bark("ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Announce URL! Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð±Ñ‹Ñ‚ÑŒ ".$announce_urls[0]);*/
 
 $ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
 $row = mysql_fetch_array($ret);
@@ -153,7 +153,7 @@ if (isset($totallen)) {
 		$filelist[] = array($ffe, $ll);
 	if ($ffe == 'Thumbs.db')
         {
-            stderr("Îøèáêà", "Â òîððåíòàõ çàïðåùåíî äåðæàòü ôàéëû Thumbs.db!");
+            stderr("ÐžÑˆÐ¸Ð±ÐºÐ°", "Ð’ Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚Ð°Ñ… Ð·Ð°Ð¿Ñ€ÐµÑ‰ÐµÐ½Ð¾ Ð´ÐµÑ€Ð¶Ð°Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»Ñ‹ Thumbs.db!");
             die;
         }
 	}
@@ -175,7 +175,7 @@ if ($multi_torrent == 'no') {
 }
 
 $dict = BDecode(BEncode($dict)); // double up on the becoding solves the occassional misgenerated infohash
-$dict['comment'] = "Òîððåíò ñîçäàí äëÿ '$SITENAME'"; // change torrent comment
+$dict['comment'] = "Ð¢Ð¾Ñ€Ñ€ÐµÐ½Ñ‚ ÑÐ¾Ð·Ð´Ð°Ð½ Ð´Ð»Ñ '$SITENAME'"; // change torrent comment
 $dict['created by'] = "$CURUSER[username]"; // change created by
 $dict['publisher'] = "$CURUSER[username]"; // change publisher
 $dict['publisher.utf-8'] = "$CURUSER[username]"; // change publisher.utf-8
@@ -201,11 +201,11 @@ if ($multi_torrent == 'yes') {
 			if (substr($url_array['host'], -6) == '.local')
 				continue; // Skip any .local domains
 			$parsed_urls[] = $al_url[0];
-			// À âäðóã â òîððåíòå äâà îäèíàêîâûõ àííîíñåðà? Ïîòîìó REPLACE INTO
+			// Ð Ð²Ð´Ñ€ÑƒÐ³ Ð² Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚Ðµ Ð´Ð²Ð° Ð¾Ð´Ð¸Ð½Ð°ÐºÐ¾Ð²Ñ‹Ñ… Ð°Ð½Ð½Ð¾Ð½ÑÐµÑ€Ð°? ÐŸÐ¾Ñ‚Ð¾Ð¼Ñƒ REPLACE INTO
 			sql_query('REPLACE INTO torrents_scrape (tid, info_hash, url) VALUES ('.implode(', ', array_map('sqlesc', array($next_id, $infohash, $al_url[0]))).')') or sqlerr(__FILE__,__LINE__);
 		}
 	} else
-		stderr($tracker_lang['error'], "Â òîððåíò ôàéëå íåò announce-list è íå óêàçàí announce. Òàêîé ìóëüòèòðåêåðíûé òîððåíò èñïîëüçîâàòü íåëüçÿ.");
+		stderr($tracker_lang['error'], "Ð’ Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚ Ñ„Ð°Ð¹Ð»Ðµ Ð½ÐµÑ‚ announce-list Ð¸ Ð½Ðµ ÑƒÐºÐ°Ð·Ð°Ð½ announce. Ð¢Ð°ÐºÐ¾Ð¹ Ð¼ÑƒÐ»ÑŒÑ‚Ð¸Ñ‚Ñ€ÐµÐºÐµÑ€Ð½Ñ‹Ð¹ Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ Ð½ÐµÐ»ÑŒÐ·Ñ.");
 }
 
 /*print_r($infohash);
@@ -263,9 +263,9 @@ if ($fp) {
     fclose($fp);
 }
 
-write_log("Òîððåíò íîìåð $id ($torrent) áûë çàëèò ïîëüçîâàòåëåì " . $CURUSER["username"], "5DDB6E", "torrent");
+write_log("Ð¢Ð¾Ñ€Ñ€ÐµÐ½Ñ‚ Ð½Ð¾Ð¼ÐµÑ€ $id ($torrent) Ð±Ñ‹Ð» Ð·Ð°Ð»Ð¸Ñ‚ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¼ " . $CURUSER["username"], "5DDB6E", "torrent");
 
-// Ýòîé ôèãíåé âàùå êòî-òî ïîëüçóåòñÿ?
+// Ð­Ñ‚Ð¾Ð¹ Ñ„Ð¸Ð³Ð½ÐµÐ¹ Ð²Ð°Ñ‰Ðµ ÐºÑ‚Ð¾-Ñ‚Ð¾ Ð¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ?
 /* Email notify */
 /*******************
 

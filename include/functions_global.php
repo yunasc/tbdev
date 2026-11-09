@@ -265,11 +265,11 @@ function textbbcode($form, $name, $content = "") {
 		}
 		return t;
 	}
-	var rus_lr2 = ('Е-е-О-о-Ё-Ё-Ё-Ё-Ж-Ж-Ч-Ч-Ш-Ш-Щ-Щ-Ъ-Ь-Э-Э-Ю-Ю-Я-Я-Я-Я-ё-ё-ж-ч-ш-щ-э-ю-я-я').split('-');
-	var lat_lr2 = ('/E-/e-/O-/o-ЫO-Ыo-ЙO-Йo-ЗH-Зh-ЦH-Цh-СH-Сh-ШH-Шh-ъ' + String.fromCharCode(35) + '-ь' + String.fromCharCode(39) + '-ЙE-Йe-ЙU-Йu-ЙA-Йa-ЫA-Ыa-ыo-йo-зh-цh-сh-шh-йe-йu-йa-ыa').split('-');
-	var rus_lr1 = ('А-Б-В-Г-Д-Е-З-И-Й-К-Л-М-Н-О-П-Р-С-Т-У-Ф-Х-Х-Ц-Щ-Ы-Я-а-б-в-г-д-е-з-и-й-к-л-м-н-о-п-р-с-т-у-ф-х-х-ц-щ-ъ-ы-ь-я').split('-');
+	var rus_lr2 = ('Р•-Рµ-Рћ-Рѕ-РЃ-РЃ-РЃ-РЃ-Р–-Р–-Р§-Р§-РЁ-РЁ-Р©-Р©-РЄ-Р¬-Р­-Р­-Р®-Р®-РЇ-РЇ-РЇ-РЇ-С‘-С‘-Р¶-С‡-С€-С‰-СЌ-СЋ-СЏ-СЏ').split('-');
+	var lat_lr2 = ('/E-/e-/O-/o-Р«O-Р«o-Р™O-Р™o-Р—H-Р—h-Р¦H-Р¦h-РЎH-РЎh-РЁH-РЁh-СЉ' + String.fromCharCode(35) + '-СЊ' + String.fromCharCode(39) + '-Р™E-Р™e-Р™U-Р™u-Р™A-Р™a-Р«A-Р«a-С‹o-Р№o-Р·h-С†h-СЃh-С€h-Р№e-Р№u-Р№a-С‹a').split('-');
+	var rus_lr1 = ('Рђ-Р‘-Р’-Р“-Р”-Р•-Р—-Р-Р™-Рљ-Р›-Рњ-Рќ-Рћ-Рџ-Р -РЎ-Рў-РЈ-Р¤-РҐ-РҐ-Р¦-Р©-Р«-РЇ-Р°-Р±-РІ-Рі-Рґ-Рµ-Р·-Рё-Р№-Рє-Р»-Рј-РЅ-Рѕ-Рї-СЂ-СЃ-С‚-Сѓ-С„-С…-С…-С†-С‰-СЉ-С‹-СЊ-СЏ').split('-');
 	var lat_lr1 = ('A-B-V-G-D-E-Z-I-J-K-L-M-N-O-P-R-S-T-U-F-H-X-C-W-Y-Q-a-b-v-g-d-e-z-i-j-k-l-m-n-o-p-r-s-t-u-f-h-x-c-w-' + String.fromCharCode(35) + '-y-' + String.fromCharCode(39) + '-q').split('-');
-	var rus_rl = ('А-Б-В-Г-Д-Е-Ё-Ж-З-И-Й-К-Л-М-Н-О-П-Р-С-Т-У-Ф-Х-Ц-Ч-Ш-Щ-Ъ-Ы-Ь-Э-Ю-Я-а-б-в-г-д-е-ё-ж-з-и-й-к-л-м-н-о-п-р-с-т-у-ф-х-ц-ч-ш-щ-ъ-ы-ь-э-ю-я').split('-');
+	var rus_rl = ('Рђ-Р‘-Р’-Р“-Р”-Р•-РЃ-Р–-Р—-Р-Р™-Рљ-Р›-Рњ-Рќ-Рћ-Рџ-Р -РЎ-Рў-РЈ-Р¤-РҐ-Р¦-Р§-РЁ-Р©-РЄ-Р«-Р¬-Р­-Р®-РЇ-Р°-Р±-РІ-Рі-Рґ-Рµ-С‘-Р¶-Р·-Рё-Р№-Рє-Р»-Рј-РЅ-Рѕ-Рї-СЂ-СЃ-С‚-Сѓ-С„-С…-С†-С‡-С€-С‰-СЉ-С‹-СЊ-СЌ-СЋ-СЏ').split('-');
 	var lat_rl = ('A-B-V-G-D-E-JO-ZH-Z-I-J-K-L-M-N-O-P-R-S-T-U-F-H-C-CH-SH-SHH-' + String.fromCharCode(35) + String.fromCharCode(35) + '-Y-' + String.fromCharCode(39) + String.fromCharCode(39) + '-JE-JU-JA-a-b-v-g-d-e-jo-zh-z-i-j-k-l-m-n-o-p-r-s-t-u-f-h-c-ch-sh-shh-' + String.fromCharCode(35) + '-y-' + String.fromCharCode(39) + '-je-ju-ja').split('-');
 	var transAN = true;
 	function transliteText(txt) {
@@ -486,63 +486,63 @@ function textbbcode($form, $name, $content = "") {
 			  OnClick="FieldName(this, this.name)"
 			  OnKeyUp="FieldName(this, this.name)"><?php echo $content; ?></textarea>
 	<div class="editor" style="background-image: url(editor/bg.gif); background-repeat: repeat-x;">
-		<div class="editorbutton" OnClick="RowsTextarea('area',1)"><img title="Увеличить окно" src="editor/plus.gif">
+		<div class="editorbutton" OnClick="RowsTextarea('area',1)"><img title="РЈРІРµР»РёС‡РёС‚СЊ РѕРєРЅРѕ" src="editor/plus.gif">
 		</div>
-		<div class="editorbutton" OnClick="RowsTextarea('area',0)"><img title="Уменьшить окно" src="editor/minus.gif">
+		<div class="editorbutton" OnClick="RowsTextarea('area',0)"><img title="РЈРјРµРЅСЊС€РёС‚СЊ РѕРєРЅРѕ" src="editor/minus.gif">
 		</div>
-		<div class="editorbutton" OnClick="InsertCode('b')"><img title="Жирный текст" src="editor/bold.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('i')"><img title="Наклонный текст" src="editor/italic.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('u')"><img title="Подчеркнутый текст" src="editor/underline.gif">
+		<div class="editorbutton" OnClick="InsertCode('b')"><img title="Р–РёСЂРЅС‹Р№ С‚РµРєСЃС‚" src="editor/bold.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('i')"><img title="РќР°РєР»РѕРЅРЅС‹Р№ С‚РµРєСЃС‚" src="editor/italic.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('u')"><img title="РџРѕРґС‡РµСЂРєРЅСѓС‚С‹Р№ С‚РµРєСЃС‚" src="editor/underline.gif">
 		</div>
-		<div class="editorbutton" OnClick="InsertCode('s')"><img title="Перечеркнутый текст" src="editor/striket.gif">
+		<div class="editorbutton" OnClick="InsertCode('s')"><img title="РџРµСЂРµС‡РµСЂРєРЅСѓС‚С‹Р№ С‚РµРєСЃС‚" src="editor/striket.gif">
 		</div>
-		<div class="editorbutton" OnClick="InsertCode('li')"><img title="Маркированный список" src="editor/li.gif">
+		<div class="editorbutton" OnClick="InsertCode('li')"><img title="РњР°СЂРєРёСЂРѕРІР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє" src="editor/li.gif">
 		</div>
-		<div class="editorbutton" OnClick="InsertCode('hr')"><img title="Разделительная линия" src="editor/hr.gif">
+		<div class="editorbutton" OnClick="InsertCode('hr')"><img title="Р Р°Р·РґРµР»РёС‚РµР»СЊРЅР°СЏ Р»РёРЅРёСЏ" src="editor/hr.gif">
 		</div>
-		<div class="editorbutton" OnClick="InsertCode('left')"><img title="Выравнивание по левому краю"
+		<div class="editorbutton" OnClick="InsertCode('left')"><img title="Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ РїРѕ Р»РµРІРѕРјСѓ РєСЂР°СЋ"
 																	src="editor/left.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('center')"><img title="Выравнивание по центру"
+		<div class="editorbutton" OnClick="InsertCode('center')"><img title="Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ РїРѕ С†РµРЅС‚СЂСѓ"
 																	  src="editor/center.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('right')"><img title="Выравнивание по правому краю"
+		<div class="editorbutton" OnClick="InsertCode('right')"><img title="Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ РїРѕ РїСЂР°РІРѕРјСѓ РєСЂР°СЋ"
 																	 src="editor/right.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('justify')"><img title="Выравнивание по ширине"
+		<div class="editorbutton" OnClick="InsertCode('justify')"><img title="Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ РїРѕ С€РёСЂРёРЅРµ"
 																	   src="editor/justify.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('code')"><img title="Код" src="editor/code.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('php')"><img title="PHP-Код" src="editor/php.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('hide')"><img title="Скрытый текст" src="editor/hide.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('code')"><img title="РљРѕРґ" src="editor/code.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('php')"><img title="PHP-РљРѕРґ" src="editor/php.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('hide')"><img title="РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚" src="editor/hide.gif"></div>
 		<div class="editorbutton"
-			 OnClick="InsertCode('url','Введите полный адрес','Введите описание','Вы не указали адрес!')"><img
-				title="Вставить ссылку" src="editor/url.gif"></div>
+			 OnClick="InsertCode('url','Р’РІРµРґРёС‚Рµ РїРѕР»РЅС‹Р№ Р°РґСЂРµСЃ','Р’РІРµРґРёС‚Рµ РѕРїРёСЃР°РЅРёРµ','Р’С‹ РЅРµ СѓРєР°Р·Р°Р»Рё Р°РґСЂРµСЃ!')"><img
+				title="Р’СЃС‚Р°РІРёС‚СЊ СЃСЃС‹Р»РєСѓ" src="editor/url.gif"></div>
 		<div class="editorbutton"
-			 OnClick="InsertCode('mail','Введите полный адрес','Введите описание','Вы не указали адрес!')"><img
-				title="Вставить E-Mail" src="editor/mail.gif"></div>
-		<div class="editorbutton" OnClick="InsertCode('img')"><img title="Вставить картинку" src="editor/img.gif"></div>
+			 OnClick="InsertCode('mail','Р’РІРµРґРёС‚Рµ РїРѕР»РЅС‹Р№ Р°РґСЂРµСЃ','Р’РІРµРґРёС‚Рµ РѕРїРёСЃР°РЅРёРµ','Р’С‹ РЅРµ СѓРєР°Р·Р°Р»Рё Р°РґСЂРµСЃ!')"><img
+				title="Р’СЃС‚Р°РІРёС‚СЊ E-Mail" src="editor/mail.gif"></div>
+		<div class="editorbutton" OnClick="InsertCode('img')"><img title="Р’СЃС‚Р°РІРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ" src="editor/img.gif"></div>
 	</div>
 	<div class="editor" style="background-image: url(editor/bg.gif); background-repeat: repeat-x;">
-		<div class="editorbutton" OnClick="InsertCode('quote')"><img title="Цитировать" src="editor/quote.gif"></div>
-		<div class="editorbutton" OnClick="translateAlltoCyrillic()"><img title="Перевод текста с латиницы в кириллицу"
+		<div class="editorbutton" OnClick="InsertCode('quote')"><img title="Р¦РёС‚РёСЂРѕРІР°С‚СЊ" src="editor/quote.gif"></div>
+		<div class="editorbutton" OnClick="translateAlltoCyrillic()"><img title="РџРµСЂРµРІРѕРґ С‚РµРєСЃС‚Р° СЃ Р»Р°С‚РёРЅРёС†С‹ РІ РєРёСЂРёР»Р»РёС†Сѓ"
 																		  src="editor/rus.gif"></div>
-		<div class="editorbutton" OnClick="translateAlltoLatin()"><img title="Перевод текста с кириллицы в латиницу"
+		<div class="editorbutton" OnClick="translateAlltoLatin()"><img title="РџРµСЂРµРІРѕРґ С‚РµРєСЃС‚Р° СЃ РєРёСЂРёР»Р»РёС†С‹ РІ Р»Р°С‚РёРЅРёС†Сѓ"
 																	   src="editor/eng.gif"></div>
-		<div class="editorbutton" OnClick="changelanguage()"><img title="Автоматический перевод текста"
+		<div class="editorbutton" OnClick="changelanguage()"><img title="РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ РїРµСЂРµРІРѕРґ С‚РµРєСЃС‚Р°"
 																  src="editor/auto.gif"></div>
 		<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="family" onChange="InsertCode('family',this.options[this.selectedIndex].value)"><option style="font-family:Verdana;" value="Verdana">Verdana</option><option style="font-family:Arial;" value="Arial">Arial</option><option style="font-family:'Courier New';" value="Courier New">Courier New</option><option style="font-family:Tahoma;" value="Tahoma">Tahoma</option><option style="font-family:Helvetica;" value="Helvetica">Helvetica</option></select></div>-->
 		<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="family"
 										  onChange="InsertCode('family',this.options[this.selectedIndex].value)"
-										  onFocus="this.value='Шрифт'">
-				<option style="font-weight:bold;" value="Шрифт">Шрифт</option>
+										  onFocus="this.value='РЁСЂРёС„С‚'">
+				<option style="font-weight:bold;" value="РЁСЂРёС„С‚">РЁСЂРёС„С‚</option>
 				<option style="font-family:Verdana;" value="Verdana">Verdana</option>
 				<option style="font-family:Arial;" value="Arial">Arial</option>
 				<option style="font-family:'Courier New';" value="Courier New">Courier New</option>
 				<option style="font-family:Tahoma;" value="Tahoma">Tahoma</option>
 				<option style="font-family:Helvetica;" value="Helvetica">Helvetica</option>
 			</select></div>
-		<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)"><option style="color:black;" value="black">Цвет шрифта</option><option style="color:silver;" value="silver">Цвет шрифта</option><option style="color:gray;" value="gray">Цвет шрифта</option><option style="color:white;" value="white">Цвет шрифта</option><option style="color:maroon;" value="maroon">Цвет шрифта</option><option style="color:red;" value="red">Цвет шрифта</option><option style="color:purple;" value="purple">Цвет шрифта</option><option style="color:fuchsia;" value="fuchsia">Цвет шрифта</option><option style="color:green;" value="green">Цвет шрифта</option><option style="color:lime;" value="lime">Цвет шрифта</option><option style="color:olive;" value="olive">Цвет шрифта</option><option style="color:yellow;" value="yellow">Цвет шрифта</option><option style="color:navy;" value="navy">Цвет шрифта</option><option style="color:blue;" value="blue">Цвет шрифта</option><option style="color:teal;" value="teal">Цвет шрифта</option><option style="color:aqua;" value="aqua">Цвет шрифта</option></select></div>-->
+		<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color" onChange="InsertCode('color',this.options[this.selectedIndex].value)"><option style="color:black;" value="black">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:silver;" value="silver">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:gray;" value="gray">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:white;" value="white">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:maroon;" value="maroon">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:red;" value="red">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:purple;" value="purple">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:fuchsia;" value="fuchsia">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:green;" value="green">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:lime;" value="lime">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:olive;" value="olive">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:yellow;" value="yellow">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:navy;" value="navy">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:blue;" value="blue">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:teal;" value="teal">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option><option style="color:aqua;" value="aqua">Р¦РІРµС‚ С€СЂРёС„С‚Р°</option></select></div>-->
 		<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="color"
 										  onChange="InsertCode('color',this.options[this.selectedIndex].value)"
-										  onFocus="this.value='Цвет'">
-				<option style="font-weight:bold;" value="Цвет">Цвет</option>
+										  onFocus="this.value='Р¦РІРµС‚'">
+				<option style="font-weight:bold;" value="Р¦РІРµС‚">Р¦РІРµС‚</option>
 				<option style="color:black;" value="black">Black</option>
 				<option style="color:silver;" value="silver">Silver</option>
 				<option style="color:gray;" value="gray">Gray</option>
@@ -560,17 +560,17 @@ function textbbcode($form, $name, $content = "") {
 				<option style="color:teal;" value="teal">Teal</option>
 				<option style="color:aqua;" value="aqua">Aqua</option>
 			</select></div>
-		<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)"><option value="8">Размер 8</option><option value="10">Размер 10</option><option value="12">Размер 12</option><option value="14">Размер 14</option><option value="18">Размер 18</option><option value="24">Размер 24</option></select></div>-->
+		<!--<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size" onChange="InsertCode('size',this.options[this.selectedIndex].value)"><option value="8">Р Р°Р·РјРµСЂ 8</option><option value="10">Р Р°Р·РјРµСЂ 10</option><option value="12">Р Р°Р·РјРµСЂ 12</option><option value="14">Р Р°Р·РјРµСЂ 14</option><option value="18">Р Р°Р·РјРµСЂ 18</option><option value="24">Р Р°Р·РјРµСЂ 24</option></select></div>-->
 		<div class="editorbutton"><select class="editorinput" tabindex="1" style="font-size:10px;" name="size"
 										  onChange="InsertCode('size',this.options[this.selectedIndex].value)"
-										  onFocus="this.value='Размер'">
-				<option style="font-weight:bold;" value="Размер">Размер</option>
-				<option value="8">Размер 8</option>
-				<option value="10">Размер 10</option>
-				<option value="12">Размер 12</option>
-				<option value="14">Размер 14</option>
-				<option value="18">Размер 18</option>
-				<option value="24">Размер 24</option>
+										  onFocus="this.value='Р Р°Р·РјРµСЂ'">
+				<option style="font-weight:bold;" value="Р Р°Р·РјРµСЂ">Р Р°Р·РјРµСЂ</option>
+				<option value="8">Р Р°Р·РјРµСЂ 8</option>
+				<option value="10">Р Р°Р·РјРµСЂ 10</option>
+				<option value="12">Р Р°Р·РјРµСЂ 12</option>
+				<option value="14">Р Р°Р·РјРµСЂ 14</option>
+				<option value="18">Р Р°Р·РјРµСЂ 18</option>
+				<option value="24">Р Р°Р·РјРµСЂ 24</option>
 			</select></div>
 	</div>
 <?php
@@ -717,7 +717,7 @@ function format_quotes($s) {
 function encode_quote($text) {
 	$start_html = "<div align=\"center\"><div style=\"width: 85%; overflow: auto\">"
 		. "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\" align=\"center\" class=\"bgcolor4\">"
-		. "<tr bgcolor=\"FFE5E0\"><td><font class=\"block-title\">Цитата</font></td></tr><tr class=\"bgcolor1\"><td>";
+		. "<tr bgcolor=\"FFE5E0\"><td><font class=\"block-title\">Р¦РёС‚Р°С‚Р°</font></td></tr><tr class=\"bgcolor1\"><td>";
 	$end_html = "</td></tr></table></div></div>";
 	$text = preg_replace("#\[quote\](.*?)\[/quote\]#si", "" . $start_html . "\\1" . $end_html . "", $text);
 	return $text;
@@ -727,7 +727,7 @@ function encode_quote($text) {
 function encode_quote_from($text) {
 	$start_html = "<div align=\"center\"><div style=\"width: 85%; overflow: auto\">"
 		. "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\" align=\"center\" class=\"bgcolor4\">"
-		. "<tr bgcolor=\"FFE5E0\"><td><font class=\"block-title\">\\1 писал</font></td></tr><tr class=\"bgcolor1\"><td>";
+		. "<tr bgcolor=\"FFE5E0\"><td><font class=\"block-title\">\\1 РїРёСЃР°Р»</font></td></tr><tr class=\"bgcolor1\"><td>";
 	$end_html = "</td></tr></table></div></div>";
 	$text = preg_replace("#\[quote=(.+?)\](.*?)\[/quote\]#si", "" . $start_html . "\\2" . $end_html . "", $text);
 	return $text;
@@ -735,7 +735,7 @@ function encode_quote_from($text) {
 
 // Format spoiler
 /*function encode_spoiler($text) {
-	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
+	$replace = "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚</div><div class=\"spoiler-body\"><textarea>\\1</textarea></div></div>";
 	$text = preg_replace("#\[hide\](.*?)\[/hide\]#si", $replace, $text);
 	return $text;
 }
@@ -762,7 +762,7 @@ function encode_spoiler_from($text) {
 
 // Format spoiler
 function escape1($matches) {
-	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">Скрытый текст</div><div class=\"spoiler-body\"><textarea>" . htmlspecialchars_uni($matches[1]) . "</textarea></div></div>";
+	return "<div class=\"spoiler-wrap\"><div class=\"spoiler-head folded clickable\">РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚</div><div class=\"spoiler-body\"><textarea>" . htmlspecialchars_uni($matches[1]) . "</textarea></div></div>";
 }
 
 // Format spoiler from
@@ -774,7 +774,7 @@ function escape2($matches) {
 function encode_code($text) {
 	$start_html = "<div align=\"center\"><div style=\"width: 85%; overflow: auto\">"
 		. "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\" align=\"center\" class=\"bgcolor4\">"
-		. "<tr bgcolor=\"E5EFFF\"><td colspan=\"2\"><font class=\"block-title\">Код</font></td></tr>"
+		. "<tr bgcolor=\"E5EFFF\"><td colspan=\"2\"><font class=\"block-title\">РљРѕРґ</font></td></tr>"
 		. "<tr class=\"bgcolor1\"><td align=\"right\" class=\"code\" style=\"width: 5px; border-right: none\">{ZEILEN}</td><td class=\"code\">";
 	$end_html = "</td></tr></table></div></div>";
 	$match_count = preg_match_all("#\[code\](.*?)\[/code\]#si", $text, $matches);
@@ -810,7 +810,7 @@ function encode_code($text) {
 function encode_php($text) {
 	$start_html = "<div align=\"center\"><div style=\"width: 85%; overflow: auto\">"
 		. "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"3\" border=\"0\" align=\"center\" class=\"bgcolor4\">"
-		. "<tr bgcolor=\"F3E8FF\"><td colspan=\"2\"><font class=\"block-title\">PHP - Код</font></td></tr>"
+		. "<tr bgcolor=\"F3E8FF\"><td colspan=\"2\"><font class=\"block-title\">PHP - РљРѕРґ</font></td></tr>"
 		. "<tr class=\"bgcolor1\"><td align=\"right\" class=\"code\" style=\"width: 5px; border-right: none\">{ZEILEN}</td><td>";
 	$end_html = "</td></tr></table></div></div>";
 	$match_count = preg_match_all("#\[php\](.*?)\[/php\]#si", $text, $matches);
@@ -886,12 +886,12 @@ function format_comment($text, $strip_html = true) {
 	$html[] = "<img class=\"linked-image\" src=\"\\1\" border=\"0\" alt=\"\\1\" title=\"\\1\" />";
 	$bb[] = "#\[img=([a-zA-Z]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\2\" align=\"\\1\" border=\"0\" alt=\"\\2\" title=\"\\2\" />";
-	$bb[] = "#\[img\ alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
+	$bb[] = "#\[img\ alt=([a-zA-ZР°-СЏРђ-РЇ0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\2\" align=\"\\1\" border=\"0\" alt=\"\\1\" title=\"\\1\" />";
-	$bb[] = "#\[img=([a-zA-Z]+) alt=([a-zA-Zа-яА-Я0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
+	$bb[] = "#\[img=([a-zA-Z]+) alt=([a-zA-ZР°-СЏРђ-РЇ0-9\_\-\. ]+)\](?=https?://)([^?](?:[^\[]+|\[(?!url))*?)\[/img\]#is";
 	$html[] = "<img class=\"linked-image\" src=\"\\3\" align=\"\\1\" border=\"0\" alt=\"\\2\" title=\"\\2\" />";
 	$bb[] = "#\[kp=([0-9]+)\]#is";
-	$html[] = "<a href=\"http://www.kinopoisk.ru/level/1/film/\\1/\" rel=\"nofollow\"><img src=\"http://www.kinopoisk.ru/rating/\\1.gif/\" alt=\"Кинопоиск\" title=\"Кинопоиск\" border=\"0\" /></a>";
+	$html[] = "<a href=\"http://www.kinopoisk.ru/level/1/film/\\1/\" rel=\"nofollow\"><img src=\"http://www.kinopoisk.ru/rating/\\1.gif/\" alt=\"РљРёРЅРѕРїРѕРёСЃРє\" title=\"РљРёРЅРѕРїРѕРёСЃРє\" border=\"0\" /></a>";
 	$bb[] = "#\[url\]((?:https?|ftps?)://([\w\#$%&~/.\-;:=,?@\]+]+|\[(?!url=))*?)\[/url\]#is";
 	$html[] = "<a href=\"\\1\" title=\"\\1\">\\1</a>";
 	$bb[] = "#\[url\]((www|ftp)\.([\w\#$%&~/.\-;:=,?@\]+]+|\[(?!url=))*?)\[/url\]#is";
@@ -1111,12 +1111,12 @@ function get_left_time_plural($time_end, $decimals = 0) {
 	$divider['hours']   = (60 * 60);
 	$divider['minutes'] = (60);
 
-	$langs['years']		= array("год", "года", "лет");
-	$langs['months']	= array("месяц", "месяца", "месяцев");
-	$langs['weeks']		= array("неделю", "недели", "недель");
-	$langs['days']		= array("сутки", "суток", "суток");
-	$langs['hours']		= array("час", "часа", "часов");
-	$langs['minutes']	= array("минуту", "минуты", "минут");
+	$langs['years']		= array("РіРѕРґ", "РіРѕРґР°", "Р»РµС‚");
+	$langs['months']	= array("РјРµСЃСЏС†", "РјРµСЃСЏС†Р°", "РјРµСЃСЏС†РµРІ");
+	$langs['weeks']		= array("РЅРµРґРµР»СЋ", "РЅРµРґРµР»Рё", "РЅРµРґРµР»СЊ");
+	$langs['days']		= array("СЃСѓС‚РєРё", "СЃСѓС‚РѕРє", "СЃСѓС‚РѕРє");
+	$langs['hours']		= array("С‡Р°СЃ", "С‡Р°СЃР°", "С‡Р°СЃРѕРІ");
+	$langs['minutes']	= array("РјРёРЅСѓС‚Сѓ", "РјРёРЅСѓС‚С‹", "РјРёРЅСѓС‚");
 
 	foreach ($divider as $unit => $div) {
 		${'left_time_'.$unit} = floor((($time_end - TIMENOW) / $div));
@@ -1136,12 +1136,12 @@ function get_elapsed_time_plural($time_start, $decimals = 0) {
 	$divider['hours']   = (60 * 60);
 	$divider['minutes'] = (60);
 
-	$langs['years']		= array("год", "года", "лет");
-	$langs['months']	= array("месяц", "месяца", "месяцев");
-	$langs['weeks']		= array("неделю", "недели", "недель");
-	$langs['days']		= array("день", "дня", "дней");
-	$langs['hours']		= array("час", "часа", "часов");
-	$langs['minutes']	= array("минуту", "минуты", "минут");
+	$langs['years']		= array("РіРѕРґ", "РіРѕРґР°", "Р»РµС‚");
+	$langs['months']	= array("РјРµСЃСЏС†", "РјРµСЃСЏС†Р°", "РјРµСЃСЏС†РµРІ");
+	$langs['weeks']		= array("РЅРµРґРµР»СЋ", "РЅРµРґРµР»Рё", "РЅРµРґРµР»СЊ");
+	$langs['days']		= array("РґРµРЅСЊ", "РґРЅСЏ", "РґРЅРµР№");
+	$langs['hours']		= array("С‡Р°СЃ", "С‡Р°СЃР°", "С‡Р°СЃРѕРІ");
+	$langs['minutes']	= array("РјРёРЅСѓС‚Сѓ", "РјРёРЅСѓС‚С‹", "РјРёРЅСѓС‚");
 
 	foreach ($divider as $unit => $div) {
 		${'elapsed_time_'.$unit} = floor(((TIMENOW - $time_start) / $div));
@@ -1163,14 +1163,14 @@ function get_elapsed_time($ts) {
 	$days -= $weeks * 7;
 	$t = "";
 	if ($weeks > 0)
-		return "$weeks недел" . ($weeks > 1 ? "и" : "я");
+		return "$weeks РЅРµРґРµР»" . ($weeks > 1 ? "Рё" : "СЏ");
 	if ($days > 0)
-		return "$days д" . ($days > 1 ? "ней" : "ень");
+		return "$days Рґ" . ($days > 1 ? "РЅРµР№" : "РµРЅСЊ");
 	if ($hours > 0)
-		return "$hours час" . ($hours > 1 ? "ов" : "");
+		return "$hours С‡Р°СЃ" . ($hours > 1 ? "РѕРІ" : "");
 	if ($mins > 0)
-		return "$mins минут" . ($mins > 1 ? "" : "а");
-	return "< 1 минуты";
+		return "$mins РјРёРЅСѓС‚" . ($mins > 1 ? "" : "Р°");
+	return "< 1 РјРёРЅСѓС‚С‹";
 }
 
 ?>

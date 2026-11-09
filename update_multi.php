@@ -26,7 +26,7 @@
 // +--------------------------------------------------------------------------+
 */
 
-// Да простят меня боги за эти уродства, но это всё писалось в 23:59
+// Р”Р° РїСЂРѕСЃС‚СЏС‚ РјРµРЅСЏ Р±РѕРіРё Р·Р° СЌС‚Рё СѓСЂРѕРґСЃС‚РІР°, РЅРѕ СЌС‚Рѕ РІСЃС‘ РїРёСЃР°Р»РѕСЃСЊ РІ 23:59
 
 require_once('include/bittorrent.php');
 
@@ -42,7 +42,7 @@ dbconn();
 $use_sessions = $old_us;
 
 if (!$_GET['token'])
-	loggedinorreturn(); // А вдруг гугл прийдет на такие страницы? Не надо...
+	loggedinorreturn(); // Рђ РІРґСЂСѓРі РіСѓРіР» РїСЂРёР№РґРµС‚ РЅР° С‚Р°РєРёРµ СЃС‚СЂР°РЅРёС†С‹? РќРµ РЅР°РґРѕ...
 
 require_once('include/scraper/httptscraper.php');
 require_once('include/scraper/udptscraper.php');
@@ -97,10 +97,10 @@ if ($_GET['info_hash'] && $_GET['url']) {
 
 list($name, $cur_visible, $multitracker, $last_mt_update) = mysql_fetch_row(sql_query('SELECT name, visible, multitracker, last_mt_update FROM torrents WHERE id = '.$tid));
 if ($name == '' || $multitracker == 'no')
-	stderr($tracker_lang['error'], "Такого торрента нет, или он не мультитрекерный.");
+	stderr($tracker_lang['error'], "РўР°РєРѕРіРѕ С‚РѕСЂСЂРµРЅС‚Р° РЅРµС‚, РёР»Рё РѕРЅ РЅРµ РјСѓР»СЊС‚РёС‚СЂРµРєРµСЂРЅС‹Р№.");
 
 if (strtotime($last_mt_update) > (TIMENOW - 3600))
-	stderr($tracker_lang['error'], "Вы пытаетесь обновить мультитрекер слишком часто. Разрешено это делать не чаще 1 раза в час.");
+	stderr($tracker_lang['error'], "Р’С‹ РїС‹С‚Р°РµС‚РµСЃСЊ РѕР±РЅРѕРІРёС‚СЊ РјСѓР»СЊС‚РёС‚СЂРµРєРµСЂ СЃР»РёС€РєРѕРј С‡Р°СЃС‚Рѕ. Р Р°Р·СЂРµС€РµРЅРѕ СЌС‚Рѕ РґРµР»Р°С‚СЊ РЅРµ С‡Р°С‰Рµ 1 СЂР°Р·Р° РІ С‡Р°СЃ.");
 
 $anns_r = sql_query('SELECT info_hash, url FROM torrents_scrape WHERE tid = '.$tid);
 
@@ -158,7 +158,7 @@ $ajax = strval($_GET['ajax']);
 if ($ajax !== 'yes') {
 	header('Refresh: 3;url=details.php?id='.$tid);
 	$errors = count($works) - $success;
-	stderr($tracker_lang['success'], "Обновление мультитрекера выполнено успешно. Успешно: $success Ошибок: $errors");
+	stderr($tracker_lang['success'], "РћР±РЅРѕРІР»РµРЅРёРµ РјСѓР»СЊС‚РёС‚СЂРµРєРµСЂР° РІС‹РїРѕР»РЅРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РЈСЃРїРµС€РЅРѕ: $success РћС€РёР±РѕРє: $errors");
 } else {
 	header ("Content-Type: text/html; charset=" . $tracker_lang['language_charset']);
 
@@ -175,12 +175,12 @@ if ($ajax !== 'yes') {
 	if (count($announces_a)) {
 		foreach ($announces_a as $announce) {
 			if ($announce['state'] == 'ok')
-				$anns[] = '<li><b>' . htmlspecialchars_uni($announce['url']) . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
+				$anns[] = '<li><b>' . htmlspecialchars_uni($announce['url']) . '</b> - СЂР°Р·РґР°СЋС‰РёРµ: <b>' . $announce['seeders'] . '</b>, РєР°С‡Р°СЋС‰РёРµ: <b>' . $announce['leechers'] . '</b>';
 			else
-				$anns[] = '<li><font color="red"><b>' . htmlspecialchars_uni($announce['url']) . '</b></font> - не работает, ошибка: ' . htmlspecialchars_uni($announce['error']) . '</b>';
+				$anns[] = '<li><font color="red"><b>' . htmlspecialchars_uni($announce['url']) . '</b></font> - РЅРµ СЂР°Р±РѕС‚Р°РµС‚, РѕС€РёР±РєР°: ' . htmlspecialchars_uni($announce['error']) . '</b>';
 		}
 		if (strtotime($row['last_mt_update']) < (TIMENOW - 3600) && $CURUSER)
-			$update_link = '<br />Данные могли устареть. <a href="update_multi.php?id=' . $tid . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';
+			$update_link = '<br />Р”Р°РЅРЅС‹Рµ РјРѕРіР»Рё СѓСЃС‚Р°СЂРµС‚СЊ. <a href="update_multi.php?id=' . $tid . '" onclick="update_multi(); return false;">' . $tracker_lang['details_update_multitracker'] . '</a>';
 		if ($row['last_mt_update'] == '0000-00-00 00:00:00')
 			$update_link .= '<br />' . $tracker_lang['details_update_last_mt_update'] . ' <b>' . $tracker_lang['never'] . '</b>';
 		else

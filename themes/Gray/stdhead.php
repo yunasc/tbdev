@@ -51,7 +51,7 @@ if($keywords)
 if($description)
     echo "<meta name=\"description\" content=\"$description\" />\n";
 ?>
-<link rel="alternate" type="application/rss+xml" title="Последние торренты" href="<?=$DEFAULTBASEURL?>/rss.php">
+<link rel="alternate" type="application/rss+xml" title="РџРѕСЃР»РµРґРЅРёРµ С‚РѕСЂСЂРµРЅС‚С‹" href="<?=$DEFAULTBASEURL?>/rss.php">
 <link rel="shortcut icon" href="<?=$DEFAULTBASEURL;?>/favicon.ico" type="image/x-icon" />
 
 </head>
@@ -91,7 +91,7 @@ if($description)
 <a href="faq.php"><font color="#FFFFFF"><?=$tracker_lang['faq'];?></font></a>
 <? if ($CURUSER) { ?>
 &nbsp;&#8226;&nbsp;
-<!--<a href="helpdesk.php"><font color="#FFFFFF">Тех. Поддержка</font></a>
+<!--<a href="helpdesk.php"><font color="#FFFFFF">РўРµС…. РџРѕРґРґРµСЂР¶РєР°</font></a>
 &nbsp;&#8226;&nbsp;-->
 <a href="staff.php"><font color="#FFFFFF"><?=$tracker_lang['staff'];?></font></a>
 <? } ?>
@@ -123,9 +123,9 @@ else
 $medaldon = $warn = '';
 
 if ($CURUSER['donor'] == "yes")
-	$medaldon = "<img src=\"pic/star.gif\" alt=\"Донор\" title=\"Донор\">";
+	$medaldon = "<img src=\"pic/star.gif\" alt=\"Р”РѕРЅРѕСЂ\" title=\"Р”РѕРЅРѕСЂ\">";
 if ($CURUSER['warned'] == "yes")
-	$warn = "<img src=\"pic/warned.gif\" alt=\"Предупрежден\" title=\"Предупрежден\">";
+	$warn = "<img src=\"pic/warned.gif\" alt=\"РџСЂРµРґСѓРїСЂРµР¶РґРµРЅ\" title=\"РџСЂРµРґСѓРїСЂРµР¶РґРµРЅ\">";
 
 //// check for messages ////////////////// 
         $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1") or error_log(mysql_error());
@@ -138,9 +138,9 @@ if ($CURUSER['warned'] == "yes")
         $arr1 = mysql_fetch_row($res1);
         $outmessages = $arr1[0];
         if ($unread)
-                $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Есть новые сообщения\" src=\"pic/pn_inboxnew.gif\">"; 
+                $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Р•СЃС‚СЊ РЅРѕРІС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ\" src=\"pic/pn_inboxnew.gif\">"; 
         else
-                $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Нет новых сообщений\" src=\"pic/pn_inbox.gif\">";
+                $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"РќРµС‚ РЅРѕРІС‹С… СЃРѕРѕР±С‰РµРЅРёР№\" src=\"pic/pn_inbox.gif\">";
 
 $res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid=" . $CURUSER["id"] . " AND seeder='yes'") or error_log(mysql_error());
 $row = mysql_fetch_row($res2);
@@ -164,9 +164,9 @@ $activeleech = $row[0];
 <tr>
 <td class="tablea"><table align="center" style="width:100%" cellspacing="0" cellpadding="0" border="0">
 <tr>
-<td class="bottom" align="left"><span class="smallfont"><?=$tracker_lang['welcome_back'];?><b><a href="userdetails.php?id=<?=$CURUSER['id']?>"><?=get_user_class_color($CURUSER['class'], $CURUSER['username'])?></a></b><?=$medaldon?><?=$warn?>&nbsp; [<a href="bookmarks.php">Закладки</a>] [<a href="mybonus.php">Мой бонус</a>] [<a href="logout.php">Выйти</a>]<br/>
-<font color=1900D1>Рейтинг:</font> <?=$ratio?>&nbsp;&nbsp;<font color=green>Раздал:</font> <font color=black><?=$uped?></font>&nbsp;&nbsp;<font color=darkred>Скачал:</font> <font color=black><?=$downed?></font>&nbsp;&nbsp;<font color=darkblue>Бонус:</font> <a href="mybonus.php" class="online"><font color=black><?=$CURUSER["bonus"]?></font></a>&nbsp;&nbsp;<font color=1900D1>Торренты:&nbsp;</font></span> <img alt="Раздает" title="Раздает" src="./themes/<?=$ss_uri;?>/images/arrowup.gif">&nbsp;<font color=black><span class="smallfont"><?=$activeseed?></span></font>&nbsp;&nbsp;<img alt="Качает" title="Качает" src="./themes/<?=$ss_uri;?>/images/arrowdown.gif">&nbsp;<font color=black><span class="smallfont"><?=$activeleech?></span></font></td>
-<td class="bottom" align="right"><span class="smallfont">Текущее время: <span id="clock">Загрузка...</span>
+<td class="bottom" align="left"><span class="smallfont"><?=$tracker_lang['welcome_back'];?><b><a href="userdetails.php?id=<?=$CURUSER['id']?>"><?=get_user_class_color($CURUSER['class'], $CURUSER['username'])?></a></b><?=$medaldon?><?=$warn?>&nbsp; [<a href="bookmarks.php">Р—Р°РєР»Р°РґРєРё</a>] [<a href="mybonus.php">РњРѕР№ Р±РѕРЅСѓСЃ</a>] [<a href="logout.php">Р’С‹Р№С‚Рё</a>]<br/>
+<font color=1900D1>Р РµР№С‚РёРЅРі:</font> <?=$ratio?>&nbsp;&nbsp;<font color=green>Р Р°Р·РґР°Р»:</font> <font color=black><?=$uped?></font>&nbsp;&nbsp;<font color=darkred>РЎРєР°С‡Р°Р»:</font> <font color=black><?=$downed?></font>&nbsp;&nbsp;<font color=darkblue>Р‘РѕРЅСѓСЃ:</font> <a href="mybonus.php" class="online"><font color=black><?=$CURUSER["bonus"]?></font></a>&nbsp;&nbsp;<font color=1900D1>РўРѕСЂСЂРµРЅС‚С‹:&nbsp;</font></span> <img alt="Р Р°Р·РґР°РµС‚" title="Р Р°Р·РґР°РµС‚" src="./themes/<?=$ss_uri;?>/images/arrowup.gif">&nbsp;<font color=black><span class="smallfont"><?=$activeseed?></span></font>&nbsp;&nbsp;<img alt="РљР°С‡Р°РµС‚" title="РљР°С‡Р°РµС‚" src="./themes/<?=$ss_uri;?>/images/arrowdown.gif">&nbsp;<font color=black><span class="smallfont"><?=$activeleech?></span></font></td>
+<td class="bottom" align="right"><span class="smallfont">РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ: <span id="clock">Р—Р°РіСЂСѓР·РєР°...</span>
 
 <!-- clock hack -->
 <script type="text/javascript">
@@ -195,21 +195,21 @@ refrClock();
 
 <?
 if ($messages){
-print("<span class=smallfont><a href=message.php>$inboxpic</a> $messages ($unread новых)</span>");
+print("<span class=smallfont><a href=message.php>$inboxpic</a> $messages ($unread РЅРѕРІС‹С…)</span>");
 if ($outmessages)
-print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=Отправленые title=Отправленые src=pic/pn_sentbox.gif></a> $outmessages</span>");
+print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=РћС‚РїСЂР°РІР»РµРЅС‹Рµ title=РћС‚РїСЂР°РІР»РµРЅС‹Рµ src=pic/pn_sentbox.gif></a> $outmessages</span>");
 else
-print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=Отправленые title=Отправленые src=pic/pn_sentbox.gif></a> 0</span>");
+print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=РћС‚РїСЂР°РІР»РµРЅС‹Рµ title=РћС‚РїСЂР°РІР»РµРЅС‹Рµ src=pic/pn_sentbox.gif></a> 0</span>");
 }
 else
 {
-print("<span class=smallfont><a href=message.php><img height=16px style=border:none alt=Полученные title=Полученные src=pic/pn_inbox.gif></a> 0</span>");
+print("<span class=smallfont><a href=message.php><img height=16px style=border:none alt=РџРѕР»СѓС‡РµРЅРЅС‹Рµ title=РџРѕР»СѓС‡РµРЅРЅС‹Рµ src=pic/pn_inbox.gif></a> 0</span>");
 if ($outmessages)
-print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=Отправленые title=Отправленые src=pic/pn_sentbox.gif></a> $outmessages</span>");
+print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=РћС‚РїСЂР°РІР»РµРЅС‹Рµ title=РћС‚РїСЂР°РІР»РµРЅС‹Рµ src=pic/pn_sentbox.gif></a> $outmessages</span>");
 else
-print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=Отправленые title=Отправленые src=pic/pn_sentbox.gif></a> 0</span>");
+print("<span class=smallfont>&nbsp;&nbsp;<a href=message.php?action=viewmailbox&box=-1><img height=16px style=border:none alt=РћС‚РїСЂР°РІР»РµРЅС‹Рµ title=РћС‚РїСЂР°РІР»РµРЅС‹Рµ src=pic/pn_sentbox.gif></a> 0</span>");
 }
-print("&nbsp;<a href=friends.php><img style=border:none alt=Друзья title=Друзья src=pic/buddylist.gif></a>");
+print("&nbsp;<a href=friends.php><img style=border:none alt=Р”СЂСѓР·СЊСЏ title=Р”СЂСѓР·СЊСЏ src=pic/buddylist.gif></a>");
 print("&nbsp;<a href=getrss.php><img style=border:none alt=RSS title=RSS src=pic/rss.gif></a>");
 ?>
 </span></td>
@@ -314,7 +314,7 @@ if ($CURUSER['override_class'] != 255) $usrclass = "&nbsp;<img src=\"pic/warning
 
 elseif(get_user_class() >= UC_MODERATOR) $usrclass = "&nbsp;<a href=\"setclass.php\"><img src=\"pic/warning.gif\" title=\"".get_user_class_name($CURUSER['class'])."\" alt=\"".get_user_class_name($CURUSER['class'])."\" border=\"0\"></a>&nbsp;";
 
-	blok_menu($tracker_lang['welcome_back'].($CURUSER ? "<a href=\"$DEFAULTBASEURL/userdetails.php?id=" . $CURUSER["id"] . "\">" . $CURUSER["username"] . "</a>&nbsp;".$usrclass."&nbsp;" : "гость" ) . $medaldon . $warn, $userbar , "155");
+	blok_menu($tracker_lang['welcome_back'].($CURUSER ? "<a href=\"$DEFAULTBASEURL/userdetails.php?id=" . $CURUSER["id"] . "\">" . $CURUSER["username"] . "</a>&nbsp;".$usrclass."&nbsp;" : "РіРѕСЃС‚СЊ" ) . $medaldon . $warn, $userbar , "155");
 	echo "<br />";
 
 	$mainmenu = "<a class=\"menu\" href=\"index.php\">&nbsp;".$tracker_lang['homepage']."</a>"

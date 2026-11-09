@@ -34,14 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$b = get_row_count('captcha', 'WHERE imagehash = '.sqlesc($_POST['imagehash']).' AND imagestring = '.sqlesc($_POST['imagestring']));
 		sql_query('DELETE FROM captcha WHERE imagehash = '.sqlesc($_POST['imagehash'])) or sqlerr(__FILE__, __LINE__);
 		if ($b == 0)
-			stderr($tracker_lang['error'], 'Вы ввели неправильный код подтверждения.');
+			stderr($tracker_lang['error'], 'Р’С‹ РІРІРµР»Рё РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ РєРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ.');
 	}
 
 	if (!mkglobal('useremail:subject:message'))
-		stderr($tracker_lang['error'], 'Вы не заполнили все поля формы! Вернитесь назад и попробуйте еще раз.');
+		stderr($tracker_lang['error'], 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РІСЃРµ РїРѕР»СЏ С„РѕСЂРјС‹! Р’РµСЂРЅРёС‚РµСЃСЊ РЅР°Р·Р°Рґ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·.');
 
 	if (!validemail($useremail))
-		stderr($tracker_lang['error'], 'Это не похоже на реальный email адрес.');
+		stderr($tracker_lang['error'], 'Р­С‚Рѕ РЅРµ РїРѕС…РѕР¶Рµ РЅР° СЂРµР°Р»СЊРЅС‹Р№ email Р°РґСЂРµСЃ.');
 
 $ip = getip();
 $username = $CURUSER['username'] ? $CURUSER['username'] : 'unregged';
@@ -51,7 +51,7 @@ else
 	$userid = 0;
 
 $body = <<<EOD
-Сообщение через обратную связь на {$website_name}:
+РЎРѕРѕР±С‰РµРЅРёРµ С‡РµСЂРµР· РѕР±СЂР°С‚РЅСѓСЋ СЃРІСЏР·СЊ РЅР° {$website_name}:
 
 --------------------------------
 
@@ -59,36 +59,36 @@ $message
 
 --------------------------------
 
-IP Адрес: {$ip}
-Имя пользователя: {$username}
-Код пользователя: {$userid}
+IP РђРґСЂРµСЃ: {$ip}
+РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: {$username}
+РљРѕРґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: {$userid}
 EOD;
 
 	stdhead();
-	if (sent_mail($admin_email, $useremail, $useremail, 'Обратная связь на '.$website_name.' - ' . $subject, $body, false))
-		stdmsg('Успешно', 'Ваше сообщение отправлено администрации.', 'success');
+	if (sent_mail($admin_email, $useremail, $useremail, 'РћР±СЂР°С‚РЅР°СЏ СЃРІСЏР·СЊ РЅР° '.$website_name.' - ' . $subject, $body, false))
+		stdmsg('РЈСЃРїРµС€РЅРѕ', 'Р’Р°С€Рµ СЃРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё.', 'success');
 	else
-		stdmsg('Ошибка', 'Ваше сообщение <b>НЕ</b> было отправлено администрации, из-за непредвиденной ошибки сервера.', 'error');
+		stdmsg('РћС€РёР±РєР°', 'Р’Р°С€Рµ СЃРѕРѕР±С‰РµРЅРёРµ <b>РќР•</b> Р±С‹Р»Рѕ РѕС‚РїСЂР°РІР»РµРЅРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё, РёР·-Р·Р° РЅРµРїСЂРµРґРІРёРґРµРЅРЅРѕР№ РѕС€РёР±РєРё СЃРµСЂРІРµСЂР°.', 'error');
 	stdfoot();
 
 } else {
-	stdhead('Связаться с нами');
+	stdhead('РЎРІСЏР·Р°С‚СЊСЃСЏ СЃ РЅР°РјРё');
 	if ($use_captcha) {
 		include_once("include/captcha.php");
 		$hash = create_captcha();
 	}
 ?>
-<form method="post" name="contactus" action="contactus.php" onsubmit="document.contactus.cbutton.value='Пожалуйста подождите ...';document.contactus.cbutton.disabled=true">
+<form method="post" name="contactus" action="contactus.php" onsubmit="document.contactus.cbutton.value='РџРѕР¶Р°Р»СѓР№СЃС‚Р° РїРѕРґРѕР¶РґРёС‚Рµ ...';document.contactus.cbutton.disabled=true">
 <input type="hidden" name="do" value="process">
 <table class="main" border="1" cellspacing="0" cellpadding="5" width="100%">
 	<tr>
 		<td align="left" class="colhead" colspan="2">
-			Связаться с нами
+			РЎРІСЏР·Р°С‚СЊСЃСЏ СЃ РЅР°РјРё
 		</td>
 	</tr>
 	<tr>
 		<td align="right" width="20%" valign="top">
-			<b>Ваш Email:</b>
+			<b>Р’Р°С€ Email:</b>
 		</td>
 		<td align="left" width="80%" valign="top">
 			<input type="text" name="useremail" value="" size="30">
@@ -96,7 +96,7 @@ EOD;
 	</tr>
 	<tr>
 		<td align="right" width="20%" valign="top">
-			<b>Тема:</b>
+			<b>РўРµРјР°:</b>
 		</td>
 		<td align="left" width="80%" valign="top">
 			<input type="text" name="subject" value="" size="30">
@@ -104,7 +104,7 @@ EOD;
 	</tr>	
 	<tr>
 		<td align="right" width="20%" valign="top">
-			<b>Сообщение:</b>
+			<b>РЎРѕРѕР±С‰РµРЅРёРµ:</b>
 		</td>
 		<td align="left" width="80%" valign="top">
 			<textarea name="message" cols="100" rows="10"></textarea>
@@ -113,22 +113,22 @@ EOD;
 <? if ($use_captcha) { ?>
 	<tr>
 		<td align="right" width="20%" valign="top">
-			<b>Код безопасности:</b>
+			<b>РљРѕРґ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё:</b>
 		</td>
 		<td align="left" width="80%" valign="top">
 			<input type="text" name="imagestring" value="" size="30">
-			<p>Пожалуйста, введите текст изображенный на картинке внизу.<br />Этот процесс предотвращает автоматическую регистрацию.</p>
+			<p>РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ С‚РµРєСЃС‚ РёР·РѕР±СЂР°Р¶РµРЅРЅС‹Р№ РЅР° РєР°СЂС‚РёРЅРєРµ РІРЅРёР·Сѓ.<br />Р­С‚РѕС‚ РїСЂРѕС†РµСЃСЃ РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєСѓСЋ СЂРµРіРёСЃС‚СЂР°С†РёСЋ.</p>
 			<img id="captcha" src="captcha.php?imagehash=<?=$hash; ?>" alt="Captcha" ondblclick="document.getElementById('captcha').src = 'captcha.php?imagehash=<?=$hash; ?>&amp;' + Math.random();" /><br />
-			<font color="red">Код чувствителен к регистру</font><br />
-			Кликните два раза на картинке, что-бы обновить картинку.
+			<font color="red">РљРѕРґ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ</font><br />
+			РљР»РёРєРЅРёС‚Рµ РґРІР° СЂР°Р·Р° РЅР° РєР°СЂС‚РёРЅРєРµ, С‡С‚Рѕ-Р±С‹ РѕР±РЅРѕРІРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ.
 			<input type="hidden" name="imagehash" value="<?=$hash; ?>" />
 		</td>
 	</tr>
 <? } ?>
 	<tr>
 		<td colspan="2" align="center">
-			<input type="submit" value="Отправить" name="cbutton">
-			<input type="reset" value="Сбросить">
+			<input type="submit" value="РћС‚РїСЂР°РІРёС‚СЊ" name="cbutton">
+			<input type="reset" value="РЎР±СЂРѕСЃРёС‚СЊ">
 		</td>
 	</tr>
 </table>

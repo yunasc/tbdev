@@ -35,7 +35,7 @@ if (!mkglobal("type"))
 
 if ($type == "signup" && mkglobal("email")) {
 	if (!validemail($email))
-		stderr($tracker_lang['error'], "Это не похоже на реальный email адрес.");
+		stderr($tracker_lang['error'], "Р­С‚Рѕ РЅРµ РїРѕС…РѕР¶Рµ РЅР° СЂРµР°Р»СЊРЅС‹Р№ email Р°РґСЂРµСЃ.");
 	stdhead($tracker_lang['signup_successful']);
         stdmsg($tracker_lang['signup_successful'],($use_email_act ? sprintf($tracker_lang['confirmation_mail_sent'], htmlspecialchars_uni($email)) : sprintf($tracker_lang['thanks_for_registering'], $SITENAME)));
 	stdfoot();
@@ -56,10 +56,10 @@ elseif ($type == "confirmed") {
 }
 elseif ($type == "confirm") {
 	if (isset($CURUSER)) {
-		stdhead("Подтверждение регистрации");
-		print("<h1>Ваш аккаунт успешно подтвержден!</h1>\n");
-		print("<p>Ваш аккаунт теперь активирован! Вы автоматически вошли. Теперь вы можете <a href=\"$DEFAULTBASEURL/\"><b>перейти на главную</b></a> и начать использовать ваш аккаунт.</p>\n");
-		print("<p>Прежде чем начать использовать $SITENAME мы рекомендуем вам прочитать <a href=\"rules.php\"><b>правила</b></a> и <a href=\"faq.php\"><b>ЧаВо</b></a>.</p>\n");
+		stdhead("РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ СЂРµРіРёСЃС‚СЂР°С†РёРё");
+		print("<h1>Р’Р°С€ Р°РєРєР°СѓРЅС‚ СѓСЃРїРµС€РЅРѕ РїРѕРґС‚РІРµСЂР¶РґРµРЅ!</h1>\n");
+		print("<p>Р’Р°С€ Р°РєРєР°СѓРЅС‚ С‚РµРїРµСЂСЊ Р°РєС‚РёРІРёСЂРѕРІР°РЅ! Р’С‹ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РІРѕС€Р»Рё. РўРµРїРµСЂСЊ РІС‹ РјРѕР¶РµС‚Рµ <a href=\"$DEFAULTBASEURL/\"><b>РїРµСЂРµР№С‚Рё РЅР° РіР»Р°РІРЅСѓСЋ</b></a> Рё РЅР°С‡Р°С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІР°С€ Р°РєРєР°СѓРЅС‚.</p>\n");
+		print("<p>РџСЂРµР¶РґРµ С‡РµРј РЅР°С‡Р°С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ $SITENAME РјС‹ СЂРµРєРѕРјРµРЅРґСѓРµРј РІР°Рј РїСЂРѕС‡РёС‚Р°С‚СЊ <a href=\"rules.php\"><b>РїСЂР°РІРёР»Р°</b></a> Рё <a href=\"faq.php\"><b>Р§Р°Р’Рѕ</b></a>.</p>\n");
 		stdfoot();
 	}
 	else {

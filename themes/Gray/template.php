@@ -67,11 +67,11 @@
   {
     global $smilies, $DEFAULTBASEURL;
 
-    begin_frame("Смайлы", true);
+    begin_frame("РЎРјР°Р№Р»С‹", true);
 
     begin_table(false, 5);
 
-    print("<tr><td class=\"colhead\">Написание</td><td class=\"colhead\">Смайл</td></tr>\n");
+    print("<tr><td class=\"colhead\">РќР°РїРёСЃР°РЅРёРµ</td><td class=\"colhead\">РЎРјР°Р№Р»</td></tr>\n");
 
     while (list($code, $url) = each($smilies))
       print("<tr><td>$code</td><td><img src=\"$DEFAULTBASEURL/pic/smilies/$url\"></td>\n");

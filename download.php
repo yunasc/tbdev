@@ -62,7 +62,7 @@ if (!$row || !is_file($fn) || !is_readable($fn))
 	stderr($tracker_lang['error'], $tracker_lang['unable_to_read_torrent']);
 
 if ($row['banned'] == 'yes' && $row['owner'] != $CURUSER['id'] && get_user_class() < UC_MODERATOR)
-	stderr($tracker_lang['error'], 'Óïñ, à òîððåíòèê-òî çàáàíåí!');
+	stderr($tracker_lang['error'], 'Ð£Ð¿Ñ, Ð° Ñ‚Ð¾Ñ€Ñ€ÐµÐ½Ñ‚Ð¸Ðº-Ñ‚Ð¾ Ð·Ð°Ð±Ð°Ð½ÐµÐ½!');
 
 sql_query("UPDATE torrents SET hits = hits + 1 WHERE id = ".sqlesc($id));
 

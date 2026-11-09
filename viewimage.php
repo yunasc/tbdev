@@ -33,12 +33,12 @@ loggedinorreturn();
 
 $pic = htmlspecialchars_uni((string) $_GET["pic"]);
 
-stdhead("Просмотр картинки");
+stdhead("РџСЂРѕСЃРјРѕС‚СЂ РєР°СЂС‚РёРЅРєРё");
 print("<h1>$pic</h1>\n");
 print("<p align=center><img src=\"torrents/images/$pic\"></p>\n");
 ?>
 
-<h3 align=center><a href="javascript: history.go(-1)">Назад</a></h3>
+<h3 align=center><a href="javascript: history.go(-1)">РќР°Р·Р°Рґ</a></h3>
 
 <?
 stdfoot();

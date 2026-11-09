@@ -43,7 +43,7 @@ if (!$count) {
 } else {
 ?>
 <table class="embedded" cellspacing="0" cellpadding="5" width="100%">
-<tr><td class="colhead" align="center" colspan="12">Список закладок</td></tr>
+<tr><td class="colhead" align="center" colspan="12">РЎРїРёСЃРѕРє Р·Р°РєР»Р°РґРѕРє</td></tr>
 <?
 
 $perpage = 25;

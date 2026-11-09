@@ -30,7 +30,7 @@ require "include/bittorrent.php";
 dbconn();
 
 if (get_user_class() < UC_ADMINISTRATOR)
-stderr($tracker_lang['error'], "Нет доступа.");
+stderr($tracker_lang['error'], "РќРµС‚ РґРѕСЃС‚СѓРїР°.");
 
 if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST")
 {
@@ -38,19 +38,19 @@ if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST")
     $username = trim((string)$_POST["username"]);
 
     if (!$username)
-        stderr($tracker_lang['error'], "Пожалуста заполняйте форму корректно.");
+        stderr($tracker_lang['error'], "РџРѕР¶Р°Р»СѓСЃС‚Р° Р·Р°РїРѕР»РЅСЏР№С‚Рµ С„РѕСЂРјСѓ РєРѕСЂСЂРµРєС‚РЅРѕ.");
 
     $res = sql_query("SELECT * FROM users WHERE username=" . sqlesc($username)) or sqlerr(__FILE__, __LINE__);
 
     if (mysql_num_rows($res) != 1)
-        stderr($tracker_lang['error'], "Неверное имя пользователя. Проверьте введеные данные.");
+        stderr($tracker_lang['error'], "РќРµРІРµСЂРЅРѕРµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ. РџСЂРѕРІРµСЂСЊС‚Рµ РІРІРµРґРµРЅС‹Рµ РґР°РЅРЅС‹Рµ.");
 
     $arr = mysql_fetch_assoc($res);
 
     $id = $arr['id'];
     $res = sql_query("DELETE FROM users WHERE id = $id") or sqlerr(__FILE__, __LINE__);
     if (mysql_affected_rows() != 1)
-        stderr($tracker_lang['error'], "Невозможно удалить аккаунт.");
+        stderr($tracker_lang['error'], "РќРµРІРѕР·РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ Р°РєРєР°СѓРЅС‚.");
     sql_query("DELETE FROM messages WHERE receiver = $id") or sqlerr(__FILE__,__LINE__);
     sql_query("DELETE FROM friends WHERE userid = $id") or sqlerr(__FILE__,__LINE__);
     sql_query("DELETE FROM friends WHERE friendid = $id") or sqlerr(__FILE__,__LINE__);
@@ -63,15 +63,15 @@ if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST")
     sql_query("DELETE FROM simpaty WHERE fromuserid = $id") or sqlerr(__FILE__,__LINE__);
     sql_query("DELETE FROM checkcomm WHERE userid = $id") or sqlerr(__FILE__,__LINE__);
     sql_query("DELETE FROM sessions WHERE uid = $id") or sqlerr(__FILE__,__LINE__);
-    stderr($tracker_lang['success'], "Аккаунт <b>$username</b> удален.");
+    stderr($tracker_lang['success'], "РђРєРєР°СѓРЅС‚ <b>$username</b> СѓРґР°Р»РµРЅ.");
 }
-stdhead("Удалить аккаунт");
+stdhead("РЈРґР°Р»РёС‚СЊ Р°РєРєР°СѓРЅС‚");
 ?>
-<h1>Удалить аккаунт</h1>
+<h1>РЈРґР°Р»РёС‚СЊ Р°РєРєР°СѓРЅС‚</h1>
 <table border=1 cellspacing=0 cellpadding=5>
     <form method=post action=delacctadmin.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
-        <tr><td class=rowhead>Пользователь</td><td><input size=40 name=username></td></tr>
-        <tr><td colspan=2><input type=submit class=btn value='Удалить'></td></tr>
+        <tr><td class=rowhead>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td><input size=40 name=username></td></tr>
+        <tr><td colspan=2><input type=submit class=btn value='РЈРґР°Р»РёС‚СЊ'></td></tr>
     </form>
 </table>
 <?

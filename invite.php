@@ -36,7 +36,7 @@ $invite = isset($_POST["invite"]) ? $_POST["invite"] : "";
 
 function bark($msg) {
     stdhead();
-	stdmsg("Ошибка", $msg);
+	stdmsg("РћС€РёР±РєР°", $msg);
 	stdfoot();
     exit;
 }
@@ -50,9 +50,9 @@ $res = sql_query("SELECT invites FROM users WHERE id = $id") or sqlerr(__FILE__,
 $inv = mysql_fetch_assoc($res);
 
 if ($inv["invites"] != 1) {
-	$_s = "ний";
+	$_s = "РЅРёР№";
 } else {
-	$_s = "ие";
+	$_s = "РёРµ";
 }
 
 if ($type == 'new') {
@@ -61,8 +61,8 @@ if ($type == 'new') {
 	"<input type=hidden name=csrf_token value=\"".csrf_token()."\" />".
 	"<input type=hidden name=id value=$id />".
 	"<table border=1 width=100% cellspacing=0 cellpadding=5>".
-	"<tr class=tabletitle><td colspan=2><b>Создать пригласительный код (осталось $inv[invites] приглаше$_s)</b></td></tr>".
-	"<tr class=tableb><td align=center colspan=2><input type=submit value=\"Создать\"></td></tr>".
+	"<tr class=tabletitle><td colspan=2><b>РЎРѕР·РґР°С‚СЊ РїСЂРёРіР»Р°СЃРёС‚РµР»СЊРЅС‹Р№ РєРѕРґ (РѕСЃС‚Р°Р»РѕСЃСЊ $inv[invites] РїСЂРёРіР»Р°С€Рµ$_s)</b></td></tr>".
+	"<tr class=tableb><td align=center colspan=2><input type=submit value=\"РЎРѕР·РґР°С‚СЊ\"></td></tr>".
 	"</form></table>");
 } elseif ($type == 'del') {
     if ($_SERVER["REQUEST_METHOD"] != "POST" || !csrf_valid(isset($_POST["csrf_token"]) ? $_POST["csrf_token"] : null)) {
@@ -86,7 +86,7 @@ if ($type == 'new') {
 
 } else {
 	if (get_user_class() <= UC_UPLOADER && !($id == $CURUSER["id"])) {
-		bark("У вас нет права видеть приглашения этого пользователя.");
+		bark("РЈ РІР°СЃ РЅРµС‚ РїСЂР°РІР° РІРёРґРµС‚СЊ РїСЂРёРіР»Р°С€РµРЅРёСЏ СЌС‚РѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.");
 	}
     stdhead();
 
@@ -98,14 +98,14 @@ if ($type == 'new') {
 	$num = mysql_num_rows($ret);
 
 	print("<form method=post action=takeconfirm.php?id=$id><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><table border=1 width=100% cellspacing=0 cellpadding=5>".
-	"<tr class=tabletitle><td colspan=7><b>Статус приглашенных вами</b> ($number)</td></tr>");
+	"<tr class=tabletitle><td colspan=7><b>РЎС‚Р°С‚СѓСЃ РїСЂРёРіР»Р°С€РµРЅРЅС‹С… РІР°РјРё</b> ($number)</td></tr>");
 
 	if(!$num) {
-		print("<tr class=tableb><td colspan=7>Еще никто вами не приглашен.</tr>");
+		print("<tr class=tableb><td colspan=7>Р•С‰Рµ РЅРёРєС‚Рѕ РІР°РјРё РЅРµ РїСЂРёРіР»Р°С€РµРЅ.</tr>");
 	} else {
-		print("<tr class=tableb><td><b>Пользователь</b></td><td><b>Email</b></td><td><b>Раздал</b></td><td><b>Скачал</b></td><td><b>Рейтинг</b></td><td><b>Статус</b></td>");
+		print("<tr class=tableb><td><b>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</b></td><td><b>Email</b></td><td><b>Р Р°Р·РґР°Р»</b></td><td><b>РЎРєР°С‡Р°Р»</b></td><td><b>Р РµР№С‚РёРЅРі</b></td><td><b>РЎС‚Р°С‚СѓСЃ</b></td>");
 		if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP)
-			print("<td align=center><b>Подтвердить</b></td>");
+			print("<td align=center><b>РџРѕРґС‚РІРµСЂРґРёС‚СЊ</b></td>");
 		print("</tr>");
 		for ($i = 0; $i < $num; ++$i) {
 			$arr = mysql_fetch_assoc($ret);
@@ -124,9 +124,9 @@ if ($type == 'new') {
 				}
 			}
 			if ($arr["status"] == 'confirmed')
-				$status = "<a href=userdetails.php?id=$arr[id]><font color=green>Подтвержден</font></a>";
+				$status = "<a href=userdetails.php?id=$arr[id]><font color=green>РџРѕРґС‚РІРµСЂР¶РґРµРЅ</font></a>";
 			else
-				$status = "<font color=red>Не подтвержден</font>";
+				$status = "<font color=red>РќРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅ</font>";
 
 			print("<tr class=tableb>$user<td>" . htmlspecialchars_uni($arr["email"]) . "</td><td>" . mksize($arr[uploaded]) . "</td><td>" . mksize($arr[downloaded]) . "</td><td>$ratio</td><td>$status</td>");
 
@@ -141,7 +141,7 @@ if ($type == 'new') {
 	}
 	if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP) {
 		print("<input type=hidden name=email value=\"" . htmlspecialchars_uni($arr["email"]) . "\">");
-		print("<tr class=tableb><td colspan=7 align=right><input type=submit value=\"Подтвердить пользователей\"></form></td></tr>");
+		print("<tr class=tableb><td colspan=7 align=right><input type=submit value=\"РџРѕРґС‚РІРµСЂРґРёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№\"></form></td></tr>");
 	}
 	print("</table><br>");
 
@@ -152,12 +152,12 @@ if ($type == 'new') {
 	$num1 = mysql_num_rows($rer);
 
 	print("<table border=1 width=100% cellspacing=0 cellpadding=5>".
-	"<tr class=tabletitle><td colspan=6><b>Статус созданых приглашений</b> ($number1)</td></tr>");
+	"<tr class=tabletitle><td colspan=6><b>РЎС‚Р°С‚СѓСЃ СЃРѕР·РґР°РЅС‹С… РїСЂРёРіР»Р°С€РµРЅРёР№</b> ($number1)</td></tr>");
 
 	if(!$num1) {
-		print("<tr class=tableb><td colspan=6>На данный момент вами не создано ниодного приглашения.</tr>");
+		print("<tr class=tableb><td colspan=6>РќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІР°РјРё РЅРµ СЃРѕР·РґР°РЅРѕ РЅРёРѕРґРЅРѕРіРѕ РїСЂРёРіР»Р°С€РµРЅРёСЏ.</tr>");
 	} else {
-		print("<tr class=tableb><td><b>Код приглашения</b></td><td><b>Дата создания</b></td><td></td></tr>");
+		print("<tr class=tableb><td><b>РљРѕРґ РїСЂРёРіР»Р°С€РµРЅРёСЏ</b></td><td><b>Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ</b></td><td></td></tr>");
 		for ($i = 0; $i < $num1; ++$i) {
 			$arr1 = mysql_fetch_assoc($rer);
 			print("<tr class=tableb><td>$arr1[invite]</td><td>$arr1[time_invited]</td>");
@@ -165,7 +165,7 @@ if ($type == 'new') {
 		}
 	}
 
-	print("<tr class=tableb><td colspan=7 align=center><form method=get action=invite.php?id=$id&type=new><input type='hidden' name='id' value='$id' /><input type='hidden' name='type' value='new' /><input type=submit value=\"Создать приглашение\"></form></td></tr>");
+	print("<tr class=tableb><td colspan=7 align=center><form method=get action=invite.php?id=$id&type=new><input type='hidden' name='id' value='$id' /><input type='hidden' name='type' value='new' /><input type=submit value=\"РЎРѕР·РґР°С‚СЊ РїСЂРёРіР»Р°С€РµРЅРёРµ\"></form></td></tr>");
 	print("</table>");
 }
 stdfoot();

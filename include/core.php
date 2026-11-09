@@ -55,7 +55,7 @@ if ($use_gzip) gzip();
 
 // IMPORTANT CONSTANTS
 define ("BETA", 0); // Set 0 to remove *BETA* notice.
-define ("BETA_NOTICE", "\n<br />Внимание! Версия не для промышленого использования!");
+define ("BETA_NOTICE", "\n<br />Р’РЅРёРјР°РЅРёРµ! Р’РµСЂСЃРёСЏ РЅРµ РґР»СЏ РїСЂРѕРјС‹С€Р»РµРЅРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ!");
 define ("DEBUG_MODE", 0); // Shows the queries at the bottom of the page.
 
 // BACKWARD CODE COMPATIBILITY

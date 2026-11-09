@@ -32,7 +32,7 @@ dbconn(false);
 
 loggedinorreturn();
 
-stdhead("Мои торренты");
+stdhead("РњРѕРё С‚РѕСЂСЂРµРЅС‚С‹");
 
 $where = "WHERE owner = " . $CURUSER["id"] . " AND banned != 'yes'";
 $res = sql_query("SELECT COUNT(*) FROM torrents $where");
@@ -40,14 +40,14 @@ $row = mysql_fetch_array($res);
 $count = $row[0];
 
 if (!$count) {
-	stdmsg($tracker_lang['error'], "Вы не загружали торренты на этот трекер.");
+	stdmsg($tracker_lang['error'], "Р’С‹ РЅРµ Р·Р°РіСЂСѓР¶Р°Р»Рё С‚РѕСЂСЂРµРЅС‚С‹ РЅР° СЌС‚РѕС‚ С‚СЂРµРєРµСЂ.");
 	stdfoot();
 	die();
 }
 else {
 ?>
 <table class="embedded" cellspacing="0" cellpadding="3" width="100%">
-<tr><td class="colhead" align="center" colspan="12">Мои торренты</td></tr>
+<tr><td class="colhead" align="center" colspan="12">РњРѕРё С‚РѕСЂСЂРµРЅС‚С‹</td></tr>
 <?
 
 	list($pagertop, $pagerbottom, $limit) = pager(20, $count, "mytorrents.php?");

@@ -183,11 +183,11 @@ function repl(t,a,b){
 	}
 	return t;
 }
-var rus_lr2 = ('Å-å-Î-î-¨-¨-¨-¨-Æ-Æ-×-×-Ø-Ø-Ù-Ù-Ú-Ü-İ-İ-Ş-Ş-ß-ß-ß-ß-¸-¸-æ-÷-ø-ù-ı-ş-ÿ-ÿ').split('-');
-var lat_lr2 = ('/E-/e-/O-/o-ÛO-Ûo-ÉO-Éo-ÇH-Çh-ÖH-Öh-ÑH-Ñh-ØH-Øh-ú'+String.fromCharCode(35)+'-ü'+String.fromCharCode(39)+'-ÉE-Ée-ÉU-Éu-ÉA-Éa-ÛA-Ûa-ûo-éo-çh-öh-ñh-øh-ée-éu-éa-ûa').split('-');
-var rus_lr1 = ('À-Á-Â-Ã-Ä-Å-Ç-È-É-Ê-Ë-Ì-Í-Î-Ï-Ğ-Ñ-Ò-Ó-Ô-Õ-Õ-Ö-Ù-Û-ß-à-á-â-ã-ä-å-ç-è-é-ê-ë-ì-í-î-ï-ğ-ñ-ò-ó-ô-õ-õ-ö-ù-ú-û-ü-ÿ').split('-');
+var rus_lr2 = ('Ğ•-Ğµ-Ğ-Ğ¾-Ğ-Ğ-Ğ-Ğ-Ğ–-Ğ–-Ğ§-Ğ§-Ğ¨-Ğ¨-Ğ©-Ğ©-Ğª-Ğ¬-Ğ­-Ğ­-Ğ®-Ğ®-Ğ¯-Ğ¯-Ğ¯-Ğ¯-Ñ‘-Ñ‘-Ğ¶-Ñ‡-Ñˆ-Ñ‰-Ñ-Ñ-Ñ-Ñ').split('-');
+var lat_lr2 = ('/E-/e-/O-/o-Ğ«O-Ğ«o-Ğ™O-Ğ™o-Ğ—H-Ğ—h-Ğ¦H-Ğ¦h-Ğ¡H-Ğ¡h-Ğ¨H-Ğ¨h-ÑŠ'+String.fromCharCode(35)+'-ÑŒ'+String.fromCharCode(39)+'-Ğ™E-Ğ™e-Ğ™U-Ğ™u-Ğ™A-Ğ™a-Ğ«A-Ğ«a-Ñ‹o-Ğ¹o-Ğ·h-Ñ†h-Ñh-Ñˆh-Ğ¹e-Ğ¹u-Ğ¹a-Ñ‹a').split('-');
+var rus_lr1 = ('Ğ-Ğ‘-Ğ’-Ğ“-Ğ”-Ğ•-Ğ—-Ğ˜-Ğ™-Ğš-Ğ›-Ğœ-Ğ-Ğ-ĞŸ-Ğ -Ğ¡-Ğ¢-Ğ£-Ğ¤-Ğ¥-Ğ¥-Ğ¦-Ğ©-Ğ«-Ğ¯-Ğ°-Ğ±-Ğ²-Ğ³-Ğ´-Ğµ-Ğ·-Ğ¸-Ğ¹-Ğº-Ğ»-Ğ¼-Ğ½-Ğ¾-Ğ¿-Ñ€-Ñ-Ñ‚-Ñƒ-Ñ„-Ñ…-Ñ…-Ñ†-Ñ‰-ÑŠ-Ñ‹-ÑŒ-Ñ').split('-');
 var lat_lr1 = ('A-B-V-G-D-E-Z-I-J-K-L-M-N-O-P-R-S-T-U-F-H-X-C-W-Y-Q-a-b-v-g-d-e-z-i-j-k-l-m-n-o-p-r-s-t-u-f-h-x-c-w-'+String.fromCharCode(35)+'-y-'+String.fromCharCode(39)+'-q').split('-');
-var rus_rl = ('À-Á-Â-Ã-Ä-Å-¨-Æ-Ç-È-É-Ê-Ë-Ì-Í-Î-Ï-Ğ-Ñ-Ò-Ó-Ô-Õ-Ö-×-Ø-Ù-Ú-Û-Ü-İ-Ş-ß-à-á-â-ã-ä-å-¸-æ-ç-è-é-ê-ë-ì-í-î-ï-ğ-ñ-ò-ó-ô-õ-ö-÷-ø-ù-ú-û-ü-ı-ş-ÿ').split('-');
+var rus_rl = ('Ğ-Ğ‘-Ğ’-Ğ“-Ğ”-Ğ•-Ğ-Ğ–-Ğ—-Ğ˜-Ğ™-Ğš-Ğ›-Ğœ-Ğ-Ğ-ĞŸ-Ğ -Ğ¡-Ğ¢-Ğ£-Ğ¤-Ğ¥-Ğ¦-Ğ§-Ğ¨-Ğ©-Ğª-Ğ«-Ğ¬-Ğ­-Ğ®-Ğ¯-Ğ°-Ğ±-Ğ²-Ğ³-Ğ´-Ğµ-Ñ‘-Ğ¶-Ğ·-Ğ¸-Ğ¹-Ğº-Ğ»-Ğ¼-Ğ½-Ğ¾-Ğ¿-Ñ€-Ñ-Ñ‚-Ñƒ-Ñ„-Ñ…-Ñ†-Ñ‡-Ñˆ-Ñ‰-ÑŠ-Ñ‹-ÑŒ-Ñ-Ñ-Ñ').split('-');
 var lat_rl = ('A-B-V-G-D-E-JO-ZH-Z-I-J-K-L-M-N-O-P-R-S-T-U-F-H-C-CH-SH-SHH-'+String.fromCharCode(35)+String.fromCharCode(35)+'-Y-'+String.fromCharCode(39)+String.fromCharCode(39)+'-JE-JU-JA-a-b-v-g-d-e-jo-zh-z-i-j-k-l-m-n-o-p-r-s-t-u-f-h-c-ch-sh-shh-'+String.fromCharCode(35)+'-y-'+String.fromCharCode(39)+'-je-ju-ja').split('-');
 var transAN=true;
 function transliteText(txt){

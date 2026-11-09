@@ -34,25 +34,25 @@ function insert_tag($name, $description, $syntax, $example, $remarks)
 	$result = format_comment($example);
 	print("<p class=sub><b>$name</b></p>\n");
 	print("<table class=main width=100% border=1 cellspacing=0 cellpadding=5>\n");
-	print("<tr valign=top><td width=25%>Описание:</td><td>$description\n");
-	print("<tr valign=top><td>Синтаксис:</td><td><tt>$syntax</tt>\n");
-	print("<tr valign=top><td>Пример:</td><td><tt>$example</tt>\n");
-	print("<tr valign=top><td>Результат:</td><td>$result\n");
+	print("<tr valign=top><td width=25%>РћРїРёСЃР°РЅРёРµ:</td><td>$description\n");
+	print("<tr valign=top><td>РЎРёРЅС‚Р°РєСЃРёСЃ:</td><td><tt>$syntax</tt>\n");
+	print("<tr valign=top><td>РџСЂРёРјРµСЂ:</td><td><tt>$example</tt>\n");
+	print("<tr valign=top><td>Р РµР·СѓР»СЊС‚Р°С‚:</td><td>$result\n");
 	if ($remarks != "")
-		print("<tr><td>Примечание:</td><td>$remarks\n");
+		print("<tr><td>РџСЂРёРјРµС‡Р°РЅРёРµ:</td><td>$remarks\n");
 	print("</table>\n");
 }
 
-stdhead("Теги");
+stdhead("РўРµРіРё");
 begin_main_frame();
-begin_frame("Теги");
+begin_frame("РўРµРіРё");
 $test = (string) $_POST["test"];
 ?>
-<p><?=$SITENAME?> поддерживает большое количество <i>BB тегов</i> которые вы можете использовать для украшения ваших раздач и постов.</p>
+<p><?=$SITENAME?> РїРѕРґРґРµСЂР¶РёРІР°РµС‚ Р±РѕР»СЊС€РѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ <i>BB С‚РµРіРѕРІ</i> РєРѕС‚РѕСЂС‹Рµ РІС‹ РјРѕР¶РµС‚Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ СѓРєСЂР°С€РµРЅРёСЏ РІР°С€РёС… СЂР°Р·РґР°С‡ Рё РїРѕСЃС‚РѕРІ.</p>
 
 <form method=post action=?>
 <textarea name=test cols=60 rows=3><? print($test ? htmlspecialchars_uni($test) : "")?></textarea>
-<input type=submit value="Проверить этот код!" style='height: 23px; margin-left: 5px'>
+<input type=submit value="РџСЂРѕРІРµСЂРёС‚СЊ СЌС‚РѕС‚ РєРѕРґ!" style='height: 23px; margin-left: 5px'>
 </form>
 <?
 

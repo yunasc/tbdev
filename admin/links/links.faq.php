@@ -2,6 +2,6 @@
 
 if (!defined('ADMIN_FILE')) die("Illegal File Access");
 
-BuildMenu("".$admin_file.".php?op=FaqAdmin", "Íàñòðîéêè ×àÂî", "faq.png");
+BuildMenu("".$admin_file.".php?op=FaqAdmin", "ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð§Ð°Ð’Ð¾", "faq.png");
 
 ?>

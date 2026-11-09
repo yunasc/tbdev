@@ -33,8 +33,8 @@ loggedinorreturn();
 if (get_user_class() < UC_SYSOP) {
 die($tracker_lang['access_denied']);
 }
-stdhead("Категории");
-print("<h1>Категории</h1>\n");
+stdhead("РљР°С‚РµРіРѕСЂРёРё");
+print("<h1>РљР°С‚РµРіРѕСЂРёРё</h1>\n");
 print("</br>");
 print("<table width=70% border=1 cellspacing=0 cellpadding=2><tr><td align=center>\n");
 
@@ -46,7 +46,7 @@ csrf_require_post();
 $delid = (int) $_POST['delid'];
 $query = "DELETE FROM categories WHERE id=" .sqlesc($delid) . " LIMIT 1";
 $sql = sql_query($query);
-echo("Категория успешно удалена! [ <a href='category.php'>Назад</a> ]");
+echo("РљР°С‚РµРіРѕСЂРёСЏ СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅР°! [ <a href='category.php'>РќР°Р·Р°Рґ</a> ]");
 end_frame();
 stdfoot();
 die();
@@ -54,7 +54,7 @@ die();
 $delid = (int) $_GET['delid'];
 $name = htmlspecialchars_uni($_GET['cat']);
 if($delid > 0) {
-echo("Вы действителньо хотите удалить эту категорию? ($name) ( <strong>" . post_link('category.php', array('delid' => $delid, 'sure' => 'yes'), 'Да') . "</strong> / <strong><a href=\"". $_SERVER['PHP_SELF'] . "\">Нет</a></strong> )");
+echo("Р’С‹ РґРµР№СЃС‚РІРёС‚РµР»РЅСЊРѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ СЌС‚Сѓ РєР°С‚РµРіРѕСЂРёСЋ? ($name) ( <strong>" . post_link('category.php', array('delid' => $delid, 'sure' => 'yes'), 'Р”Р°') . "</strong> / <strong><a href=\"". $_SERVER['PHP_SELF'] . "\">РќРµС‚</a></strong> )");
 end_frame();
 stdfoot();
 die();
@@ -76,7 +76,7 @@ sort = ".sqlesc($cat_sort)." WHERE id=".sqlesc($id);
 $sql = sql_query($query);
 if($sql) {
 echo("<table class=main cellspacing=0 cellpadding=5 width=50%>");
-echo("<tr><td><div align='center'>Ваша категория отредактирована <strong>успешно!</strong> [ <a href='category.php'>Назад</a> ]</div></tr>");
+echo("<tr><td><div align='center'>Р’Р°С€Р° РєР°С‚РµРіРѕСЂРёСЏ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅР° <strong>СѓСЃРїРµС€РЅРѕ!</strong> [ <a href='category.php'>РќР°Р·Р°Рґ</a> ]</div></tr>");
 echo("</table>");
 end_frame();
 stdfoot();
@@ -91,13 +91,13 @@ $sort = (int) $_GET['sort'];
 if($editid > 0) {
 echo("<form name='form1' method='post' action='category.php'><input type='hidden' name='csrf_token' value='" . csrf_token() . "'>");
 echo("<table class=main cellspacing=0 cellpadding=5 width=50%>");
-echo("<div align='center'><input type='hidden' name='edited' value='1'>Редактирование категории <strong>&quot;$name&quot;</strong></div>");
+echo("<div align='center'><input type='hidden' name='edited' value='1'>Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё <strong>&quot;$name&quot;</strong></div>");
 echo("<br />");
 echo("<input type='hidden' name='id' value='$editid'<table class=main cellspacing=0 cellpadding=5 width=50%>");
-echo("<tr><td>Название: </td><td align='right'><input type='text' size=50 name='cat_name' value='$name'></td></tr>");
-echo("<tr><td>Картинка: </td><td align='right'><input type='text' size=50 name='cat_img' value='$img'></td></tr>");
-echo("<tr><td>Сортировка: </td><td align='right'><input type='text' size=50 name='cat_sort' value='$sort'></td></tr>");
-echo("<tr><td></td><td><div align='right'><input type='Submit' value='Редактировать'></div></td></tr>");
+echo("<tr><td>РќР°Р·РІР°РЅРёРµ: </td><td align='right'><input type='text' size=50 name='cat_name' value='$name'></td></tr>");
+echo("<tr><td>РљР°СЂС‚РёРЅРєР°: </td><td align='right'><input type='text' size=50 name='cat_img' value='$img'></td></tr>");
+echo("<tr><td>РЎРѕСЂС‚РёСЂРѕРІРєР°: </td><td align='right'><input type='text' size=50 name='cat_sort' value='$sort'></td></tr>");
+echo("<tr><td></td><td><div align='right'><input type='Submit' value='Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ'></div></td></tr>");
 echo("</table></form>");
 end_frame();
 stdfoot();
@@ -122,29 +122,29 @@ $success = TRUE;
 $success = FALSE;
 }
 }
-print("<strong>Добавить новую категорию</strong>");
+print("<strong>Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІСѓСЋ РєР°С‚РµРіРѕСЂРёСЋ</strong>");
 print("<br />");
 print("<br />");
 echo("<form name='form1' method='post' action='category.php'><input type='hidden' name='csrf_token' value='" . csrf_token() . "'>");
 echo("<table class=main cellspacing=0 cellpadding=5 width=50%>");
-echo("<tr><td>Название: </td><td align='right'><input type='text' size=50 name='cat_name'></td></tr>");
-echo("<tr><td>Картинка: </td><td align='right'><input type='text' size=50 name='cat_img'><input type='hidden' name='add' value='true'></td></tr>");
-echo("<tr><td>Сортировка: </td><td align='right'><input type='text' size=50 name='cat_sort'></td></tr>");
-echo("<tr><td></td><td><div align='right'><input type='Submit' value='Создать категорию'></div></td></tr>");
+echo("<tr><td>РќР°Р·РІР°РЅРёРµ: </td><td align='right'><input type='text' size=50 name='cat_name'></td></tr>");
+echo("<tr><td>РљР°СЂС‚РёРЅРєР°: </td><td align='right'><input type='text' size=50 name='cat_img'><input type='hidden' name='add' value='true'></td></tr>");
+echo("<tr><td>РЎРѕСЂС‚РёСЂРѕРІРєР°: </td><td align='right'><input type='text' size=50 name='cat_sort'></td></tr>");
+echo("<tr><td></td><td><div align='right'><input type='Submit' value='РЎРѕР·РґР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ'></div></td></tr>");
 echo("</table>");
 if($success == TRUE) {
-print("<strong>Удачно!</strong>");
+print("<strong>РЈРґР°С‡РЅРѕ!</strong>");
 }
 echo("<br />");
 echo("</form>");
 
 ///////////////////// E X I S T I N G C A T E G O R I E S \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-print("<strong>Существующие категории:</strong>");
+print("<strong>РЎСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РєР°С‚РµРіРѕСЂРёРё:</strong>");
 print("<br />");
 print("<br />");
 echo("<table class=main cellspacing=0 cellpadding=5>");
-echo("<td>ID</td><td>Сортировка</td><td>Название</td><td>Картинка</td><td>Просмотр категории</td><td>Редактировать</td><td>Удалить</td>");
+echo("<td>ID</td><td>РЎРѕСЂС‚РёСЂРѕРІРєР°</td><td>РќР°Р·РІР°РЅРёРµ</td><td>РљР°СЂС‚РёРЅРєР°</td><td>РџСЂРѕСЃРјРѕС‚СЂ РєР°С‚РµРіРѕСЂРёРё</td><td>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</td><td>РЈРґР°Р»РёС‚СЊ</td>");
 $query = "SELECT * FROM categories WHERE 1=1 ORDER BY sort";
 $sql = sql_query($query) or sqlerr(__FILE__, __LINE__);
 while ($row = mysql_fetch_array($sql)) {

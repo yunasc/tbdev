@@ -49,7 +49,7 @@ sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 
 ?>
 <div align="center">
-<p><span style="color: green; font-weight: bold;">После загрузки торрента, вам нужно будет скачать торрент и поставить качаться в папку где лежат оригиналы файлов.</span></p>
+<p><span style="color: green; font-weight: bold;">РџРѕСЃР»Рµ Р·Р°РіСЂСѓР·РєРё С‚РѕСЂСЂРµРЅС‚Р°, РІР°Рј РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ СЃРєР°С‡Р°С‚СЊ С‚РѕСЂСЂРµРЅС‚ Рё РїРѕСЃС‚Р°РІРёС‚СЊ РєР°С‡Р°С‚СЊСЃСЏ РІ РїР°РїРєСѓ РіРґРµ Р»РµР¶Р°С‚ РѕСЂРёРіРёРЅР°Р»С‹ С„Р°Р№Р»РѕРІ.</span></p>
 <form name="upload" enctype="multipart/form-data" action="takeupload.php" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?=$max_torrent_size?>" />
 <table border="1" cellspacing="0" cellpadding="5">
@@ -60,10 +60,10 @@ tr($tracker_lang['torrent_file'], "<input type=file name=tfile size=80>\n", 1);
 tr($tracker_lang['torrent_name'], "<input type=\"text\" name=\"name\" size=\"80\" /><br />(".$tracker_lang['taken_from_torrent'].")\n", 1);
 tr($tracker_lang['img_poster'], $tracker_lang['max_file_size'].": 500kb<br />".$tracker_lang['avialable_formats'].": .gif .jpg .png<br /><input type=file name=image0 size=80>\n", 1);
 tr($tracker_lang['images'], $tracker_lang['max_file_size'].": 500kb<br />".$tracker_lang['avialable_formats'].": .gif .jpg .png<br />".
-		"<b>".$tracker_lang['image']." №1:</b>&nbsp&nbsp<input type=file name=image1 size=80><br />".
-		"<b>".$tracker_lang['image']." №2:</b>&nbsp&nbsp<input type=file name=image2 size=80><br />".
-		"<b>".$tracker_lang['image']." №3:</b>&nbsp&nbsp<input type=file name=image3 size=80><br />".
-		"<b>".$tracker_lang['image']." №4:</b>&nbsp&nbsp<input type=file name=image4 size=80>", 1);
+		"<b>".$tracker_lang['image']." в„–1:</b>&nbsp&nbsp<input type=file name=image1 size=80><br />".
+		"<b>".$tracker_lang['image']." в„–2:</b>&nbsp&nbsp<input type=file name=image2 size=80><br />".
+		"<b>".$tracker_lang['image']." в„–3:</b>&nbsp&nbsp<input type=file name=image3 size=80><br />".
+		"<b>".$tracker_lang['image']." в„–4:</b>&nbsp&nbsp<input type=file name=image4 size=80>", 1);
 print("<tr><td class=rowhead style='padding: 3px'>".$tracker_lang['description']."</td><td>");
 textbbcode("upload","descr");
 print("</td></tr>\n");
@@ -77,21 +77,21 @@ foreach ($cats as $row)
 $s .= "</select>\n";
 tr($tracker_lang['type'], $s, 1);
 
-tr('Мультитрекер', '<input type="checkbox" value="yes" id="multi" name="multi" /><label for="multi">Мультитрекерный торрент</label>
-	<br /><font class="small">Включение этой опции отключает установку private-флага и удаление других аннонсеров из файла</font>', 1);
+tr('РњСѓР»СЊС‚РёС‚СЂРµРєРµСЂ', '<input type="checkbox" value="yes" id="multi" name="multi" /><label for="multi">РњСѓР»СЊС‚РёС‚СЂРµРєРµСЂРЅС‹Р№ С‚РѕСЂСЂРµРЅС‚</label>
+	<br /><font class="small">Р’РєР»СЋС‡РµРЅРёРµ СЌС‚РѕР№ РѕРїС†РёРё РѕС‚РєР»СЋС‡Р°РµС‚ СѓСЃС‚Р°РЅРѕРІРєСѓ private-С„Р»Р°РіР° Рё СѓРґР°Р»РµРЅРёРµ РґСЂСѓРіРёС… Р°РЅРЅРѕРЅСЃРµСЂРѕРІ РёР· С„Р°Р№Р»Р°</font>', 1);
 
 tr('Keywords', '<input type="text" name="keywords" size="80" />', 1);
 tr('Description', '<input type="text" name="description" size="80" />', 1);
 
 if(get_user_class() >= UC_ADMINISTRATOR)
-    tr("Тип раздачи",
-    "<input type=\"radio\" name=\"free\" id=\"gold\" value=\"yes\" /><label for=\"gold\">Золотая раздача (считаеться только раздача, скачка не учитиваеться)</label><br />".
-    "<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\" /><label for=\"silver\">Серебряная раздача (скачка не учитиваеться только на 50%)</label><br />".
-    "<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\" checked /><label for=\"no\">Обычная раздача (скачка и раздача учитиваеться как обычно)</label><br />"
+    tr("РўРёРї СЂР°Р·РґР°С‡Рё",
+    "<input type=\"radio\" name=\"free\" id=\"gold\" value=\"yes\" /><label for=\"gold\">Р—РѕР»РѕС‚Р°СЏ СЂР°Р·РґР°С‡Р° (СЃС‡РёС‚Р°РµС‚СЊСЃСЏ С‚РѕР»СЊРєРѕ СЂР°Р·РґР°С‡Р°, СЃРєР°С‡РєР° РЅРµ СѓС‡РёС‚РёРІР°РµС‚СЊСЃСЏ)</label><br />".
+    "<input type=\"radio\" name=\"free\" id=\"silver\" value=\"silver\" /><label for=\"silver\">РЎРµСЂРµР±СЂСЏРЅР°СЏ СЂР°Р·РґР°С‡Р° (СЃРєР°С‡РєР° РЅРµ СѓС‡РёС‚РёРІР°РµС‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° 50%)</label><br />".
+    "<input type=\"radio\" name=\"free\" id=\"no\" value=\"no\" checked /><label for=\"no\">РћР±С‹С‡РЅР°СЏ СЂР°Р·РґР°С‡Р° (СЃРєР°С‡РєР° Рё СЂР°Р·РґР°С‡Р° СѓС‡РёС‚РёРІР°РµС‚СЊСЃСЏ РєР°Рє РѕР±С‹С‡РЅРѕ)</label><br />"
     , 1);
 
 if (get_user_class() >= UC_ADMINISTRATOR)
-    tr("Важный", "<input type=\"checkbox\" name=\"not_sticky\" value=\"no\">Прикрепить этот торрент (всегда наверху)", 1);
+    tr("Р’Р°Р¶РЅС‹Р№", "<input type=\"checkbox\" name=\"not_sticky\" value=\"no\">РџСЂРёРєСЂРµРїРёС‚СЊ СЌС‚РѕС‚ С‚РѕСЂСЂРµРЅС‚ (РІСЃРµРіРґР° РЅР°РІРµСЂС…Сѓ)", 1);
 
 ?>
 <tr><td align="center" colspan="2"><input type="submit" class=btn value="<?=$tracker_lang['upload'];?>" /></td></tr>

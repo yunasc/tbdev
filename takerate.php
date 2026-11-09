@@ -59,7 +59,7 @@ if (!$row)
 
 $own = sql_query("SELECT id FROM ratings WHERE torrent = $id AND user = $CURUSER[id]");
 if (mysql_num_rows($own) != 0)
-    bark("Вы уже голосовали за этот торрент!"); 
+    bark("Р’С‹ СѓР¶Рµ РіРѕР»РѕСЃРѕРІР°Р»Рё Р·Р° СЌС‚РѕС‚ С‚РѕСЂСЂРµРЅС‚!"); 
 
 $res = sql_query("INSERT INTO ratings (torrent, user, rating, added) VALUES ($id, " . $CURUSER["id"] . ", $rating, NOW())");
 if (!$res) {
@@ -71,7 +71,7 @@ if (!$res) {
 
 sql_query("UPDATE torrents SET numratings = numratings + 1, ratingsum = ratingsum + $rating WHERE id = $id");
 
-echo 'Ваша оценка <b>' . $rating . '</b> - <b>' . $tracker_lang['vote_' . $rating] . '</b>';
+echo 'Р’Р°С€Р° РѕС†РµРЅРєР° <b>' . $rating . '</b> - <b>' . $tracker_lang['vote_' . $rating] . '</b>';
 
 //header("Refresh: 0; url=details.php?id=$id&rated=1");
 

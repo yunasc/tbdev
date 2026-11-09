@@ -29,7 +29,7 @@
 require "include/bittorrent.php";
 dbconn(false);
 ob_start();
-stdhead("Панель администратора");
+stdhead("РџР°РЅРµР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°");
 
 define("ADMIN_FILE", 1);
 $admin_file = "admincp";

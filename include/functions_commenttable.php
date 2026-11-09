@@ -45,10 +45,10 @@ function commenttable($rows, $redaktor = "comment") {
 			    }
 			     if (strtotime($row["last_access"]) > gmtime() - 600) {
 			     	$online = "online";
-			     	$online_text = "В сети";
+			     	$online_text = "Р’ СЃРµС‚Рё";
 			     } else {
 			     	$online = "offline";
-			     	$online_text = "Не в сети";
+			     	$online_text = "РќРµ РІ СЃРµС‚Рё";
 			     }
 
 	   print("<table class=maibaugrand width=100% border=1 cellspacing=0 cellpadding=3>");
@@ -83,7 +83,7 @@ function commenttable($rows, $redaktor = "comment") {
 
 	if ($row["editedby"]) {
 	       //$res = mysql_fetch_assoc(sql_query("SELECT * FROM users WHERE id = $row[editedby]")) or sqlerr(__FILE__,__LINE__);
-	       $text .= "<p><font size=1 class=small>Последний раз редактировалось <a href=userdetails.php?id=$row[editedby]><b>$row[editedbyname]</b></a> в $row[editedat]</font></p>\n";
+	       $text .= "<p><font size=1 class=small>РџРѕСЃР»РµРґРЅРёР№ СЂР°Р· СЂРµРґР°РєС‚РёСЂРѕРІР°Р»РѕСЃСЊ <a href=userdetails.php?id=$row[editedby]><b>$row[editedbyname]</b></a> РІ $row[editedat]</font></p>\n";
 	 }
 		print("</td></tr>");
 		print("<tr valign=top>\n");
@@ -94,14 +94,14 @@ function commenttable($rows, $redaktor = "comment") {
 		print("</tr>\n");
 		print("<tr><td class=colhead align=\"center\" colspan=\"2\">");
 		print"<div style=\"float: left; width: auto;\">"
-			.($CURUSER ? " [<a href=\"".$redaktor.".php?action=quote&amp;cid=$row[id]\" class=\"altlink_white\">Цитата</a>]" : "")
-			.($row["user"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR ? " [<a href=".$redaktor.".php?action=edit&amp;cid=$row[id] class=\"altlink_white\">Изменить</a>]" : "")
-		    .(get_user_class() >= UC_MODERATOR ? " [<a href=\"".$redaktor.".php?action=delete&amp;cid=$row[id]\" class=\"altlink_white\">Удалить</a>]" : "")
-		    .($row["editedby"] && get_user_class() >= UC_MODERATOR ? " [<a href=\"".$redaktor.".php?action=vieworiginal&amp;cid=$row[id]\" class=\"altlink_white\">Оригинал</a>]" : "")
-		    .(get_user_class() >= UC_MODERATOR ? " IP: ".($row["ip"] ? "<a href=\"usersearch.php?ip=$row[ip]\" class=\"altlink_white\">".$row["ip"]."</a>" : "Неизвестен" ) : "")
+			.($CURUSER ? " [<a href=\"".$redaktor.".php?action=quote&amp;cid=$row[id]\" class=\"altlink_white\">Р¦РёС‚Р°С‚Р°</a>]" : "")
+			.($row["user"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR ? " [<a href=".$redaktor.".php?action=edit&amp;cid=$row[id] class=\"altlink_white\">РР·РјРµРЅРёС‚СЊ</a>]" : "")
+		    .(get_user_class() >= UC_MODERATOR ? " [<a href=\"".$redaktor.".php?action=delete&amp;cid=$row[id]\" class=\"altlink_white\">РЈРґР°Р»РёС‚СЊ</a>]" : "")
+		    .($row["editedby"] && get_user_class() >= UC_MODERATOR ? " [<a href=\"".$redaktor.".php?action=vieworiginal&amp;cid=$row[id]\" class=\"altlink_white\">РћСЂРёРіРёРЅР°Р»</a>]" : "")
+		    .(get_user_class() >= UC_MODERATOR ? " IP: ".($row["ip"] ? "<a href=\"usersearch.php?ip=$row[ip]\" class=\"altlink_white\">".$row["ip"]."</a>" : "РќРµРёР·РІРµСЃС‚РµРЅ" ) : "")
 		    ."</div>";
 
-		print("<div align=\"right\"><!--<font size=1 class=small>-->Комментарий добавлен: ".$row["added"]." GMT<!--</font>--></td></tr>");
+		print("<div align=\"right\"><!--<font size=1 class=small>-->РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР±Р°РІР»РµРЅ: ".$row["added"]." GMT<!--</font>--></td></tr>");
 		print("</table><br>");
   }
 

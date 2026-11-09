@@ -33,7 +33,7 @@ loggedinorreturn();
 csrf_require_post();
 
 if ($HTTP_SERVER_VARS["REQUEST_METHOD"] != "POST")
- stderr($tracker_lang['error'], "Шутник!");
+ stderr($tracker_lang['error'], "РЁСѓС‚РЅРёРє!");
 
 if (get_user_class() < UC_MODERATOR)
 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
@@ -42,15 +42,15 @@ $sender_id = ($_POST['sender'] == 'system' ? 0 : $CURUSER['id']);
 $dt = sqlesc(get_date_time());
 $msg = $_POST['msg'];
 if (!$msg)
-stderr($tracker_lang['error'],"Пожалуста, введите сообщение!");
+stderr($tracker_lang['error'],"РџРѕР¶Р°Р»СѓСЃС‚Р°, РІРІРµРґРёС‚Рµ СЃРѕРѕР±С‰РµРЅРёРµ!");
 
 $subject = $_POST['subject'];
 if (!$subject)
-stderr($tracker_lang['error'],"Пожалуста, введите тему!");
+stderr($tracker_lang['error'],"РџРѕР¶Р°Р»СѓСЃС‚Р°, РІРІРµРґРёС‚Рµ С‚РµРјСѓ!");
 
 $clases = $_POST['clases'];
 if (!$_POST['clases'])
-	stderr($tracker_lang['error'],"Выберите 1 или более классов для отправки сообщения.");
+	stderr($tracker_lang['error'],"Р’С‹Р±РµСЂРёС‚Рµ 1 РёР»Рё Р±РѕР»РµРµ РєР»Р°СЃСЃРѕРІ РґР»СЏ РѕС‚РїСЂР°РІРєРё СЃРѕРѕР±С‰РµРЅРёСЏ.");
 
 /*$query = sql_query("SELECT id FROM users WHERE class IN (".implode(", ", array_map("sqlesc", $clases)).")");
 
@@ -58,13 +58,13 @@ while ($dat=mysql_fetch_assoc($query)) {
 	sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES ($sender_id, $dat[id], '" . get_date_time() . "', " . sqlesc($msg) .", " . sqlesc($subject) .")") or sqlerr(__FILE__,__LINE__);
 }*/
 
-write_log("Массовое сообщение от пользователя $CURUSER[username]","FFAE00","tracker");
+write_log("РњР°СЃСЃРѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ $CURUSER[username]","FFAE00","tracker");
 
 sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) SELECT $sender_id, id, NOW(), ".sqlesc($msg).", ".sqlesc($subject)." FROM users WHERE class IN (".implode(", ", array_map("sqlesc", $clases)).")") or sqlerr(__FILE__,__LINE__);
 $counter = mysql_affected_rows();
 
 header("Refresh: 2; url=staffmess.php");
 
-stderr("Успешно", "Отправлено $counter сообщений.");
+stderr("РЈСЃРїРµС€РЅРѕ", "РћС‚РїСЂР°РІР»РµРЅРѕ $counter СЃРѕРѕР±С‰РµРЅРёР№.");
 
 ?>

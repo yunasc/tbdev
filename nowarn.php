@@ -39,14 +39,14 @@ if(isset($_POST["nowarned"])&&($_POST["nowarned"]=="nowarned")){
     csrf_require_post();
 //if (get_user_class() >= UC_SYSOP) {
 if (get_user_class() < UC_MODERATOR)
-stderr($tracker_lang['error'], "Îòêàçàíî â äîñòóïå.");
+stderr($tracker_lang['error'], "ÐžÑ‚ÐºÐ°Ð·Ð°Ð½Ð¾ Ð² Ð´Ð¾ÑÑ‚ÑƒÐ¿Ðµ.");
 {
 if (empty($_POST["usernw"]) && empty($_POST["desact"]) && empty($_POST["delete"]))
-bark("Âû äîëæíû âûáðàòü ïîëüçîâàòåëÿ äëÿ ðåäàêòèðîâàíèÿ.");
+bark("Ð’Ñ‹ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð²Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð´Ð»Ñ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ.");
 
 if (!empty($_POST["usernw"]))
 {
-$msg = sqlesc("Âàøå ïðåäóïðåæäåíèå ñíÿë " . $CURUSER['username'] . ".");
+$msg = sqlesc("Ð’Ð°ÑˆÐµ Ð¿Ñ€ÐµÐ´ÑƒÐ¿Ñ€ÐµÐ¶Ð´ÐµÐ½Ð¸Ðµ ÑÐ½ÑÐ» " . $CURUSER['username'] . ".");
 $added = sqlesc(get_date_time());
 $userid = implode(", ", array_map('sqlesc', $_POST['usernw']));
 //sql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -54,7 +54,7 @@ $userid = implode(", ", array_map('sqlesc', $_POST['usernw']));
 $r = sql_query("SELECT modcomment FROM users WHERE id IN (" . implode(", ", array_map('sqlesc', $_POST['usernw'])) . ")")or sqlerr(__FILE__, __LINE__);
 $user = mysql_fetch_array($r);
 $exmodcomment = $user["modcomment"];
-$modcomment = date("Y-m-d") . " - Ïðåäóïðåæäåíèå ñíÿë " . $CURUSER['username'] . ".\n". $modcomment . $exmodcomment;
+$modcomment = date("Y-m-d") . " - ÐŸÑ€ÐµÐ´ÑƒÐ¿Ñ€ÐµÐ¶Ð´ÐµÐ½Ð¸Ðµ ÑÐ½ÑÐ» " . $CURUSER['username'] . ".\n". $modcomment . $exmodcomment;
 sql_query("UPDATE users SET modcomment=" . sqlesc($modcomment) . " WHERE id IN (" . implode(", ", array_map('sqlesc', $_POST['usernw'])) . ")") or sqlerr(__FILE__, __LINE__);
 
 $do="UPDATE users SET warned='no', warneduntil='0000-00-00 00:00:00' WHERE id IN (" . implode(", ", array_map('sqlesc', $_POST['usernw'])) . ")";

@@ -37,7 +37,7 @@ $userid = $CURUSER["id"];
 $torrentid = (int) $_POST["torrentid"];
 
 if (empty($torrentid)) {
-	stdmsg($tracker_lang["error"], "Не пытайся меня взломать!");
+	stdmsg($tracker_lang["error"], "РќРµ РїС‹С‚Р°Р№СЃСЏ РјРµРЅСЏ РІР·Р»РѕРјР°С‚СЊ!");
 }
 
 $ajax = (string) $_POST["ajax"];

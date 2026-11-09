@@ -29,7 +29,7 @@
 # IMPORTANT: Do not edit below unless you know what you are doing!
 
 /* 
- * Защита от двойного инклуда ядра
+ * Р—Р°С‰РёС‚Р° РѕС‚ РґРІРѕР№РЅРѕРіРѕ РёРЅРєР»СѓРґР° СЏРґСЂР°
  * Protection from double including the core
 */
 
@@ -87,25 +87,25 @@ if (!defined('IN_TRACKER')) {
 	// Some basic checking for engine to work
 	// Check for PHP version
 	if (version_compare(PHP_VERSION, '5.2.0', '<'))
-		die('Извините, трекер работает на PHP от версии 5.2 и выше. Обновите версию PHP.');
+		die('РР·РІРёРЅРёС‚Рµ, С‚СЂРµРєРµСЂ СЂР°Р±РѕС‚Р°РµС‚ РЅР° PHP РѕС‚ РІРµСЂСЃРёРё 5.2 Рё РІС‹С€Рµ. РћР±РЅРѕРІРёС‚Рµ РІРµСЂСЃРёСЋ PHP.');
 	// Check for php-spl
 	if (!interface_exists('ArrayAccess'))
-		die('У вас не установлено расширение PHP SPL (Standard PHP Library). Без установки этого расширения дальнейшая работа невозможна.');
+		die('РЈ РІР°СЃ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЂР°СЃС€РёСЂРµРЅРёРµ PHP SPL (Standard PHP Library). Р‘РµР· СѓСЃС‚Р°РЅРѕРІРєРё СЌС‚РѕРіРѕ СЂР°СЃС€РёСЂРµРЅРёСЏ РґР°Р»СЊРЅРµР№С€Р°СЏ СЂР°Р±РѕС‚Р° РЅРµРІРѕР·РјРѕР¶РЅР°.');
 
 	// Additional security countermeasures
 	// Will be enabled later...
 	/*if (file_exists('install'))
-		die('После установки нужно обязательно удалить папку install.');*/
+		die('РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё РЅСѓР¶РЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓРґР°Р»РёС‚СЊ РїР°РїРєСѓ install.');*/
 	if (ini_get('register_globals') == '1' || strtolower(ini_get('register_globals')) == 'on')
-		die('Отключите register_globals в php.ini/.htaccess (угроза безопасности)');
+		die('РћС‚РєР»СЋС‡РёС‚Рµ register_globals РІ php.ini/.htaccess (СѓРіСЂРѕР·Р° Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё)');
 	if ((int) ini_get('short_open_tag') == '0')
-		die('Включите short_open_tag в php.ini/.htaccess (техническое требование)');
+		die('Р’РєР»СЋС‡РёС‚Рµ short_open_tag РІ php.ini/.htaccess (С‚РµС…РЅРёС‡РµСЃРєРѕРµ С‚СЂРµР±РѕРІР°РЅРёРµ)');
 
 	if (!file_exists('include/secrets.local.php'))
-		die('Создайте файл include/secrets.local.php и переместите в него свои локальные настройки из include/secrets.php (техническое требование)');
+		die('РЎРѕР·РґР°Р№С‚Рµ С„Р°Р№Р» include/secrets.local.php Рё РїРµСЂРµРјРµСЃС‚РёС‚Рµ РІ РЅРµРіРѕ СЃРІРѕРё Р»РѕРєР°Р»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё РёР· include/secrets.php (С‚РµС…РЅРёС‡РµСЃРєРѕРµ С‚СЂРµР±РѕРІР°РЅРёРµ)');
 
 	if (!file_exists('include/config.local.php'))
-		die('Создайте файл include/config.local.php и переместите в него свои локальные настройки из include/config.php (техническое требование)');
+		die('РЎРѕР·РґР°Р№С‚Рµ С„Р°Р№Р» include/config.local.php Рё РїРµСЂРµРјРµСЃС‚РёС‚Рµ РІ РЅРµРіРѕ СЃРІРѕРё Р»РѕРєР°Р»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё РёР· include/config.php (С‚РµС…РЅРёС‡РµСЃРєРѕРµ С‚СЂРµР±РѕРІР°РЅРёРµ)');
 
 	// Variables for Start Time
 	$tstart = timer(); // Start time

@@ -49,13 +49,13 @@ if ($action == 'edit') {
 
 		foreach (explode(":", $var_list) as $x)
 			if (empty($_POST[$x]))
-				stderr($tracker_lang["error"], "Вы не заполнили все поля!");
+				stderr($tracker_lang["error"], "Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РІСЃРµ РїРѕР»СЏ!");
 			else
 				$GLOBALS[$x] = $_POST[$x];
 
 		foreach (explode(":", $int_list) as $x)
 			if (!is_valid_id($GLOBALS[$x]))
-				stderr($tracker_lang["error"], "Вы ввели не число в следующее поле: $x");
+				stderr($tracker_lang["error"], "Р’С‹ РІРІРµР»Рё РЅРµ С‡РёСЃР»Рѕ РІ СЃР»РµРґСѓСЋС‰РµРµ РїРѕР»Рµ: $x");
 		
 		$updateset = array();
 
@@ -70,13 +70,13 @@ if ($action == 'edit') {
 		if ($returnto != "")
 			header("Location: $returnto");
 		else
-			stderr("Успешно", "Релиз отредактирован.");
+			stderr("РЈСЃРїРµС€РЅРѕ", "Р РµР»РёР· РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅ.");
 	} else {
 		$returnto = $_GET['returnto'];
-		stdhead("Редактировать релиз");
+		stdhead("Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂРµР»РёР·");
 
 $cats = genrelist();
-$categories = "<select name=\"cat\"><option selected>Выберите категорию</option>";
+$categories = "<select name=\"cat\"><option selected>Р’С‹Р±РµСЂРёС‚Рµ РєР°С‚РµРіРѕСЂРёСЋ</option>";
 foreach ($cats as $cat) {
 	$cat_id = $cat["id"];
 	$cat_name = $cat["name"];
@@ -91,18 +91,18 @@ $id = (int) $_GET["id"];
 <form name="index" action="?action=edit&id=<?=$id;?>" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="0" cellspacing="0" cellpadding="5">
 <?
-tr("Название релиза", "<input type=\"text\" name=\"name\" size=\"80\" value=\"$release[name]\" /><br />Пример: Смерть Президента (2006) DVDRip\n", 1);
-tr("Постер", "<input type=\"text\" name=\"poster\" size=\"80\" value=\"$release[poster]\" /><br />Залить картинку на <a href=\"http://www.imageshack.us\">ImageShack</a>", 1);
+tr("РќР°Р·РІР°РЅРёРµ СЂРµР»РёР·Р°", "<input type=\"text\" name=\"name\" size=\"80\" value=\"$release[name]\" /><br />РџСЂРёРјРµСЂ: РЎРјРµСЂС‚СЊ РџСЂРµР·РёРґРµРЅС‚Р° (2006) DVDRip\n", 1);
+tr("РџРѕСЃС‚РµСЂ", "<input type=\"text\" name=\"poster\" size=\"80\" value=\"$release[poster]\" /><br />Р—Р°Р»РёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РЅР° <a href=\"http://www.imageshack.us\">ImageShack</a>", 1);
 ?>
-<tr><td width="" class="heading" valign="top" align="right">Верхний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "top", $release["top"]);?></td></tr>
-<tr><td width="" class="heading" valign="top" align="right">Средний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "center", $release["center"]);?></td></tr>
-<tr><td width="" class="heading" valign="top" align="right">Нижний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "bottom", $release["bottom"]);?></td></tr>
+<tr><td width="" class="heading" valign="top" align="right">Р’РµСЂС…РЅРёР№ С€Р°Р±Р»РѕРЅ</td><td valign="top" align="left"><?=textbbcode("index", "top", $release["top"]);?></td></tr>
+<tr><td width="" class="heading" valign="top" align="right">РЎСЂРµРґРЅРёР№ С€Р°Р±Р»РѕРЅ</td><td valign="top" align="left"><?=textbbcode("index", "center", $release["center"]);?></td></tr>
+<tr><td width="" class="heading" valign="top" align="right">РќРёР¶РЅРёР№ С€Р°Р±Р»РѕРЅ</td><td valign="top" align="left"><?=textbbcode("index", "bottom", $release["bottom"]);?></td></tr>
 <?
-tr("Номер торрента", "<input type=\"text\" name=\"torrentid\" size=\"60\" value=\"$release[torrentid]\" /><br />Пример: $DEFAULTBASEURL/details.php?id=<b>6764</b><br />Выделенное жирным - и есть номер торрента\n", 1);
-tr("URL IMDB", "<input type=\"text\" name=\"imdb\" size=\"60\" value=\"$release[imdb]\" /><br />Пример: http://www.imdb.com/title/tt0408306/\n", 1);
-tr("Категория", $categories, 1);
+tr("РќРѕРјРµСЂ С‚РѕСЂСЂРµРЅС‚Р°", "<input type=\"text\" name=\"torrentid\" size=\"60\" value=\"$release[torrentid]\" /><br />РџСЂРёРјРµСЂ: $DEFAULTBASEURL/details.php?id=<b>6764</b><br />Р’С‹РґРµР»РµРЅРЅРѕРµ Р¶РёСЂРЅС‹Рј - Рё РµСЃС‚СЊ РЅРѕРјРµСЂ С‚РѕСЂСЂРµРЅС‚Р°\n", 1);
+tr("URL IMDB", "<input type=\"text\" name=\"imdb\" size=\"60\" value=\"$release[imdb]\" /><br />РџСЂРёРјРµСЂ: http://www.imdb.com/title/tt0408306/\n", 1);
+tr("РљР°С‚РµРіРѕСЂРёСЏ", $categories, 1);
 ?>
-<tr><td align="center" colspan="2"><input type="submit" value="Изменить" /></td></tr>
+<tr><td align="center" colspan="2"><input type="submit" value="РР·РјРµРЅРёС‚СЊ" /></td></tr>
 </table>
 <? if ($_GET["returnto"])
 	print "<input type=\"hidden\" name=\"returnto\" value=\"".htmlentities($_GET["returnto"])."\" />";

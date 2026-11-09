@@ -186,7 +186,7 @@ if ($variant == "index" || $variant == "bookmarks")
 	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=9&type={$link9}\" class=\"altlink_white\">".$tracker_lang['uploadeder']."</a></td>\n");
 
 if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
-	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=10&type={$link10}\" class=\"altlink_white\">Изменен</td>");
+	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=10&type={$link10}\" class=\"altlink_white\">РР·РјРµРЅРµРЅ</td>");
 
 if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 	print("<td class=\"colhead\" align=\"center\">".$tracker_lang['delete']."</td>\n");
@@ -227,7 +227,7 @@ print("<tbody id=\"highlighted\">");
                 $freepic = '';
         }
 		$thisisfree = $freepic;
-		print("<td align=\"left\">".($row["not_sticky"] == "no" ? "Важный: " : "")."<a href=\"details.php?");
+		print("<td align=\"left\">".($row["not_sticky"] == "no" ? "Р’Р°Р¶РЅС‹Р№: " : "")."<a href=\"details.php?");
 		if ($variant == "mytorrents")
 			print("returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;");
 		print("id=$id");
@@ -262,7 +262,7 @@ print("<tbody id=\"highlighted\">");
 			print("<a href=\"edit.php?id=$row[id]\"><img border=\"0\" src=\"$pic_base_url/pen.gif\" alt=\"".$tracker_lang['edit']."\" title=\"".$tracker_lang['edit']."\" /></a>\n");
 
 			   if ($row["readtorrent"] == 0 && $variant == "index")
-				   print ("<b><font color=\"red\" size=\"1\">[новый]</font></b>");
+				   print ("<b><font color=\"red\" size=\"1\">[РЅРѕРІС‹Р№]</font></b>");
 
 			print("<br /><i>".$row["added"]."</i>");
 
@@ -309,7 +309,7 @@ print("<tbody id=\"highlighted\">");
 
 //		print("<td align=center><nobr>" . str_replace(" ", "<br />", $row["added"]) . "</nobr></td>\n");
 				$ttl = ($ttl_days*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($row["added"])) / 3600);
-				if ($ttl == 1) $ttl .= " час"; else $ttl .= "&nbsp;часов";
+				if ($ttl == 1) $ttl .= " С‡Р°СЃ"; else $ttl .= "&nbsp;С‡Р°СЃРѕРІ";
 		if ($use_ttl)
 			print("<td align=\"center\">$ttl</td>\n");
 		print("<td align=\"center\">" . str_replace(" ", "<br />", mksize($row["size"])) . "</td>\n");
@@ -356,9 +356,9 @@ print("<tbody id=\"highlighted\">");
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index") {
 			if ($row["moderated"] == "no")
-				print("<td align=\"center\"><font color=\"red\"><b>Нет</b></font></td>\n");
+				print("<td align=\"center\"><font color=\"red\"><b>РќРµС‚</b></font></td>\n");
 			else
-				print("<td align=\"center\"><a href=\"userdetails.php?id=$row[moderatedby]\"><font color=\"green\"><b>Да</b></font></a></td>\n");
+				print("<td align=\"center\"><a href=\"userdetails.php?id=$row[moderatedby]\"><font color=\"green\"><b>Р”Р°</b></font></a></td>\n");
 		}
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
@@ -371,13 +371,13 @@ print("<tbody id=\"highlighted\">");
 	print("</tbody>");
 
 	if ($variant == "index" && $CURUSER)
-		print("<tr><td class=\"colhead\" colspan=\"12\" align=\"center\"><a href=\"markread.php\" class=\"altlink_white\">Все торренты прочитаны</a></td></tr>");
+		print("<tr><td class=\"colhead\" colspan=\"12\" align=\"center\"><a href=\"markread.php\" class=\"altlink_white\">Р’СЃРµ С‚РѕСЂСЂРµРЅС‚С‹ РїСЂРѕС‡РёС‚Р°РЅС‹</a></td></tr>");
 
 	//print("</table>\n");
 
 	if ($variant == "index") {
 		if (get_user_class() >= UC_MODERATOR) {
-			print("<tr><td align=\"right\" colspan=\"12\"><form id=\"bulk-torrent-delete\" method=\"post\" action=\"deltorrent.php?mode=delete\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"Удалить\"></form></td></tr>\n");
+			print("<tr><td align=\"right\" colspan=\"12\"><form id=\"bulk-torrent-delete\" method=\"post\" action=\"deltorrent.php?mode=delete\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"РЈРґР°Р»РёС‚СЊ\"></form></td></tr>\n");
 		}
 	}
 

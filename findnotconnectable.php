@@ -39,23 +39,23 @@ if ($_GET['action'] == "list") {
 $res2 = sql_query("SELECT userid, seeder, torrent, agent FROM peers WHERE connectable='no' ORDER BY userid DESC") or sqlerr(__FILE__, __LINE__);
 
 stdhead("Peers that are unconnectable");
-print("<a href=findnotconnectable.php?action=sendpm><h3>Послать всем несоединябельным пирам массовое ПМ</h3></a>");
-print("<a href=findnotconnectable.php><h3>Просмотреть лог (Проверьте это прежде чем отправлять ЛС пользователям)</h3></a>");
-print("<h1>Пиры с которыми нельзя соединиться</h1>");
-print("Это только те пользователи которые сейчас активны на торрентах.");
+print("<a href=findnotconnectable.php?action=sendpm><h3>РџРѕСЃР»Р°С‚СЊ РІСЃРµРј РЅРµСЃРѕРµРґРёРЅСЏР±РµР»СЊРЅС‹Рј РїРёСЂР°Рј РјР°СЃСЃРѕРІРѕРµ РџРњ</h3></a>");
+print("<a href=findnotconnectable.php><h3>РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ Р»РѕРі (РџСЂРѕРІРµСЂСЊС‚Рµ СЌС‚Рѕ РїСЂРµР¶РґРµ С‡РµРј РѕС‚РїСЂР°РІР»СЏС‚СЊ Р›РЎ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј)</h3></a>");
+print("<h1>РџРёСЂС‹ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ</h1>");
+print("Р­С‚Рѕ С‚РѕР»СЊРєРѕ С‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РєРѕС‚РѕСЂС‹Рµ СЃРµР№С‡Р°СЃ Р°РєС‚РёРІРЅС‹ РЅР° С‚РѕСЂСЂРµРЅС‚Р°С….");
 
-print("<br /><font color=red>*</font> означает что пользователь сидирует.<p>");
+print("<br /><font color=red>*</font> РѕР·РЅР°С‡Р°РµС‚ С‡С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРёРґРёСЂСѓРµС‚.<p>");
 $result = sql_query("SELECT DISTINCT userid FROM peers WHERE connectable = 'no'");
 $count = mysql_num_rows($result);
-print ("$count уникальных пиров с которыми нельзя соединиться.");
+print ("$count СѓРЅРёРєР°Р»СЊРЅС‹С… РїРёСЂРѕРІ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ.");
 @mysql_free_result($result);
 
 if (mysql_num_rows($res2) == 0)
-print("<p align=center><b>Со всеми пирами можно соединится!</b></p>\n");
+print("<p align=center><b>РЎРѕ РІСЃРµРјРё РїРёСЂР°РјРё РјРѕР¶РЅРѕ СЃРѕРµРґРёРЅРёС‚СЃСЏ!</b></p>\n");
 else
 {
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
-print("<tr><td class=colhead>Пользователь</td><td class=colhead>Торрент</td><td class=colhead>Клиент</td></tr>\n");
+print("<tr><td class=colhead>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>РўРѕСЂСЂРµРЅС‚</td><td class=colhead>РљР»РёРµРЅС‚</td></tr>\n");
 while($arr2 = mysql_fetch_assoc($res2))
 {
 $r2 = sql_query("SELECT username FROM users WHERE id=$arr2[userid]") or sqlerr(__FILE__, __LINE__);
@@ -74,11 +74,11 @@ if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST"){
 $dt = sqlesc(get_date_time());
 $msg = $_POST['msg'];
 if (!$msg)
-stderr($tracker_lang['error'],"Введите текст сообщения");
+stderr($tracker_lang['error'],"Р’РІРµРґРёС‚Рµ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ");
 
 $query = sql_query("SELECT distinct userid FROM peers WHERE connectable='no'");
 while($dat=mysql_fetch_assoc($query)){
-$subject = sqlesc("Трекер определил вас несоединябельного");
+$subject = sqlesc("РўСЂРµРєРµСЂ РѕРїСЂРµРґРµР»РёР» РІР°СЃ РЅРµСЃРѕРµРґРёРЅСЏР±РµР»СЊРЅРѕРіРѕ");
 send_pm(0, $dat['userid'], get_date_time(), $subject, $msg);
 //sql_query("INSERT INTO messages (sender, receiver, added, msg, subject) VALUES (0,$dat[userid] , '" . get_date_time() . "', " . sqlesc($msg) . ", " . $subject .")") or sqlerr(__FILE__,__LINE__);
 }
@@ -89,11 +89,11 @@ header("Refresh: 0; url=findnotconnectable.php");
 }
 
 if ($_GET['action'] == "sendpm") {
-stdhead("Пиры с которыми нельзя соединиться");
+stdhead("РџРёСЂС‹ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ");
 ?>
 <table class=main width=750 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
 <div align=center>
-<h1>Общее сообщение для пользователей с которыми нельзя соединиться</a></h1>
+<h1>РћР±С‰РµРµ СЃРѕРѕР±С‰РµРЅРёРµ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ</a></h1>
 <form method=post action=findnotconnectable.php><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <?
 
@@ -119,7 +119,7 @@ $body = "The tracker has determined that you are firewalled or NATed and cannot 
 </tr>
 <tr><td><textarea name=msg cols=120 rows=15><?=$body?></textarea></td></tr>
 <tr>
-<tr><td colspan=2 align=center><input type=submit value="Отправить" class=btn></td></tr>
+<tr><td colspan=2 align=center><input type=submit value="РћС‚РїСЂР°РІРёС‚СЊ" class=btn></td></tr>
 </table>
 <input type=hidden name=receiver value=<?=$receiver?>>
 </form>
@@ -128,20 +128,20 @@ $body = "The tracker has determined that you are firewalled or NATed and cannot 
 <?
 }
 if ($_GET['action'] == ""){
-stdhead("Лог общих сообщений для файрволеных");
+stdhead("Р›РѕРі РѕР±С‰РёС… СЃРѕРѕР±С‰РµРЅРёР№ РґР»СЏ С„Р°Р№СЂРІРѕР»РµРЅС‹С…");
 $getlog = sql_query("SELECT * FROM `notconnectablepmlog` LIMIT 10");
-print("<h1>Лог общих сообщений для файрволеных</h1>");
-print("<a href=findnotconnectable.php?action=sendpm><h3>Послать общее сообщение для пользователей с которыми нельзя соединиться</h3></a>");
-print("<a href=findnotconnectable.php?action=list><h3>Показать пользователей с которыми нельзя соединиться</h3></a>");
-print("<br />Пожалуста не отправляйте ЛС слишком часто. Мы не хотим спамить пользователей, только дадим знать что с ними нельзя соединиться.<p>");
-print("<br />Каждую неделю будет нормально.<p>");
+print("<h1>Р›РѕРі РѕР±С‰РёС… СЃРѕРѕР±С‰РµРЅРёР№ РґР»СЏ С„Р°Р№СЂРІРѕР»РµРЅС‹С…</h1>");
+print("<a href=findnotconnectable.php?action=sendpm><h3>РџРѕСЃР»Р°С‚СЊ РѕР±С‰РµРµ СЃРѕРѕР±С‰РµРЅРёРµ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ</h3></a>");
+print("<a href=findnotconnectable.php?action=list><h3>РџРѕРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ</h3></a>");
+print("<br />РџРѕР¶Р°Р»СѓСЃС‚Р° РЅРµ РѕС‚РїСЂР°РІР»СЏР№С‚Рµ Р›РЎ СЃР»РёС€РєРѕРј С‡Р°СЃС‚Рѕ. РњС‹ РЅРµ С…РѕС‚РёРј СЃРїР°РјРёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, С‚РѕР»СЊРєРѕ РґР°РґРёРј Р·РЅР°С‚СЊ С‡С‚Рѕ СЃ РЅРёРјРё РЅРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ.<p>");
+print("<br />РљР°Р¶РґСѓСЋ РЅРµРґРµР»СЋ Р±СѓРґРµС‚ РЅРѕСЂРјР°Р»СЊРЅРѕ.<p>");
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
-print("<tr><td class=colhead>Пользователь</td><td class=colhead>Дата</td><td class=colhead>Прошло</td></tr>");
+print("<tr><td class=colhead>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>Р”Р°С‚Р°</td><td class=colhead>РџСЂРѕС€Р»Рѕ</td></tr>");
 while($arr2 = mysql_fetch_assoc($getlog)){
 $r2 = sql_query("SELECT username FROM users WHERE id=$arr2[user]") or sqlerr(__FILE__, __LINE__);
 $a2 = mysql_fetch_assoc($r2);
 $elapsed = get_elapsed_time(sql_timestamp_to_unix_timestamp($arr2[date]));
-print("<tr><td class=colhead><a href=userdetails.php?id=$arr2[user]>$a2[username]</a></td><td class=colhead>$arr2[date]</td><td>$elapsed назад</td></tr>");
+print("<tr><td class=colhead><a href=userdetails.php?id=$arr2[user]>$a2[username]</a></td><td class=colhead>$arr2[date]</td><td>$elapsed РЅР°Р·Р°Рґ</td></tr>");
 }
 print("</table>");
 

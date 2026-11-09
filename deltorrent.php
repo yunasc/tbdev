@@ -36,18 +36,18 @@ csrf_require_post();
 if (get_user_class() < UC_MODERATOR)
 	stderr($tracker_lang["error"], $tracker_lang["access_denied"]);
 
-stdhead("Удалить торрент");
+stdhead("РЈРґР°Р»РёС‚СЊ С‚РѕСЂСЂРµРЅС‚");
 begin_main_frame();
 
 $mode = $_GET["mode"];
 
 if ($mode == "delete" && !empty($_POST['delete'])) {
 	$res = sql_query("SELECT id, name FROM torrents WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")");
-	echo "Следующие торренты удалены:<br><br>";
+	echo "РЎР»РµРґСѓСЋС‰РёРµ С‚РѕСЂСЂРµРЅС‚С‹ СѓРґР°Р»РµРЅС‹:<br><br>";
 	while ($row = mysql_fetch_array($res)) {
 		echo "ID: $row[id] - $row[name]<br>";
-		$reasonstr = "Старый или не подходил под правила.";
-		$text = "Торрент $row[id] ($row[name]) был удален пользователем $CURUSER[username]. Причина: $reasonstr\n";
+		$reasonstr = "РЎС‚Р°СЂС‹Р№ РёР»Рё РЅРµ РїРѕРґС…РѕРґРёР» РїРѕРґ РїСЂР°РІРёР»Р°.";
+		$text = "РўРѕСЂСЂРµРЅС‚ $row[id] ($row[name]) Р±С‹Р» СѓРґР°Р»РµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј $CURUSER[username]. РџСЂРёС‡РёРЅР°: $reasonstr\n";
 		write_log($text);
 		deletetorrent($row['id']);
 	}

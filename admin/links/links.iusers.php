@@ -2,6 +2,6 @@
 
 if (!defined("ADMIN_FILE")) die("Illegal File Access");
 
-BuildMenu("".$admin_file.".php?op=iUsers", "Ñìåíà ïàðîëÿ", "password.png");
+BuildMenu("".$admin_file.".php?op=iUsers", "Ð¡Ð¼ÐµÐ½Ð° Ð¿Ð°Ñ€Ð¾Ð»Ñ", "password.png");
 
 ?>

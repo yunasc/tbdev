@@ -43,7 +43,7 @@ $query[] = "feed=dl";
 if (isset($_POST['cat']))
 $query[] = "cat=".@implode(',', $_POST['cat']);
 else {
-/*stdmsg($tracker_lang['error'],"Вы должны выбрать категорию!");
+/*stdmsg($tracker_lang['error'],"Р’С‹ РґРѕР»Р¶РЅС‹ РІС‹Р±СЂР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ!");
 stdfoot();
 die();*/
 }
@@ -53,7 +53,7 @@ $queries = @implode("&", $query);
 if ($queries)
 $link .= "?$queries";
 
-stdmsg($tracker_lang['success'], "Используйте этот адрес в вашей программе для чтения RSS: <br /><a href=$link>$link</a>");
+stdmsg($tracker_lang['success'], "РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЌС‚РѕС‚ Р°РґСЂРµСЃ РІ РІР°С€РµР№ РїСЂРѕРіСЂР°РјРјРµ РґР»СЏ С‡С‚РµРЅРёСЏ RSS: <br /><a href=$link>$link</a>");
 stdfoot();
 die();
 }
@@ -61,31 +61,31 @@ die();
 <FORM method="POST" action="getrss.php">
 <table border="1" cellspacing="1" cellpadding="5">
 <TR>
-<TD class="rowhead">Категории:
+<TD class="rowhead">РљР°С‚РµРіРѕСЂРёРё:
 </TD>
 <TD><?=$catoptions?>
-<span class="small">Если вы не выберете категории для просмотра,<br /> вам будет выдана ссылка на все категории.</span>
+<span class="small">Р•СЃР»Рё РІС‹ РЅРµ РІС‹Р±РµСЂРµС‚Рµ РєР°С‚РµРіРѕСЂРёРё РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°,<br /> РІР°Рј Р±СѓРґРµС‚ РІС‹РґР°РЅР° СЃСЃС‹Р»РєР° РЅР° РІСЃРµ РєР°С‚РµРіРѕСЂРёРё.</span>
 </TD>
 </TR>
 <TR>
-<TD class="rowhead">Тип ссылки в RSS:
+<TD class="rowhead">РўРёРї СЃСЃС‹Р»РєРё РІ RSS:
 </TD>
 <TD>
-<INPUT type="radio" name="feed" value="web" checked />Ссылка на страницу<BR>
-<INPUT type="radio" name="feed" value="dl" />Ссылка на скачивание
+<INPUT type="radio" name="feed" value="web" checked />РЎСЃС‹Р»РєР° РЅР° СЃС‚СЂР°РЅРёС†Сѓ<BR>
+<INPUT type="radio" name="feed" value="dl" />РЎСЃС‹Р»РєР° РЅР° СЃРєР°С‡РёРІР°РЅРёРµ
 </TD>
 </TR>
 <TR>
-<TD class="rowhead">Тип логина:
+<TD class="rowhead">РўРёРї Р»РѕРіРёРЅР°:
 </TD>
 <TD>
-<INPUT type="radio" name="login" value="cookie" />Стандарт (cookies)<BR>
-<INPUT type="radio" name="login" value="passkey" checked />Альтернативный (passkey)
+<INPUT type="radio" name="login" value="cookie" />РЎС‚Р°РЅРґР°СЂС‚ (cookies)<BR>
+<INPUT type="radio" name="login" value="passkey" checked />РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ (passkey)
 </TD>
 </TR>
 <TR>
 <TD colspan="2" align="center">
-<BUTTON type="submit">Сгенерировать RSS ссылку</BUTTON>
+<BUTTON type="submit">РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ RSS СЃСЃС‹Р»РєСѓ</BUTTON>
 </TD>
 </TR>
 </TABLE>

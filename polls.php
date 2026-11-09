@@ -58,10 +58,10 @@
   $row = mysql_fetch_row($rows);
   $pollcount = $row[0];
   if ($pollcount == 0)
-  	stderr("Извиниет", "Нет опросов!");
+  	stderr("РР·РІРёРЅРёРµС‚", "РќРµС‚ РѕРїСЂРѕСЃРѕРІ!");
   $polls = sql_query("SELECT * FROM polls ORDER BY id DESC LIMIT 1," . ($pollcount - 1 )) or sqlerr(__FILE__, __LINE__);
-  stdhead("Прошлые опросы");
-  print("<h1>Прошлые опросы</h1>");
+  stdhead("РџСЂРѕС€Р»С‹Рµ РѕРїСЂРѕСЃС‹");
+  print("<h1>РџСЂРѕС€Р»С‹Рµ РѕРїСЂРѕСЃС‹</h1>");
 
     function srt($a,$b)
     {
@@ -80,14 +80,14 @@
     print("<p><table width=750 border=1 cellspacing=0 cellpadding=10><tr><td align=center>\n");
 
     print("<p class=sub>");
-    $added = date("Y-m-d",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " назад)";
+    $added = date("Y-m-d",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " РЅР°Р·Р°Рґ)";
 
     print("$added");
 
     if (get_user_class() >= UC_ADMINISTRATOR)
     {
-    	print(" - [<a href=makepoll.php?action=edit&pollid=$poll[id]><b>Редактировать</b></a>]\n");
-			print(" - [<a href=?action=delete&pollid=$poll[id]><b>Удалить</b></a>]\n");
+    	print(" - [<a href=makepoll.php?action=edit&pollid=$poll[id]><b>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</b></a>]\n");
+			print(" - [<a href=?action=delete&pollid=$poll[id]><b>РЈРґР°Р»РёС‚СЊ</b></a>]\n");
 		}
 
 		print("<a name=$poll[id]>");
@@ -136,7 +136,7 @@
     }
     print("</table>\n");
 	$tvotes = number_format($tvotes);
-    print("<p align=center>Голосов: $tvotes</p>\n");
+    print("<p align=center>Р“РѕР»РѕСЃРѕРІ: $tvotes</p>\n");
 
     print("</td></tr></table>\n");
 

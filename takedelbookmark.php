@@ -38,7 +38,7 @@ loggedinorreturn();
 csrf_require_post();
 
 if (!isset($_POST[delbookmark]))
-       bark("Ничего не выбрано");
+       bark("РќРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°РЅРѕ");
 
 $res2 = sql_query("SELECT id, userid FROM bookmarks WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST[delbookmark])) . ")") or sqlerr(__FILE__, __LINE__);
 
@@ -46,7 +46,7 @@ while ($arr = mysql_fetch_assoc($res2)) {
        if (($arr[userid] == $CURUSER[id]) || (get_user_class() > 3))
 sql_query("DELETE FROM bookmarks WHERE id = $arr[id]") or sqlerr(__FILE__, __LINE__);
        else
-bark("Вы пытаетесь удалить не свою закладку!");
+bark("Р’С‹ РїС‹С‚Р°РµС‚РµСЃСЊ СѓРґР°Р»РёС‚СЊ РЅРµ СЃРІРѕСЋ Р·Р°РєР»Р°РґРєСѓ!");
 }
 
 header("Location: ".safe_local_return(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'bookmarks.php'));

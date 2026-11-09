@@ -19,8 +19,8 @@ elseif ($percent <= 70) $pic = "loadbaryellow.gif";
 else $pic = "loadbarred.gif";
 	$width = $percent * 4;
 $content .= "<center>
-<table class=\"main\" border=\"0\" width=\"402\"><tr><td style=\"padding: 0px; background-repeat: repeat-x\" title=\"Нагрузка: $percent%, Средняя (LA): $avgload\">"
-."<img height=\"15\" width=\"$width\" src=\"pic/$pic\" alt=\"Нагрузка: $percent%, Средняя (LA): $avgload\" title=\"Нагрузка: $percent%, Средняя (LA): $avgload\">"
+<table class=\"main\" border=\"0\" width=\"402\"><tr><td style=\"padding: 0px; background-repeat: repeat-x\" title=\"РќР°РіСЂСѓР·РєР°: $percent%, РЎСЂРµРґРЅСЏСЏ (LA): $avgload\">"
+."<img height=\"15\" width=\"$width\" src=\"pic/$pic\" alt=\"РќР°РіСЂСѓР·РєР°: $percent%, РЎСЂРµРґРЅСЏСЏ (LA): $avgload\" title=\"РќР°РіСЂСѓР·РєР°: $percent%, РЎСЂРµРґРЅСЏСЏ (LA): $avgload\">"
 ."</td></tr></table>"
-."<b>Всего к трекеру подключено уникальных $connected пользователей.</b></center>";
+."<b>Р’СЃРµРіРѕ Рє С‚СЂРµРєРµСЂСѓ РїРѕРґРєР»СЋС‡РµРЅРѕ СѓРЅРёРєР°Р»СЊРЅС‹С… $connected РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.</b></center>";
 ?>

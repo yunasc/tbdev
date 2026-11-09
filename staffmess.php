@@ -33,7 +33,7 @@ loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
 stderr($tracker_lang['error'], $tracker_lang['access_denied']);
 
-stdhead("Общее сообщение", false);
+stdhead("РћР±С‰РµРµ СЃРѕРѕР±С‰РµРЅРёРµ", false);
 ?>
 <table class=main width=100% border=0 cellspacing=0 cellpadding=0>
 <tr><td class=embedded>
@@ -49,9 +49,9 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 }
 ?>
 <table cellspacing=0 cellpadding=5>
-<tr><td class="colhead" colspan="2">Общее сообщение всем членам администрации и пользователям</td></tr>
+<tr><td class="colhead" colspan="2">РћР±С‰РµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІСЃРµРј С‡Р»РµРЅР°Рј Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј</td></tr>
 <tr>
-<td>Кому отправлять:<br />
+<td>РљРѕРјСѓ РѕС‚РїСЂР°РІР»СЏС‚СЊ:<br />
   <table style="border: 0" width="100%" cellpadding="0" cellspacing="0">
     <tr>
 <?
@@ -71,7 +71,7 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
     </table>
   </td>
 </tr>
-<TD colspan="2">Тема:
+<TD colspan="2">РўРµРјР°:
    <INPUT name="subject" type="text" size="70"></TD>
 </TR>
 <tr><td align="center">
@@ -79,13 +79,13 @@ if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"])
 <!--<textarea name=msg cols=80 rows=15><?=$body?></textarea>-->
 </td></tr>
 <tr>
-<td colspan=2><div align="center"><b>Отправитель:&nbsp;&nbsp;</b>
+<td colspan=2><div align="center"><b>РћС‚РїСЂР°РІРёС‚РµР»СЊ:&nbsp;&nbsp;</b>
 <?=$CURUSER['username']?>
 <input name="sender" type="radio" value="self" checked>
-&nbsp; Система
+&nbsp; РЎРёСЃС‚РµРјР°
 <input name="sender" type="radio" value="system">
 </div></td></tr>
-<tr><td colspan=2 align=center><input type=submit value="Отправить" class=btn></td></tr>
+<tr><td colspan=2 align=center><input type=submit value="РћС‚РїСЂР°РІРёС‚СЊ" class=btn></td></tr>
 </table>
 <input type=hidden name=receiver value=<?=$receiver?>>
 </form>

@@ -29,7 +29,7 @@
 require "include/bittorrent.php";
 dbconn();
 loggedinorreturn();
-stdhead("Администрация");
+stdhead("РђРґРјРёРЅРёСЃС‚СЂР°С†РёСЏ");
 begin_main_frame();
 begin_frame("");
 ?>
@@ -66,12 +66,12 @@ $staff_table[$arr['class']]=$staff_table[$arr['class']]."</tr><tr height=15>";
 $col[$arr['class']]=0;
 }
 }
-begin_frame("Администрация");
+begin_frame("РђРґРјРёРЅРёСЃС‚СЂР°С†РёСЏ");
 ?>
 
 <table width=100% cellspacing=0>
 <tr>
-<tr><td class=embedded colspan=11>Вопросы, на которые есть ответы в правилах или FAQ, будут оставлены без внимания.</td></tr>
+<tr><td class=embedded colspan=11>Р’РѕРїСЂРѕСЃС‹, РЅР° РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ РѕС‚РІРµС‚С‹ РІ РїСЂР°РІРёР»Р°С… РёР»Рё FAQ, Р±СѓРґСѓС‚ РѕСЃС‚Р°РІР»РµРЅС‹ Р±РµР· РІРЅРёРјР°РЅРёСЏ.</td></tr>
 <!-- Define table column widths -->
 <td class=embedded width="125">&nbsp;</td>
 <td class=embedded width="25">&nbsp;</td>
@@ -85,25 +85,25 @@ begin_frame("Администрация");
 <td class=embedded width="25">&nbsp;</td>
 <td class=embedded width="35">&nbsp;</td>
 </tr>
-<tr><td class=embedded colspan=11><b>Директорат трекера</b></td></tr>
+<tr><td class=embedded colspan=11><b>Р”РёСЂРµРєС‚РѕСЂР°С‚ С‚СЂРµРєРµСЂР°</b></td></tr>
 <tr><td class=embedded colspan=11><hr color="#4040c0" size=1></td></tr>
 <tr height=15>
 <?=$staff_table[UC_SYSOP]?>
 </tr>
 <tr><td class=embedded colspan=11>&nbsp;</td></tr>
-<tr><td class=embedded colspan=11><b>Администраторы</b></td></tr>
+<tr><td class=embedded colspan=11><b>РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹</b></td></tr>
 <tr><td class=embedded colspan=11><hr color="#4040c0" size=1></td></tr>
 <tr height=15>
 <?=$staff_table[UC_ADMINISTRATOR]?>
 </tr>
 <tr><td class=embedded colspan=11>&nbsp;</td></tr>
-<tr><td class=embedded colspan=11><b>Модераторы</b></td></tr>
+<tr><td class=embedded colspan=11><b>РњРѕРґРµСЂР°С‚РѕСЂС‹</b></td></tr>
 <tr><td class=embedded colspan=11><hr color="#4040c0" size=1></td></tr>
 <tr height=15>
 <?=$staff_table[UC_MODERATOR]?>
 </tr>
 <tr><td class=embedded colspan=11>&nbsp;</td></tr>
-<tr><td class=embedded colspan=11><b>Аплоадеры</b></td></tr>
+<tr><td class=embedded colspan=11><b>РђРїР»РѕР°РґРµСЂС‹</b></td></tr>
 <tr><td class=embedded colspan=11><hr color="#4040c0" size=1></td></tr>
 <tr height=15>
 <?=$staff_table[UC_UPLOADER]?>
@@ -115,37 +115,37 @@ end_frame();
 ?>
 
 <? if (get_user_class() >= UC_SYSOP) { ?>
-<? begin_frame("Инструменты владельца<font color=#FF0000> - Видно сис. администраторам.</font>"); ?>
+<? begin_frame("РРЅСЃС‚СЂСѓРјРµРЅС‚С‹ РІР»Р°РґРµР»СЊС†Р°<font color=#FF0000> - Р’РёРґРЅРѕ СЃРёСЃ. Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°Рј.</font>"); ?>
 <table width=100% cellspacing=10 align=center>
 <tr>
-<td class=embedded><form method=get action=staffmess.php><input type=submit value="Масовое ПМ" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=category.php><input type=submit value="Категории" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=delacct.php><input type=submit value="Удалить юзера" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=bans.php><input type=submit value="Баны" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=status.php><input type=submit value="Статус сервера" style='height: 20px; width: 100px' disabled></form></td>
+<td class=embedded><form method=get action=staffmess.php><input type=submit value="РњР°СЃРѕРІРѕРµ РџРњ" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=category.php><input type=submit value="РљР°С‚РµРіРѕСЂРёРё" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=delacct.php><input type=submit value="РЈРґР°Р»РёС‚СЊ СЋР·РµСЂР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=bans.php><input type=submit value="Р‘Р°РЅС‹" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=status.php><input type=submit value="РЎС‚Р°С‚СѓСЃ СЃРµСЂРІРµСЂР°" style='height: 20px; width: 100px' disabled></form></td>
 </tr>
 </table>
 <? end_frame();
 }
 
 if (get_user_class() >= UC_ADMINISTRATOR) { ?>
-<? begin_frame("Инструменты владельца<font color=#009900> - Видно администраторам.</font>"); ?>
+<? begin_frame("РРЅСЃС‚СЂСѓРјРµРЅС‚С‹ РІР»Р°РґРµР»СЊС†Р°<font color=#009900> - Р’РёРґРЅРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°Рј.</font>"); ?>
 <table width=100% cellspacing=10 align=center>
 <tr>
-<td class=embedded><form method=get action=unco.php><input type=submit value="Неподтв. юзеры" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=delacctadmin.php><input type=submit value="Удалить юзера" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=agentban.php><input type=submit value="Бан клиентов" style='height: 20px; width: 100px' disabled></form></td>
+<td class=embedded><form method=get action=unco.php><input type=submit value="РќРµРїРѕРґС‚РІ. СЋР·РµСЂС‹" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=delacctadmin.php><input type=submit value="РЈРґР°Р»РёС‚СЊ СЋР·РµСЂР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=agentban.php><input type=submit value="Р‘Р°РЅ РєР»РёРµРЅС‚РѕРІ" style='height: 20px; width: 100px' disabled></form></td>
 </tr>
 <tr>
 <td class=embedded><form method=get action=topten.php><input type=submit value="Top 10" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=findnotconnectable.php><input type=submit value="Юзеры за NAT" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=findnotconnectable.php><input type=submit value="Р®Р·РµСЂС‹ Р·Р° NAT" style='height: 20px; width: 100px'></form></td>
 </tr>
 </table>
 <? end_frame();
 }
 
 if (get_user_class() >= UC_MODERATOR) { ?>
-<? begin_frame("Средства персонала - <font color=#004E98>Видно модераторам.</font>"); ?>
+<? begin_frame("РЎСЂРµРґСЃС‚РІР° РїРµСЂСЃРѕРЅР°Р»Р° - <font color=#004E98>Р’РёРґРЅРѕ РјРѕРґРµСЂР°С‚РѕСЂР°Рј.</font>"); ?>
 
 
 <table width=100% cellspacing=3>
@@ -153,26 +153,26 @@ if (get_user_class() >= UC_MODERATOR) { ?>
 <? if (get_user_class() >= UC_MODERATOR) { ?>
 </tr>
 <tr>
-<td class=embedded><a class=altlink href=staff.php?act=users>Пользователи с рейтингом ниже 0.20</a></td>
-<td class=embedded>Показать всех пользователей с рейтингом ниже чем 0.20</td>
+<td class=embedded><a class=altlink href=staff.php?act=users>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃ СЂРµР№С‚РёРЅРіРѕРј РЅРёР¶Рµ 0.20</a></td>
+<td class=embedded>РџРѕРєР°Р·Р°С‚СЊ РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ СЂРµР№С‚РёРЅРіРѕРј РЅРёР¶Рµ С‡РµРј 0.20</td>
 </tr>
 <tr>
-<td class=embedded><a class=altlink href=staff.php?act=banned>Отключенные пользователи</a></td>
-<td class=embedded>Показать всех отключенных пользователей</td>
+<td class=embedded><a class=altlink href=staff.php?act=banned>РћС‚РєР»СЋС‡РµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</a></td>
+<td class=embedded>РџРѕРєР°Р·Р°С‚СЊ РІСЃРµС… РѕС‚РєР»СЋС‡РµРЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</td>
 </tr>
 <tr>
-<td class=embedded><a class=altlink href=staff.php?act=last>Новые пользователи</a></td>
-<td class=embedded>100 самых новых пользователей</td>
+<td class=embedded><a class=altlink href=staff.php?act=last>РќРѕРІС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</a></td>
+<td class=embedded>100 СЃР°РјС‹С… РЅРѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</td>
 </tr>
 <tr>
-<td class=embedded><a class=altlink href=log.php>Лог сайта</a></td>
-<td class=embedded>Показать что было залито/удалено/итд</td>
+<td class=embedded><a class=altlink href=log.php>Р›РѕРі СЃР°Р№С‚Р°</a></td>
+<td class=embedded>РџРѕРєР°Р·Р°С‚СЊ С‡С‚Рѕ Р±С‹Р»Рѕ Р·Р°Р»РёС‚Рѕ/СѓРґР°Р»РµРЅРѕ/РёС‚Рґ</td>
 </tr>
 </table>
 
 <? end_frame(); ?>
 <br />
-<? begin_frame("Модераторы и средства - <font color=#004E98>Видно модераторам.</font>"); ?>
+<? begin_frame("РњРѕРґРµСЂР°С‚РѕСЂС‹ Рё СЃСЂРµРґСЃС‚РІР° - <font color=#004E98>Р’РёРґРЅРѕ РјРѕРґРµСЂР°С‚РѕСЂР°Рј.</font>"); ?>
 
 <br />
 <table width=100% cellspacing=3>
@@ -184,61 +184,61 @@ if (get_user_class() >= UC_MODERATOR) { ?>
 </table>
 <table width=100% cellspacing=10 align=center>
 <tr>
-<td class=embedded><form method=get action=warned.php><input type=submit value="Предупр. юзеры" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=adduser.php><input type=submit value="Добавить юзера" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=makepoll.php><input type=submit value="Создать опрос" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=recover.php><input type=submit value="Востан. юзера" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=uploaders.php><input type=submit value="Аплоадеры" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=warned.php><input type=submit value="РџСЂРµРґСѓРїСЂ. СЋР·РµСЂС‹" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=adduser.php><input type=submit value="Р”РѕР±Р°РІРёС‚СЊ СЋР·РµСЂР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=makepoll.php><input type=submit value="РЎРѕР·РґР°С‚СЊ РѕРїСЂРѕСЃ" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=recover.php><input type=submit value="Р’РѕСЃС‚Р°РЅ. СЋР·РµСЂР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=uploaders.php><input type=submit value="РђРїР»РѕР°РґРµСЂС‹" style='height: 20px; width: 100px'></form></td>
 </tr>
 <tr>
-<td class=embedded><form method=get action=polloverview.php><input type=submit value="Обзор опроса" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=users.php><input type=submit value="Список юзеров" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=tags.php><input type=submit value="Теги" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=smilies.php><input type=submit value="Смайлы" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=polloverview.php><input type=submit value="РћР±Р·РѕСЂ РѕРїСЂРѕСЃР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=users.php><input type=submit value="РЎРїРёСЃРѕРє СЋР·РµСЂРѕРІ" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=tags.php><input type=submit value="РўРµРіРё" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=smilies.php><input type=submit value="РЎРјР°Р№Р»С‹" style='height: 20px; width: 100px'></form></td>
 </tr>
 <tr>
-<td class=embedded><form method=get action=stats.php><input type=submit value="Статистика" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=testip.php><input type=submit value="Проверка IP" style='height: 20px; width: 100px'></form></td>
-<td class=embedded><form method=get action=reports.php><input type=submit value="Жалобы" style='height: 20px; width: 100px' disabled></form></td>
-<td class=embedded><form method=get action=ipcheck.php><input type=submit value="Повторные IP" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=stats.php><input type=submit value="РЎС‚Р°С‚РёСЃС‚РёРєР°" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=testip.php><input type=submit value="РџСЂРѕРІРµСЂРєР° IP" style='height: 20px; width: 100px'></form></td>
+<td class=embedded><form method=get action=reports.php><input type=submit value="Р–Р°Р»РѕР±С‹" style='height: 20px; width: 100px' disabled></form></td>
+<td class=embedded><form method=get action=ipcheck.php><input type=submit value="РџРѕРІС‚РѕСЂРЅС‹Рµ IP" style='height: 20px; width: 100px'></form></td>
 </tr>
 </table>
 <br />
 
 <? end_frame(); ?>
 
-<? begin_frame("Искать пользователя - <font color=#004E98>Видно модераторам.</font>"); ?>
+<? begin_frame("РСЃРєР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ - <font color=#004E98>Р’РёРґРЅРѕ РјРѕРґРµСЂР°С‚РѕСЂР°Рј.</font>"); ?>
 
 
 <table width=100% cellspacing=3>
 <tr>
 <td class=embedded>
 <form method=get action="users.php">
-Поиск: <input type=text size=30 name=search>
+РџРѕРёСЃРє: <input type=text size=30 name=search>
 <select name=class>
-<option value='-'>(Выберите)</option>
-<option value=0>Пользователь</option>
-<option value=1>Опытный пользователь</option>
+<option value='-'>(Р’С‹Р±РµСЂРёС‚Рµ)</option>
+<option value=0>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</option>
+<option value=1>РћРїС‹С‚РЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ</option>
 <option value=2>VIP</option>
-<option value=3>Заливающий</option>
-<option value=4>Модератор</option>
-<option value=5>Администратор</option>
-<option value=6>Владелец</option>
+<option value=3>Р—Р°Р»РёРІР°СЋС‰РёР№</option>
+<option value=4>РњРѕРґРµСЂР°С‚РѕСЂ</option>
+<option value=5>РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ</option>
+<option value=6>Р’Р»Р°РґРµР»РµС†</option>
 </select>
-<input type=submit value='Искать'>
+<input type=submit value='РСЃРєР°С‚СЊ'>
 </form>
 </td>
 </tr>
-<tr><td class=embedded><li><a href="usersearch.php">Административный поиск</li></a></td></tr>
+<tr><td class=embedded><li><a href="usersearch.php">РђРґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№ РїРѕРёСЃРє</li></a></td></tr>
 </table>
 
 <? end_frame(); ?>
 <br />
 <? if ($act == "users") {
-begin_frame("Пользователи с рейтингом ниже 0.20");
+begin_frame("РџРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃ СЂРµР№С‚РёРЅРіРѕРј РЅРёР¶Рµ 0.20");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
-echo "<tr><td class=colhead align=left>Пользователь</td><td class=colhead>Рейтинг</td><td class=colhead>IP</td><td class=colhead>Зарегистрирован</td><td class=colhead>Последний раз был на трекере</td><td class=colhead>Скачал</td><td class=colhead>Раздал</td></tr>";
+echo "<tr><td class=colhead align=left>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>Р РµР№С‚РёРЅРі</td><td class=colhead>IP</td><td class=colhead>Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</td><td class=colhead>РџРѕСЃР»РµРґРЅРёР№ СЂР°Р· Р±С‹Р» РЅР° С‚СЂРµРєРµСЂРµ</td><td class=colhead>РЎРєР°С‡Р°Р»</td><td class=colhead>Р Р°Р·РґР°Р»</td></tr>";
 
 
 $result = sql_query ("SELECT * FROM users WHERE uploaded / downloaded <= 0.20 AND enabled = 'yes' ORDER BY downloaded DESC ");
@@ -251,15 +251,15 @@ echo "<tr><td><a href=userdetails.php?id=".$row["id"]."><b>".$row["username"]."<
 
 
 } while($row = mysql_fetch_array($result));
-} else {print "<tr><td colspan=7>Извините, записей не обнаружено!</td></tr>";}
+} else {print "<tr><td colspan=7>РР·РІРёРЅРёС‚Рµ, Р·Р°РїРёСЃРµР№ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ!</td></tr>";}
 echo "</table>";
 end_frame(); }?>
 
 <? if ($act == "last") {
-begin_frame("Последние пользователи");
+begin_frame("РџРѕСЃР»РµРґРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
-echo "<tr><td class=colhead align=left>Пользователь</td><td class=colhead>Рейтинг</td><td class=colhead>IP</td><td class=colhead>Зарегистрирован</td><td class=colhead>Последний&nbsp;раз&nbsp;был&nbsp;на&nbsp;трекере</td><td class=colhead>Скачал</td><td class=colhead>Раздал</td></tr>";
+echo "<tr><td class=colhead align=left>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>Р РµР№С‚РёРЅРі</td><td class=colhead>IP</td><td class=colhead>Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</td><td class=colhead>РџРѕСЃР»РµРґРЅРёР№&nbsp;СЂР°Р·&nbsp;Р±С‹Р»&nbsp;РЅР°&nbsp;С‚СЂРµРєРµСЂРµ</td><td class=colhead>РЎРєР°С‡Р°Р»</td><td class=colhead>Р Р°Р·РґР°Р»</td></tr>";
 
 $result = sql_query ("SELECT * FROM users WHERE enabled = 'yes' AND status = 'confirmed' ORDER BY added DESC limit 100");
 if ($row = mysql_fetch_array($result)) {
@@ -280,10 +280,10 @@ end_frame(); }?>
 
 
 <? if ($act == "banned") {
-begin_frame("Забаненые пользователи");
+begin_frame("Р—Р°Р±Р°РЅРµРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё");
 
 echo '<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">';
-echo "<tr><td class=colhead align=left>Пользователь</td><td class=colhead>Рейтинг</td><td class=colhead>IP</td><td class=colhead>Зарегистрирован</td><td class=colhead>Последний раз был</td><td class=colhead>Скачал</td><td class=colhead>Раздал</td></tr>";
+echo "<tr><td class=colhead align=left>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</td><td class=colhead>Р РµР№С‚РёРЅРі</td><td class=colhead>IP</td><td class=colhead>Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</td><td class=colhead>РџРѕСЃР»РµРґРЅРёР№ СЂР°Р· Р±С‹Р»</td><td class=colhead>РЎРєР°С‡Р°Р»</td><td class=colhead>Р Р°Р·РґР°Р»</td></tr>";
 $result = sql_query ("SELECT * FROM users WHERE enabled = 'no' ORDER BY last_access DESC ");
 if ($row = mysql_fetch_array($result)) {
 do {
@@ -297,7 +297,7 @@ echo "<tr><td><a href=userdetails.php?id=".$row["id"]."><b>".$row["username"]."<
 
 
 } while($row = mysql_fetch_array($result));
-} else {print "<tr><td colspan=7>Извините, записей не обнаружено!</td></tr>";}
+} else {print "<tr><td colspan=7>РР·РІРёРЅРёС‚Рµ, Р·Р°РїРёСЃРµР№ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ!</td></tr>";}
 echo "</table>";
 end_frame(); } }
 
@@ -323,20 +323,20 @@ $firstline .= "<tr height=15><td class=embedded><a class=altlink href=userdetail
 "<td class=embedded>".$arr['supportfor']."</td></tr>\n";
 }
 
-begin_frame("Первая линия поддержки");
+begin_frame("РџРµСЂРІР°СЏ Р»РёРЅРёСЏ РїРѕРґРґРµСЂР¶РєРё");
 ?>
 
 <table width=100% cellspacing=0>
 <tr>
-<td class=embedded colspan=11>Общие вопросы лучше задавать этим пользователям. Учтите что они добровольцы, тратящие свое время и силы на помощь вам.
-Относитесь к ним подобающе.<br /><br /><br /></td></tr>
+<td class=embedded colspan=11>РћР±С‰РёРµ РІРѕРїСЂРѕСЃС‹ Р»СѓС‡С€Рµ Р·Р°РґР°РІР°С‚СЊ СЌС‚РёРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј. РЈС‡С‚РёС‚Рµ С‡С‚Рѕ РѕРЅРё РґРѕР±СЂРѕРІРѕР»СЊС†С‹, С‚СЂР°С‚СЏС‰РёРµ СЃРІРѕРµ РІСЂРµРјСЏ Рё СЃРёР»С‹ РЅР° РїРѕРјРѕС‰СЊ РІР°Рј.
+РћС‚РЅРѕСЃРёС‚РµСЃСЊ Рє РЅРёРј РїРѕРґРѕР±Р°СЋС‰Рµ.<br /><br /><br /></td></tr>
 <!-- Define table column widths -->
 <tr>
-<td class=embedded width="30"><b>Пользователь&nbsp;</b></td>
-<td class=embedded width="5"><b>Активен&nbsp;</b></td>
-<td class=embedded width="5"><b>Контакт&nbsp;</b></td>
-<td class=embedded width="85"><b>Язык&nbsp;</b></td>
-<td class=embedded width="200"><b>Поддержка для&nbsp;</b></td>
+<td class=embedded width="30"><b>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ&nbsp;</b></td>
+<td class=embedded width="5"><b>РђРєС‚РёРІРµРЅ&nbsp;</b></td>
+<td class=embedded width="5"><b>РљРѕРЅС‚Р°РєС‚&nbsp;</b></td>
+<td class=embedded width="85"><b>РЇР·С‹Рє&nbsp;</b></td>
+<td class=embedded width="200"><b>РџРѕРґРґРµСЂР¶РєР° РґР»СЏ&nbsp;</b></td>
 </tr>
 
 

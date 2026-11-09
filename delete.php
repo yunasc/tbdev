@@ -39,7 +39,7 @@ function bark($msg) {
 }
 
 if (!mkglobal("id"))
-	bark("Нехватает данных");
+	bark("РќРµС…РІР°С‚Р°РµС‚ РґР°РЅРЅС‹С…");
 
 $id = intval($id);
 if (!$id)
@@ -48,51 +48,51 @@ if (!$id)
 $res = sql_query("SELECT name, owner, seeders FROM torrents WHERE id = $id");
 $row = mysql_fetch_array($res);
 if (!$row)
-	stderr($tracker_lang['error'],"Такого торрента не существует.");
+	stderr($tracker_lang['error'],"РўР°РєРѕРіРѕ С‚РѕСЂСЂРµРЅС‚Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.");
 
 if ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)
-	bark("Вы не владелец! Как такое могло произойти?\n");
+	bark("Р’С‹ РЅРµ РІР»Р°РґРµР»РµС†! РљР°Рє С‚Р°РєРѕРµ РјРѕРіР»Рѕ РїСЂРѕРёР·РѕР№С‚Рё?\n");
 
 $rt = intval($_POST["reasontype"]);
 
 if (!is_int($rt) || $rt < 1 || $rt > 5)
-	bark("Неверная причина $rt.");
+	bark("РќРµРІРµСЂРЅР°СЏ РїСЂРёС‡РёРЅР° $rt.");
 
 $r = $_POST["r"];
 $reason = $_POST["reason"];
 
 if ($rt == 1)
-	$reasonstr = "Мертвый: 0 раздающих, 0 качающих = 0 пиров";
+	$reasonstr = "РњРµСЂС‚РІС‹Р№: 0 СЂР°Р·РґР°СЋС‰РёС…, 0 РєР°С‡Р°СЋС‰РёС… = 0 РїРёСЂРѕРІ";
 elseif ($rt == 2)
-	$reasonstr = "Двойник" . ($reason[0] ? (": " . trim($reason[0])) : "!");
+	$reasonstr = "Р”РІРѕР№РЅРёРє" . ($reason[0] ? (": " . trim($reason[0])) : "!");
 elseif ($rt == 3)
 	$reasonstr = "Nuked" . ($reason[1] ? (": " . trim($reason[1])) : "!");
 elseif ($rt == 4)
 {
 	if (!$reason[2])
-		bark("Вы не написали пукт правил, которые этот торрент нарушил.");
-  $reasonstr = "Нарушение правил: " . trim($reason[2]);
+		bark("Р’С‹ РЅРµ РЅР°РїРёСЃР°Р»Рё РїСѓРєС‚ РїСЂР°РІРёР», РєРѕС‚РѕСЂС‹Рµ СЌС‚РѕС‚ С‚РѕСЂСЂРµРЅС‚ РЅР°СЂСѓС€РёР».");
+  $reasonstr = "РќР°СЂСѓС€РµРЅРёРµ РїСЂР°РІРёР»: " . trim($reason[2]);
 }
 else
 {
 	if (!$reason[3])
-		bark("Вы не написали причину, почему удаляете торрент.");
+		bark("Р’С‹ РЅРµ РЅР°РїРёСЃР°Р»Рё РїСЂРёС‡РёРЅСѓ, РїРѕС‡РµРјСѓ СѓРґР°Р»СЏРµС‚Рµ С‚РѕСЂСЂРµРЅС‚.");
   $reasonstr = trim($reason[3]);
 }
 
 deletetorrent($id);
 
-write_log("Торрент $id ($row[name]) был удален пользователем $CURUSER[username] (".htmlspecialchars_uni($reasonstr).")\n","F25B61","torrent");
+write_log("РўРѕСЂСЂРµРЅС‚ $id ($row[name]) Р±С‹Р» СѓРґР°Р»РµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј $CURUSER[username] (".htmlspecialchars_uni($reasonstr).")\n","F25B61","torrent");
 
-stdhead("Торрент удален!");
+stdhead("РўРѕСЂСЂРµРЅС‚ СѓРґР°Р»РµРЅ!");
 
 if (isset($_POST["returnto"]))
-	$ret = "<a href=\"" . htmlspecialchars_uni(safe_local_return($_POST["returnto"])) . "\">Назад</a>";
+	$ret = "<a href=\"" . htmlspecialchars_uni(safe_local_return($_POST["returnto"])) . "\">РќР°Р·Р°Рґ</a>";
 else
-	$ret = "<a href=\"$DEFAULTBASEURL/\">На главную</a>";
+	$ret = "<a href=\"$DEFAULTBASEURL/\">РќР° РіР»Р°РІРЅСѓСЋ</a>";
 
 ?>
-<h2>Торрент удален!</h2>
+<h2>РўРѕСЂСЂРµРЅС‚ СѓРґР°Р»РµРЅ!</h2>
 <p><?= $ret ?></p>
 <?
 

@@ -6,8 +6,8 @@ function iUsers($iname, $ipass, $imail) {
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		list($iclass) = mysql_fetch_row(sql_query('SELECT class FROM users WHERE username = ' . sqlesc($iname)));
 		if (get_user_class() <= $iclass) {
-			stdmsg("Ошибка", "Смена пароля завершилась неудачей! Вы пробовали изменить учетные данные пользователя выше. Действие записано в логахъ.", "error");
-			write_log('Администратор '.$CURUSER['username'].' пробовал изменить учетные данные пользователя '.$iname.' классом выше!', 'red', 'error');
+			stdmsg("РћС€РёР±РєР°", "РЎРјРµРЅР° РїР°СЂРѕР»СЏ Р·Р°РІРµСЂС€РёР»Р°СЃСЊ РЅРµСѓРґР°С‡РµР№! Р’С‹ РїСЂРѕР±РѕРІР°Р»Рё РёР·РјРµРЅРёС‚СЊ СѓС‡РµС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІС‹С€Рµ. Р”РµР№СЃС‚РІРёРµ Р·Р°РїРёСЃР°РЅРѕ РІ Р»РѕРіР°С…СЉ.", "error");
+			write_log('РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ '.$CURUSER['username'].' РїСЂРѕР±РѕРІР°Р» РёР·РјРµРЅРёС‚СЊ СѓС‡РµС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ '.$iname.' РєР»Р°СЃСЃРѕРј РІС‹С€Рµ!', 'red', 'error');
 		} else {
 			$updateset = array();
 			if (!empty($ipass)) {
@@ -21,28 +21,28 @@ function iUsers($iname, $ipass, $imail) {
 			if (count($updateset))
 				$res = sql_query("UPDATE users SET ".implode(", ", $updateset)." WHERE username = ".sqlesc($iname)) or sqlerr(__FILE__,__LINE__);
 			if (mysql_modified_rows() < 1)
-				stdmsg("Ошибка", "Смена пароля завершилась неудачей! Возможно указано несуществующее имя пользователя.", "error");
+				stdmsg("РћС€РёР±РєР°", "РЎРјРµРЅР° РїР°СЂРѕР»СЏ Р·Р°РІРµСЂС€РёР»Р°СЃСЊ РЅРµСѓРґР°С‡РµР№! Р’РѕР·РјРѕР¶РЅРѕ СѓРєР°Р·Р°РЅРѕ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.", "error");
 			else
-				stdmsg("Изменения пользователя прошло успешно", "Имя пользователя: ".$iname.(!empty($hash) ? "<br />Новый пароль: ".$ipass : "").(!empty($imail) ? "<br />Новая почта: ".$imail : ""));
+				stdmsg("РР·РјРµРЅРµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ", "РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: ".$iname.(!empty($hash) ? "<br />РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ: ".$ipass : "").(!empty($imail) ? "<br />РќРѕРІР°СЏ РїРѕС‡С‚Р°: ".$imail : ""));
 		}
 	} else {
 		echo "<form method=\"post\" action=\"".$admin_file.".php?op=iUsers\">"
 			."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 		."<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\">"
-		."<tr><td class=\"colhead\" colspan=\"2\">Смена пароля</td></tr>"
+		."<tr><td class=\"colhead\" colspan=\"2\">РЎРјРµРЅР° РїР°СЂРѕР»СЏ</td></tr>"
 		."<tr>"
-		."<td><b>Пользователь</b></td>"
+		."<td><b>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</b></td>"
 		."<td><input name=\"iname\" type=\"text\"></td>"
 		."</tr>"
 		."<tr>"
-		."<td><b>Новый пароль</b></td>"
+		."<td><b>РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ</b></td>"
 		."<td><input name=\"ipass\" type=\"password\"></td>"
 		."</tr>"
 		."<tr>"
-		."<td><b>Новая почта</b></td>"
+		."<td><b>РќРѕРІР°СЏ РїРѕС‡С‚Р°</b></td>"
 		."<td><input name=\"imail\" type=\"text\"></td>"
 		."</tr>"
-		."<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" name=\"isub\" value=\"Сделать\"></td></tr>"
+		."<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" name=\"isub\" value=\"РЎРґРµР»Р°С‚СЊ\"></td></tr>"
 		."</table>"
 		."<input type=\"hidden\" name=\"op\" value=\"iUsers\" />"
 		."</form>";

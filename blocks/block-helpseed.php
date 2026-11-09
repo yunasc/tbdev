@@ -14,7 +14,7 @@ if (mysql_num_rows($res) > 0) {
 		$torrname = $arr['name'];
 		if (strlen($torrname) > 55)
 		$torrname = substr($torrname, 0, 55) . "...";
-		$content .= "<b><a href=\"details.php?id=".$arr['id']."&hit=1\" alt=\"".$arr['name']."\" title=\"".$arr['name']."\">".$torrname."</a></b><font color=\"#0099FF\"><b> (Раздают: ".number_format($arr['seeders'])." Качают: ".number_format($arr['leechers']).")</b></font><br />\n";
+		$content .= "<b><a href=\"details.php?id=".$arr['id']."&hit=1\" alt=\"".$arr['name']."\" title=\"".$arr['name']."\">".$torrname."</a></b><font color=\"#0099FF\"><b> (Р Р°Р·РґР°СЋС‚: ".number_format($arr['seeders'])." РљР°С‡Р°СЋС‚: ".number_format($arr['leechers']).")</b></font><br />\n";
 	}
 } else
 	$content .= "<b> ".$tracker_lang['no_need_seeding']." </b>\n";

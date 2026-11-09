@@ -37,14 +37,14 @@ function FaqAdmin() {
 
 		foreach ($faq_categ as $id => $temp) {
 		print("<br />\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n");
-		print("<tr><td class=\"colhead\" align=\"center\" colspan=\"2\">Позиция</td><td class=\"colhead\" align=\"left\">Секция/Название</td><td class=\"colhead\" align=\"center\">Статус</td><td class=\"colhead\" align=\"center\">Действие</td></tr>\n");
+		print("<tr><td class=\"colhead\" align=\"center\" colspan=\"2\">РџРѕР·РёС†РёСЏ</td><td class=\"colhead\" align=\"left\">РЎРµРєС†РёСЏ/РќР°Р·РІР°РЅРёРµ</td><td class=\"colhead\" align=\"center\">РЎС‚Р°С‚СѓСЃ</td><td class=\"colhead\" align=\"center\">Р”РµР№СЃС‚РІРёРµ</td></tr>\n");
 
 		print("<tr><td align=\"center\" width=\"40px\"><select name=\"order[". $id ."]\">");
 		for ($n=1; $n <= count($faq_categ); $n++) {
 			$sel = ($n == $faq_categ[$id]["order"]) ? " selected=\"selected\"" : "";
 			print("<option value=\"$n\"". $sel .">". $n ."</option>");
 		}
-		$status = ($faq_categ[$id]["flag"] == "0") ? "<font color=\"red\">Скрыто</font>" : "Обычный";
+		$status = ($faq_categ[$id]["flag"] == "0") ? "<font color=\"red\">РЎРєСЂС‹С‚Рѕ</font>" : "РћР±С‹С‡РЅС‹Р№";
 		print("</select></td><td align=\"center\" width=\"40px\">&nbsp;</td><td><b>". $faq_categ[$id]["title"] ."</b></td><td align=\"center\" width=\"60px\">". $status ."</td><td align=\"center\" width=\"60px\"><a href=\"$admin_file.php?op=FaqAction&action=edit&id=". $id ."\">E</a> / <a href=\"$admin_file.php?op=FaqAction&action=delete&id=". $id ."\">D</a></td></tr>\n");
 
 		if (array_key_exists("items", $faq_categ[$id])) {
@@ -54,15 +54,15 @@ function FaqAdmin() {
 					$sel = ($n == $faq_categ[$id]["items"][$id2][order]) ? " selected=\"selected\"" : "";
 					print("<option value=\"$n\"". $sel .">". $n ."</option>");
 				}
-				if ($faq_categ[$id]["items"][$id2][flag] == "0") $status = "<font color=\"#FF0000\">Скрыто</font>";
+				if ($faq_categ[$id]["items"][$id2][flag] == "0") $status = "<font color=\"#FF0000\">РЎРєСЂС‹С‚Рѕ</font>";
 				elseif ($faq_categ[$id]["items"][$id2][flag] == "2") $status = "<font color=\"#0000FF\"><img src=\"".$rootpath.$pic_base_url."/updated.png\" alt=\"Updated\" align=\"absbottom\"></font>";
-				elseif ($faq_categ[$id]["items"][$id2][flag] == "3") $status = "<font color=\"#008000\"><img src=\"".$rootpath.$pic_base_url."/new.png\" alt=\"Новое\" align=\"absbottom\"></font>";
-				else $status = "Обычный";
+				elseif ($faq_categ[$id]["items"][$id2][flag] == "3") $status = "<font color=\"#008000\"><img src=\"".$rootpath.$pic_base_url."/new.png\" alt=\"РќРѕРІРѕРµ\" align=\"absbottom\"></font>";
+				else $status = "РћР±С‹С‡РЅС‹Р№";
 				print("</select></td><td>". $faq_categ[$id]["items"][$id2]["question"] ."</td><td align=\"center\" width=\"60px\">". $status ."</td><td align=\"center\" width=\"60px\"><a href=\"$admin_file.php?op=FaqAction&action=edit&id=". $id2 ."\">E</a> / <a href=\"$admin_file.php?op=FaqAction&action=delete&id=". $id2 ."\">D</a></td></tr>\n");
 			}
 		}
 
-		print("<tr><td colspan=\"5\" align=\"center\"><a href=\"$admin_file.php?op=FaqAction&action=additem&inid=". $id ."\">Добавить новый элемент</a></td></tr>\n");
+		print("<tr><td colspan=\"5\" align=\"center\"><a href=\"$admin_file.php?op=FaqAction&action=additem&inid=". $id ."\">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚</a></td></tr>\n");
 		print("</table>\n");
 		}
 	}
@@ -70,20 +70,20 @@ function FaqAdmin() {
 	// print the orphaned items table
 	if (isset($faq_orphaned)) {
 		print("<br />\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n");
-		print("<tr><td align=\"center\" colspan=\"3\"><b style=\"color: #FF0000\">Удаленные элементы</b></td>\n");
+		print("<tr><td align=\"center\" colspan=\"3\"><b style=\"color: #FF0000\">РЈРґР°Р»РµРЅРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹</b></td>\n");
 		print("<tr><td class=\"colhead\" align=\"left\">Item Title</td><td class=\"colhead\" align=\"center\">Status</td><td class=\"colhead\" align=\"center\">Actions</td></tr>\n");
 		foreach ($faq_orphaned as $id => $temp) {
-			if ($faq_orphaned[$id]["flag"] == "0") $status = "<font color=\"#FF0000\">Скрыто</font>";
-			elseif ($faq_orphaned[$id]["flag"] == "2") $status = "<font color=\"#0000FF\">Обновлено</font>";
-			elseif ($faq_orphaned[$id]["flag"] == "3") $status = "<font color=\"#008000\">Новое</font>";
-			else $status = "Обычный";
+			if ($faq_orphaned[$id]["flag"] == "0") $status = "<font color=\"#FF0000\">РЎРєСЂС‹С‚Рѕ</font>";
+			elseif ($faq_orphaned[$id]["flag"] == "2") $status = "<font color=\"#0000FF\">РћР±РЅРѕРІР»РµРЅРѕ</font>";
+			elseif ($faq_orphaned[$id]["flag"] == "3") $status = "<font color=\"#008000\">РќРѕРІРѕРµ</font>";
+			else $status = "РћР±С‹С‡РЅС‹Р№";
 			print("<tr><td>". $faq_orphaned[$id]["question"] ."</td><td align=\"center\" width=\"60px\">". $status ."</td><td align=\"center\" width=\"60px\"><a href=\"$admin_file.php?op=FaqAction&action=edit&id=". $id ."\">edit</a> <a href=\"$admin_file.php?op=FaqAction&action=delete&id=". $id ."\">delete</a></td></tr>\n");
 		}
 		print("</table>\n");
 	}
 
-	print("<br />\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\"><a href=\"$admin_file.php?op=FaqAction&action=addsection\">Добавить новую секцию</a></td></tr>\n</table>\n");
-	print("<p align=\"center\"><input type=\"submit\" name=\"reorder\" value=\"Сортировать\" class=\"btn\"></p>\n");
+	print("<br />\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"95%\">\n<tr><td align=\"center\"><a href=\"$admin_file.php?op=FaqAction&action=addsection\">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІСѓСЋ СЃРµРєС†РёСЋ</a></td></tr>\n</table>\n");
+	print("<p align=\"center\"><input type=\"submit\" name=\"reorder\" value=\"РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ\" class=\"btn\"></p>\n");
 	print("</form>\n");
 }
 
@@ -108,9 +108,9 @@ function FaqAction() {
 		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=100%>\n");
 		print("<tr><td>ID:</td><td>$arr[id] <input type=\"hidden\" name=\"id\" value=\"$arr[id]\" /></td></tr>\n");
-		print("<tr><td>Вопрос:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"$arr[question]\" size=50 /></td></tr>\n");
-		print("<tr><td style=\"vertical-align: top;\">Ответ:</td><td><textarea id=specialboxg rows=15 cols=80 name=\"answer\">$arr[answer]</textarea></td></tr>\n");
-		print("<tr><td>Статус:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\"".($arr['flag'] == 0 ? " selected" : "").">Скрыто</option><option value=\"1\" style=\"color: #000000;\"".($arr['flag'] == 1 ? " selected" : "").">Обычный</option><option value=\"2\" style=\"color: #0000FF;\" ".($arr['flag'] == 2 ? "selected" : "").">Обновлено</option><option value=\"3\" style=\"color: #008000;\" ".($arr['flag'] == 3 ? "selected" : "").">Новое</option></select></td></tr>");
+		print("<tr><td>Р’РѕРїСЂРѕСЃ:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"$arr[question]\" size=50 /></td></tr>\n");
+		print("<tr><td style=\"vertical-align: top;\">РћС‚РІРµС‚:</td><td><textarea id=specialboxg rows=15 cols=80 name=\"answer\">$arr[answer]</textarea></td></tr>\n");
+		print("<tr><td>РЎС‚Р°С‚СѓСЃ:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\"".($arr['flag'] == 0 ? " selected" : "").">РЎРєСЂС‹С‚Рѕ</option><option value=\"1\" style=\"color: #000000;\"".($arr['flag'] == 1 ? " selected" : "").">РћР±С‹С‡РЅС‹Р№</option><option value=\"2\" style=\"color: #0000FF;\" ".($arr['flag'] == 2 ? "selected" : "").">РћР±РЅРѕРІР»РµРЅРѕ</option><option value=\"3\" style=\"color: #008000;\" ".($arr['flag'] == 3 ? "selected" : "").">РќРѕРІРѕРµ</option></select></td></tr>");
 
 		print("<tr><td>Category:</td><td><select style=\"width: 300px;\" name=\"categ\" />");
 		$res2 = sql_query("SELECT `id`, `question` FROM `faq` WHERE `type`='categ' ORDER BY `order` ASC");
@@ -119,7 +119,7 @@ function FaqAction() {
 			print("<option value=\"$arr2[id]\"". $selected .">$arr2[question]</option>");
 		}
 		print("</td></tr>\n");
-		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" name=\"edit\" value=\"Отредактировать\" class=\"btn\"></td></tr>\n");
+		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" name=\"edit\" value=\"РћС‚СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ\" class=\"btn\"></td></tr>\n");
 		print("</table>");
 	}
 	elseif ($arr[type] == "categ") {
@@ -127,12 +127,12 @@ function FaqAction() {
 		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" width=100% align=\"center\">\n");
 		print("<tr><td>ID:</td><td>$arr[id] <input type=\"hidden\" name=\"id\" value=\"$arr[id]\" /></td></tr>\n");
-		print("<tr><td>Название:</td><td><input style=\"width: 300px;\" type=\"text\" name=\"title\" value=\"$arr[question]\" id=specialboxn /></td></tr>\n");
+		print("<tr><td>РќР°Р·РІР°РЅРёРµ:</td><td><input style=\"width: 300px;\" type=\"text\" name=\"title\" value=\"$arr[question]\" id=specialboxn /></td></tr>\n");
 		if ($arr[flag] == "0")
-			print("<tr><td>Статус:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">Скрыто</option><option value=\"1\" style=\"color: #000000;\">Обычный</option></select></td></tr>");
+			print("<tr><td>РЎС‚Р°С‚СѓСЃ:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">РЎРєСЂС‹С‚Рѕ</option><option value=\"1\" style=\"color: #000000;\">РћР±С‹С‡РЅС‹Р№</option></select></td></tr>");
 		else
-			print("<tr><td>Статус:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\"".($arr['flag'] == 0 ? " selected" : "").">Скрыто</option><option value=\"1\" style=\"color: #000000;\"".($arr['flag'] == 1 ? " selected" : "").">Обычный</option></select></td></tr>");
-		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" class=btn name=\"edit\" value=\"Отредактировать\"></td></tr>\n");
+			print("<tr><td>РЎС‚Р°С‚СѓСЃ:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\"".($arr['flag'] == 0 ? " selected" : "").">РЎРєСЂС‹С‚Рѕ</option><option value=\"1\" style=\"color: #000000;\"".($arr['flag'] == 1 ? " selected" : "").">РћР±С‹С‡РЅС‹Р№</option></select></td></tr>");
+		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" class=btn name=\"edit\" value=\"РћС‚СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ\"></td></tr>\n");
 		print("</table>");
 	}
 	}
@@ -172,17 +172,17 @@ function FaqAction() {
 		print("<form method=\"post\" action=\"$admin_file.php?op=FaqAction&action=addnewitem\">");
 		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"100%\">\n");
-		print("<tr><td>Вопрос:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"\" /></td></tr>\n");
-		print("<tr><td style=\"vertical-align: top;\">Ответ:</td><td><textarea id=specialboxg rows=15 cols=80 name=\"answer\"></textarea></td></tr>\n");
-		print("<tr><td>Статус:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">Скрыто</option><option value=\"1\" style=\"color: #000000;\">Обычный</option><option value=\"2\" style=\"color: #0000FF;\">Обновлено</option><option value=\"3\" style=\"color: #008000;\">Новое</option></select></td></tr>");
-		print("<tr><td>Категория:</td><td><select style=\"width: 300px;\" name=\"categ\" />");
+		print("<tr><td>Р’РѕРїСЂРѕСЃ:</td><td><input id=specialboxg type=\"text\" name=\"question\" value=\"\" /></td></tr>\n");
+		print("<tr><td style=\"vertical-align: top;\">РћС‚РІРµС‚:</td><td><textarea id=specialboxg rows=15 cols=80 name=\"answer\"></textarea></td></tr>\n");
+		print("<tr><td>РЎС‚Р°С‚СѓСЃ:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">РЎРєСЂС‹С‚Рѕ</option><option value=\"1\" style=\"color: #000000;\">РћР±С‹С‡РЅС‹Р№</option><option value=\"2\" style=\"color: #0000FF;\">РћР±РЅРѕРІР»РµРЅРѕ</option><option value=\"3\" style=\"color: #008000;\">РќРѕРІРѕРµ</option></select></td></tr>");
+		print("<tr><td>РљР°С‚РµРіРѕСЂРёСЏ:</td><td><select style=\"width: 300px;\" name=\"categ\" />");
 		$res = sql_query("SELECT `id`, `question` FROM `faq` WHERE `type`='categ' ORDER BY `order` ASC");
 		while ($arr = mysql_fetch_array($res, MYSQL_BOTH)) {
 			$selected = ($arr["id"] == $_GET["inid"]) ? " selected=\"selected\"" : "";
 			print("<option value=\"{$arr["id"]}\"". $selected .">{$arr["question"]}</option>");
 		}
 		print("</td></tr>\n");
-		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" class=\"btn\" name=\"edit\" value=\"Добавить\"></td></tr>\n");
+		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" class=\"btn\" name=\"edit\" value=\"Р”РѕР±Р°РІРёС‚СЊ\"></td></tr>\n");
 		print("</table>");
 	}
 
@@ -193,7 +193,7 @@ function FaqAction() {
 		print("<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">");
 		print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" align=\"center\" width=\"100%\">\n");
 		print("<tr><td>Title:</td><td><input style=\"width: 600px;\" type=\"text\" name=\"title\" value=\"\" id=specialboxn /></td></tr>\n");
-		print("<tr><td>Status:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">Скрыто</option><option value=\"1\" style=\"color: #000000;\">Обычный</option></select></td></tr>");
+		print("<tr><td>Status:</td><td><select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #FF0000;\">РЎРєСЂС‹С‚Рѕ</option><option value=\"1\" style=\"color: #000000;\">РћР±С‹С‡РЅС‹Р№</option></select></td></tr>");
 		print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" name=\"edit\" value=\"Add\" class=\"btn\" style=\"width: 60px;\"></td></tr>\n");
 		print("</table>");
 	}

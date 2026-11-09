@@ -14,42 +14,42 @@ function ($el) {
 }, $existing_modules));
 
 $allowed_modules = array_merge($allowed_modules, array(
-	"admincp" => "Админка",
-	"browse" => "Обзор",
-	"forums" => "Форум",
-	"staff" => "Персонал",
-	"upload" => "Загрузить",
-	"details" => "Детали",
-	"my" => "Панель управ.",
-	"userdetails" => "Профиль",
-	"viewrequests" => "Запросы",
-	"viewoffers" => "Предложения",
-	"log" => "Журнал",
-	"faq" => "ЧаВо",
-	"rules" => "Правила",
-	"message" => "Личка",
-	"recover" => "Восстан. пароля",
-	"signup" => "Регистрация",
-	"login" => "Вход",
-	"mybonus" => "Мой Бонус",
-	"invite" => "Приглашения",
-	"bookmarks" => "Закладки",
+	"admincp" => "РђРґРјРёРЅРєР°",
+	"browse" => "РћР±Р·РѕСЂ",
+	"forums" => "Р¤РѕСЂСѓРј",
+	"staff" => "РџРµСЂСЃРѕРЅР°Р»",
+	"upload" => "Р—Р°РіСЂСѓР·РёС‚СЊ",
+	"details" => "Р”РµС‚Р°Р»Рё",
+	"my" => "РџР°РЅРµР»СЊ СѓРїСЂР°РІ.",
+	"userdetails" => "РџСЂРѕС„РёР»СЊ",
+	"viewrequests" => "Р—Р°РїСЂРѕСЃС‹",
+	"viewoffers" => "РџСЂРµРґР»РѕР¶РµРЅРёСЏ",
+	"log" => "Р–СѓСЂРЅР°Р»",
+	"faq" => "Р§Р°Р’Рѕ",
+	"rules" => "РџСЂР°РІРёР»Р°",
+	"message" => "Р›РёС‡РєР°",
+	"recover" => "Р’РѕСЃСЃС‚Р°РЅ. РїР°СЂРѕР»СЏ",
+	"signup" => "Р РµРіРёСЃС‚СЂР°С†РёСЏ",
+	"login" => "Р’С…РѕРґ",
+	"mybonus" => "РњРѕР№ Р‘РѕРЅСѓСЃ",
+	"invite" => "РџСЂРёРіР»Р°С€РµРЅРёСЏ",
+	"bookmarks" => "Р—Р°РєР»Р°РґРєРё",
 ));
 
 function BlocksNavi() {
 	global $admin_file;
-	echo "<h2>Управление блоками</h2><br />"
-	."[ <a href=\"".$admin_file.".php?op=BlocksAdmin\">Главная</a>"
-	." | <a href=\"".$admin_file.".php?op=BlocksNew\">Добавить новый блок</a>"
-	." | <a href=\"".$admin_file.".php?op=BlocksFile\">Добавить новый файловый блок</a>"
-	." | <a href=\"".$admin_file.".php?op=BlocksFileEdit\">Редактировать блок</a> ]";
+	echo "<h2>РЈРїСЂР°РІР»РµРЅРёРµ Р±Р»РѕРєР°РјРё</h2><br />"
+	."[ <a href=\"".$admin_file.".php?op=BlocksAdmin\">Р“Р»Р°РІРЅР°СЏ</a>"
+	." | <a href=\"".$admin_file.".php?op=BlocksNew\">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ Р±Р»РѕРє</a>"
+	." | <a href=\"".$admin_file.".php?op=BlocksFile\">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ С„Р°Р№Р»РѕРІС‹Р№ Р±Р»РѕРє</a>"
+	." | <a href=\"".$admin_file.".php?op=BlocksFileEdit\">Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р±Р»РѕРє</a> ]";
 }
 
 function BlocksAdmin() {
 	global $admin_file, $prefix;
 	BlocksNavi();
 	echo "<p /><table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\"><tr align=\"center\">"
-	."<td class=\"colhead\">№</td><td class=\"colhead\">Заголовок</td><td class=\"colhead\">Позиция</td><td colspan=\"2\" class=\"colhead\">Положение</td><td class=\"colhead\">Тип</td><td class=\"colhead\">Статус</td><td class=\"colhead\">Кто видит</td><td class=\"colhead\">Функции</td></tr>";
+	."<td class=\"colhead\">в„–</td><td class=\"colhead\">Р—Р°РіРѕР»РѕРІРѕРє</td><td class=\"colhead\">РџРѕР·РёС†РёСЏ</td><td colspan=\"2\" class=\"colhead\">РџРѕР»РѕР¶РµРЅРёРµ</td><td class=\"colhead\">РўРёРї</td><td class=\"colhead\">РЎС‚Р°С‚СѓСЃ</td><td class=\"colhead\">РљС‚Рѕ РІРёРґРёС‚</td><td class=\"colhead\">Р¤СѓРЅРєС†РёРё</td></tr>";
 
 	$result = sql_query("SELECT a.bid, a.bkey, a.title, a.bposition, a.weight, a.active, a.blockfile, a.view, a.expire, a.action, b.bid, b.bposition, b.weight, c.bid, c.bposition, c.weight FROM ".$prefix."_blocks AS a LEFT JOIN ".$prefix."_blocks AS b ON (b.bposition = a.bposition AND b.weight = a.weight-1) LEFT JOIN ".$prefix."_blocks AS c ON (c.bposition = a.bposition AND c.weight = a.weight+1) ORDER BY a.bposition, a.weight") or sqlerr(__FILE__,__LINE__);
 	while (list($bid, $bkey, $title, $bposition, $weight, $active, $blockfile, $view, $expire, $action, $con1, $bposition1, $weight1, $con2, $bposition2, $weight2) = mysql_fetch_row($result)) {
@@ -64,69 +64,69 @@ function BlocksAdmin() {
 		$weight_plus = $weight + 1;
 		echo "<tr><td align=\"center\">$bid</td><td>$title</td>";
 		if ($bposition == "l") {
-			$bposition = "<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Левый блок\" title=\"Левый блок\"> Слева";
+			$bposition = "<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Р›РµРІС‹Р№ Р±Р»РѕРє\" title=\"Р›РµРІС‹Р№ Р±Р»РѕРє\"> РЎР»РµРІР°";
 		} elseif ($bposition == "r") {
-			$bposition = "Справа <img src=\"admin/pic/right.gif\" border=\"0\" alt=\"Правый блок\" title=\"Правый блок\">";
+			$bposition = "РЎРїСЂР°РІР° <img src=\"admin/pic/right.gif\" border=\"0\" alt=\"РџСЂР°РІС‹Р№ Р±Р»РѕРє\" title=\"РџСЂР°РІС‹Р№ Р±Р»РѕРє\">";
 		} elseif ($bposition == "c") {
-			$bposition = "<img src=\"admin/pic/right.gif\" border=\"0\" alt=\"Центральный блок\" title=\"Центральный блок\">&nbsp;По центру вверху&nbsp;<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Центральный блок\" title=\"Центральный блок\">";
+			$bposition = "<img src=\"admin/pic/right.gif\" border=\"0\" alt=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\" title=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\">&nbsp;РџРѕ С†РµРЅС‚СЂСѓ РІРІРµСЂС…Сѓ&nbsp;<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\" title=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\">";
 		} elseif ($bposition == "d") {
-			$bposition = "<img src=\"admin/pic/right.gif\" border=\"0\" alt=\"Центральный блок\" title=\"Центральный блок\">&nbsp;По центру внизу&nbsp;<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Центральный блок\" title=\"Центральный блок\">";
+			$bposition = "<img src=\"admin/pic/right.gif\" border=\"0\" alt=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\" title=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\">&nbsp;РџРѕ С†РµРЅС‚СЂСѓ РІРЅРёР·Сѓ&nbsp;<img src=\"admin/pic/left.gif\" border=\"0\" alt=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\" title=\"Р¦РµРЅС‚СЂР°Р»СЊРЅС‹Р№ Р±Р»РѕРє\">";
 		} elseif ($bposition == "b") {
-			$bposition = "<img src=\"admin/pic/up.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">&nbsp;Верхний баннер&nbsp;<img src=\"admin/pic/up.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">";
+			$bposition = "<img src=\"admin/pic/up.gif\" border=\"0\" alt=\"Р‘Р°РЅРЅРµСЂ\" title=\"Р‘Р°РЅРЅРµСЂ\">&nbsp;Р’РµСЂС…РЅРёР№ Р±Р°РЅРЅРµСЂ&nbsp;<img src=\"admin/pic/up.gif\" border=\"0\" alt=\"Р‘Р°РЅРЅРµСЂ\" title=\"Р‘Р°РЅРЅРµСЂ\">";
 		} elseif ($bposition == "f") {
-			$bposition = "<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">&nbsp;Нижний баннер&nbsp;<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Баннер\" title=\"Баннер\">";
+			$bposition = "<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Р‘Р°РЅРЅРµСЂ\" title=\"Р‘Р°РЅРЅРµСЂ\">&nbsp;РќРёР¶РЅРёР№ Р±Р°РЅРЅРµСЂ&nbsp;<img src=\"admin/pic/down.gif\" border=\"0\" alt=\"Р‘Р°РЅРЅРµСЂ\" title=\"Р‘Р°РЅРЅРµСЂ\">";
 		}
 		echo "<td align=\"center\"><nobr>$bposition</nobr></td><td align=\"center\">$weight</td><td align=\"center\">";
-		if ($con1) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_minus, 'bidrep' => $con1), "<img src=\"admin/pic/up.gif\" alt=\"Переместить вверх\" title=\"Переместить вверх\" border=\"0\">")." ";
-		if ($con2) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_plus, 'bidrep' => $con2), "<img src=\"admin/pic/down.gif\" alt=\"Переместить вниз\" title=\"Переместить вниз\" border=\"0\">")."";
+		if ($con1) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_minus, 'bidrep' => $con1), "<img src=\"admin/pic/up.gif\" alt=\"РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРІРµСЂС…\" title=\"РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРІРµСЂС…\" border=\"0\">")." ";
+		if ($con2) echo "".post_link($admin_file.".php", array('op' => 'BlocksOrder', 'weight' => $weight, 'bidori' => $bid, 'weightrep' => $weight_plus, 'bidrep' => $con2), "<img src=\"admin/pic/down.gif\" alt=\"РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРЅРёР·\" title=\"РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРЅРёР·\" border=\"0\">")."";
 		echo"</td>";
 		if ($bkey == "") {
 			$type = "HTML";
-			if ($blockfile != "") $type = "Файл";
+			if ($blockfile != "") $type = "Р¤Р°Р№Р»";
 		} elseif ($bkey != "") {
-			$type = "Системный";
+			$type = "РЎРёСЃС‚РµРјРЅС‹Р№";
 		}
 		echo "<td align=\"center\">$type</td>";
 		$block_act = $active;
 		if ($active == 1) {
-			$active = "<font color=\"#009900\">Вкл.</font>";
-			$change = "<img src=\"admin/pic/inactive.gif\" border=\"0\" alt=\"Выкл.\" title=\"Выкл.\">";
+			$active = "<font color=\"#009900\">Р’РєР».</font>";
+			$change = "<img src=\"admin/pic/inactive.gif\" border=\"0\" alt=\"Р’С‹РєР».\" title=\"Р’С‹РєР».\">";
 		} elseif ($active == 0) {
-			$active = "<font color=\"#FF0000\">Выкл.</font>";
-			$change = "<img src=\"admin/pic/activate.gif\" border=\"0\" alt=\"Вкл.\" title=\"Вкл.\">";
+			$active = "<font color=\"#FF0000\">Р’С‹РєР».</font>";
+			$change = "<img src=\"admin/pic/activate.gif\" border=\"0\" alt=\"Р’РєР».\" title=\"Р’РєР».\">";
 		}
 		echo "<td align=\"center\">$active</td>";
 		if ($view == 0) {
-			$who_view = "Все посетители";
+			$who_view = "Р’СЃРµ РїРѕСЃРµС‚РёС‚РµР»Рё";
 		} elseif ($view == 1) {
-			$who_view = "Только пользователи";
+			$who_view = "РўРѕР»СЊРєРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё";
 		} elseif ($view == 2) {
-			$who_view = "Только администраторы";
+			$who_view = "РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹";
 		} elseif ($view == 3) {
-			$who_view = "Только анонимы";
+			$who_view = "РўРѕР»СЊРєРѕ Р°РЅРѕРЅРёРјС‹";
 		}
 		echo "<td align=\"center\"><nobr>$who_view</nobr></td>";
-		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Редактировать\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Редактировать\"></a> ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), $change);
-		if ($bkey == "") echo " ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "<img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"Удалить\">", "Удалить \"$title\"?")."";
-		if ($block_act == 0) echo " <a href=\"".$admin_file.".php?op=BlocksShow&bid=$bid\" title=\"Показать\"><img src=\"admin/pic/show.gif\" border=\"0\" alt=\"Показать\"></a>";
+		echo "<td align=\"center\"><a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\" title=\"Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ\"><img src=\"admin/pic/edit.gif\" border=\"0\" alt=\"Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ\"></a> ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), $change);
+		if ($bkey == "") echo " ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "<img src=\"admin/pic/delete.gif\" border=\"0\" alt=\"РЈРґР°Р»РёС‚СЊ\">", "РЈРґР°Р»РёС‚СЊ \"$title\"?")."";
+		if ($block_act == 0) echo " <a href=\"".$admin_file.".php?op=BlocksShow&bid=$bid\" title=\"РџРѕРєР°Р·Р°С‚СЊ\"><img src=\"admin/pic/show.gif\" border=\"0\" alt=\"РџРѕРєР°Р·Р°С‚СЊ\"></a>";
 	}
 	if (mysql_num_rows($result) == 0)
-		echo "<tr><td colspan=\"9\">Нет блоков.";
-	echo "</td></tr></table><center>[ ".post_link($admin_file.".php", array('op' => 'BlocksFixweight'), "Зафиксировать позицию и положение блоков")." ]</center>";
+		echo "<tr><td colspan=\"9\">РќРµС‚ Р±Р»РѕРєРѕРІ.";
+	echo "</td></tr></table><center>[ ".post_link($admin_file.".php", array('op' => 'BlocksFixweight'), "Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РїРѕР·РёС†РёСЋ Рё РїРѕР»РѕР¶РµРЅРёРµ Р±Р»РѕРєРѕРІ")." ]</center>";
 
 }
 
 function BlocksNew() {
 	global $prefix, $admin_file;
 	BlocksNavi();
-	echo "<h2>Добавить новый блок</h2>"
+	echo "<h2>Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ Р±Р»РѕРє</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
-	."<tr><td>Заголовок:</td><td><input type=\"text\" name=\"title\" size=\"65\" style=\"width:400px\" maxlength=\"60\"></td></tr>"
-	."<tr><td>Имя файла:</td><td>"
+	."<tr><td>Р—Р°РіРѕР»РѕРІРѕРє:</td><td><input type=\"text\" name=\"title\" size=\"65\" style=\"width:400px\" maxlength=\"60\"></td></tr>"
+	."<tr><td>РРјСЏ С„Р°Р№Р»Р°:</td><td>"
 	."<select name=\"blockfile\" style=\"width:400px\">"
-	."<option name=\"blockfile\" value=\"\" selected>Нет</option>";
+	."<option name=\"blockfile\" value=\"\" selected>РќРµС‚</option>";
 	$handle = opendir("blocks");
 	while ($file = readdir($handle)) {
 		if (preg_match("/^block\-(.+)\.php/", $file, $matches)) {
@@ -136,17 +136,17 @@ function BlocksNew() {
 	}
 	closedir($handle);
 	echo "</select></td></tr>"
-	."<tr><td>Содержание:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\"></textarea></td></tr>"
-	."<tr><td>Позиция:</td><td><select name=\"bposition\" style=\"width:400px\">"
-	."<option name=\"bposition\" value=\"l\">Слева</option>"
-	."<option name=\"bposition\" value=\"c\">По центру вверху</option>"
-	."<option name=\"bposition\" value=\"d\">По центру внизу</option>"
-	."<option name=\"bposition\" value=\"r\">Справа</option>"
-	."<option name=\"bposition\" value=\"b\">Верхний баннер</option>"
-	."<option name=\"bposition\" value=\"f\">Нижний баннер</option>"
+	."<tr><td>РЎРѕРґРµСЂР¶Р°РЅРёРµ:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\"></textarea></td></tr>"
+	."<tr><td>РџРѕР·РёС†РёСЏ:</td><td><select name=\"bposition\" style=\"width:400px\">"
+	."<option name=\"bposition\" value=\"l\">РЎР»РµРІР°</option>"
+	."<option name=\"bposition\" value=\"c\">РџРѕ С†РµРЅС‚СЂСѓ РІРІРµСЂС…Сѓ</option>"
+	."<option name=\"bposition\" value=\"d\">РџРѕ С†РµРЅС‚СЂСѓ РІРЅРёР·Сѓ</option>"
+	."<option name=\"bposition\" value=\"r\">РЎРїСЂР°РІР°</option>"
+	."<option name=\"bposition\" value=\"b\">Р’РµСЂС…РЅРёР№ Р±Р°РЅРЅРµСЂ</option>"
+	."<option name=\"bposition\" value=\"f\">РќРёР¶РЅРёР№ Р±Р°РЅРЅРµСЂ</option>"
 	."</select></td></tr>";
-	echo "<tr><td>Отображать блок в модулях:</td><td align=\"center\"><table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\" style=\"width:400px\"><tr>";
-	echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"ihome\"></td><td>Главная</td>";
+	echo "<tr><td>РћС‚РѕР±СЂР°Р¶Р°С‚СЊ Р±Р»РѕРє РІ РјРѕРґСѓР»СЏС…:</td><td align=\"center\"><table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\" style=\"width:400px\"><tr>";
+	echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"ihome\"></td><td>Р“Р»Р°РІРЅР°СЏ</td>";
 	global $allowed_modules;
 	$a = 1;
 	foreach ($allowed_modules as $name => $title) {
@@ -160,33 +160,33 @@ function BlocksNew() {
 			$a++;
 		}
 	}
-	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"></td><td><b>Во всех модулях</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"></td><td><b>Только на главной</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"></td><td><b>Свободный блок</b></td></tr></table></td></tr>";
-	echo "<tr><td>Скрывать?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" checked>Да &nbsp;&nbsp; <input type=\"radio\" name=\"hide\" value=\"no\">Нет</td></tr>";
-	echo "<tr><td>Включить?</td><td><input type=\"radio\" name=\"active\" value=\"1\" checked>Да &nbsp;&nbsp; <input type=\"radio\" name=\"active\" value=\"0\">Нет</td></tr>"
-	."<tr><td>Время работы, в днях:</td><td><input type=\"text\" name=\"expire\" maxlength=\"3\" value=\"0\" size=\"65\" style=\"width:400px\"></td></tr>"
-	."<tr><td>После истечения:</td><td><select name=\"action\" style=\"width:400px\">"
-	."<option name=\"action\" value=\"d\">Выкл.</option>"
-	."<option name=\"action\" value=\"r\">Удалить</option></select></td></tr>"
-	."<tr><td>Кто это будет видеть?</td><td><select name=\"view\" style=\"width:400px\">"
-	."<option value=\"0\" >Все посетители</option>"
-	."<option value=\"1\" >Только пользователи</option>"
-	."<option value=\"2\" >Только администраторы</option>"
-	."<option value=\"3\" >Только анонимы</option>"
+	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"></td><td><b>Р’Рѕ РІСЃРµС… РјРѕРґСѓР»СЏС…</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"></td><td><b>РўРѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"></td><td><b>РЎРІРѕР±РѕРґРЅС‹Р№ Р±Р»РѕРє</b></td></tr></table></td></tr>";
+	echo "<tr><td>РЎРєСЂС‹РІР°С‚СЊ?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" checked>Р”Р° &nbsp;&nbsp; <input type=\"radio\" name=\"hide\" value=\"no\">РќРµС‚</td></tr>";
+	echo "<tr><td>Р’РєР»СЋС‡РёС‚СЊ?</td><td><input type=\"radio\" name=\"active\" value=\"1\" checked>Р”Р° &nbsp;&nbsp; <input type=\"radio\" name=\"active\" value=\"0\">РќРµС‚</td></tr>"
+	."<tr><td>Р’СЂРµРјСЏ СЂР°Р±РѕС‚С‹, РІ РґРЅСЏС…:</td><td><input type=\"text\" name=\"expire\" maxlength=\"3\" value=\"0\" size=\"65\" style=\"width:400px\"></td></tr>"
+	."<tr><td>РџРѕСЃР»Рµ РёСЃС‚РµС‡РµРЅРёСЏ:</td><td><select name=\"action\" style=\"width:400px\">"
+	."<option name=\"action\" value=\"d\">Р’С‹РєР».</option>"
+	."<option name=\"action\" value=\"r\">РЈРґР°Р»РёС‚СЊ</option></select></td></tr>"
+	."<tr><td>РљС‚Рѕ СЌС‚Рѕ Р±СѓРґРµС‚ РІРёРґРµС‚СЊ?</td><td><select name=\"view\" style=\"width:400px\">"
+	."<option value=\"0\" >Р’СЃРµ РїРѕСЃРµС‚РёС‚РµР»Рё</option>"
+	."<option value=\"1\" >РўРѕР»СЊРєРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</option>"
+	."<option value=\"2\" >РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹</option>"
+	."<option value=\"3\" >РўРѕР»СЊРєРѕ Р°РЅРѕРЅРёРјС‹</option>"
 	."</select></td></tr>"
-	."<tr><td colspan=\"2\" align=\"center\"><br /><input type=\"hidden\" name=\"op\" value=\"BlocksAdd\"><input type=\"submit\" value=\"Создать блок\"></td></tr></table></form>";
+	."<tr><td colspan=\"2\" align=\"center\"><br /><input type=\"hidden\" name=\"op\" value=\"BlocksAdd\"><input type=\"submit\" value=\"РЎРѕР·РґР°С‚СЊ Р±Р»РѕРє\"></td></tr></table></form>";
 }
 
 function BlocksFile() {
 	global $admin_file;
 	BlocksNavi();
-	echo "<h2>Добавить новый файловый блок</h2>"
+	echo "<h2>Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ С„Р°Р№Р»РѕРІС‹Р№ Р±Р»РѕРє</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
-	."<tr><td>Имя файла:</td><td><input type=\"text\" name=\"bf\" size=\"65\" style=\"width:400px\" maxlength=\"200\">"
-	."<tr><td>Тип:</td><td><input type=\"radio\" name=\"flag\" value=\"php\" checked>PHP &nbsp;&nbsp; <input type=\"radio\" name=\"flag\" value=\"html\">HTML</td></tr>"
+	."<tr><td>РРјСЏ С„Р°Р№Р»Р°:</td><td><input type=\"text\" name=\"bf\" size=\"65\" style=\"width:400px\" maxlength=\"200\">"
+	."<tr><td>РўРёРї:</td><td><input type=\"radio\" name=\"flag\" value=\"php\" checked>PHP &nbsp;&nbsp; <input type=\"radio\" name=\"flag\" value=\"html\">HTML</td></tr>"
 	."<tr><td colspan=\"2\" align=\"center\"><br /><input type=\"hidden\" name=\"op\" value=\"BlocksbfEdit\">"
-	."<input type=\"submit\" value=\"Создать блок\"></td></tr></table></form>";
+	."<input type=\"submit\" value=\"РЎРѕР·РґР°С‚СЊ Р±Р»РѕРє\"></td></tr></table></form>";
 }
 
 function BlocksOrder($weightrep,$weight,$bidrep,$bidori) {
@@ -242,7 +242,7 @@ function BlocksAdd($title, $content, $bposition, $active, $hide, $blockfile, $vi
 	}
 
 	if (($content == "") && ($blockfile == "")) {
-		stdmsg("Ошибка", "Блок не может быть пустым!", 'error');
+		stdmsg("РћС€РёР±РєР°", "Р‘Р»РѕРє РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!", 'error');
 	} else {
 		if ($expire == "" || $expire == 0) {
 			$expire = 0;
@@ -271,17 +271,17 @@ function BlocksEdit($bid) {
 	$bid = intval($bid);
 	list($bkey, $title, $content, $bposition, $weight, $active, $hide, $blockfile, $view, $expire, $action, $which) = mysql_fetch_row(sql_query("SELECT bkey, title, content, bposition, weight, active, allow_hide, blockfile, view, expire, action, which FROM ".$prefix."_blocks WHERE bid='$bid'"));
 	if ($blockfile != "") {
-		$type = "(Файловый блок)";
+		$type = "(Р¤Р°Р№Р»РѕРІС‹Р№ Р±Р»РѕРє)";
 	} else {
-		$type = "(HTML блок)";
+		$type = "(HTML Р±Р»РѕРє)";
 	}
-	echo "<h2>Блок: $title $type</h2>"
+	echo "<h2>Р‘Р»РѕРє: $title $type</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
-	."<tr><td>Заголовок:</td><td><input type=\"text\" name=\"title\" maxlength=\"50\" size=\"65\" style=\"width:400px\" value=\"$title\"></td></tr>";
+	."<tr><td>Р—Р°РіРѕР»РѕРІРѕРє:</td><td><input type=\"text\" name=\"title\" maxlength=\"50\" size=\"65\" style=\"width:400px\" value=\"$title\"></td></tr>";
 	if ($blockfile != "") {
-		echo "<tr><td>Имя файла:</td><td><select name=\"blockfile\" style=\"width:400px\">";
+		echo "<tr><td>РРјСЏ С„Р°Р№Р»Р°:</td><td><select name=\"blockfile\" style=\"width:400px\">";
 		$dir = opendir("blocks");
 		while ($file = readdir($dir)) {
 			if (preg_match("/^block\-(.+)\.php/", $file, $matches)) {
@@ -292,7 +292,7 @@ function BlocksEdit($bid) {
 		}
 		closedir($dir);
 	} else {
-		echo "<tr><td>Содержание:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\">".htmlspecialchars_uni($content)."</textarea></td></tr>";
+		echo "<tr><td>РЎРѕРґРµСЂР¶Р°РЅРёРµ:</td><td><textarea name=\"content\" cols=\"65\" rows=\"15\" style=\"width:400px\">".htmlspecialchars_uni($content)."</textarea></td></tr>";
 	}
 	$oldposition = $bposition;
 	echo "<input type=\"hidden\" name=\"oldposition\" value=\"$oldposition\">";
@@ -302,18 +302,18 @@ function BlocksEdit($bid) {
 	$sel4 = ($bposition == "d") ? "selected" : "";
 	$sel5 = ($bposition == "b") ? "selected" : "";
 	$sel6 = ($bposition == "f") ? "selected" : "";
-	echo "<tr><td>Позиция:</td><td><select name=\"bposition\" style=\"width:400px\">"
-	."<option name=\"bposition\" value=\"l\" $sel1>Слева</option>"
-	."<option name=\"bposition\" value=\"c\" $sel2>По центру вверху</option>"
-	."<option name=\"bposition\" value=\"d\" $sel4>По центру внизу</option>"
-	."<option name=\"bposition\" value=\"r\" $sel3>Справа</option>"
-	."<option name=\"bposition\" value=\"b\" $sel5>Верхний баннер</option>"
-	."<option name=\"bposition\" value=\"f\" $sel6>Нижний баннер</option>"
+	echo "<tr><td>РџРѕР·РёС†РёСЏ:</td><td><select name=\"bposition\" style=\"width:400px\">"
+	."<option name=\"bposition\" value=\"l\" $sel1>РЎР»РµРІР°</option>"
+	."<option name=\"bposition\" value=\"c\" $sel2>РџРѕ С†РµРЅС‚СЂСѓ РІРІРµСЂС…Сѓ</option>"
+	."<option name=\"bposition\" value=\"d\" $sel4>РџРѕ С†РµРЅС‚СЂСѓ РІРЅРёР·Сѓ</option>"
+	."<option name=\"bposition\" value=\"r\" $sel3>РЎРїСЂР°РІР°</option>"
+	."<option name=\"bposition\" value=\"b\" $sel5>Р’РµСЂС…РЅРёР№ Р±Р°РЅРЅРµСЂ</option>"
+	."<option name=\"bposition\" value=\"f\" $sel6>РќРёР¶РЅРёР№ Р±Р°РЅРЅРµСЂ</option>"
 	."</select></td></tr>";
-	echo "<tr><td>Отображать блок в модулях:</td><td align=\"center\"><table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\" style=\"width:400px\"><tr>";
+	echo "<tr><td>РћС‚РѕР±СЂР°Р¶Р°С‚СЊ Р±Р»РѕРє РІ РјРѕРґСѓР»СЏС…:</td><td align=\"center\"><table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\" style=\"width:400px\"><tr>";
 	$where_mas = explode(",", $which);
 	$cel = ($where_mas[0] == "ihome") ? " checked" : "";
-	echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"ihome\"$cel></td><td>Главная</td>";
+	echo "<td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"ihome\"$cel></td><td>Р“Р»Р°РІРЅР°СЏ</td>";
 	global $allowed_modules;
 	$a = 1;
 	foreach ($allowed_modules as $name => $title) {
@@ -345,7 +345,7 @@ function BlocksEdit($bid) {
 		$fel = " checked";
 		break;
 	}
-	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"$cel></td><td><b>Во всех модулях</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"$hel></td><td><b>Только на главной</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"$fel></td><td><b>Свободный блок</b></td></tr></table></td></tr>";
+	echo "</tr><tr><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"all\"$cel></td><td><b>Р’Рѕ РІСЃРµС… РјРѕРґСѓР»СЏС…</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"home\"$hel></td><td><b>РўРѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№</b></td><td><input type=\"checkbox\" name=\"blockwhere[]\" value=\"infly\"$fel></td><td><b>РЎРІРѕР±РѕРґРЅС‹Р№ Р±Р»РѕРє</b></td></tr></table></td></tr>";
 	$sel1 = ($active == 1) ? "checked" : "";
 	$sel2 = ($active == 0) ? "checked" : "";
 	$hide1 = ($hide == 'yes') ? "checked" : "";
@@ -355,37 +355,37 @@ function BlocksEdit($bid) {
 		$oldexpire = $expire;
 		$expire = intval(($expire - time()) / 3600);
 		$exp_day = $expire / 24;
-		$expire_text = "<input type=\"hidden\" name=\"expire\" value=\"$oldexpire\">Осталось: $expire часы (".substr($exp_day,0,5)." дней)";
+		$expire_text = "<input type=\"hidden\" name=\"expire\" value=\"$oldexpire\">РћСЃС‚Р°Р»РѕСЃСЊ: $expire С‡Р°СЃС‹ (".substr($exp_day,0,5)." РґРЅРµР№)";
 	} else {
 		$newexpire = 1;
 		$expire_text = "<input type=\"text\" name=\"expire\" value=\"0\" maxlength=\"3\" size=\"65\" style=\"width:400px\">";
 	}
 	$selact1 = ($action == "d") ? "selected" : "";
 	$selact2 = ($action == "r") ? "selected" : "";
-	echo "<tr><td>Сворачивать?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" $hide1>Да &nbsp;&nbsp;"
-	."<input type=\"radio\" name=\"hide\" value=\"no\" $hide2>Нет</td></tr>";
-	echo "<tr><td>Включить?</td><td><input type=\"radio\" name=\"active\" value=\"1\" $sel1>Да &nbsp;&nbsp;"
-	."<input type=\"radio\" name=\"active\" value=\"0\" $sel2>Нет</td></tr>"
-	."<tr><td>Время работы, в днях:</td><td>$expire_text</td></tr>"
-	."<tr><td>После истечения:</td><td><select name=\"action\" style=\"width:400px\">"
-	."<option name=\"action\" value=\"d\" $selact1>Выкл.</option>"
-	."<option name=\"action\" value=\"r\" $selact2>Удалить</option></select></td></tr>";
+	echo "<tr><td>РЎРІРѕСЂР°С‡РёРІР°С‚СЊ?</td><td><input type=\"radio\" name=\"hide\" value=\"yes\" $hide1>Р”Р° &nbsp;&nbsp;"
+	."<input type=\"radio\" name=\"hide\" value=\"no\" $hide2>РќРµС‚</td></tr>";
+	echo "<tr><td>Р’РєР»СЋС‡РёС‚СЊ?</td><td><input type=\"radio\" name=\"active\" value=\"1\" $sel1>Р”Р° &nbsp;&nbsp;"
+	."<input type=\"radio\" name=\"active\" value=\"0\" $sel2>РќРµС‚</td></tr>"
+	."<tr><td>Р’СЂРµРјСЏ СЂР°Р±РѕС‚С‹, РІ РґРЅСЏС…:</td><td>$expire_text</td></tr>"
+	."<tr><td>РџРѕСЃР»Рµ РёСЃС‚РµС‡РµРЅРёСЏ:</td><td><select name=\"action\" style=\"width:400px\">"
+	."<option name=\"action\" value=\"d\" $selact1>Р’С‹РєР».</option>"
+	."<option name=\"action\" value=\"r\" $selact2>РЈРґР°Р»РёС‚СЊ</option></select></td></tr>";
 	$sel1 = ($view == 0) ? "selected" : "";
 	$sel2 = ($view == 1) ? "selected" : "";
 	$sel3 = ($view == 2) ? "selected" : "";
 	$sel4 = ($view == 3) ? "selected" : "";
-	echo "</td></tr><tr><td>Кто это будет видеть?</td><td><select name=\"view\" style=\"width:400px\">"
-	."<option value=\"0\" $sel1>Все посетители</option>"
-	."<option value=\"1\" $sel2>Только пользователи</option>"
-	."<option value=\"2\" $sel3>Только администраторы</option>"
-	."<option value=\"3\" $sel4>Только анонимы</option>"
+	echo "</td></tr><tr><td>РљС‚Рѕ СЌС‚Рѕ Р±СѓРґРµС‚ РІРёРґРµС‚СЊ?</td><td><select name=\"view\" style=\"width:400px\">"
+	."<option value=\"0\" $sel1>Р’СЃРµ РїРѕСЃРµС‚РёС‚РµР»Рё</option>"
+	."<option value=\"1\" $sel2>РўРѕР»СЊРєРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</option>"
+	."<option value=\"2\" $sel3>РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹</option>"
+	."<option value=\"3\" $sel4>РўРѕР»СЊРєРѕ Р°РЅРѕРЅРёРјС‹</option>"
 	."</select></td></tr></table><br>"
 	."<center><input type=\"hidden\" name=\"bid\" value=\"$bid\">"
 	."<input type=\"hidden\" name=\"newexpire\" value=\"$newexpire\">"
 	."<input type=\"hidden\" name=\"bkey\" value=\"$bkey\">"
 	."<input type=\"hidden\" name=\"weight\" value=\"$weight\">"
 	."<input type=\"hidden\" name=\"op\" value=\"BlocksEditSave\">"
-	."<input type=\"submit\" value=\"Сохранить\"></form></center>";
+	."<input type=\"submit\" value=\"РЎРѕС…СЂР°РЅРёС‚СЊ\"></form></center>";
 }
 
 function BlocksEditSave($newexpire, $bid, $bkey, $title, $content, $oldposition, $bposition, $active, $hide, $weight, $blockfile, $view, $expire, $action) {
@@ -441,19 +441,19 @@ function BlocksShow($bid) {
 	$bid = intval($bid);
 	echo "<p />";
 	render_blocks($blockfile, $title, $content, $bid, 'c', 'no');
-	echo "<h4>[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), "Включить")." | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Редактировать</a>";
-	if ($bkey == "") echo " | ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "Удалить", "Удалить \"$title\"?")."";
-	echo " | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Главная</a> ]</h4>";
+	echo "<h4>[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid), "Р’РєР»СЋС‡РёС‚СЊ")." | <a href=\"".$admin_file.".php?op=BlocksEdit&bid=$bid\">Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>";
+	if ($bkey == "") echo " | ".post_link($admin_file.".php", array('op' => 'BlocksDelete', 'bid' => $bid), "РЈРґР°Р»РёС‚СЊ", "РЈРґР°Р»РёС‚СЊ \"$title\"?")."";
+	echo " | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Р“Р»Р°РІРЅР°СЏ</a> ]</h4>";
 }
 
 function BlocksFileEdit() {
 	global $prefix, $admin_file;
 	BlocksNavi();
-	echo "<h2>Редактировать блок</h2>"
+	echo "<h2>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р±Р»РѕРє</h2>"
 	."<form action=\"".$admin_file.".php\" method=\"post\">"
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 	."<table border=\"0\" align=\"center\">"
-	."<tr><td>Имя файла:</td><td>"
+	."<tr><td>РРјСЏ С„Р°Р№Р»Р°:</td><td>"
 	."<select name=\"bf\" style=\"width:400px\">";
 	$handle = opendir("blocks");
 	while ($file = readdir($handle)) {
@@ -464,7 +464,7 @@ function BlocksFileEdit() {
 	}
 	closedir($handle);
 	echo "</select></td></tr>"
-	."<tr><td colspan=\"2\" align=\"center\"><input type=\"hidden\" name=\"op\" value=\"BlocksbfEdit\"><input type=\"submit\" value=\"Редактировать блок\"></td></tr></table></form>";
+	."<tr><td colspan=\"2\" align=\"center\"><input type=\"hidden\" name=\"op\" value=\"BlocksbfEdit\"><input type=\"submit\" value=\"Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р±Р»РѕРє\"></td></tr></table></form>";
 }
 
 function BlocksChange($bid, $ok=0) {
@@ -483,11 +483,11 @@ function BlocksChange($bid, $ok=0) {
 	} else {
 		list($title, $content, $active) = mysql_fetch_row(sql_query("SELECT title, content, active FROM ".$prefix."_blocks WHERE bid='$bid'"));
 		if ($active == 0) {
-			echo "<center>Активировать блок \"$title\"?<br /><br />";
+			echo "<center>РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ Р±Р»РѕРє \"$title\"?<br /><br />";
 		} else {
-			echo "<center>Деактивировать блок \"$title\"?<br /><br />";
+			echo "<center>Р”РµР°РєС‚РёРІРёСЂРѕРІР°С‚СЊ Р±Р»РѕРє \"$title\"?<br /><br />";
 		}
-		echo "[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid, 'ok' => 1), "Да")." | <a href=\"".$admin_file.".php?op=BlocksAdmin\">Нет</a> ]</center>";
+		echo "[ ".post_link($admin_file.".php", array('op' => 'BlocksChange', 'bid' => $bid, 'ok' => 1), "Р”Р°")." | <a href=\"".$admin_file.".php?op=BlocksAdmin\">РќРµС‚</a> ]</center>";
 	}
 }
 
@@ -523,16 +523,16 @@ function BlocksbfEdit() {
 		BlocksNavi();
 		$permtest = end_chmod("blocks", 777);
 		if ($permtest)
-			stdmsg("Ошибка", $permtest, 'error');
-		echo "<h2>Блок: $bf</h2>"
+			stdmsg("РћС€РёР±РєР°", $permtest, 'error');
+		echo "<h2>Р‘Р»РѕРє: $bf</h2>"
 		."<form action=\"".$admin_file.".php\" method=\"post\">"
 		."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
 		."<table border=\"0\" align=\"center\">"
-		."<tr><td>Содержание:</td><td><textarea wrap=\"virtual\" name=\"blocktext\" cols=\"65\" rows=\"25\" style=\"width:400px\">".$out[1]."</textarea></td></tr>"
+		."<tr><td>РЎРѕРґРµСЂР¶Р°РЅРёРµ:</td><td><textarea wrap=\"virtual\" name=\"blocktext\" cols=\"65\" rows=\"25\" style=\"width:400px\">".$out[1]."</textarea></td></tr>"
 		."<tr><td colspan=\"2\" align=\"center\"><br /><input type=\"hidden\" name=\"bf\" value=\"".$bf."\">"
 		."<input type=\"hidden\" name=\"flag\" value=\"".$flaged."\">"
 		."<input type=\"hidden\" name=\"op\" value=\"BlocksbfSave\">"
-		."<input type=\"submit\" value=\"Сохранить\"> <input type=\"button\" value=\"Назад\" onClick=\"javascript:history.go(-1)\"></td></tr></table></form>";
+		."<input type=\"submit\" value=\"РЎРѕС…СЂР°РЅРёС‚СЊ\"> <input type=\"button\" value=\"РќР°Р·Р°Рґ\" onClick=\"javascript:history.go(-1)\"></td></tr></table></form>";
 	} else {
 		Header("Location: ".$admin_file.".php?op=BlocksFile");
 	}

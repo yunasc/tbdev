@@ -42,11 +42,11 @@ if ($ip)
 	  stderr($tracker_lang['error'], "Bad IP.");
 	$res = sql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
 	if (mysql_num_rows($res) == 0)
-	  stderr("Результат", "IP адрес <b>$ip</b> не забанен.");
+	  stderr("Р РµР·СѓР»СЊС‚Р°С‚", "IP Р°РґСЂРµСЃ <b>$ip</b> РЅРµ Р·Р°Р±Р°РЅРµРЅ.");
 	else
 	{
 	  $banstable = "<table class=main border=0 cellspacing=0 cellpadding=5>\n" .
-	    "<tr><td class=colhead>Первый</td><td class=colhead>Последний</td><td class=colhead>Комментарий</td></tr>\n";
+	    "<tr><td class=colhead>РџРµСЂРІС‹Р№</td><td class=colhead>РџРѕСЃР»РµРґРЅРёР№</td><td class=colhead>РљРѕРјРјРµРЅС‚Р°СЂРёР№</td></tr>\n";
 	  while ($arr = mysql_fetch_assoc($res))
 	  {
 	    $first = long2ip($arr["first"]);
@@ -55,16 +55,16 @@ if ($ip)
 	    $banstable .= "<tr><td>$first</td><td>$last</td><td>$comment</td></tr>\n";
 	  }
 	  $banstable .= "</table>\n";
-	  stderr("Результат", "<table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded style='padding-right: 5px'><img src=pic/smilies/excl.gif></td><td class=embedded>IP адрес <b>$ip</b> забанен:</td></tr></table><p>$banstable</p>");
+	  stderr("Р РµР·СѓР»СЊС‚Р°С‚", "<table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded style='padding-right: 5px'><img src=pic/smilies/excl.gif></td><td class=embedded>IP Р°РґСЂРµСЃ <b>$ip</b> Р·Р°Р±Р°РЅРµРЅ:</td></tr></table><p>$banstable</p>");
 	}
 }
-stdhead("Проверка IP");
+stdhead("РџСЂРѕРІРµСЂРєР° IP");
 
 ?>
-<h1>Проверить IP адрес</h1>
+<h1>РџСЂРѕРІРµСЂРёС‚СЊ IP Р°РґСЂРµСЃ</h1>
 <form method=post action=testip.php>
 <table border=1 cellspacing=0 cellpadding=5>
-<tr><td class=rowhead>IP адрес</td><td><input type=text name=ip></td></tr>
+<tr><td class=rowhead>IP Р°РґСЂРµСЃ</td><td><input type=text name=ip></td></tr>
 <tr><td colspan=2 align=center><input type=submit class=btn value='OK'></td></tr>
 </form>
 </table>

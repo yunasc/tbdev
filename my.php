@@ -41,14 +41,14 @@ if (isset($_GET["edited"])) {
 } elseif (isset($_GET["emailch"]))
 	print("<h1>".$tracker_lang['my_mail_updated']."</h1>\n");
 /*else
-	print("<h1>Добро пожаловать, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");*/
+	print("<h1>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");*/
 
 ?>
 <table border="1" cellspacing="0" cellpadding="10" align="center">
 <tr>
 <td align="center" width="33%"><a href="logout.php"><b><?=$tracker_lang['logout'];?></b></a></td>
 <td align="center" width="33%"><a href="mytorrents.php"><b><?=$tracker_lang['my_torrents'];?></b></a></td>
-<td align="center" width="33%"><a href="friends.php"><b>Мои списки пользователей</b></a></td>
+<td align="center" width="33%"><a href="friends.php"><b>РњРѕРё СЃРїРёСЃРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</b></a></td>
 </tr>
 <tr>
 <td colspan="3">
@@ -106,9 +106,9 @@ function format_tz($a)
 }
 
 tr($tracker_lang['my_allow_pm_from'],
-"<input type=radio name=acceptpms" . ($CURUSER["acceptpms"] == "yes" ? " checked" : "") . " value=\"yes\">Все (исключая блокированных)
-<br /><input type=radio name=acceptpms" .  ($CURUSER["acceptpms"] == "friends" ? " checked" : "") . " value=\"friends\">Только друзей
-<br /><input type=radio name=acceptpms" .  ($CURUSER["acceptpms"] == "no" ? " checked" : "") . " value=\"no\">Только администрации"
+"<input type=radio name=acceptpms" . ($CURUSER["acceptpms"] == "yes" ? " checked" : "") . " value=\"yes\">Р’СЃРµ (РёСЃРєР»СЋС‡Р°СЏ Р±Р»РѕРєРёСЂРѕРІР°РЅРЅС‹С…)
+<br /><input type=radio name=acceptpms" .  ($CURUSER["acceptpms"] == "friends" ? " checked" : "") . " value=\"friends\">РўРѕР»СЊРєРѕ РґСЂСѓР·РµР№
+<br /><input type=radio name=acceptpms" .  ($CURUSER["acceptpms"] == "no" ? " checked" : "") . " value=\"no\">РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё"
 ,1);
 
 tr($tracker_lang['my_parked'],
@@ -135,8 +135,8 @@ if (count($r) > 0)
 	$categories .= "</tr></table>\n";
 }
 
-tr($tracker_lang['my_email_notify'], "<input type=checkbox name=pmnotif" . (strpos($CURUSER['notifs'], "[pm]") !== false ? " checked" : "") . " value=yes> Уведомить меня при получении ЛС<br />\n" .
-	 "<input type=checkbox name=emailnotif" . (strpos($CURUSER['notifs'], "[email]") !== false ? " checked" : "") . " value=yes> Уведомить меня при размещении торрента в одной <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; из следующих предпочитаемых категорий.\n"
+tr($tracker_lang['my_email_notify'], "<input type=checkbox name=pmnotif" . (strpos($CURUSER['notifs'], "[pm]") !== false ? " checked" : "") . " value=yes> РЈРІРµРґРѕРјРёС‚СЊ РјРµРЅСЏ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё Р›РЎ<br />\n" .
+	 "<input type=checkbox name=emailnotif" . (strpos($CURUSER['notifs'], "[email]") !== false ? " checked" : "") . " value=yes> РЈРІРµРґРѕРјРёС‚СЊ РјРµРЅСЏ РїСЂРё СЂР°Р·РјРµС‰РµРЅРёРё С‚РѕСЂСЂРµРЅС‚Р° РІ РѕРґРЅРѕР№ <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; РёР· СЃР»РµРґСѓСЋС‰РёС… РїСЂРµРґРїРѕС‡РёС‚Р°РµРјС‹С… РєР°С‚РµРіРѕСЂРёР№.\n"
    , 1);
 tr($tracker_lang['my_default_browse'],$categories,1);
 tr($tracker_lang['my_style'], "$themes",1);
@@ -238,25 +238,25 @@ tr(" ", "    <table cellspacing=\"3\" cellpadding=\"0\" width=\"100%\" border=\"
       </tr>
     </table>",1);
 tr($tracker_lang['my_website'], "<input type=\"text\" name=\"website\" size=50 value=\"" . htmlspecialchars_uni($CURUSER["website"]) . "\" /> ", 1);
-tr($tracker_lang['my_torrents_per_page'], "<input type=text size=10 name=torrentsperpage value=$CURUSER[torrentsperpage]> (0 = установки по умолчанию)",1);
-tr($tracker_lang['my_topics_per_page'], "<input type=text size=10 name=topicsperpage value=$CURUSER[topicsperpage]> (0 = установки по умолчанию)",1);
-tr($tracker_lang['my_messages_per_page'], "<input type=text size=10 name=postsperpage value=$CURUSER[postsperpage]> (0 = установки по умолчанию)",1);
-tr($tracker_lang['my_show_avatars'], "<input type=checkbox name=avatars" . ($CURUSER["avatars"] == "yes" ? " checked" : "") . "> (Пользователи с маленькими каналами могут отключить эту опцию)",1);
-tr($tracker_lang['my_info'], "<textarea name=info cols=50 rows=4>" . $CURUSER["info"] . "</textarea><br />Показывается на вашей публичной странице. Может содержать <a href=tags.php target=_new>BB коды</a>.", 1);
+tr($tracker_lang['my_torrents_per_page'], "<input type=text size=10 name=torrentsperpage value=$CURUSER[torrentsperpage]> (0 = СѓСЃС‚Р°РЅРѕРІРєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)",1);
+tr($tracker_lang['my_topics_per_page'], "<input type=text size=10 name=topicsperpage value=$CURUSER[topicsperpage]> (0 = СѓСЃС‚Р°РЅРѕРІРєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)",1);
+tr($tracker_lang['my_messages_per_page'], "<input type=text size=10 name=postsperpage value=$CURUSER[postsperpage]> (0 = СѓСЃС‚Р°РЅРѕРІРєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)",1);
+tr($tracker_lang['my_show_avatars'], "<input type=checkbox name=avatars" . ($CURUSER["avatars"] == "yes" ? " checked" : "") . "> (РџРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃ РјР°Р»РµРЅСЊРєРёРјРё РєР°РЅР°Р»Р°РјРё РјРѕРіСѓС‚ РѕС‚РєР»СЋС‡РёС‚СЊ СЌС‚Сѓ РѕРїС†РёСЋ)",1);
+tr($tracker_lang['my_info'], "<textarea name=info cols=50 rows=4>" . $CURUSER["info"] . "</textarea><br />РџРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РЅР° РІР°С€РµР№ РїСѓР±Р»РёС‡РЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ <a href=tags.php target=_new>BB РєРѕРґС‹</a>.", 1);
 tr($tracker_lang['my_userbar'], "<img src=\"torrentbar/bar.php/".$CURUSER["id"].".png\" border=\"0\"><br />".$tracker_lang['my_userbar_descr'].":<br /><input type=\"text\" size=65 value=\"[url=$DEFAULTBASEURL][img]$DEFAULTBASEURL/torrentbar/bar.php/".$CURUSER["id"].".png[/img][/url]\" readonly />",1);
 tr($tracker_lang['my_mail'], "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars_uni($CURUSER["email"]) . "\" />", 1);
-print("<tr><td colspan=\"2\" align=left><b>Примечание:</b> Если вы смените ваш Email адрес, то вам придет запрос о подтверждении на ваш новый Email-адрес. Если вы не подтвердите письмо, то Email адрес не будет изменен.</td></tr>\n");
-tr("Сменить пасскей","<input type=checkbox name=resetpasskey value=1 /> (Вы должны перекачать все активные торренты после смены пасскея)", 1);
+print("<tr><td colspan=\"2\" align=left><b>РџСЂРёРјРµС‡Р°РЅРёРµ:</b> Р•СЃР»Рё РІС‹ СЃРјРµРЅРёС‚Рµ РІР°С€ Email Р°РґСЂРµСЃ, С‚Рѕ РІР°Рј РїСЂРёРґРµС‚ Р·Р°РїСЂРѕСЃ Рѕ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРё РЅР° РІР°С€ РЅРѕРІС‹Р№ Email-Р°РґСЂРµСЃ. Р•СЃР»Рё РІС‹ РЅРµ РїРѕРґС‚РІРµСЂРґРёС‚Рµ РїРёСЃСЊРјРѕ, С‚Рѕ Email Р°РґСЂРµСЃ РЅРµ Р±СѓРґРµС‚ РёР·РјРµРЅРµРЅ.</td></tr>\n");
+tr("РЎРјРµРЅРёС‚СЊ РїР°СЃСЃРєРµР№","<input type=checkbox name=resetpasskey value=1 /> (Р’С‹ РґРѕР»Р¶РЅС‹ РїРµСЂРµРєР°С‡Р°С‚СЊ РІСЃРµ Р°РєС‚РёРІРЅС‹Рµ С‚РѕСЂСЂРµРЅС‚С‹ РїРѕСЃР»Рµ СЃРјРµРЅС‹ РїР°СЃСЃРєРµСЏ)", 1);
 
 if (strlen($CURUSER['passkey']) != 32) {
 	$CURUSER['passkey'] = md5($CURUSER['username'].get_date_time().$CURUSER['passhash']);
 	sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 }
-tr("Мой пасскей","<b>$CURUSER[passkey]</b>", 1);
-tr("Привязать IP к пасскею", "<input type=checkbox name=passkey_ip" . ($CURUSER["passkey_ip"] != "" ? " checked" : "") . "> Включив эту опцию вы можете защитить себя от неавторизованной закакачки по вашему пасскею привязав его к IP. Если ваш IP динамический - не включайте эту опцию.<br />На данный момент ваш IP: <b>".getip()."</b>", 1);
-tr("Старый пароль", "<input type=\"password\" name=\"oldpassword\" size=\"50\" />", 1);
-tr("Сменить пароль", "<input type=\"password\" name=\"chpassword\" size=\"50\" />", 1);
-tr("Пароль еще раз", "<input type=\"password\" name=\"passagain\" size=\"50\" />", 1);
+tr("РњРѕР№ РїР°СЃСЃРєРµР№","<b>$CURUSER[passkey]</b>", 1);
+tr("РџСЂРёРІСЏР·Р°С‚СЊ IP Рє РїР°СЃСЃРєРµСЋ", "<input type=checkbox name=passkey_ip" . ($CURUSER["passkey_ip"] != "" ? " checked" : "") . "> Р’РєР»СЋС‡РёРІ СЌС‚Сѓ РѕРїС†РёСЋ РІС‹ РјРѕР¶РµС‚Рµ Р·Р°С‰РёС‚РёС‚СЊ СЃРµР±СЏ РѕС‚ РЅРµР°РІС‚РѕСЂРёР·РѕРІР°РЅРЅРѕР№ Р·Р°РєР°РєР°С‡РєРё РїРѕ РІР°С€РµРјСѓ РїР°СЃСЃРєРµСЋ РїСЂРёРІСЏР·Р°РІ РµРіРѕ Рє IP. Р•СЃР»Рё РІР°С€ IP РґРёРЅР°РјРёС‡РµСЃРєРёР№ - РЅРµ РІРєР»СЋС‡Р°Р№С‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ.<br />РќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІР°С€ IP: <b>".getip()."</b>", 1);
+tr("РЎС‚Р°СЂС‹Р№ РїР°СЂРѕР»СЊ", "<input type=\"password\" name=\"oldpassword\" size=\"50\" />", 1);
+tr("РЎРјРµРЅРёС‚СЊ РїР°СЂРѕР»СЊ", "<input type=\"password\" name=\"chpassword\" size=\"50\" />", 1);
+tr("РџР°СЂРѕР»СЊ РµС‰Рµ СЂР°Р·", "<input type=\"password\" name=\"passagain\" size=\"50\" />", 1);
 
 function priv($name, $descr) {
 	global $CURUSER;
@@ -268,14 +268,14 @@ function priv($name, $descr) {
 /* tr("Privacy level",  priv("normal", "Normal") . " " . priv("low", "Low (email address will be shown)") . " " . priv("strong", "Strong (no info will be made available)"), 1); */
 
 ?>
-<tr><td colspan="2" align="center"><input type="submit" value="Обновить профиль" style='height: 25px'> <input type="reset" value="Сбросить изменения" style='height: 25px'></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" value="РћР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ" style='height: 25px'> <input type="reset" value="РЎР±СЂРѕСЃРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ" style='height: 25px'></td></tr>
 </table>
 </form>
 </td>
 </tr>
 </table>
 <?
-print("<p><a href=users.php><b>Найти пользователя/Список пользователей</b></a></p>");
+print("<p><a href=users.php><b>РќР°Р№С‚Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ/РЎРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</b></a></p>");
 stdfoot();
 
 ?>

@@ -37,11 +37,11 @@ stdhead("Search");
 <!--<p>(this page is under construction)</p>-->
 <form method="get" action=browse.php>
 <p align="center">
-Поиск:
+РџРѕРёСЃРє:
 <input type="text" name="search" size="40" value="<?= htmlspecialchars_uni($searchstr) ?>" />
-в
+РІ
 <select name="cat">
-<option value="0">(Все типы)</option>
+<option value="0">(Р’СЃРµ С‚РёРїС‹)</option>
 <?
 
 
@@ -57,13 +57,13 @@ foreach ($cats as $cat) {
 $deadchkbox = "<input type=\"checkbox\" name=\"incldead\" value=\"1\"";
 if ($_GET["incldead"])
     $deadchkbox .= " checked=\"checked\"";
-$deadchkbox .= " /> включая мертвяки\n";
+$deadchkbox .= " /> РІРєР»СЋС‡Р°СЏ РјРµСЂС‚РІСЏРєРё\n";
 
 ?>
 <?= $catdropdown ?>
 </select>
 <?= $deadchkbox ?>
-<input type="submit" value="Поиск!" />
+<input type="submit" value="РџРѕРёСЃРє!" />
 </p>
 </form>
 </td></tr></table>

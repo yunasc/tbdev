@@ -57,7 +57,7 @@ $where = "category IN (".implode(", ", array_map("sqlesc", $cats)).") AND";
 header("Content-Type: application/xml");
 print("<?xml version=\"1.0\" encoding=\"windows-1251\" ?>\n<rss version=\"0.91\">\n<channel>\n" .
 "<title>" . $SITENAME . "</title>\n<link>" . $DEFAULTBASEURL . "</link>\n<description>" . $DESCR . "</description>\n" .
-"<language>en-usde</language>\n<copyright>Copyright © 2006 " . $SITENAME . "</copyright>\n<webMaster>" . $SITEEMAIL . "</webMaster>\n" .
+"<language>en-usde</language>\n<copyright>Copyright В© 2006 " . $SITENAME . "</copyright>\n<webMaster>" . $SITEEMAIL . "</webMaster>\n" .
 "<image><title><![CDATA[" . $SITENAME . "]]></title>\n<url>" . $DEFAULTBASEURL . "/favicon.gif</url>\n<link>" . $DEFAULTBASEURL . "</link>\n" .
 "<width>16</width>\n<height>16</height>\n<description><![CDATA[" . $DESCR . "]]></description>\n<generator><![CDATA[TBDev Yuna Scatari Edition - http://bit-torrent.kiev.ua]]></generator>\n</image>\n");
 
@@ -68,19 +68,19 @@ list($id,$name,$descr,$filename,$size,$cat,$seeders,$leechers,$added,$catname) =
 
 // seeders ?
 if($seeders != 1){
-$s = "их";
-$aktivs="$seeders раздающий($s)";
+$s = "РёС…";
+$aktivs="$seeders СЂР°Р·РґР°СЋС‰РёР№($s)";
 }
 else
-$aktivs="нет раздающих";
+$aktivs="РЅРµС‚ СЂР°Р·РґР°СЋС‰РёС…";
 
 // leechers ?
 if ($leechers != 1){
-$l = "ий";
-$aktivl="$leechers качающих($l)";
+$l = "РёР№";
+$aktivl="$leechers РєР°С‡Р°СЋС‰РёС…($l)";
 }
 else
-$aktivl="нет качающих";
+$aktivl="РЅРµС‚ РєР°С‡Р°СЋС‰РёС…";
 
 // ddl or detail ?
 if ($feed == "dl")
@@ -95,10 +95,10 @@ $a = mysql_fetch_assoc($spd);
 $totalspeed = mksize($a["totalspeed"]) . "/s";
 }
 else
-$totalspeed = "нет траффика";
+$totalspeed = "РЅРµС‚ С‚СЂР°С„С„РёРєР°";
 
 // output of all data
-echo("<item><title><![CDATA[" . $name . "]]></title>\n<link>" . $link . "</link>\n<description><![CDATA[\nКатегория: " . $category[$cat] . " \n Размер: " . mksize($size) . "\n Статус: " . $aktivs . " и " . $aktivl . "\n Скорость: " . $totalspeed . "\n Добавлен: " . $added . "\n Описание:\n " . format_comment($descr) . "\n]]></description>\n</item>\n");
+echo("<item><title><![CDATA[" . $name . "]]></title>\n<link>" . $link . "</link>\n<description><![CDATA[\nРљР°С‚РµРіРѕСЂРёСЏ: " . $category[$cat] . " \n Р Р°Р·РјРµСЂ: " . mksize($size) . "\n РЎС‚Р°С‚СѓСЃ: " . $aktivs . " Рё " . $aktivl . "\n РЎРєРѕСЂРѕСЃС‚СЊ: " . $totalspeed . "\n Р”РѕР±Р°РІР»РµРЅ: " . $added . "\n РћРїРёСЃР°РЅРёРµ:\n " . format_comment($descr) . "\n]]></description>\n</item>\n");
 }
 
 echo("</channel>\n</rss>\n");

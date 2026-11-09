@@ -21,10 +21,10 @@ function show_hide(id)
         if (klappText.style.display == 'none') {
                   klappText.style.display = 'block';
                   klappBild.src = 'pic/minus.gif';
-                  klappBild.title = 'Скрыть';
+                  klappBild.title = 'РЎРєСЂС‹С‚СЊ';
         } else {
                   klappText.style.display = 'none';
                   klappBild.src = 'pic/plus.gif';
-                  klappBild.title = 'Показать';
+                  klappBild.title = 'РџРѕРєР°Р·Р°С‚СЊ';
         }
 }

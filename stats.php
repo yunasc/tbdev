@@ -33,7 +33,7 @@ loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
 	stderr($tracker_lang['error'], "Permission denied.");
 
-stdhead("Статистика");
+stdhead("РЎС‚Р°С‚РёСЃС‚РёРєР°");
 ?>
 
 <STYLE TYPE="text/css" MEDIA=screen>
@@ -82,23 +82,23 @@ $query = "SELECT u.id, u.username AS name, MAX(t.added) AS last, COUNT(DISTINCT 
 $res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 
 if (mysql_num_rows($res) == 0)
-	stdmsg("Извините", "Нет заливающих.");
+	stdmsg("РР·РІРёРЅРёС‚Рµ", "РќРµС‚ Р·Р°Р»РёРІР°СЋС‰РёС….");
 else
 {
-	begin_frame("Статистика заливающих", True);
+	begin_frame("РЎС‚Р°С‚РёСЃС‚РёРєР° Р·Р°Р»РёРІР°СЋС‰РёС…", True);
 	begin_table();
 	print("<tr>\n
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=uploader&amp;catorder=$catorder\" class=colheadlink>Заливающий</a></td>\n
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=lastul&amp;catorder=$catorder\" class=colheadlink>Последняя заливка</a></td>\n
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=torrents&amp;catorder=$catorder\" class=colheadlink>Торрентов</a></td>\n
-	<td class=colhead>Завершено</td>\n
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=peers&amp;catorder=$catorder\" class=colheadlink>Пиров</a></td>\n
-	<td class=colhead>Завершено</td>\n
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=uploader&amp;catorder=$catorder\" class=colheadlink>Р—Р°Р»РёРІР°СЋС‰РёР№</a></td>\n
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=lastul&amp;catorder=$catorder\" class=colheadlink>РџРѕСЃР»РµРґРЅСЏСЏ Р·Р°Р»РёРІРєР°</a></td>\n
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=torrents&amp;catorder=$catorder\" class=colheadlink>РўРѕСЂСЂРµРЅС‚РѕРІ</a></td>\n
+	<td class=colhead>Р—Р°РІРµСЂС€РµРЅРѕ</td>\n
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=peers&amp;catorder=$catorder\" class=colheadlink>РџРёСЂРѕРІ</a></td>\n
+	<td class=colhead>Р—Р°РІРµСЂС€РµРЅРѕ</td>\n
 	</tr>\n");
 	while ($uper = mysql_fetch_array($res))
 	{
 		print("<tr><td><a href=userdetails.php?id=".$uper['id']."><b>".$uper['name']."</b></a></td>\n");
-		print("<td " . ($uper['last']?(">".$uper['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($uper['last']))." назад)"):"align=center>---") . "</td>\n");
+		print("<td " . ($uper['last']?(">".$uper['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($uper['last']))." РЅР°Р·Р°Рґ)"):"align=center>---") . "</td>\n");
 		print("<td align=right>" . $uper['n_t'] . "</td>\n");
 		print("<td align=right>" . ($n_tor > 0?number_format(100 * $uper['n_t']/$n_tor,1)."%":"---") . "</td>\n");
 		print("<td align=right>" . $uper['n_p']."</td>\n");
@@ -109,7 +109,7 @@ else
 }
 
 if ($n_tor == 0)
-	stdmsg("Извините", "Данные по категориям отсутствуют!");
+	stdmsg("РР·РІРёРЅРёС‚Рµ", "Р”Р°РЅРЅС‹Рµ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚!");
 else
 {
   if ($catorder == "lastul")
@@ -125,18 +125,18 @@ else
 	FROM categories as c LEFT JOIN torrents as t ON t.category = c.id LEFT JOIN peers as p
 	ON t.id = p.torrent GROUP BY c.id ORDER BY $orderby") or sqlerr(__FILE__, __LINE__);
 
-	begin_frame("Активность категорий", True);
+	begin_frame("РђРєС‚РёРІРЅРѕСЃС‚СЊ РєР°С‚РµРіРѕСЂРёР№", True);
 	begin_table();
-	print("<tr><td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=category\" class=colheadlink>Категория</a></td>
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=lastul\" class=colheadlink>Последняя заливка</a></td>
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=torrents\" class=colheadlink>Торрентов</a></td>
-	<td class=colhead>Завершено</td>
-	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=peers\" class=colheadlink>Пиров</a></td>
-	<td class=colhead>Завершено</td></tr>\n");
+	print("<tr><td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=category\" class=colheadlink>РљР°С‚РµРіРѕСЂРёСЏ</a></td>
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=lastul\" class=colheadlink>РџРѕСЃР»РµРґРЅСЏСЏ Р·Р°Р»РёРІРєР°</a></td>
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=torrents\" class=colheadlink>РўРѕСЂСЂРµРЅС‚РѕРІ</a></td>
+	<td class=colhead>Р—Р°РІРµСЂС€РµРЅРѕ</td>
+	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=peers\" class=colheadlink>РџРёСЂРѕРІ</a></td>
+	<td class=colhead>Р—Р°РІРµСЂС€РµРЅРѕ</td></tr>\n");
 	while ($cat = mysql_fetch_array($res))
 	{
 		print("<tr><td class=rowhead>" . $cat['name'] . "</b></a></td>");
-		print("<td " . ($cat['last']?(">".$cat['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($cat['last']))." назад)"):"align = center>---") ."</td>");
+		print("<td " . ($cat['last']?(">".$cat['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($cat['last']))." РЅР°Р·Р°Рґ)"):"align = center>---") ."</td>");
 		print("<td align=right>" . $cat['n_t'] . "</td>");
 		print("<td align=right>" . number_format(100 * $cat['n_t']/$n_tor,1) . "%</td>");
 		print("<td align=right>" . $cat['n_p'] . "</td>");
