@@ -39,13 +39,13 @@ list($users) = mysqli_fetch_array(sql_query("SELECT COUNT(id) FROM users"));
 if ($users >= $maxusers)
 	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_users_limit'], number_format($maxusers)));
 
-if ($_POST["agree"] != "yes") {
+if (($_POST["agree"] ?? "") !== "yes") {
 stdhead("Правила трекера");
 ?>
 <div style="width:80%" align="center">
 <fieldset class="fieldset">
 <legend>Правила трекера</legend>
-<form method="post" action="<?=$_SERVER[PHP_SELF]?>">
+<form method="post" action="<?=htmlspecialchars_uni($_SERVER["PHP_SELF"])?>">
 <table cellpadding="4" cellspacing="0" border="0" style="width:100%" class="tableinborder">
 <tr>
 <td class="tablea">Для продолжения регистрации, Вы должны согласиться со следующими правилами:</td></tr>

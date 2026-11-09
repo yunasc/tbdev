@@ -442,9 +442,9 @@ SELECTOR;
 		if (db_error())
 			sqlerr();
 		if ($is_voted) {
-			$stars .= ratingpic($row['rating']) . "(" . $row["rating"] . " " . $tracker_lang['from'] . " 5 ".$tracker_lang['with'] . " " . $row["numratings"] . " " . getWord($row["numratings"], array($tracker_lang['votes_1'], $tracker_lang['votes_2'], $tracker_lang['votes_3'])).")".' Ваша оценка <b>' . $is_voted['rating'] . '</b> - <b>' . $tracker_lang['vote_' . $is_voted['rating']] . '</b>';
+			$stars = ratingpic($row['rating']) . "(" . $row["rating"] . " " . $tracker_lang['from'] . " 5 ".$tracker_lang['with'] . " " . $row["numratings"] . " " . getWord($row["numratings"], array($tracker_lang['votes_1'], $tracker_lang['votes_2'], $tracker_lang['votes_3'])).")".' Ваша оценка <b>' . $is_voted['rating'] . '</b> - <b>' . $tracker_lang['vote_' . $is_voted['rating']] . '</b>';
 		} else {
-			$stars .= $rating_selector;
+			$stars = $rating_selector;
 		}
 		tr($tracker_lang['rating'], $stars, 1);
 	}
@@ -526,6 +526,7 @@ if (!isset($_GET["dllist"])) {
 
 if ($row["multitracker"] == 'yes') {
 	if (count($announces_a)) {
+		$update_link = "";
 		foreach ($announces_a as $announce) {
 			if ($announce['state'] == 'ok')
 				$anns[] = '<li><b>' . htmlspecialchars_uni($announce['url']) . '</b> - раздающие: <b>' . $announce['seeders'] . '</b>, качающие: <b>' . $announce['leechers'] . '</b>';
@@ -544,7 +545,8 @@ if ($row["multitracker"] == 'yes') {
 }
 
 if ($row["times_completed"] > 0) {
-    $res = sql_query("SELECT users.id, users.username, users.title, users.uploaded, users.downloaded, users.donor, users.enabled, users.warned, users.last_access, users.class, snatched.startdat, snatched.last_action, snatched.completedat, snatched.seeder, snatched.userid, snatched.uploaded AS sn_up, snatched.downloaded AS sn_dn FROM snatched INNER JOIN users ON snatched.userid = users.id WHERE snatched.finished='yes' AND snatched.torrent =" . sqlesc($id) . " ORDER BY users.class DESC $limit") or sqlerr(__FILE__,__LINE__);
+    $res = sql_query("SELECT users.id, users.username, users.title, users.uploaded, users.downloaded, users.donor, users.enabled, users.warned, users.last_access, users.class, snatched.startdat, snatched.last_action, snatched.completedat, snatched.seeder, snatched.userid, snatched.uploaded AS sn_up, snatched.downloaded AS sn_dn FROM snatched INNER JOIN users ON snatched.userid = users.id WHERE snatched.finished='yes' AND snatched.torrent =" . sqlesc($id) . " ORDER BY users.class DESC") or sqlerr(__FILE__,__LINE__);
+	$snatched_small = [];
 	$snatched_full = "<table width=\"100%\" class=\"main\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
 	$snatched_full .= "<tr><td class=colhead>Юзер</td><td class=colhead>Раздал</td><td class=colhead>Скачал</td><td class=colhead>Рейтинг</td><td class=colhead align=center>Начал / Закончил</td><td class=colhead align=center>Действие</td><td class=colhead align=center>Сидирует</td><td class=colhead align=center>ЛС</td></tr>";
 
@@ -573,17 +575,17 @@ if ($row["times_completed"] > 0) {
 		$uploaded2 = mksize($arr["sn_up"]);
 		$downloaded2 = mksize($arr["sn_dn"]);
 		//end
-		//$highlight = $CURUSER["id"] == $arr["id"] ? " bgcolor=#00A527" : "";;
 		$snatched_small[] = "<a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])." (<font color=" . get_ratio_color($ratio) . ">$ratio</font>)</a>";
-		$snatched_full .= "<tr$highlight><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>{$arr["startdat"]}<br />{$arr["completedat"]}</nobr></td><td align=center><nobr>{$arr["last_action"]}</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
+		$snatched_full .= "<tr><td><a href=userdetails.php?id=$arr[userid]>".get_user_class_color($arr["class"], $arr["username"])."</a>".get_user_icons($arr)."</td><td><nobr>$uploaded&nbsp;Общего<br>$uploaded2&nbsp;Торрент</nobr></td><td><nobr>$downloaded&nbsp;Общего<br>$downloaded2&nbsp;Торрент</nobr></td><td><nobr>$ratio&nbsp;Общего<br>$ratio2&nbsp;Торрент</nobr></td><td align=center><nobr>{$arr["startdat"]}<br />{$arr["completedat"]}</nobr></td><td align=center><nobr>{$arr["last_action"]}</nobr></td><td align=center>" . ($arr["seeder"] == "yes" ? "<b><font color=\"green\">Да</font>" : "<font color=\"red\">Нет</font></b>") .
 			"</td><td align=center><a href=\"message.php?action=sendmessage&amp;receiver={$arr['userid']}\"><img src=\"$pic_base_url/button_pm.gif\" border=\"0\"></a></td></tr>\n";
     }
     $snatched_full .= "</table>\n";
 	?><script language="javascript" type="text/javascript" src="js/show_hide.js"></script><?php
+	$reseed_button = "";
 	if ($row["seeders"] == 0 || ($row["leechers"] / $row["seeders"] >= 2))
 		$reseed_button = "<form method=\"post\" action=\"takereseed.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"hidden\" name=\"torrent\" value=\"$id\" /><input type=\"submit\" value=\"Позвать скачавших\" /></form>";
-	if (!$_GET["snatched"]==1)
-		tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="$pic_base_url/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.@implode(", ", $snatched_small).$reseed_button.'</div>', 1);
+	if (($_GET["snatched"] ?? "") !== "1")
+		tr("Скачавшие<br /><a href=\"details.php?id=$id&amp;snatched=1#snatched\" class=\"sublink\">[{$tracker_lang['open_list']}]</a>", '<a href="javascript: show_hide(\'s1\')"><img border="0" src="$pic_base_url/plus.gif" id="pics1"><div id="ss1" style="display: none;">'.implode(", ", $snatched_small).$reseed_button.'</div>', 1);
 	else
 		tr("Скачавшие<br /><a href=\"details.php?id=$id\" class=\"sublink\" name=\"snatched\">[{$tracker_lang['close_list']}]</a>", $snatched_full,1);
 }

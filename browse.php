@@ -103,7 +103,7 @@ if (isset($_GET['sort']) && isset($_GET['type'])) {
     }
 
 
-    $orderby = "ORDER BY t." . $column . " " . $ascdesc;
+    $orderby = "ORDER BY t." . ($column ?: "id") . " " . $ascdesc;
     $pagerlink = "sort=" . intval($_GET['sort']) . "&type=" . $linkascdesc . "&";
 
 } else {
@@ -148,10 +148,8 @@ if (isset($_GET['all']))
     $all = false;
 
 if (!$all)
-    if (!$_GET && $CURUSER["notifs"]) {
-        $all = True;
+    if (!$_GET && !empty($CURUSER["notifs"])) {
         foreach ($cats as $cat) {
-            $all &= $cat['id'];
             if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== false) {
                 $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
@@ -163,9 +161,7 @@ if (!$all)
         $wherecatina[] = $category;
         $addparam .= "cat=$category&amp;";
     } else {
-        $all = true;
         foreach ($cats as $cat) {
-            $all &= $_GET["cr$car[id]"];
             if (isset($_GET["c$cat[id]"])) {
                 $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
@@ -225,7 +221,7 @@ if (!$count && isset($cleansearchstr)) {
     }
 }
 
-$torrentsperpage = $CURUSER["torrentsperpage"];
+$torrentsperpage = $CURUSER["torrentsperpage"] ?? 25;
 if (!$torrentsperpage)
     $torrentsperpage = 25;
 
@@ -242,7 +238,7 @@ if ($count) {
         $addparam = $pagerlink;
     }
     list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
-    $query = "SELECT t.id, t.moderated, t.moderatedby, t.category, (t.leechers + t.remote_leechers) AS leechers, (t.seeders + t.remote_seeders) AS seeders, t.multitracker, t.last_mt_update, t.free, t.name, t.info_hash, t.times_completed, t.size, t.added, t.comments, t.numfiles, t.filename, t.not_sticky, t.owner," . "IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, c.name AS cat_name, c.image AS cat_pic, u.username, u.class" . ($CURUSER ? ", EXISTS(SELECT * FROM readtorrents WHERE readtorrents.userid = " . sqlesc($CURUSER["id"]) . " AND readtorrents.torrentid = t.id) AS readtorrent" : ", 1 AS readtorrent") . " FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id $where $orderby $limit";
+    $query = "SELECT t.id, t.type, t.moderated, t.moderatedby, t.category, (t.leechers + t.remote_leechers) AS leechers, (t.seeders + t.remote_seeders) AS seeders, t.multitracker, t.last_mt_update, t.free, t.name, t.info_hash, t.times_completed, t.size, t.added, t.comments, t.numfiles, t.filename, t.not_sticky, t.owner," . "IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, c.name AS cat_name, c.image AS cat_pic, u.username, u.class" . ($CURUSER ? ", EXISTS(SELECT * FROM readtorrents WHERE readtorrents.userid = " . sqlesc($CURUSER["id"]) . " AND readtorrents.torrentid = t.id) AS readtorrent" : ", 1 AS readtorrent") . " FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id $where $orderby $limit";
     $res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 } else
     unset($res);
@@ -280,8 +276,8 @@ if (isset($cleansearchstr))
 
                                         <?php
                                         $i = 0;
+                                        $catsperrow = 5;
                                         foreach ($cats as $cat) {
-                                            $catsperrow = 5;
                                             print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
                                             print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat['id'], $wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars_uni($cat['name']) . "</a></td>\n");
                                             $i++;

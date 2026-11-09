@@ -239,28 +239,11 @@ function userlogin($lightmode = false) {
 }
 
 function get_server_load() {
-	global $tracker_lang, $phpver;
-	if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
-		return 0;
-	} elseif (@file_exists("/proc/loadavg")) {
-		$load = @file_get_contents("/proc/loadavg");
-		$serverload = explode(" ", $load);
-		$serverload[0] = round($serverload[0], 4);
-		if(!$serverload) {
-			$load = @exec("uptime");
-			$load = preg_split("/load averages?: /", $load);
-			$serverload = explode(",", $load[1]);
-		}
-	} else {
-		$load = @exec("uptime");
-		$load = preg_split("/load averages?: /", $load);
-		$serverload = explode(",", $load[1]);
-	}
-	$returnload = trim($serverload[0]);
-	if(!$returnload) {
-		$returnload = $tracker_lang['unknown'];
-	}
-	return $returnload;
+    if (!function_exists('sys_getloadavg'))
+        return null;
+
+    $averages = sys_getloadavg();
+    return $averages === false ? null : round($averages[0], 4);
 }
 
 function user_session() {
@@ -604,6 +587,7 @@ function stdhead($title = "", $msgalert = true) {
 
 	$ss_uri = select_theme();
 
+	$unread = 0;
 	if ($msgalert && $CURUSER) {
 		$res = sql_query('SELECT COUNT(*) FROM messages WHERE receiver = ' . $CURUSER['id'] . ' AND unread="yes"') or die('OopppsY!');
 		$arr = mysqli_fetch_row($res);
@@ -1004,13 +988,13 @@ function get_user_icons($arr, $big = false) {
 				$pics .= $arr["warned"] == "yes" ? "<img src=pic/$warnedpic alt=\"Warned\" border=0 $style>" : "";
 		else
 				$pics .= "<img src=\"pic/$disabledpic\" alt=\"Disabled\" border=\"0\" $style>\n";
-		$pics .= $arr["parked"] == "yes" ? "<img src=pic/$parkedpic alt=\"Parked\" border=\"0\" $style>" : "";
+		$pics .= ($arr["parked"] ?? "no") === "yes" ? "<img src=pic/$parkedpic alt=\"Parked\" border=\"0\" $style>" : "";
 		return $pics;
 }
 
 function parked() {
 	   global $CURUSER;
-	   if ($CURUSER['parked'] == 'yes')
+	   if (($CURUSER['parked'] ?? 'no') === 'yes')
 		  stderr($tracker_lang['error'], 'Ваш аккаунт припаркован.');
 }
 

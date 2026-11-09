@@ -966,7 +966,7 @@ function format_comment($text, $strip_html = true) {
 
 function get_user_class() {
 	global $CURUSER;
-	return $CURUSER["class"];
+	return $CURUSER["class"] ?? -1;
 }
 
 function get_user_class_name($class) {

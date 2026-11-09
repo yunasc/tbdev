@@ -104,7 +104,10 @@ if($description)
 
 <!-- /////// some vars for the statusbar;o) //////// -->
 
-<?php if ($CURUSER) { ?>
+<?php
+$messages = $outmessages = 0;
+$medaldon = $warn = $usrclass = '';
+if ($CURUSER) { ?>
 
 <?php
 
@@ -122,7 +125,6 @@ if ($CURUSER["downloaded"] > 0) {
 else
 	$ratio = "---";
 
-$medaldon = $warn = '';
 
 if ($CURUSER['donor'] == "yes")
 	$medaldon = "<img src=\"{$pic_base_url}/star.gif\" alt=\"Донор\" title=\"Донор\">";
@@ -331,7 +333,7 @@ refrClock2();
 <a class="menu" href="signup.php"><center>'.$tracker_lang['signup'].'</center></a>';
 }
 
-if ($CURUSER['override_class'] != 255)
+if ($CURUSER && $CURUSER['override_class'] != 255)
 	$usrclass = "&nbsp;<img src=\"{$pic_base_url}/warning.gif\" title=" . get_user_class_name($CURUSER['class']) . " alt=" . get_user_class_name($CURUSER['class']) . ">&nbsp;";
 elseif (get_user_class() >= UC_MODERATOR)
 	$usrclass = "&nbsp;<a href=\"setclass.php\"><img src=\"{$pic_base_url}/warning.gif\" title=\"" . get_user_class_name($CURUSER['class']) . "\" alt=\"" . get_user_class_name($CURUSER['class']) . "\" border=\"0\"></a>&nbsp;";
@@ -402,7 +404,7 @@ if (COOKIE_SALT == 'default') {
     print("</td></tr></table></p>\n");
 }
 
-if ($CURUSER['override_class'] != 255 && $CURUSER) { // Second condition needed so that this box isn't displayed for non members/logged out members.
+if ($CURUSER && $CURUSER['override_class'] != 255) {
 	print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=green><tr><td style='padding: 10px; background: green'>\n");
 	print("<b><a href=\"$DEFAULTBASEURL/restoreclass.php\"><font color=white>{$tracker_lang['lower_class']}</font></a></b>");
 	print("</td></tr></table></p>\n");
