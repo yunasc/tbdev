@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -64,7 +64,7 @@ if ($action == "viewcomments")
 
 	$res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 
-	$arr = mysql_fetch_row($res) or stderr($tracker_lang['error'], "Комментарии не найдены");
+	$arr = mysqli_fetch_row($res) or stderr($tracker_lang['error'], "Комментарии не найдены");
 
 	$commentcount = $arr[0];
 
@@ -76,9 +76,9 @@ if ($action == "viewcomments")
 
 	$res = sql_query("SELECT username, donor, warned, enabled FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
 
-	if (mysql_num_rows($res) == 1)
+	if (mysqli_num_rows($res) == 1)
 	{
-		$arr = mysql_fetch_assoc($res);
+		$arr = mysqli_fetch_assoc($res);
 
 	  $subject = "<a href=userdetails.php?id=$userid><b>$arr[username]</b></a>" . get_user_icons($arr, true);
 	}
@@ -93,7 +93,7 @@ if ($action == "viewcomments")
 
 	$res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 
-	if (mysql_num_rows($res) == 0) stderr($tracker_lang['error'], "Комментарии не найдены");
+	if (mysqli_num_rows($res) == 0) stderr($tracker_lang['error'], "Комментарии не найдены");
 
 	stdhead("История комментариев");
 
@@ -107,7 +107,7 @@ if ($action == "viewcomments")
 
 	begin_frame();
 
-	while ($arr = mysql_fetch_assoc($res))
+	while ($arr = mysqli_fetch_assoc($res))
 	{
 
 		$commentid = $arr["id"];
@@ -123,7 +123,7 @@ if ($action == "viewcomments")
 
 	  $subres = sql_query("SELECT COUNT(*) FROM comments WHERE torrent = $torrentid AND id < $commentid")
 	  	or sqlerr(__FILE__, __LINE__);
-	  $subrow = mysql_fetch_row($subres);
+	  $subrow = mysqli_fetch_row($subres);
     $count = $subrow[0];
     $comm_page = floor($count/20);
     $page_url = $comm_page?"&page=$comm_page":"";

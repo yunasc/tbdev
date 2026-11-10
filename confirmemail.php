@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -38,7 +38,7 @@ if (!$id)
 dbconn();
 
 $res = sql_query("SELECT editsecret, editsecret_added FROM users WHERE id = $id");
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 
 if (!$row)
 	httperr();
@@ -51,7 +51,7 @@ if (!is_string($md5) || $md5 !== md5($sec . $email . $sec))
 
 sql_query("UPDATE users SET editsecret='', email=" . sqlesc($email) . " WHERE id = $id AND editsecret = " . sqlesc($row["editsecret"]));
 
-if (!mysql_affected_rows())
+if (!db_affected_rows())
 	httperr();
 
 header("Refresh: 0; url=my.php?emailch=1");

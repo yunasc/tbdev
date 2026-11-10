@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -44,14 +44,14 @@ $ajax = (string) $_POST["ajax"];
 if ($ajax == "yes") {
 	sql_query("INSERT INTO thanks (torrentid, userid) VALUES ($torrentid, $userid)");// or sqlerr(__FILE__,__LINE__);
 	$count_sql = sql_query("SELECT COUNT(*) FROM thanks WHERE torrentid = $torrentid");
-	$count_row = mysql_fetch_array($count_sql);
+	$count_row = mysqli_fetch_array($count_sql);
 	$count = $count_row[0];
 
 	if ($count == 0) {
 		$thanksby = $tracker_lang['none_yet'];
 	} else {
 		$thanked_sql = sql_query("SELECT thanks.userid, users.username, users.class FROM thanks INNER JOIN users ON thanks.userid = users.id WHERE thanks.torrentid = $torrentid");
-		while ($thanked_row = mysql_fetch_assoc($thanked_sql)) {
+		while ($thanked_row = mysqli_fetch_assoc($thanked_sql)) {
 			if (($thanked_row["userid"] == $CURUSER["id"]) || ($thanked_row["userid"] == $row["owner"]))
 			$can_not_thanks = true;
 			//list($userid, $username) = $thanked_row;

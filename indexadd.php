@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -55,7 +55,7 @@ stdhead("Выберите тип релиза");
 	<table border="1" cellspacing="0" cellpadding="3" width="20%">
 	<tr><td class="heading" align="right">Тип</td><td>
 	<select name="type">
-<?
+<?php
 	foreach ($types as $type)
 		print("<option value=\"" . $type["type"] . "\">" . $type["name"] . "</option>");
 ?>
@@ -64,7 +64,7 @@ stdhead("Выберите тип релиза");
 	<tr><td align="center" colspan="2"><input type="submit" class=btn value="Дальше"></td></tr>
 	</table>
 </form>
-<?
+<?php
 stdfoot();
 die;
 } else
@@ -86,14 +86,14 @@ $categories .= "</select>";
 <form name="index" action="takeindex.php" method="post"><input type="hidden" name="csrf_token" value="<?=csrf_token()?>">
 <table border="0" cellspacing="0" cellpadding="5">
 <tr><td class="colhead" colspan="2">Выбранный шаблон: <?=$types[$type]["name"];?></td></tr>
-<?
+<?php
 tr("Название релиза", "<input type=\"text\" name=\"name\" size=\"80\" /><br />Пример: Смерть Президента (2006) DVDRip\n", 1);
 tr("Постер", "<input type=\"text\" name=\"poster\" size=\"80\" /><br />Залить картинку на <a href=\"http://www.imageshack.us\">ImageShack</a>", 1);
 ?>
 <tr><td width="" class="heading" valign="top" align="right">Верхний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "top", $templates[$type]["toptemplate"]);?></td></tr>
 <tr><td width="" class="heading" valign="top" align="right">Средний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "center", $templates[$type]["centertemplate"]);?></td></tr>
 <tr><td width="" class="heading" valign="top" align="right">Нижний шаблон</td><td valign="top" align="left"><?=textbbcode("index", "bottom", $templates[$type]["bottomtemplate"]);?></td></tr>
-<?
+<?php
 tr("Номер торрента", "<input type=\"text\" name=\"torrentid\" size=\"60\" /><br />Пример: $DEFAULTBASEURL/details.php?id=<b>6764</b><br />Выделенное жирным - и есть номер торрента\n", 1);
 tr("URL IMDB", "<input type=\"text\" name=\"imdb\" size=\"60\" /><br />Пример: http://www.imdb.com/title/tt0408306/\n", 1);
 tr("Категория", $categories, 1);
@@ -102,6 +102,6 @@ tr("Категория", $categories, 1);
 </table>
 </form>
 
-<?
+<?php
 stdfoot();
 ?>

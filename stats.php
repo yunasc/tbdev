@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -50,15 +50,15 @@ stdhead("Статистика");
 -->
 </STYLE>
 
-<?
+<?php
 begin_main_frame();
 
 $res = sql_query("SELECT COUNT(*) FROM torrents") or sqlerr(__FILE__, __LINE__);
-$n = mysql_fetch_row($res);
+$n = mysqli_fetch_row($res);
 $n_tor = $n[0];
 
 $res = sql_query("SELECT COUNT(*) FROM peers") or sqlerr(__FILE__, __LINE__);
-$n = mysql_fetch_row($res);
+$n = mysqli_fetch_row($res);
 $n_peers = $n[0];
 
 $uporder = htmlspecialchars_uni($_GET['uporder']);
@@ -81,7 +81,7 @@ $query = "SELECT u.id, u.username AS name, MAX(t.added) AS last, COUNT(DISTINCT 
 
 $res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 	stdmsg("Извините", "Нет заливающих.");
 else
 {
@@ -95,7 +95,7 @@ else
 	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=peers&amp;catorder=$catorder\" class=colheadlink>Пиров</a></td>\n
 	<td class=colhead>Завершено</td>\n
 	</tr>\n");
-	while ($uper = mysql_fetch_array($res))
+	while ($uper = mysqli_fetch_array($res))
 	{
 		print("<tr><td><a href=userdetails.php?id=".$uper['id']."><b>".$uper['name']."</b></a></td>\n");
 		print("<td " . ($uper['last']?(">".$uper['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($uper['last']))." назад)"):"align=center>---") . "</td>\n");
@@ -133,7 +133,7 @@ else
 	<td class=colhead>Завершено</td>
 	<td class=colhead><a href=\"" . $_SERVER['PHP_SELF'] . "?uporder=$uporder&amp;catorder=peers\" class=colheadlink>Пиров</a></td>
 	<td class=colhead>Завершено</td></tr>\n");
-	while ($cat = mysql_fetch_array($res))
+	while ($cat = mysqli_fetch_array($res))
 	{
 		print("<tr><td class=rowhead>" . $cat['name'] . "</b></a></td>");
 		print("<td " . ($cat['last']?(">".$cat['last']." (".get_elapsed_time(sql_timestamp_to_unix_timestamp($cat['last']))." назад)"):"align = center>---") ."</td>");

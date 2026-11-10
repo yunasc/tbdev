@@ -580,7 +580,7 @@ function get_row_count($table, $suffix = "") {
 	if ($suffix)
 		$suffix = " $suffix";
 	($r = sql_query("SELECT COUNT(*) FROM $table$suffix")) or sqlerr(__FILE__, __LINE__);
-	($a = mysql_fetch_row($r)) or sqlerr(__FILE__, __LINE__);
+	($a = mysqli_fetch_row($r)) or sqlerr(__FILE__, __LINE__);
 	return $a[0];
 }
 
@@ -622,7 +622,7 @@ function newerr($heading = '', $text = '', $head = true, $foot = true, $die = tr
 }
 
 function sqlerr($file = '', $line = '') {
-	error_log('Database error: ' . mysql_error() . ($file !== '' ? ' in ' . $file . ':' . $line : ''));
+	error_log('Database error: ' . db_error() . ($file !== '' ? ' in ' . $file . ':' . $line : ''));
 	header('HTTP/1.1 500 Internal Server Error');
 	die('Database error.');
 }
@@ -966,7 +966,7 @@ function format_comment($text, $strip_html = true) {
 
 function get_user_class() {
 	global $CURUSER;
-	return $CURUSER["class"];
+	return $CURUSER["class"] ?? -1;
 }
 
 function get_user_class_name($class) {

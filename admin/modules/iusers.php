@@ -4,7 +4,7 @@ if (!defined("ADMIN_FILE")) die("Illegal File Access");
 function iUsers($iname, $ipass, $imail) {
 	global $admin_file, $CURUSER;
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-		list($iclass) = mysql_fetch_row(sql_query('SELECT class FROM users WHERE username = ' . sqlesc($iname)));
+		list($iclass) = mysqli_fetch_row(sql_query('SELECT class FROM users WHERE username = ' . sqlesc($iname)));
 		if (get_user_class() <= $iclass) {
 			stdmsg("Ошибка", "Смена пароля завершилась неудачей! Вы пробовали изменить учетные данные пользователя выше. Действие записано в логахъ.", "error");
 			write_log('Администратор '.$CURUSER['username'].' пробовал изменить учетные данные пользователя '.$iname.' классом выше!', 'red', 'error');
@@ -20,7 +20,7 @@ function iUsers($iname, $ipass, $imail) {
 				$updateset[] = "email = ".sqlesc($imail);
 			if (count($updateset))
 				$res = sql_query("UPDATE users SET ".implode(", ", $updateset)." WHERE username = ".sqlesc($iname)) or sqlerr(__FILE__,__LINE__);
-			if (mysql_modified_rows() < 1)
+			if (db_modified_rows() < 1)
 				stdmsg("Ошибка", "Смена пароля завершилась неудачей! Возможно указано несуществующее имя пользователя.", "error");
 			else
 				stdmsg("Изменения пользователя прошло успешно", "Имя пользователя: ".$iname.(!empty($hash) ? "<br />Новый пароль: ".$ipass : "").(!empty($imail) ? "<br />Новая почта: ".$imail : ""));

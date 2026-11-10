@@ -7,7 +7,7 @@ function StatusDB() {
 	global $prefix, $admin_file, $dbname;
 	$result = sql_query("SHOW TABLES FROM ".$dbname."");
 	$content = "";
-	while (list($name) = mysql_fetch_array($result)) $content .= "<option value=\"".$name."\" selected>".$name."</option>";
+	while (list($name) = mysqli_fetch_array($result)) $content .= "<option value=\"".$name."\" selected>".$name."</option>";
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\">"
 	."<form method=\"post\" action=\"".$admin_file.".php\">"
 	."<input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">"
@@ -22,7 +22,7 @@ function StatusDB() {
 	if ($_POST['type'] == "Optimize") {
 		$result = sql_query("SHOW TABLE STATUS FROM ".$dbname."");
 		$tables = array();
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 			$total = $row['Data_length'] + $row['Index_length'];
 			$totaltotal += $total;
 			$free = ($row['Data_free']) ? $row['Data_free'] : 0;
@@ -39,7 +39,7 @@ function StatusDB() {
 		."".$content3."</table>";
 	} elseif ($_POST['type'] == "Repair") {
 		$result = sql_query("SHOW TABLE STATUS FROM ".$dbname."");
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 			$total = $row['Data_length'] + $row['Index_length'];
 			$totaltotal += $total;
 			$i++;

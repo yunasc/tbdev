@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -67,7 +67,7 @@ stdfoot();
 die();
 }
 $res = sql_query("SELECT id, username, class, last_access, added, uploaded, downloaded FROM users WHERE enabled='yes' AND status='confirmed' AND id <> $CURUSER[id] AND INET_ATON(ip) & INET_ATON('$mask') = INET_ATON('$ip') & INET_ATON('$mask')") or sqlerr(__FILE__, __LINE__);
-if (mysql_num_rows($res)){
+if (mysqli_num_rows($res)){
 stdhead("Сетевые соседи");
 
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
@@ -77,7 +77,7 @@ print("<tr><td class=colhead align=left>Пользователь</td>
 <td class=colhead>Рейтинг</td><td class=colhead>Зарегистрирован</td>
 <td class=colhead>Последний доступ</td><td class=colhead align=left>Класс</td>
 <td class=colhead>IP</td></tr>\n");
-while($arr=mysql_fetch_assoc($res)){
+while($arr=mysqli_fetch_assoc($res)){
 print("<tr><td align=left><b><a href=userdetails.php?id=$arr[id]>".get_user_class_color($arr["class"], $arr["username"])."</a></b></td>
 <td>".mksize($arr["uploaded"])."</td>
 <td>".mksize($arr["downloaded"])."</td>

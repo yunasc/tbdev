@@ -19,7 +19,7 @@ if (!$count) {
 	$content .= $pagertop;
 	$content .= "</td></tr>";
 	$res = sql_query("SELECT i.*, c.id AS catid, c.name AS catname, c.image AS catimage FROM indexreleases AS i LEFT JOIN categories AS c ON i.cat = c.id ORDER BY id DESC $limit") or sqlerr(__FILE__, __LINE__);
-	while ($release = mysql_fetch_array($res)) {
+	while ($release = mysqli_fetch_array($res)) {
 		$catid = $release["catid"];
 		$catname = $release["catname"];
 		$catimage = $release["catimage"];

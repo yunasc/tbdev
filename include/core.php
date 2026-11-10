@@ -68,55 +68,15 @@ if (!isset($HTTP_POST_VARS) && isset($_POST)) {
 	$HTTP_POST_FILES = $_FILES;
 }
 
-// STRIP MAGIC QUOTES FROM REQUEST
-if (get_magic_quotes_gpc()) {
-	if (!empty($_GET))    { $_GET    = strip_magic_quotes($_GET);    }
-	if (!empty($_POST))   { $_POST   = strip_magic_quotes($_POST);   }
-	if (!empty($_COOKIE)) { $_COOKIE = strip_magic_quotes($_COOKIE); }
+// Some legacy forms still read the escaped copies of request parameters.
+function escape_legacy_request($values) {
+    foreach ($values as &$value)
+        $value = is_array($value) ? escape_legacy_request($value) : addslashes($value);
+    return $values;
 }
-// DO SOME EXTRA STUFF
-if (!get_magic_quotes_gpc()) {
-	if (is_array($HTTP_GET_VARS)) {
-		while (list($k, $v) = each($HTTP_GET_VARS)) {
-			if (is_array($HTTP_GET_VARS[$k])) {
-				while (list($k2, $v2) = each($HTTP_GET_VARS[$k])) {
-					$HTTP_GET_VARS[$k][$k2] = addslashes($v2);
-				}
-				@reset($HTTP_GET_VARS[$k]);
-			} else {
-				$HTTP_GET_VARS[$k] = addslashes($v);
-			}
-		}
-		@reset($HTTP_GET_VARS);
-	}
 
-	if (is_array($HTTP_POST_VARS)) {
-		while (list($k, $v) = each($HTTP_POST_VARS)) {
-			if (is_array($HTTP_POST_VARS[$k])) {
-				while (list($k2, $v2) = each($HTTP_POST_VARS[$k])) {
-					$HTTP_POST_VARS[$k][$k2] = addslashes($v2);
-				}
-				@reset($HTTP_POST_VARS[$k]);
-			} else {
-				$HTTP_POST_VARS[$k] = addslashes($v);
-			}
-		}
-		@reset($HTTP_POST_VARS);
-	}
-
-	if (is_array($HTTP_COOKIE_VARS)) {
-		while (list($k, $v) = each($HTTP_COOKIE_VARS)) {
-			if (is_array($HTTP_COOKIE_VARS[$k])) {
-				while (list($k2, $v2) = each($HTTP_COOKIE_VARS[$k])) {
-					$HTTP_COOKIE_VARS[$k][$k2] = addslashes($v2);
-				}
-				@reset($HTTP_COOKIE_VARS[$k]);
-			} else {
-				$HTTP_COOKIE_VARS[$k] = addslashes($v);
-			}
-		}
-		@reset($HTTP_COOKIE_VARS);
-	}
-}
+$HTTP_GET_VARS = escape_legacy_request($HTTP_GET_VARS);
+$HTTP_POST_VARS = escape_legacy_request($HTTP_POST_VARS);
+$HTTP_COOKIE_VARS = escape_legacy_request($HTTP_COOKIE_VARS);
 
 ?>

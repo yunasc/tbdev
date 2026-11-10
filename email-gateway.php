@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -35,7 +35,7 @@ if (!$id)
 	stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
 $res = sql_query("SELECT username, class, email FROM users WHERE id=$id");
-$arr = mysql_fetch_assoc($res) or stderr($tracker_lang['error'], "Нет такого пользователя.");
+$arr = mysqli_fetch_assoc($res) or stderr($tracker_lang['error'], "Нет такого пользователя.");
 $username = $arr["username"];
 if ($arr["class"] < UC_MODERATOR)
 	stderr($tracker_lang['error'], $tracker_lang['access_denied']);
@@ -100,4 +100,4 @@ stdhead("E-mail шлюз");
 <font class=small><b>Внимание:</b> Ваш IP-адрес будет записан и будет виден получателю, для предотвращения обмана.<br />
 Убедитесь что вы ввели правильный e-mail адрес если вы ожидаете ответа.</font>
 </p>
-<? stdfoot(); ?>
+<?php stdfoot(); ?>

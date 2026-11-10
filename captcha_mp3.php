@@ -21,7 +21,7 @@ if($_GET['imagehash'] == "test") {
 	$imagestring = "Yuna";
 } else {
 	$query = sql_query("SELECT * FROM captcha WHERE imagehash = ".sqlesc($_GET['imagehash'])." LIMIT 1") or sqlerr(__FILE__,__LINE__);
-	$regimage = mysql_fetch_array($query);
+	$regimage = mysqli_fetch_array($query);
 	$imagestring = $regimage['imagestring'];
 }
 

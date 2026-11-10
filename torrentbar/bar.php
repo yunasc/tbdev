@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Author: TracKer
 // E-Mail: tracker2k@gmail.com
@@ -73,15 +73,11 @@ function getParam() {
 	return $res;
 }
 
-function mysql_init() {
-	global $mysql_host, $mysql_db, $mysql_user, $mysql_pass;
-    if ($mysql_pass!='') {
-        $link = @mysql_connect($mysql_host, $mysql_user, $mysql_pass) or die("Cannot connect to database!"); 
-    } else {
-        $link = @mysql_connect($mysql_host, $mysql_user) or die("Cannot connect to database!"); 
-    }
-    mysql_select_db($mysql_db) or die("Cannot select database!");
-    return $link;
+function bar_connect() {
+    global $mysql_host, $mysql_db, $mysql_user, $mysql_pass, $mysql_charset;
+    require_once __DIR__ . '/../include/db.php';
+    if (!db_connect($mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset))
+        die('Database unavailable.');
 }
 
 function ifthen($ifcondition, $iftrue, $iffalse) {
@@ -151,18 +147,18 @@ $userid = getParam();
 if ($userid!="") {
 	include($config_path);
 	include($configlocal_path);
-	mysql_init();
+	bar_connect();
 	
 	$query = "SELECT COUNT(id) FROM users WHERE id = '".$userid."'";
-    $result = @mysql_query($query) or die("Could not select data!");
-    $counter = mysql_result($result, 0);
-    mysql_free_result($result);
+    $result = @db_query($query) or die("Could not select data!");
+    $counter = db_result($result, 0);
+    mysqli_free_result($result);
     
     if ($counter>0) {
     	$query = "SELECT uploaded, downloaded FROM users WHERE id = ".$userid;
-        $result = mysql_query($query) or die("Could not select data!");
+        $result = db_query($query) or die("Could not select data!");
         
-        while ($data = mysql_fetch_array($result))
+        while ($data = mysqli_fetch_array($result))
     	{
             $upload_counter = $data['uploaded'];
             $download_counter = $data['downloaded'];

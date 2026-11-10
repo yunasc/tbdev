@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -54,13 +54,13 @@
   $limit = ($type == 'announce' ? "LIMIT 1000" : "");
   $res = sql_query("SELECT txt, added, color FROM `sitelog` WHERE type = ".sqlesc($type)." ORDER BY `added` DESC $limit") or sqlerr(__FILE__, __LINE__);
   print("<h1>Логи</h1>\n");
-  if (mysql_num_rows($res) == 0)
+  if (mysqli_num_rows($res) == 0)
     print("<b>Лог файл пустой</b>\n");
   else
   {
     print("<table border=1 cellspacing=0 cellpadding=5>\n");
     print("<tr><td class=colhead align=left>Дата</td><td class=colhead align=left>Время</td><td class=colhead align=left>Событие</td></tr>\n");
-    while ($arr = mysql_fetch_assoc($res))
+    while ($arr = mysqli_fetch_assoc($res))
     {
       $date = substr($arr['added'], 0, strpos($arr['added'], " "));
       $time = substr($arr['added'], strpos($arr['added'], " ") + 1);

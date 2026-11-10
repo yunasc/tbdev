@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -51,10 +51,10 @@ $test = (string) $_POST["test"];
 <p><?=$SITENAME?> поддерживает большое количество <i>BB тегов</i> которые вы можете использовать для украшения ваших раздач и постов.</p>
 
 <form method=post action=?>
-<textarea name=test cols=60 rows=3><? print($test ? htmlspecialchars_uni($test) : "")?></textarea>
+<textarea name=test cols=60 rows=3><?php print($test ? htmlspecialchars_uni($test) : "")?></textarea>
 <input type=submit value="Проверить этот код!" style='height: 23px; margin-left: 5px'>
 </form>
-<?
+<?php
 
 if ($test != "")
   print("<p><hr>" . format_comment($test) . "<hr></p>\n");

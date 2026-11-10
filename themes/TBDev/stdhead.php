@@ -47,7 +47,7 @@ $(document).ready(function(){
 
 //-->
 </script>
-<?
+<?php
 if($keywords)
     echo "<meta name=\"keywords\" content=\"$keywords\" />\n";
 if($description)
@@ -74,28 +74,28 @@ if($description)
 <td align="center" class="topnav">&nbsp;<a href="<?=$DEFAULTBASEURL;?>/"><font color="#FFFFFF"><?=$tracker_lang['homepage'];?></font></a>
 &nbsp;&#8226;&nbsp;
 <a href="browse.php"><font color="#FFFFFF"><?=$tracker_lang['browse'];?></font></a>
-<? if ($CURUSER) { ?>
+<?php if ($CURUSER) { ?>
 &nbsp;&#8226;&nbsp;
 <a href="bookmarks.php"><font color="#FFFFFF"><?=$tracker_lang['bookmarks'];?></font></a>
-<? } ?>
-<? if (get_user_class() >= UC_USER) { ?>
+<?php } ?>
+<?php if (get_user_class() >= UC_USER) { ?>
 &nbsp;&#8226;&nbsp;
 <a href="upload.php"><font color="#FFFFFF"><?=$tracker_lang['upload'];?></font></a>
-<? } ?>
-<? if ($CURUSER) { ?>
+<?php } ?>
+<?php if ($CURUSER) { ?>
 &nbsp;&#8226;&nbsp;
 <a href="log.php"><font color="#FFFFFF"><?=$tracker_lang['logs'];?></font></a>
-<? } ?>
+<?php } ?>
 &nbsp;&#8226;&nbsp;
 <a href="rules.php"><font color="#FFFFFF"><?=$tracker_lang['rules'];?></font></a>
 &nbsp;&#8226;&nbsp;
 <a href="faq.php"><font color="#FFFFFF"><?=$tracker_lang['faq'];?></font></a>
-<? if ($CURUSER) { ?>
+<?php if ($CURUSER) { ?>
 &nbsp;&#8226;&nbsp;
 <!--<a href="helpdesk.php"><font color="#FFFFFF">Тех. Поддержка</font></a>
 &nbsp;&#8226;&nbsp;-->
 <a href="staff.php"><font color="#FFFFFF"><?=$tracker_lang['staff'];?></font></a>
-<? } ?>
+<?php } ?>
 &nbsp;&#8226;&nbsp;
 <a href="contactus.php"><font color="#FFFFFF"><?=$tracker_lang['contactus'];?></font></a>
 </td></tr>
@@ -104,9 +104,12 @@ if($description)
 
 <!-- /////// some vars for the statusbar;o) //////// -->
 
-<? if ($CURUSER) { ?>
+<?php
+$messages = $outmessages = 0;
+$medaldon = $warn = $usrclass = '';
+if ($CURUSER) { ?>
 
-<?
+<?php
 
 $uped = mksize($CURUSER['uploaded']);
 $downed = mksize($CURUSER['downloaded']);
@@ -122,7 +125,6 @@ if ($CURUSER["downloaded"] > 0) {
 else
 	$ratio = "---";
 
-$medaldon = $warn = '';
 
 if ($CURUSER['donor'] == "yes")
 	$medaldon = "<img src=\"{$pic_base_url}/star.gif\" alt=\"Донор\" title=\"Донор\">";
@@ -130,26 +132,26 @@ if ($CURUSER['warned'] == "yes")
 	$warn = "<img src=\"{$pic_base_url}/warned.gif\" alt=\"Предупрежден\" title=\"Предупрежден\">";
 
 //// check for messages ////////////////// 
-        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1") or error_log(mysql_error());
-        $arr1 = mysql_fetch_row($res1);
+        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1") or error_log(db_error());
+        $arr1 = mysqli_fetch_row($res1);
         $messages = $arr1[0];
-        /*$res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1 AND unread='yes'") or error_log(mysql_error());
-        $arr1 = mysql_fetch_row($res1);
+        /*$res1 = sql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location=1 AND unread='yes'") or error_log(db_error());
+        $arr1 = mysqli_fetch_row($res1);
         $unread = $arr1[0];*/
-        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND saved='yes'") or error_log(mysql_error());
-        $arr1 = mysql_fetch_row($res1);
+        $res1 = sql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND saved='yes'") or error_log(db_error());
+        $arr1 = mysqli_fetch_row($res1);
         $outmessages = $arr1[0];
         if ($unread)
                 $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Есть новые сообщения\" src=\"{$pic_base_url}/pn_inboxnew.gif\">";
         else
                 $inboxpic = "<img height=\"16px\" style=\"border:none\" alt=\"inbox\" title=\"Нет новых сообщений\" src=\"{$pic_base_url}/pn_inbox.gif\">";
 
-$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='yes'") or error_log(mysql_error());
-$row = mysql_fetch_row($res2);
+$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='yes'") or error_log(db_error());
+$row = mysqli_fetch_row($res2);
 $activeseed = $row[0];
 
-$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='no'") or error_log(mysql_error());
-$row = mysql_fetch_row($res2);
+$res2 = sql_query("SELECT COUNT(*) FROM peers WHERE userid = {$CURUSER["id"]} AND seeder='no'") or error_log(db_error());
+$row = mysqli_fetch_row($res2);
 $activeleech = $row[0];
 
 //// end
@@ -214,7 +216,7 @@ refrClock();
 </script>
 <!-- / clock hack -->
 
-<?
+<?php
 if ($messages) {
 	print("<span class=smallfont><a href=message.php>$inboxpic</a> $messages ($unread новых)</span>");
 	if ($outmessages)
@@ -237,11 +239,11 @@ print("&nbsp;<a href=getrss.php><img style=border:none alt=RSS title=RSS src={$p
 </table></table>
 <p>
 
-<? } else {?>
+<?php } else {?>
 
 <br />
 
-<? } ?>
+<?php } ?>
 <!-- /////////// here we go, with the menu //////////// -->
 
 <?php
@@ -254,10 +256,10 @@ $w = "width=\"90%\"";
 
 <!------------- MENU ------------------------------------------------------------------------>
 
-<? $fn = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/") + 1); ?>
+<?php $fn = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/") + 1); ?>
 
 <td valign="top" width="155">
-<?
+<?php
 
 show_blocks("l");
 
@@ -331,7 +333,7 @@ refrClock2();
 <a class="menu" href="signup.php"><center>'.$tracker_lang['signup'].'</center></a>';
 }
 
-if ($CURUSER['override_class'] != 255)
+if ($CURUSER && $CURUSER['override_class'] != 255)
 	$usrclass = "&nbsp;<img src=\"{$pic_base_url}/warning.gif\" title=" . get_user_class_name($CURUSER['class']) . " alt=" . get_user_class_name($CURUSER['class']) . ">&nbsp;";
 elseif (get_user_class() >= UC_MODERATOR)
 	$usrclass = "&nbsp;<a href=\"setclass.php\"><img src=\"{$pic_base_url}/warning.gif\" title=\"" . get_user_class_name($CURUSER['class']) . "\" alt=\"" . get_user_class_name($CURUSER['class']) . "\" border=\"0\"></a>&nbsp;";
@@ -386,7 +388,7 @@ if ($CURUSER) {
 </td>
 
 <td align="center" valign="top" class="outer" style="padding-top: 5px; padding-bottom: 5px">
-<?
+<?php
 
 if ($CURUSER) {
 	if ($unread) {
@@ -402,7 +404,7 @@ if (COOKIE_SALT == 'default') {
     print("</td></tr></table></p>\n");
 }
 
-if ($CURUSER['override_class'] != 255 && $CURUSER) { // Second condition needed so that this box isn't displayed for non members/logged out members.
+if ($CURUSER && $CURUSER['override_class'] != 255) {
 	print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=green><tr><td style='padding: 10px; background: green'>\n");
 	print("<b><a href=\"$DEFAULTBASEURL/restoreclass.php\"><font color=white>{$tracker_lang['lower_class']}</font></a></b>");
 	print("</td></tr></table></p>\n");

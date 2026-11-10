@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -42,14 +42,14 @@ if ($HTTP_SERVER_VARS["REQUEST_METHOD"] == "POST")
 
     $res = sql_query("SELECT * FROM users WHERE username=" . sqlesc($username)) or sqlerr(__FILE__, __LINE__);
 
-    if (mysql_num_rows($res) != 1)
+    if (mysqli_num_rows($res) != 1)
         stderr($tracker_lang['error'], "Неверное имя пользователя. Проверьте введеные данные.");
 
-    $arr = mysql_fetch_assoc($res);
+    $arr = mysqli_fetch_assoc($res);
 
     $id = $arr['id'];
     $res = sql_query("DELETE FROM users WHERE id = $id") or sqlerr(__FILE__, __LINE__);
-    if (mysql_affected_rows() != 1)
+    if (db_affected_rows() != 1)
         stderr($tracker_lang['error'], "Невозможно удалить аккаунт.");
     sql_query("DELETE FROM messages WHERE receiver = $id") or sqlerr(__FILE__,__LINE__);
     sql_query("DELETE FROM friends WHERE userid = $id") or sqlerr(__FILE__,__LINE__);
@@ -74,6 +74,6 @@ stdhead("Удалить аккаунт");
         <tr><td colspan=2><input type=submit class=btn value='Удалить'></td></tr>
     </form>
 </table>
-<?
+<?php
 stdfoot();
 ?>

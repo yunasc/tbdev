@@ -103,7 +103,7 @@ if (isset($_GET['sort']) && isset($_GET['type'])) {
     }
 
 
-    $orderby = "ORDER BY t." . $column . " " . $ascdesc;
+    $orderby = "ORDER BY t." . ($column ?: "id") . " " . $ascdesc;
     $pagerlink = "sort=" . intval($_GET['sort']) . "&type=" . $linkascdesc . "&";
 
 } else {
@@ -148,12 +148,10 @@ if (isset($_GET['all']))
     $all = false;
 
 if (!$all)
-    if (!$_GET && $CURUSER["notifs"]) {
-        $all = True;
+    if (!$_GET && !empty($CURUSER["notifs"])) {
         foreach ($cats as $cat) {
-            $all &= $cat[id];
-            if (strpos($CURUSER["notifs"], "[cat" . $cat[id] . "]") !== false) {
-                $wherecatina[] = $cat[id];
+            if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== false) {
+                $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
             }
         }
@@ -163,11 +161,9 @@ if (!$all)
         $wherecatina[] = $category;
         $addparam .= "cat=$category&amp;";
     } else {
-        $all = true;
         foreach ($cats as $cat) {
-            $all &= $_GET["cr$car[id]"];
             if (isset($_GET["c$cat[id]"])) {
-                $wherecatina[] = $cat[id];
+                $wherecatina[] = $cat['id'];
                 $addparam .= "c$cat[id]=1&amp;";
             }
         }
@@ -197,7 +193,7 @@ if ($where != "")
     $where = "WHERE $where";
 
 $res = sql_query("SELECT COUNT(*) FROM torrents AS t $where") or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $count = $row[0];
 $num_torrents = $count;
 
@@ -220,12 +216,12 @@ if (!$count && isset($cleansearchstr)) {
         if ($where != "")
             $where = "WHERE $where";
         $res = sql_query("SELECT COUNT(*) FROM torrents AS t $where");
-        $row = mysql_fetch_array($res);
+        $row = mysqli_fetch_array($res);
         $count = $row[0];
     }
 }
 
-$torrentsperpage = $CURUSER["torrentsperpage"];
+$torrentsperpage = $CURUSER["torrentsperpage"] ?? 25;
 if (!$torrentsperpage)
     $torrentsperpage = 25;
 
@@ -242,7 +238,7 @@ if ($count) {
         $addparam = $pagerlink;
     }
     list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
-    $query = "SELECT t.id, t.moderated, t.moderatedby, t.category, (t.leechers + t.remote_leechers) AS leechers, (t.seeders + t.remote_seeders) AS seeders, t.multitracker, t.last_mt_update, t.free, t.name, t.info_hash, t.times_completed, t.size, t.added, t.comments, t.numfiles, t.filename, t.not_sticky, t.owner," . "IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, c.name AS cat_name, c.image AS cat_pic, u.username, u.class" . ($CURUSER ? ", EXISTS(SELECT * FROM readtorrents WHERE readtorrents.userid = " . sqlesc($CURUSER["id"]) . " AND readtorrents.torrentid = t.id) AS readtorrent" : ", 1 AS readtorrent") . " FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id $where $orderby $limit";
+    $query = "SELECT t.id, t.type, t.moderated, t.moderatedby, t.category, (t.leechers + t.remote_leechers) AS leechers, (t.seeders + t.remote_seeders) AS seeders, t.multitracker, t.last_mt_update, t.free, t.name, t.info_hash, t.times_completed, t.size, t.added, t.comments, t.numfiles, t.filename, t.not_sticky, t.owner," . "IF(t.numratings < $minvotes, NULL, ROUND(t.ratingsum / t.numratings, 1)) AS rating, c.name AS cat_name, c.image AS cat_pic, u.username, u.class" . ($CURUSER ? ", EXISTS(SELECT * FROM readtorrents WHERE readtorrents.userid = " . sqlesc($CURUSER["id"]) . " AND readtorrents.torrentid = t.id) AS readtorrent" : ", 1 AS readtorrent") . " FROM torrents AS t LEFT JOIN categories AS c ON t.category = c.id LEFT JOIN users AS u ON t.owner = u.id $where $orderby $limit";
     $res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 } else
     unset($res);
@@ -278,10 +274,10 @@ if (isset($cleansearchstr))
                                 <table class="bottom">
                                     <tr>
 
-                                        <?
+                                        <?php
                                         $i = 0;
+                                        $catsperrow = 5;
                                         foreach ($cats as $cat) {
-                                            $catsperrow = 5;
                                             print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
                                             print("<td class=\"bottom\" style=\"padding-bottom: 2px;padding-left: 7px\"><input name=\"c$cat[id]\" type=\"checkbox\" " . (in_array($cat['id'], $wherecatina) ? "checked " : "") . "value=\"1\"><a class=\"catlink\" href=\"browse.php?cat=$cat[id]\">" . htmlspecialchars_uni($cat['name']) . "</a></td>\n");
                                             $i++;
@@ -316,17 +312,17 @@ if (isset($cleansearchstr))
                                     <select name="incldead">
                                         <option value="0"><?= $tracker_lang['active']; ?></option>
                                         <option
-                                            value="1"<? print($incldead == 1 ? " selected" : ""); ?>><?= $tracker_lang['including_dead']; ?></option>
+                                            value="1"<?php print($incldead == 1 ? " selected" : ""); ?>><?= $tracker_lang['including_dead']; ?></option>
                                         <option
-                                            value="2"<? print($incldead == 2 ? " selected" : ""); ?>><?= $tracker_lang['only_dead']; ?></option>
+                                            value="2"<?php print($incldead == 2 ? " selected" : ""); ?>><?= $tracker_lang['only_dead']; ?></option>
                                         <option
-                                            value="3"<? print($incldead == 3 ? " selected" : ""); ?>><?= $tracker_lang['golden_torrents']; ?></option>
+                                            value="3"<?php print($incldead == 3 ? " selected" : ""); ?>><?= $tracker_lang['golden_torrents']; ?></option>
                                         <option
-                                            value="4"<? print($incldead == 4 ? " selected" : ""); ?>><?= $tracker_lang['no_seeds']; ?></option>
+                                            value="4"<?php print($incldead == 4 ? " selected" : ""); ?>><?= $tracker_lang['no_seeds']; ?></option>
                                     </select>
                                     <select name="cat">
                                         <option value="0">(<?= $tracker_lang['all_types']; ?>)</option>
-                                        <?
+                                        <?php
 
                                         //$cats = genrelist();
                                         $catdropdown = "";
@@ -352,7 +348,7 @@ if (isset($cleansearchstr))
         </tr>
     </table>
 
-<?
+<?php
 
 if (isset($cleansearchstr))
     print('<tr><td class="index" colspan="12">' . $tracker_lang['search_results_for'] . ' "' . htmlspecialchars_uni($searchstr) . '"</td></tr>');

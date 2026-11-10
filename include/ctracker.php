@@ -40,7 +40,7 @@ if(!defined('IN_TRACKER'))
 // Begin CrackerTracker StandAlone
 //
 
-$cracktrack = $_SERVER['QUERY_STRING'];
+$cracktrack = ($_SERVER['QUERY_STRING'] ?? '');
 $wormprotector = array('chr(', 'chr=', 'chr%20', '%20chr', 'wget%20', '%20wget', 'wget(',
 'cmd=', '%20cmd', 'cmd%20', 'rush=', '%20rush', 'rush%20',
 'union%20', '%20union', 'union(', 'union=', 'echr(', '%20echr', 'echr%20', 'echr=',

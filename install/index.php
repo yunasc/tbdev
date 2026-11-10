@@ -2,6 +2,7 @@
 
 // ####################### SET PHP ENVIRONMENT ###########################
 error_reporting(E_ALL & ~E_NOTICE);
+ini_set('default_charset', 'Windows-1251');
 
 $enable_file = dirname(__FILE__) . '/install.enabled';
 $used_file = dirname(__FILE__) . '/install.used';
@@ -10,7 +11,7 @@ if (is_file($used_file) || !is_file($enable_file)) {
     exit('Installer is disabled.');
 }
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    header('Content-Type: text/html; charset=UTF-8');
+    header('Content-Type: text/html; charset=Windows-1251');
     exit('<form method="post"><button type="submit">Run one-time installation</button></form>');
 }
 if (!@rename($enable_file, $used_file)) {

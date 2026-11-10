@@ -33,8 +33,8 @@ if(!defined('IN_TRACKER'))
 function torrenttable($res, $variant = "index") {
 		global $pic_base_url, $CURUSER, $use_wait, $use_ttl, $ttl_days, $tracker_lang;
 
-  if ($use_wait)
-  if (($CURUSER["class"] < UC_VIP) && $CURUSER) {
+  $wait = 0;
+  if ($use_wait && $CURUSER && $CURUSER["class"] < UC_VIP) {
 		  $gigs = $CURUSER["uploaded"] / (1024*1024*1024);
 		  $ratio = (($CURUSER["downloaded"] > 0) ? ($CURUSER["uploaded"] / $CURUSER["downloaded"]) : 0);
 		  if ($ratio < 0.5 || $gigs < 5) $wait = 48;
@@ -48,104 +48,13 @@ print("<tr>\n");
 
 // sorting by MarkoStamcar
 
-$count_get = 0;
-
-foreach ($_GET as $get_name => $get_value) {
-	$get_name = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_name)));
-	$get_value = mysql_real_escape_string(strip_tags(str_replace(array("\"","'"),array("",""),$get_value)));
-	if ($get_name != "sort" && $get_name != "type") {
-		if ($count_get > 0)
-			$oldlink = $oldlink . "&" . $get_name . "=" . $get_value;
-		else
-			$oldlink = $oldlink . $get_name . "=" . $get_value;
-		$count_get++;
-	}
-}
-
-if ($count_get > 0)
-	$oldlink = $oldlink . "&";
-
-if ($_GET['sort'] == "1") {
-if ($_GET['type'] == "desc") {
-$link1 = "asc";
-} else {
-$link1 = "desc";
-}
-}
-
-if ($_GET['sort'] == "2") {
-if ($_GET['type'] == "desc") {
-$link2 = "asc";
-} else {
-$link2 = "desc";
-}
-}
-
-if ($_GET['sort'] == "3") {
-if ($_GET['type'] == "desc") {
-$link3 = "asc";
-} else {
-$link3 = "desc";
-}
-}
-
-if ($_GET['sort'] == "4") {
-if ($_GET['type'] == "desc") {
-$link4 = "asc";
-} else {
-$link4 = "desc";
-}
-}
-
-if ($_GET['sort'] == "5") {
-if ($_GET['type'] == "desc") {
-$link5 = "asc";
-} else {
-$link5 = "desc";
-}
-}
-
-if ($_GET['sort'] == "7") {
-if ($_GET['type'] == "desc") {
-$link7 = "asc";
-} else {
-$link7 = "desc";
-}
-}
-
-if ($_GET['sort'] == "8") {
-if ($_GET['type'] == "desc") {
-$link8 = "asc";
-} else {
-$link8 = "desc";
-}
-}
-
-if ($_GET['sort'] == "9") {
-if ($_GET['type'] == "desc") {
-$link9 = "asc";
-} else {
-$link9 = "desc";
-}
-}
-
-if ($_GET['sort'] == "10") {
-if ($_GET['type'] == "desc") {
-$link10 = "asc";
-} else {
-$link10 = "desc";
-}
-}
-
-if ($link1 == "") { $link1 = "asc"; } // for torrent name
-if ($link2 == "") { $link2 = "desc"; }
-if ($link3 == "") { $link3 = "desc"; }
-if ($link4 == "") { $link4 = "desc"; }
-if ($link5 == "") { $link5 = "desc"; }
-if ($link7 == "") { $link7 = "desc"; }
-if ($link8 == "") { $link8 = "desc"; }
-if ($link9 == "") { $link9 = "desc"; }
-if ($link10 == "") { $link10 = "desc"; }
+$params = array_diff_key($_GET, ['sort' => true, 'type' => true]);
+$oldlink = $params ? http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986) . '&amp;' : '';
+$directions = [1 => 'asc', 2 => 'desc', 3 => 'desc', 4 => 'desc', 5 => 'desc',
+               7 => 'desc', 8 => 'desc', 9 => 'desc', 10 => 'desc'];
+$sort = $_GET['sort'] ?? null;
+if (is_string($sort) && isset($directions[$sort]))
+    $directions[$sort] = ($_GET['type'] ?? '') === 'desc' ? 'asc' : 'desc';
 
 $script = "browse.php";
 if ($variant == "mytorrents")
@@ -155,7 +64,7 @@ if ($variant == "bookmarks")
 
 ?>
 <td class="colhead" align="center"><?php echo $tracker_lang['type'];?></td>
-<td class="colhead" align="left"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=1&type=<?php print $link1; ?>" class="altlink_white"><?php echo $tracker_lang['name'];?></a> / <a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=4&type=<?php print $link4; ?>" class="altlink_white"><?php echo $tracker_lang['added'];?></a></td>
+<td class="colhead" align="left"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=1&type=<?php print $directions[1]; ?>" class="altlink_white"><?php echo $tracker_lang['name'];?></a> / <a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=4&type=<?php print $directions[4]; ?>" class="altlink_white"><?php echo $tracker_lang['added'];?></a></td>
 <!--<td class="heading" align="left">DL</td>-->
 <?php
 if ($wait)
@@ -166,27 +75,27 @@ if ($variant == "mytorrents")
 
 
 ?>
-<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=2&type=<?php print $link2; ?>" class="altlink_white"><?php echo $tracker_lang['files'];?></a></td>
-<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=3&type=<?php print $link3; ?>" class="altlink_white"><?php echo $tracker_lang['comments'];?></a></td>
+<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=2&type=<?php print $directions[2]; ?>" class="altlink_white"><?php echo $tracker_lang['files'];?></a></td>
+<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=3&type=<?php print $directions[3]; ?>" class="altlink_white"><?php echo $tracker_lang['comments'];?></a></td>
 <?php if ($use_ttl) {
 ?>
 	<td class="colhead" align="center"><?php echo $tracker_lang['ttl'];?></td>
 <?php
 }
 ?>
-<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=5&type=<?php print $link5; ?>" class="altlink_white"><?php echo $tracker_lang['size'];?></a></td>
+<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=5&type=<?php print $directions[5]; ?>" class="altlink_white"><?php echo $tracker_lang['size'];?></a></td>
 <!--
 <td class="colhead" align="right">Views</td>
 <td class="colhead" align="right">Hits</td>
 -->
-<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=7&type=<?php print $link7; ?>" class="altlink_white"><?php echo $tracker_lang['seeds'];?></a>|<a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=8&type=<?php print $link8; ?>" class="altlink_white"><?php echo $tracker_lang['leechers'];?></a></td>
+<td class="colhead" align="center"><a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=7&type=<?php print $directions[7]; ?>" class="altlink_white"><?php echo $tracker_lang['seeds'];?></a>|<a href="<?php print $script; ?>?<?php print $oldlink; ?>sort=8&type=<?php print $directions[8]; ?>" class="altlink_white"><?php echo $tracker_lang['leechers'];?></a></td>
 <?php
 
 if ($variant == "index" || $variant == "bookmarks")
-	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=9&type={$link9}\" class=\"altlink_white\">".$tracker_lang['uploadeder']."</a></td>\n");
+	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=9&type={$directions[9]}\" class=\"altlink_white\">".$tracker_lang['uploadeder']."</a></td>\n");
 
 if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
-	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=10&type={$link10}\" class=\"altlink_white\">Изменен</td>");
+	print("<td class=\"colhead\" align=\"center\"><a href=\"{$script}?{$oldlink}sort=10&type={$directions[10]}\" class=\"altlink_white\">Изменен</td>");
 
 if ((get_user_class() >= UC_MODERATOR) && $variant == "index")
 	print("<td class=\"colhead\" align=\"center\">".$tracker_lang['delete']."</td>\n");
@@ -198,9 +107,9 @@ print("</tr>\n");
 
 print("<tbody id=\"highlighted\">");
 
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		$id = $row["id"];
-		print("<tr".($row["not_sticky"] == "no" ? " class=\"highlight\"" : "").">\n");
+		print("<tr".(($row["not_sticky"] ?? "yes") === "no" ? " class=\"highlight\"" : "").">\n");
 
 		print("<td align=\"center\" style=\"padding: 0px\">");
 		if (isset($row["cat_name"])) {
@@ -227,7 +136,7 @@ print("<tbody id=\"highlighted\">");
                 $freepic = '';
         }
 		$thisisfree = $freepic;
-		print("<td align=\"left\">".($row["not_sticky"] == "no" ? "Важный: " : "")."<a href=\"details.php?");
+		print("<td align=\"left\">".(($row["not_sticky"] ?? "yes") === "no" ? "Важный: " : "")."<a href=\"details.php?");
 		if ($variant == "mytorrents")
 			print("returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;");
 		print("id=$id");
@@ -245,15 +154,14 @@ print("<tbody id=\"highlighted\">");
 			print("<a href=\"".magnet(true, $row['info_hash'], $row['filename'], $row['size'])."\"><img src=\"$pic_base_url/magnet.png\" border=\"0\" alt=\"{$tracker_lang['magnet']}\" title=\"{$tracker_lang['magnet']}\"></a>\n");
 
 				$allow_update = (strtotime($row['last_mt_update']) < (TIMENOW - 3600));
-				if ($allow_update)
-					$suffix = '_update';
+				$suffix = $allow_update ? '_update' : '';
 				$multi_image = "<img src=\"$pic_base_url/multitracker.png\" border=\"0\" alt=\"{$tracker_lang['external_torrent' . $suffix]}\" title=\"{$tracker_lang['external_torrent' . $suffix]}\" />\n";
 				if ($allow_update)
 					$multi_image = "<a href=\"update_multi.php?id=$id\">$multi_image</a>\n";
 				echo $multi_image;
 			}
 
-		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
+		if (($CURUSER && $CURUSER["id"] == ($row["owner"] ?? null)) || get_user_class() >= UC_MODERATOR)
 			$owned = 1;
 		else
 			$owned = 0;
@@ -261,7 +169,7 @@ print("<tbody id=\"highlighted\">");
 				if ($owned)
 			print("<a href=\"edit.php?id=$row[id]\"><img border=\"0\" src=\"$pic_base_url/pen.gif\" alt=\"".$tracker_lang['edit']."\" title=\"".$tracker_lang['edit']."\" /></a>\n");
 
-			   if ($row["readtorrent"] == 0 && $variant == "index")
+			   if ($variant == "index" && $row["readtorrent"] == 0)
 				   print ("<b><font color=\"red\" size=\"1\">[новый]</font></b>");
 
 			print("<br /><i>".$row["added"]."</i>");
@@ -337,8 +245,7 @@ print("<tbody id=\"highlighted\">");
 		if ($row["leechers"]) {
 			if ($variant == "index")
 				print("<b><a href=\"details.php?id=$id&amp;hit=1&amp;todlers=1\">" .
-				   number_format($row["leechers"]) . ($peerlink ? "</a>" : "") .
-				   "</b>\n");
+				   number_format($row["leechers"]) . "</a></b>\n");
 			else
 				print("<b><a class=\"" . linkcolor($row["leechers"]) . "\" href=\"details.php?id=$id&amp;dllist=1#leechers\">" .
 				  $row["leechers"] . "</a></b>\n");
@@ -352,7 +259,7 @@ print("<tbody id=\"highlighted\">");
 			print("<td align=\"center\">" . (isset($row["username"]) ? ("<a href=\"userdetails.php?id=" . $row["owner"] . "\"><b>" . get_user_class_color($row["class"], htmlspecialchars_uni($row["username"])) . "</b></a>") : "<i>(unknown)</i>") . "</td>\n");
 
 		if ($variant == "bookmarks")
-			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" form=\"bulk-bookmark-delete\" value=\"" . $row[bookmarkid] . "\" /></td>");
+			print ("<td align=\"center\"><input type=\"checkbox\" name=\"delbookmark[]\" form=\"bulk-bookmark-delete\" value=\"" . $row['bookmarkid'] . "\" /></td>");
 
 		if ((get_user_class() >= UC_MODERATOR) && $variant == "index") {
 			if ($row["moderated"] == "no")
@@ -384,7 +291,6 @@ print("<tbody id=\"highlighted\">");
 	if ($variant == "bookmarks")
 		print("<tr><td colspan=\"12\" align=\"right\"><form id=\"bulk-bookmark-delete\" method=\"post\" action=\"takedelbookmark.php\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"".$tracker_lang['delete']."\"></form></td></tr>\n");
 
-	return $rows;
 }
 
 ?>

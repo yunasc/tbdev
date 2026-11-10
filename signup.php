@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -35,17 +35,17 @@ if ($deny_signup && !$allow_invite_signup)
 if ($CURUSER)
 	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_already_registered'], $SITENAME));
 
-list($users) = mysql_fetch_array(sql_query("SELECT COUNT(id) FROM users"));
+list($users) = mysqli_fetch_array(sql_query("SELECT COUNT(id) FROM users"));
 if ($users >= $maxusers)
 	stderr($tracker_lang['error'], sprintf($tracker_lang['signup_users_limit'], number_format($maxusers)));
 
-if ($_POST["agree"] != "yes") {
+if (($_POST["agree"] ?? "") !== "yes") {
 stdhead("Правила трекера");
 ?>
 <div style="width:80%" align="center">
 <fieldset class="fieldset">
 <legend>Правила трекера</legend>
-<form method="post" action="<?=$PHP_SELF?>">
+<form method="post" action="<?=htmlspecialchars_uni($_SERVER["PHP_SELF"])?>">
 <table cellpadding="4" cellspacing="0" border="0" style="width:100%" class="tableinborder">
 <tr>
 <td class="tablea">Для продолжения регистрации, Вы должны согласиться со следующими правилами:</td></tr>
@@ -78,7 +78,7 @@ stdhead("Правила трекера");
 <input class="tableinborder" type="submit" value="Регистрация">
 </center>
 </form>
-<?
+<?php
 stdfoot();
 die;
 }
@@ -87,13 +87,13 @@ stdhead($tracker_lang['signup_signup']);
 
 $countries = "<option value=\"0\">".$tracker_lang['signup_not_selected']."</option>\n";
 $ct_r = sql_query("SELECT id, name FROM countries ORDER BY name") or die;
-while ($ct_a = mysql_fetch_array($ct_r))
+while ($ct_a = mysqli_fetch_array($ct_r))
   $countries .= "<option value=\"$ct_a[id]\">$ct_a[name]</option>\n";
 
 ?>
 <span style="color: red; font-weight: bold;"><?=$tracker_lang['signup_use_cookies'];?></span>
 
-<?
+<?php
 if ($deny_signup && $allow_invite_signup)
 	stdmsg("Внимание", "Регистрация доступна только тем у кого есть код приглашения!");
 ?>
@@ -109,7 +109,7 @@ if ($deny_signup && $allow_invite_signup)
 </font></td></tr></table>
 </td></tr>
 <tr><td align="right" class="heading"><?=$tracker_lang['signup_gender'];?></td><td align=left><input type=radio name=gender value=1><?=$tracker_lang['signup_male'];?><input type=radio name=gender value=2><?=$tracker_lang['signup_female'];?></td></tr>
-<?
+<?php
 $year .= "<select name=year><option value=\"0000\">".$tracker_lang['my_year']."</option>\n";
 $i = "1920";
 while ($i <= (date('Y',time())-13)) {
@@ -214,7 +214,7 @@ if ($allow_invite_signup) {
 <tr><td colspan="2" align="center"><input type="submit" value="<?=$tracker_lang['signup_signup'];?>" style='height: 25px'></td></tr>
 </table>
 </form>
-<?
+<?php
 
 stdfoot();
 

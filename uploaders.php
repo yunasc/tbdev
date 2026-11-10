@@ -39,7 +39,7 @@ if ($CURUSER['class'] >= UC_MODERATOR)
 
 $query = "SELECT id, username, added, uploaded, downloaded, donor, warned FROM users WHERE class = ".UC_UPLOADER;
 $result = sql_query($query);
-$num = mysql_num_rows($result); // how many uploaders
+$num = mysqli_num_rows($result); // how many uploaders
 echo "<h2>Информация о аплоадерах</h2>";
 echo "<p>У нас " . $num . " аплоадер" . ($num > 1 ? "ов" : "") . "</p>";
 
@@ -60,22 +60,22 @@ echo "</tr>";
 
 for ($i = 0; $i <= $zerofix; $i++)
 {
-$id = mysql_result($result, $i, "id");
-$username = mysql_result($result, $i, "username");
-$added = mysql_result($result, $i, "added");
-$uploaded = mksize(mysql_result($result, $i, "uploaded"));
-$downloaded = mksize(mysql_result($result, $i, "downloaded"));
-$uploadedratio = mysql_result($result, $i, "uploaded");
-$downloadedratio = mysql_result($result, $i, "downloaded");
-$donor = mysql_result($result, $i, "donor");
-$warned = mysql_result($result, $i, "warned");
+$id = db_result($result, $i, "id");
+$username = db_result($result, $i, "username");
+$added = db_result($result, $i, "added");
+$uploaded = mksize(db_result($result, $i, "uploaded"));
+$downloaded = mksize(db_result($result, $i, "downloaded"));
+$uploadedratio = db_result($result, $i, "uploaded");
+$downloadedratio = db_result($result, $i, "downloaded");
+$donor = db_result($result, $i, "donor");
+$warned = db_result($result, $i, "warned");
 
 // get uploader torrents activity
 $upperquery = "SELECT added FROM torrents WHERE owner = $id";
 $upperresult = sql_query($upperquery);
-$numtorrents = mysql_num_rows($upperresult);
+$numtorrents = mysqli_num_rows($upperresult);
 $lastadded = '0000-00-00 00:00:00';
-while ($torrentinfo = mysql_fetch_array($upperresult))
+while ($torrentinfo = mysqli_fetch_array($upperresult))
 	if (strtotime($torrentinfo['added']) > strtotime($lastadded))
 		$lastadded = $torrentinfo['added'];
 
@@ -115,7 +115,7 @@ echo "<td>$ratio</td>";
 echo "<td>$numtorrents торрентов</td>";
 if ($numtorrents > 0)
 {
-//$lastadded = mysql_result($upperresult, $numtorrents - 1, "added");
+//$lastadded = db_result($upperresult, $numtorrents - 1, "added");
 
 echo "<td>" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastadded)) . " назад (" . date("d. M Y",strtotime($lastadded)) . ")</td>";
 }

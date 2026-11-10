@@ -49,9 +49,9 @@ loggedinorreturn();
 <td class=colhead align=left>Зарегистрирован</td>
 
 </tr>
-<?
+<?php
     $num = 0;
-    while ($a = mysql_fetch_assoc($res))
+    while ($a = mysqli_fetch_assoc($res))
     {
       ++$num;
       $highlight = $CURUSER["id"] == $a["userid"] ? " bgcolor=#BBAF9B" : "";
@@ -94,9 +94,9 @@ loggedinorreturn();
 <td class=colhead align=right>Всего</td>
 <td class=colhead align=right>Рейтинг</td>
 </tr>
-<?
+<?php
     $num = 0;
-    while ($a = mysql_fetch_assoc($res))
+    while ($a = mysqli_fetch_assoc($res))
     {
       ++$num;
       if ($a["leechers"])
@@ -127,9 +127,9 @@ loggedinorreturn();
 <td class=colhead align=left>Страна</td>
 <td class=colhead align=right><?=$what?></td>
 </tr>
-<?
+<?php
   	$num = 0;
-		while ($a = mysql_fetch_assoc($res))
+		while ($a = mysqli_fetch_assoc($res))
 		{
 	    ++$num;
 	    if ($what == "Пользователи")
@@ -156,7 +156,7 @@ loggedinorreturn();
 		print("<tr><td class=colhead>Rank</td><td class=colhead>Username</td><td class=colhead>Upload rate</td><td class=colhead>Download rate</td></tr>");
 
 		$n = 1;
-		while ($arr = mysql_fetch_assoc($res))
+		while ($arr = mysqli_fetch_assoc($res))
 		{
       $highlight = $CURUSER["id"] == $arr["userid"] ? " bgcolor=#BBAF9B" : "";
 			print("<tr><td$highlight>$n</td><td$highlight><a href=userdetails.php?id=" . $arr["userid"] . "><b>" . $arr["username"] . "</b></td><td$highlight>" . mksize($arr["uprate"]) . "/s</td><td$highlight>" . mksize($arr["downrate"]) . "/s</td></tr>\n");

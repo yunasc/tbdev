@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -52,7 +52,7 @@ $userid = implode(", ", array_map('sqlesc', $_POST['usernw']));
 //sql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
 
 $r = sql_query("SELECT modcomment FROM users WHERE id IN (" . implode(", ", array_map('sqlesc', $_POST['usernw'])) . ")")or sqlerr(__FILE__, __LINE__);
-$user = mysql_fetch_array($r);
+$user = mysqli_fetch_array($r);
 $exmodcomment = $user["modcomment"];
 $modcomment = date("Y-m-d") . " - Предупреждение снял " . $CURUSER['username'] . ".\n". $modcomment . $exmodcomment;
 sql_query("UPDATE users SET modcomment=" . sqlesc($modcomment) . " WHERE id IN (" . implode(", ", array_map('sqlesc', $_POST['usernw'])) . ")") or sqlerr(__FILE__, __LINE__);
