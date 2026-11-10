@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -43,7 +43,7 @@ if ($userid != $CURUSER["id"])
 	stderr($tracker_lang['error'], $tracker_lang['access_denied']);
 
 $res = sql_query("SELECT * FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
-$user = mysql_fetch_array($res) or stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
+$user = mysqli_fetch_array($res) or stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
 // action: add -------------------------------------------------------------
 
@@ -69,7 +69,7 @@ if ($action == 'add')
   csrf_require_post();
 
   $r = sql_query("SELECT id FROM $table_is WHERE userid=$userid AND $field_is=$targetid") or sqlerr(__FILE__, __LINE__);
-  if (mysql_num_rows($r) == 1)
+  if (mysqli_num_rows($r) == 1)
 		stderr($tracker_lang['error'], "User ID is already in your ".htmlentities($table_is)." list.");
 
 	sql_query("INSERT INTO $table_is VALUES (0,$userid, $targetid)") or sqlerr(__FILE__, __LINE__);
@@ -91,14 +91,14 @@ if ($action == 'delete')
   if ($type == 'friend')
   {
     sql_query("DELETE FROM friends WHERE userid=$userid AND friendid=$targetid") or sqlerr(__FILE__, __LINE__);
-    if (mysql_affected_rows() == 0)
+    if (db_affected_rows() == 0)
       stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
     $frag = "friends";
   }
   elseif ($type == 'block')
   {
     sql_query("DELETE FROM blocks WHERE userid=$userid AND blockid=$targetid") or sqlerr(__FILE__, __LINE__);
-    if (mysql_affected_rows() == 0)
+    if (db_affected_rows() == 0)
       stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
     $frag = "blocks";
   }
@@ -121,17 +121,17 @@ print("<tr><td>");
 $i = 0;
 
 $res = sql_query("SELECT f.friendid as id, u.username AS name, u.class, u.avatar, u.title, u.donor, u.warned, u.enabled, u.last_access FROM friends AS f LEFT JOIN users as u ON f.friendid = u.id WHERE userid=$userid ORDER BY name") or sqlerr(__FILE__, __LINE__);
-if(mysql_num_rows($res) == 0)
+if(mysqli_num_rows($res) == 0)
 	$friends = "<em>".$tracker_lang['no_friends'].".</em>";
 else
-	while ($friend = mysql_fetch_array($res))
+	while ($friend = mysqli_fetch_array($res))
 	{
     $title = $friend["title"];
 		if (!$title)
 	    $title = get_user_class_name($friend["class"]);
     $body1 = "<a href=\"userdetails.php?id=" . $friend['id'] . "\"><b>" . get_user_class_color($friend["class"], $friend['name']) . "</b></a>" .
     	get_user_icons($friend) . " ($title)<br /><br />" . $tracker_lang['last_seen'] . $friend['last_access'] .
-    	"<br />(" . get_et(sql_ts_to_ut($friend[last_access])) . " ".$tracker_lang['ago'].")";
+		"<br />(" . get_et(sql_ts_to_ut($friend['last_access'])) . " ".$tracker_lang['ago'].")";
 		$body2 = "<br /><a href=\"friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . "\">".$tracker_lang['delete']."</a>" .
 			"<br /><br /><a href=\"message.php?action=sendmessage&amp;receiver=" . $friend['id'] . "\">".$tracker_lang['pm']."</a>";
     $avatar = ($CURUSER["avatars"] == "yes" && valid_avatar_url($friend["avatar"]) ? htmlspecialchars_uni($friend["avatar"]) : "");
@@ -162,13 +162,13 @@ print($friends);
 print("</td></tr></table>\n");
 
 $res = sql_query("SELECT b.blockid AS id, u.username AS name, u.class, u.donor, u.warned, u.enabled, u.last_access FROM blocks AS b LEFT JOIN users AS u ON b.blockid = u.id WHERE userid = $userid ORDER BY name") or sqlerr(__FILE__, __LINE__);
-if(mysql_num_rows($res) == 0)
+if(mysqli_num_rows($res) == 0)
 	$blocks = "<em>".$tracker_lang['no_blocked'].".</em>";
 else
 {
 	$i = 0;
 	$blocks = "<table width=100% cellspacing=0 cellpadding=0>";
-	while ($block = mysql_fetch_array($res))
+	while ($block = mysqli_fetch_array($res))
 	{
 		if ($i % 6 == 0)
 			$blocks .= "<tr>";

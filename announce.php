@@ -39,26 +39,29 @@ require_once('./include/core_announce.php');
 
 gzip();
 
-foreach (array('passkey','info_hash','peer_id','event','ip','localip') as $x) {
-	if(isset($_GET[$x]))
-		$GLOBALS[$x] = '' . $_GET[$x];
+foreach (array('passkey', 'info_hash', 'peer_id', 'port', 'downloaded', 'uploaded', 'left') as $key) {
+    if (!isset($_GET[$key]) || !is_string($_GET[$key]))
+        err('Missing or invalid key: ' . $key);
 }
-
-foreach (array('port','downloaded','uploaded','left') as $x)
-	$GLOBALS[$x] = intval($_GET[$x]);
-
-if (get_magic_quotes_gpc()) {
-    $info_hash = stripslashes($info_hash);
-    $peer_id = stripslashes($peer_id);
+foreach (array('info_hash', 'peer_id') as $key) {
+    if (strlen($_GET[$key]) !== 20)
+        err('Invalid ' . $key);
 }
+if (!preg_match('/\A[0-9a-f]{32}\z/i', $_GET['passkey']))
+    err('Invalid passkey');
 
-foreach (array('passkey','info_hash','peer_id','port','downloaded','uploaded','left') as $x)
-	if (!isset($x)) err('Missing key: '.$x);
-		foreach (array('info_hash','peer_id') as $x)
-			if (strlen($GLOBALS[$x]) != 20)
-				err('Invalid '.$x.' (' . strlen($GLOBALS[$x]) . ' - ' . urlencode($GLOBALS[$x]) . ')');
-			if (strlen($passkey) != 32)
-				err('Invalid passkey (' . strlen($passkey) . ' - ' . $passkey . ')');
+$passkey = $_GET['passkey'];
+$info_hash = $_GET['info_hash'];
+$peer_id = $_GET['peer_id'];
+$peer_id_sql = "X'" . bin2hex($peer_id) . "'";
+$event = $_GET['event'] ?? '';
+$port = (int) $_GET['port'];
+$downloaded = (int) $_GET['downloaded'];
+$uploaded = (int) $_GET['uploaded'];
+$left = (int) $_GET['left'];
+if (min($uploaded, $downloaded, $left) < 0)
+    err('Invalid traffic counters');
+
 $ip = getip();
 $rsize = 50;
 
@@ -70,9 +73,9 @@ foreach(array('num want', 'numwant', 'num_want') as $k) {
 	}
 }
 
-$agent = $_SERVER['HTTP_USER_AGENT'];
+$agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-if (!$port || $port > 0xffff)
+if ($port < 1 || $port > 0xffff)
 	err("Invalid port");
 if (!isset($event))
 	$event = '';
@@ -109,12 +112,12 @@ if(substr($peer_id, 0, 4) == "exbc") err("This version of BitComet is banned! Yo
 if(substr($peer_id, 0, 3) == '-FG') err("FlashGet is banned!");
 
 dbconn();
-mysql_query("SELECT id FROM users WHERE passkey = " . sqlesc($passkey)) or err('Database error');
-if (mysql_affected_rows() == 0)
+$passkey_result = db_query("SELECT id FROM users WHERE passkey = " . sqlesc($passkey, true)) or err('Database error');
+if (mysqli_num_rows($passkey_result) == 0)
 	err('Invalid passkey! Re-download the .torrent from '.$DEFAULTBASEURL);
 $hash = bin2hex($info_hash);
-$res = mysql_query('SELECT id, visible, banned, free, seeders + leechers AS numpeers, UNIX_TIMESTAMP(added) AS ts FROM torrents WHERE info_hash = "'.$hash.'"') or err('Torrents error 1 (select)');
-$torrent = mysql_fetch_array($res);
+$res = db_query('SELECT id, visible, banned, free, seeders + leechers AS numpeers, UNIX_TIMESTAMP(added) AS ts FROM torrents WHERE info_hash = "'.$hash.'"') or err('Torrents error 1 (select)');
+$torrent = mysqli_fetch_array($res);
 if (!$torrent)
 	err('Torrent not registered with this tracker.');
 $torrentid = $torrent['id'];
@@ -123,11 +126,12 @@ $numpeers = $torrent['numpeers'];
 $limit = '';
 if ($numpeers > $rsize)
 	$limit = 'ORDER BY RAND() LIMIT '.$rsize;
-$res = mysql_query('SELECT '.$fields.' FROM peers WHERE torrent = '.$torrentid.' '.$limit) or err('Peers error 1 (select)');
-$resp = 'd' . benc_str('interval') . 'i' . $announce_interval . 'e' . benc_str('peers') . (($compact = ($_GET['compact'] == 1)) ? '' : 'l');
-$no_peer_id = ($_GET['no_peer_id'] == 1);
+$res = db_query('SELECT '.$fields.' FROM peers WHERE torrent = '.$torrentid.' '.$limit) or err('Peers error 1 (select)');
+$plist = '';
+$resp = 'd' . benc_str('interval') . 'i' . $announce_interval . 'e' . benc_str('peers') . (($compact = (($_GET['compact'] ?? '') == 1)) ? '' : 'l');
+$no_peer_id = (($_GET['no_peer_id'] ?? '') == 1);
 unset($self);
-while ($row = mysql_fetch_array($res)) {
+while ($row = mysqli_fetch_array($res)) {
 	if ($row['peer_id'] === $peer_id) {
 		$userid = $row['userid'];
 		$self = $row;
@@ -143,11 +147,14 @@ while ($row = mysql_fetch_array($res)) {
 			benc_str('port') . 'i' . $row['port'] . 'e' . 'e';
 	}
 }
-$resp .= ($compact ? benc_str($plist) : '') . (substr($peer_id, 0, 4) == '-BC0' ? "e7:privatei1ee" : "ee");
-$selfwhere = 'torrent = '.$torrentid.' AND peer_id = '.sqlesc($peer_id);
+$resp .= $compact ? benc_str($plist) : 'e';
+if (substr($peer_id, 0, 4) === '-BC0')
+    $resp .= '7:privatei1e';
+$resp .= 'e';
+$selfwhere = 'torrent = '.$torrentid.' AND peer_id = '.$peer_id_sql;
 if (!isset($self)) {
-	$res = mysql_query('SELECT '.$fields.' FROM peers WHERE '.$selfwhere) or err('Peers error 2 (select)');
-	$row = mysql_fetch_array($res);
+	$res = db_query('SELECT '.$fields.' FROM peers WHERE '.$selfwhere) or err('Peers error 2 (select)');
+	$row = mysqli_fetch_array($res);
 	if ($row) {
 		$userid = $row['userid'];
 		$self = $row;
@@ -162,13 +169,13 @@ $dt = sqlesc(date('Y-m-d H:i:s', time()));
 $updateset = array();
 $snatch_updateset = array();
 
-if (isset($self) && ($self['prevts'] > ($self['nowts'] - $announce_wait )) )
+if (isset($self) && (($self['prevts'] ?? 0) > ($self['nowts'] - $announce_wait )) )
 	err('There is a minimum announce time of ' . $announce_wait . ' seconds');
 if (!isset($self)) {
-	$rz = mysql_query('SELECT id, uploaded, downloaded, enabled, parked, class, passkey_ip FROM users WHERE passkey = '.sqlesc($passkey).' ORDER BY last_access DESC LIMIT 1') or err('Users error 1 (select)');
-	if (mysql_num_rows($rz) == 0)
+	$rz = db_query('SELECT id, uploaded, downloaded, enabled, parked, class, passkey_ip FROM users WHERE passkey = '.sqlesc($passkey, true).' ORDER BY last_access DESC LIMIT 1') or err('Users error 1 (select)');
+	if (mysqli_num_rows($rz) == 0)
 		err('Unknown passkey. Please redownload the torrent from '.$BASEURL.' - READ THE FAQ!');
-	$az = mysql_fetch_array($rz);
+	$az = mysqli_fetch_array($rz);
 	if ($az['enabled'] == 'no')
 		err('This account is disabled.');
 	$userid = $az['id'];
@@ -206,15 +213,14 @@ if (!isset($self)) {
                 err('Your client is not connectable! Check your Port-configuration or search on forums.');
         }else {
             $connectable = 'yes';
-            @fclose($sockres);
         }
     }
 
-    $res = mysql_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Database error');
-    $check = mysql_fetch_array($res);
+    $res = db_query('SELECT torrent, userid FROM snatched WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Database error');
+    $check = mysqli_fetch_array($res);
     if (!$check)
-        mysql_query("INSERT LOW_PRIORITY INTO snatched (torrent, userid, port, startdat, last_action) VALUES ($torrentid, $userid, $port, $dt, $dt)");
-    $ret = mysql_query("INSERT LOW_PRIORITY INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, uploadoffset, downloadoffset, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', $userid, " . sqlesc($agent) . ", $uploaded, $downloaded, " . sqlesc($passkey) . ")") or err('Peers error 4 (insert)');
+        db_query("INSERT LOW_PRIORITY INTO snatched (torrent, userid, port, startdat, last_action) VALUES ($torrentid, $userid, $port, $dt, $dt)");
+    $ret = db_query("INSERT LOW_PRIORITY INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, uploadoffset, downloadoffset, passkey) VALUES ('$connectable', $torrentid, " . $peer_id_sql . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', $userid, " . sqlesc($agent) . ", $uploaded, $downloaded, " . sqlesc($passkey, true) . ")") or err('Peers error 4 (insert)');
     if ($ret) {
         if ($seeder == 'yes')
             $updateset[] = 'seeders = seeders + 1';
@@ -235,7 +241,7 @@ if (!isset($self)) {
 			break;
 	}
 	if ($upthis > 0 || $downthis > 0)
-		mysql_query('UPDATE LOW_PRIORITY users SET uploaded = uploaded + '.$upthis.', downloaded = downloaded + '.$downthis.' WHERE id='.$userid) or err('Users error 2 (update)');
+		db_query('UPDATE LOW_PRIORITY users SET uploaded = uploaded + '.$upthis.', downloaded = downloaded + '.$downthis.' WHERE id='.$userid) or err('Users error 2 (update)');
     $downloaded2 = max(0, $downloaded - $self['downloaded']);
     $uploaded2 = max(0, $uploaded - $self['uploaded']);
     if ($downloaded2 > 0 || $uploaded2 > 0) {
@@ -247,9 +253,9 @@ if (!isset($self)) {
     $snatch_updateset[] = "last_action = $dt";
     $snatch_updateset[] = "seeder = '$seeder'";
     $prev_action = $self['last_action'];
-    mysql_query("UPDATE LOW_PRIORITY peers SET uploaded = $uploaded, downloaded = $downloaded, uploadoffset = $uploaded2, downloadoffset = $downloaded2, to_go = $left, last_action = NOW(), prev_action = ".sqlesc($prev_action).", seeder = '$seeder'"
+    db_query("UPDATE LOW_PRIORITY peers SET uploaded = $uploaded, downloaded = $downloaded, uploadoffset = $uploaded2, downloadoffset = $downloaded2, to_go = $left, last_action = NOW(), prev_action = ".sqlesc($prev_action).", seeder = '$seeder'"
         . ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . time() : "") . ", agent = ".sqlesc($agent)." WHERE $selfwhere") or err('Peers error 3 (update)');
-    if (mysql_affected_rows() && $self['seeder'] != $seeder) {
+    if (db_affected_rows() && $self['seeder'] != $seeder) {
         if ($seeder == 'yes') {
             $updateset[] = 'seeders = seeders + 1';
             $updateset[] = 'leechers = IF(leechers > 0, leechers - 1, 0)';
@@ -260,9 +266,9 @@ if (!isset($self)) {
     }
 
     if ($event == 'stopped') {
-        mysql_query('UPDATE LOW_PRIORITY snatched SET seeder = "no", connectable = "no" WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 1 (update)');
-        mysql_query('DELETE FROM peers WHERE '.$selfwhere);
-        if (mysql_affected_rows()) {
+        db_query('UPDATE LOW_PRIORITY snatched SET seeder = "no", connectable = "no" WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 1 (update)');
+        db_query('DELETE FROM peers WHERE '.$selfwhere);
+        if (db_affected_rows()) {
             if ($self['seeder'] == 'yes')
                 $updateset[] = 'seeders = IF(seeders > 0, seeders - 1, 0)';
             else
@@ -285,10 +291,10 @@ if ($seeder == 'yes') {
 	$updateset[] = 'last_action = NOW()';
 }
 if (count($updateset))
-	mysql_query('UPDATE LOW_PRIORITY torrents SET ' . join(", ", $updateset) . ' WHERE id = '.$torrentid) or err('Torrents error 2 (update)');
+	db_query('UPDATE LOW_PRIORITY torrents SET ' . join(", ", $updateset) . ' WHERE id = '.$torrentid) or err('Torrents error 2 (update)');
 
 if (count($snatch_updateset))
-	mysql_query('UPDATE LOW_PRIORITY snatched SET ' . join(", ", $snatch_updateset) . ' WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 2 (update)');
+	db_query('UPDATE LOW_PRIORITY snatched SET ' . join(", ", $snatch_updateset) . ' WHERE torrent = '.$torrentid.' AND userid = '.$userid) or err('Snatched error 2 (update)');
 
 benc_resp_raw($resp);
 

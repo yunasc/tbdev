@@ -33,14 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $choice = (int) $_POST["choice"];  
   if ($CURUSER && $choice >= 0 && $choice < 256) {
     $res = sql_query("SELECT * FROM polls ORDER BY added DESC LIMIT 1") or sqlerr(__FILE__, __LINE__);
-    $arr = mysql_fetch_assoc($res) or die("Нет опроса");
+    $arr = mysqli_fetch_assoc($res) or die("Нет опроса");
     $pollid = $arr["id"];
     $userid = $CURUSER["id"];
     $res = sql_query("SELECT * FROM pollanswers WHERE pollid=$pollid && userid=$userid") or sqlerr(__FILE__, __LINE__);
-    $arr = mysql_fetch_assoc($res);
+    $arr = mysqli_fetch_assoc($res);
     if ($arr) die("Двойной голос");
     sql_query("INSERT INTO pollanswers VALUES(0, $pollid, $userid, $choice)") or sqlerr(__FILE__, __LINE__);
-    if (mysql_affected_rows() != 1)
+    if (db_affected_rows() != 1)
       stderr($tracker_lang['error'], "Произошла ошибка. Ваш голос не был принят.");
     header("Location: $DEFAULTBASEURL/");
     die;

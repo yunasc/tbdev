@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -82,26 +82,28 @@ if (!filesize($tmpname))
 	bark("Пустой файл!");
 
 $dict = bdecode(file_get_contents($tmpname));
-if (!isset($dict))
+if (!is_array($dict) || !is_array($dict['info'] ?? null))
 	bark("Что за хрень ты загружаешь? Это не бинарно-кодированый файл!");
 
-if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'], array('yes', 'silver', 'no'))) {
-	$free = $_POST['free'];
+if (get_user_class() >= UC_ADMINISTRATOR && in_array($_POST['free'] ?? 'no', array('yes', 'silver', 'no'))) {
+	$free = $_POST['free'] ?? 'no';
+} else {
+    $free = 'no';
 }
 
-if ($_POST['not_sticky'] == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
+if (($_POST['not_sticky'] ?? '') == 'no' AND get_user_class() >= UC_ADMINISTRATOR)
     $not_sticky = "no";
 else
     $not_sticky = "yes";
 
-if ($_POST['multi'] == 'yes')
+if (($_POST['multi'] ?? '') == 'yes')
 	$multi_torrent = 'yes';
 else
 	$multi_torrent = 'no';
 
 //SEO mods
-$keywords = htmlspecialchars_uni(strval($_POST["keywords"]));
-$description = htmlspecialchars_uni(strval($_POST["description"]));
+$keywords = htmlspecialchars_uni(strval($_POST["keywords"] ?? ""));
+$description = htmlspecialchars_uni(strval($_POST["description"] ?? ""));
 
 if (!$keywords)
     $keywords = '';
@@ -111,7 +113,9 @@ if (!$description)
 //SEO mods
 
 $info = $dict['info'];
-list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length']);
+list($dname, $plen, $pieces, $totallen) = array($info['name'], $info['piece length'], $info['pieces'], $info['length'] ?? null);
+if (!is_string($dname) || !is_string($pieces))
+    bark('invalid torrent metadata');
 if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
 	bark('invalid file length');
 
@@ -119,7 +123,7 @@ if (isset($totallen) && (!is_int($totallen) || $totallen < 0))
 	bark("Неверный Announce URL! Должен быть ".$announce_urls[0]);*/
 
 $ret = sql_query("SHOW TABLE STATUS LIKE 'torrents'");
-$row = mysql_fetch_array($ret);
+$row = mysqli_fetch_array($ret);
 $next_id = $row['Auto_increment'];
 
 if (strlen($pieces) % 20 != 0)
@@ -240,11 +244,11 @@ $torrent = htmlspecialchars_uni(str_replace("_", " ", $torrent));
 
 $ret = sql_query("INSERT INTO torrents (filename, owner, visible, not_sticky, info_hash, name, keywords, description, size, numfiles, type, descr, ori_descr, free, image1, image2, image3, image4, image5, category, save_as, added, last_action, multitracker) VALUES (" . implode(",", array_map("sqlesc", array($fname, $CURUSER["id"], "no", $not_sticky, $infohash, $torrent, $keywords, $description, $totallen, count($filelist), $type, $descr, $descr, $free, $inames[0], $inames[1], $inames[2], $inames[3], $inames[4], $catid, $dname))) . ", '" . get_date_time() . "', '" . get_date_time() . "', ".sqlesc($multi_torrent).")");
 if (!$ret) {
-	if (mysql_errno() == 1062)
+	if (db_errno() == 1062)
 		bark("torrent already uploaded!");
 	bark('Database error.');
 }
-$id = mysql_insert_id();
+$id = db_insert_id();
 
 sql_query('INSERT INTO torrents_descr (tid, descr_hash, descr_parsed) VALUES ('.implode(', ', array_map('sqlesc', array($id, parsed_comment_hash($descr), format_comment($descr)))).')') or sqlerr(__FILE__,__LINE__);
 
@@ -270,7 +274,7 @@ write_log("Торрент номер $id ($torrent) был залит пользователем " . $CURUSER["us
 /*******************
 
 $res = sql_query("SELECT name FROM categories WHERE id=$catid") or sqlerr(__FILE__, __LINE__);
-$arr = mysql_fetch_assoc($res);
+$arr = mysqli_fetch_assoc($res);
 $cat = $arr["name"];
 $res = sql_query("SELECT email FROM users WHERE enabled='yes' AND notifs LIKE '%[cat$catid]%'") or sqlerr(__FILE__, __LINE__);
 $uploader = $CURUSER['username'];
@@ -302,8 +306,8 @@ $to = "";
 $nmax = 100; // Max recipients per message
 $nthis = 0;
 $ntotal = 0;
-$total = mysql_num_rows($res);
-while ($arr = mysql_fetch_row($res))
+$total = mysqli_num_rows($res);
+while ($arr = mysqli_fetch_row($res))
 {
   if ($nthis == 0)
     $to = $arr[0];

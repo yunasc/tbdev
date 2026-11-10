@@ -15,7 +15,8 @@ $_DB_CONFIG = array(
 );
 
 // Request MySQL class
-require_once(CWD . '/mysql.php');
+require_once __DIR__ . '/../include/db.php';
+require_once __DIR__ . '/mysql.php';
 
 $db =& MySQL::get_instance();
 

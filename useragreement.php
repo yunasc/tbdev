@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -121,7 +121,7 @@ TorrentBits, torrentbits.org, torrentbits.com, and torrentbits.net are trademark
 The "TorrentBits" is the title of this publication only. 
 <p>
 Copyright © 2003, 2004 by Torrentbits.org.  All rights reserved. 
-<?
+<?php
 end_frame();
 end_main_frame();
 stdfoot();

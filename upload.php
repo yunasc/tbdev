@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -54,7 +54,7 @@ sql_query("UPDATE users SET passkey='$CURUSER[passkey]' WHERE id=$CURUSER[id]");
 <input type="hidden" name="MAX_FILE_SIZE" value="<?=$max_torrent_size?>" />
 <table border="1" cellspacing="0" cellpadding="5">
 <tr><td class="colhead" colspan="2"><?=$tracker_lang['upload_torrent'];?></td></tr>
-<?
+<?php
 //tr($tracker_lang['announce_url'], $announce_urls[0], 1);
 tr($tracker_lang['torrent_file'], "<input type=file name=tfile size=80>\n", 1);
 tr($tracker_lang['torrent_name'], "<input type=\"text\" name=\"name\" size=\"80\" /><br />(".$tracker_lang['taken_from_torrent'].")\n", 1);
@@ -98,7 +98,7 @@ if (get_user_class() >= UC_ADMINISTRATOR)
 </table>
 </form>
 </div>
-<?
+<?php
 
 stdfoot();
 

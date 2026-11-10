@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -84,7 +84,7 @@ ignored unless relevant for the type of search chosen.</li>
 of the torrents in progress.</li>
 <li>Колонка история отображает количество постов в форуме и комментариев к торрентам,
 соотвественно, как и ведет на страницу истории.
-<?
+<?php
 	end_frame();
 }
 else
@@ -106,7 +106,7 @@ $highlight = " bgcolor=#BBAF9B";
 
   <td valign="middle" class=rowhead>Рейтинг:</td>
   <td<?=$_GET['r']?$highlight:""?>><select name="rt">
-    <?
+    <?php
 	$options = array("равен","выше","ниже","между");
 	for ($i = 0; $i < count($options); $i++){
 	    echo "<option value=$i ".(($_GET['rt']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -118,7 +118,7 @@ $highlight = " bgcolor=#BBAF9B";
 
   <td valign="middle" class=rowhead>Статус:</td>
   <td<?=$_GET['st']?$highlight:""?>><select name="st">
-    <?
+    <?php
 	$options = array("(Любой)","Подтвержден","Не подтвержден");
 	for ($i = 0; $i < count($options); $i++){
 	    echo "<option value=$i ".(($_GET['st']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -132,7 +132,7 @@ $highlight = " bgcolor=#BBAF9B";
 
   <td valign="middle" class=rowhead>Отключен:</td>
   <td<?=$_GET['as']?$highlight:""?>><select name="as">
-    <?
+    <?php
     $options = array("(Любой)","Нет","Да");
     for ($i = 0; $i < count($options); $i++){
       echo "<option value=$i ".(($_GET['as']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -146,7 +146,7 @@ $highlight = " bgcolor=#BBAF9B";
   <td<?=$_GET['ma']?$highlight:""?>><input name="ma" type="text" value="<?=htmlspecialchars_uni($_GET['ma'])?>" maxlength="17"></td>
   <td valign="middle" class=rowhead>Класс:</td>
   <td<?=($_GET['c'] && $_GET['c'] != 1)?$highlight:""?>><select name="c"><option value='1'>(Любой)</option>
-  <?
+  <?php
   $class = $_GET['c'];
   if (!is_valid_id($class))
   	$class = '';
@@ -163,7 +163,7 @@ $highlight = " bgcolor=#BBAF9B";
     <td valign="middle" class=rowhead>Регистрация:</td>
 
   <td<?=$_GET['d']?$highlight:""?>><select name="dt">
-    <?
+    <?php
 	$options = array("в","раньше","после","между");
 	for ($i = 0; $i < count($options); $i++){
 	  echo "<option value=$i ".(($_GET['dt']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -179,7 +179,7 @@ $highlight = " bgcolor=#BBAF9B";
   <td valign="middle" class=rowhead>Раздал:</td>
 
   <td<?=$_GET['ul']?$highlight:""?>><select name="ult" id="ult">
-    <?
+    <?php
     $options = array("ровно","больше","меньше","между");
     for ($i = 0; $i < count($options); $i++){
   	  echo "<option value=$i ".(($_GET['ult']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -193,7 +193,7 @@ $highlight = " bgcolor=#BBAF9B";
   <td valign="middle" class="rowhead">Донор:</td>
 
   <td<?=$_GET['do']?$highlight:""?>><select name="do">
-    <?
+    <?php
     $options = array("(Любой)","Да","Нет");
 	for ($i = 0; $i < count($options); $i++){
 	  echo "<option value=$i ".(($_GET['do']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -205,7 +205,7 @@ $highlight = " bgcolor=#BBAF9B";
 <td valign="middle" class=rowhead>Последняя активность:</td>
 
   <td <?=$_GET['ls']?$highlight:""?>><select name="lst">
-  <?
+  <?php
   $options = array("в","раньше","после","между");
   for ($i = 0; $i < count($options); $i++){
     echo "<option value=$i ".(($_GET['lst']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -219,7 +219,7 @@ $highlight = " bgcolor=#BBAF9B";
 	  <td valign="middle" class=rowhead>Скачал:</td>
 
   <td<?=$_GET['dl']?$highlight:""?>><select name="dlt" id="dlt">
-  <?
+  <?php
 	$options = array("ровно","больше","меньше","между");
 	for ($i = 0; $i < count($options); $i++){
 	  echo "<option value=$i ".(($_GET['dlt']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -234,7 +234,7 @@ $highlight = " bgcolor=#BBAF9B";
 	<td valign="middle" class=rowhead>Предупрежден:</td>
 
 	<td<?=$_GET['w']?$highlight:""?>><select name="w">
-  <?
+  <?php
   $options = array("(Любой)","Да","Нет");
 	for ($i = 0; $i < count($options); $i++){
 		echo "<option value=$i ".(($_GET['w']=="$i")?"selected":"").">".$options[$i]."</option>\n";
@@ -253,7 +253,7 @@ $highlight = " bgcolor=#BBAF9B";
 <br /><br />
 </form>
 
-<?
+<?php
 
 // Validates date in the form [yy]yy-mm-dd;
 // Returns date if valid, 0 otherwise.
@@ -791,7 +791,7 @@ if (count($_GET) > 0 && !$_GET['h'])
   $_SESSION["mass_pm_ids"] = array();
   $_SESSION["mass_pm_key"] = mksecret();
   $mass_res = sql_query("SELECT DISTINCT u.id ".$querypm) or sqlerr(__FILE__, __LINE__);
-  while ($mass_row = mysql_fetch_row($mass_res))
+  while ($mass_row = mysqli_fetch_row($mass_res))
       $_SESSION["mass_pm_ids"][] = (int)$mass_row[0];
 
   $select_is = "u.id, u.username, u.email, u.status, u.added, u.last_access, u.ip,
@@ -814,7 +814,7 @@ if (count($_GET) > 0 && !$_GET['h'])
 //    </temporary>   /////////////////////////////////////////////////////
 
   $res = sql_query($queryc) or sqlerr(__FILE__, __LINE__);
-  $arr = mysql_fetch_row($res);
+  $arr = mysqli_fetch_row($res);
   $count = $arr[0];
 
   $q = isset($q)?($q."&amp;"):"";
@@ -827,7 +827,7 @@ if (count($_GET) > 0 && !$_GET['h'])
 
   $res = sql_query($query) or sqlerr(__FILE__, __LINE__);
 
-  if (mysql_num_rows($res) == 0)
+  if (mysqli_num_rows($res) == 0)
   	stdmsg("Внимание","Пользователь не был найден.");
   else
   {
@@ -846,7 +846,7 @@ if (count($_GET) > 0 && !$_GET['h'])
         "<td class=colhead>pUL</td>".
         "<td class=colhead>pDL</td>".
         "<td class=colhead>История</td></tr>";
-    while ($user = mysql_fetch_array($res))
+    while ($user = mysqli_fetch_array($res))
     {
     	if ($user['added'] == '0000-00-00 00:00:00')
       	$user['added'] = '---';
@@ -857,7 +857,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       {
 	    	$nip = ip2long($user['ip']);
         $auxres = sql_query("SELECT COUNT(*) FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-        $array = mysql_fetch_row($auxres);
+        $array = mysqli_fetch_row($auxres);
     	  if ($array[0] == 0)
       		$ipstr = $user['ip'];
 	  	  else
@@ -867,7 +867,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       	$ipstr = "---";
 
       $auxres = sql_query("SELECT SUM(uploaded) AS pul, SUM(downloaded) AS pdl FROM peers WHERE userid = " . $user['id']) or sqlerr(__FILE__, __LINE__);
-      $array = mysql_fetch_array($auxres);
+      $array = mysqli_fetch_array($auxres);
 
       $pul = $array['pul'];
       $pdl = $array['pdl'];
@@ -877,7 +877,7 @@ if (count($_GET) > 0 && !$_GET['h'])
       $auxres = sql_query("SELECT COUNT(id) FROM comments WHERE user = ".$user['id']) or sqlerr(__FILE__, __LINE__);
 			// Use LEFT JOIN to exclude orphan comments
       // $auxres = sql_query("SELECT COUNT(c.id) FROM comments AS c LEFT JOIN torrents as t ON c.torrent = t.id WHERE c.user = '".$user['id']."'") or sqlerr(__FILE__, __LINE__);
-      $n = mysql_fetch_row($auxres);
+      $n = mysqli_fetch_row($auxres);
       $n_comments = $n[0];
 
     	echo "<tr><td><b><a href='userdetails.php?id=" . $user['id'] . "'>" .
@@ -916,7 +916,7 @@ if (count($_GET) > 0 && !$_GET['h'])
         </tr> 
       </table> 
     </form>
-<?
+<?php
 
   }
 }

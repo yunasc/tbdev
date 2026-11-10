@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -122,7 +122,7 @@ if ($_GET["form"]=='mov')
 <br />
 
 
-<?
+<?php
 }
 if ($_GET["form"]=='all')
 {
@@ -280,7 +280,7 @@ SFVChecker</a> (Демо версия) или <a href="http://www.big-o-software.com/products
                 </td>
             </table>
 
-<?
+<?php
 }
 
 stdfoot();

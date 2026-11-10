@@ -56,7 +56,7 @@ function print_array($array, $offset_symbol = "|--", $offset = "", $parent = "")
 			break;
 		case "dictionary":
 			printf("<li><div class=dictionary> + <span class=icon>[DICT]</span> <span class=title>[%s]</span> <span class=length>(%d)</span></div>",htmlspecialchars_uni($parent),$array['strlen']);
-			while (list($key, $val) = each($array))
+			foreach ($array as $key => $val)
 			{
 				if (is_array($val))
 				{
@@ -69,7 +69,7 @@ function print_array($array, $offset_symbol = "|--", $offset = "", $parent = "")
 
 			break;
 		default:
-			  while (list($key, $val) = each($array))
+			  foreach ($array as $key => $val)
 			  {
 			    if (is_array($val))
 			    {
@@ -93,7 +93,7 @@ if (!$id)
 	httperr();
 
 $res = sql_query("SELECT name FROM torrents WHERE id = $id") or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_assoc($res);
+$row = mysqli_fetch_assoc($res);
 
 $fn = "$torrent_dir/$id.torrent";
 
@@ -221,7 +221,7 @@ function getRealAddress(oOb) { return oOb.protocol + ( ( oOb.protocol.indexOf( '
 compactMenu('colapse',false,'');
 //--></script>
 
-<?
+<?php
 // Standard html footers
 end_main_frame();
 stdfoot();

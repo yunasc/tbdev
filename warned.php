@@ -41,7 +41,7 @@ begin_frame("Предупрежденные пользователи: ($warned)", true);
 begin_table();
 
 $res = sql_query("SELECT * FROM users WHERE warned=1 AND enabled='yes' ORDER BY (users.uploaded/users.downloaded)") or sqlerr(__FILE__, __LINE__);
-$num = mysql_num_rows($res);
+$num = mysqli_num_rows($res);
 print("<table border=1 width=675 cellspacing=0 cellpadding=2><form action=\"nowarn.php\" method=post><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\">\n");
 print("<tr align=center><td class=colhead width=90>Пользователь</td>
 <td class=colhead width=70>Зарегистрирован</td>
@@ -55,7 +55,7 @@ print("<tr align=center><td class=colhead width=90>Пользователь</td>
 <td class=colhead width=65>Отключить</td></tr>\n");
 for ($i = 1; $i <= $num; $i++)
 {
-$arr = mysql_fetch_assoc($res);
+$arr = mysqli_fetch_assoc($res);
 if ($arr['added'] == '0000-00-00 00:00:00')
 $arr['added'] = '-';
 if ($arr['last_access'] == '0000-00-00 00:00:00')

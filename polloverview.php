@@ -36,7 +36,7 @@ function cleanit($array, $index, $maxlength)
    if (isset($array["{$index}"]))
    {
       $input = substr($array["{$index}"], 0, $maxlength);
-      $input = mysql_real_escape_string($input);
+      $input = db_real_escape_string($input);
       return ($input);
    }
    return NULL;
@@ -62,13 +62,13 @@ print("<h1>Обзор опросов</h1>\n");
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
 "<td class=colhead align=center>ID</td><td class=colhead>Добавлен</td><td class=colhead>Вопрос</td></tr>\n");
 
-if (mysql_num_rows($sql) == 0) {
+if (mysqli_num_rows($sql) == 0) {
  print("<tr><td colspan=3>Извините...Нет голосовавших пользователей!</td></tr></table>");
  stdfoot();
  exit;
  }
  
-while ($poll = mysql_fetch_assoc($sql))
+while ($poll = mysqli_fetch_assoc($sql))
 {
  $added = date("Y-m-d h-i-s",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " назад)";
  print("<tr><td align=center><a href=\"polloverview.php?id={$poll['id']}\">{$poll['id']}</a></td><td>{$added}</td><td><a href=\"polloverview.php?id={$poll['id']}\">{$poll['question']}</a></td></tr>\n");
@@ -90,13 +90,13 @@ print("<h1>Обзор опроса</h1>\n");
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
 "<td class=colhead align=center>ID</td><td class=colhead>Добавлен</td><td class=colhead>Вопрос</td></tr>\n");
 
-if (mysql_num_rows($sql) == 0) {
+if (mysqli_num_rows($sql) == 0) {
  print("<tr><td colspan=2>Извините...Нет опроса с таким ID!</td></tr></table>");
  stdfoot();
  exit;
  }
  
-while ($poll = mysql_fetch_assoc($sql))
+while ($poll = mysqli_fetch_assoc($sql))
 {
  $o = array($poll["option0"], $poll["option1"], $poll["option2"], $poll["option3"], $poll["option4"],
   $poll["option5"], $poll["option6"], $poll["option7"], $poll["option8"], $poll["option9"],
@@ -126,13 +126,13 @@ print("<h1>Обзор голосовавших пользователей</h1>\n");
 print("<p><table width=750 border=1 cellspacing=0 cellpadding=5><tr>\n" .
 "<td class=colhead align=center>Пользователь</td><td class=colhead>Выбор</td></tr>\n");
 
-if (mysql_num_rows($sql2) == 0) {
+if (mysqli_num_rows($sql2) == 0) {
  print("<tr><td colspan=2>Извините...Нет голосовавших пользователей!</td></tr></table>");
  stdfoot();
  exit;
  }
  
-while ($useras = mysql_fetch_assoc($sql2))
+while ($useras = mysqli_fetch_assoc($sql2))
 {
  $username  = ($useras['username'] ? $useras['username'] : "Неизвестно");
  //$useras['selection']--;

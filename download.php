@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -50,7 +50,7 @@ if (!$id)
 	httperr();*/
 
 $res = sql_query("SELECT name, filename, owner, banned FROM torrents WHERE id = ".sqlesc($id)) or sqlerr(__FILE__, __LINE__);
-$row = mysql_fetch_assoc($res);
+$row = mysqli_fetch_assoc($res);
 if (!$row)
 	stderr($tracker_lang['error'], $tracker_lang['invalid_id']);
 
@@ -66,24 +66,35 @@ if ($row['banned'] == 'yes' && $row['owner'] != $CURUSER['id'] && get_user_class
 
 sql_query("UPDATE torrents SET hits = hits + 1 WHERE id = ".sqlesc($id));
 
-$name = str_replace(array(',', ';'), '', $name);
+$name = str_replace(array(',', ';', "\r", "\n"), '', $name);
 
-require_once "include/BDecode.php";
-require_once "include/BEncode.php";
+require_once __DIR__ . '/include/benc.php';
 
 if (strlen($CURUSER['passkey']) != 32) {
-	$CURUSER['passkey'] = md5($CURUSER['username'].get_date_time().$CURUSER['passhash']);
-	sql_query("UPDATE users SET passkey=".sqlesc($CURUSER[passkey])." WHERE id=".sqlesc($CURUSER[id]));
+    $CURUSER['passkey'] = bin2hex(random_bytes(16));
+    sql_query("UPDATE users SET passkey=" . sqlesc($CURUSER['passkey'], true) . " WHERE id=" . (int) $CURUSER['id'])
+        or sqlerr(__FILE__, __LINE__);
 }
 
-$dict = bdecode(file_get_contents($fn));
+$dict = bdec(file_get_contents($fn));
+if (($dict['type'] ?? '') !== 'dictionary' || ($dict['value']['info']['type'] ?? '') !== 'dictionary')
+    stderr($tracker_lang['error'], $tracker_lang['unable_to_read_torrent']);
 
-//$dict['announce'] = $announce_urls[0]."?passkey=$CURUSER[passkey]";//"$DEFAULTBASEURL/announce.php?passkey=$CURUSER[passkey]";
-
-if (!empty($dict['announce-list'])) {
-	$dict['announce-list'][][0] = $announce_urls[0]."?passkey=$CURUSER[passkey]"; // Just add one tracker for multitrackers, we are the last
-} else
-	$dict['announce'] = $announce_urls[0]."?passkey=$CURUSER[passkey]";//"$DEFAULTBASEURL/announce.php?passkey=$CURUSER[passkey]";
+$entries = $dict['value'];
+$announce = array('type' => 'string', 'value' => $announce_urls[0] . '?passkey=' . $CURUSER['passkey']);
+if (($entries['announce-list']['type'] ?? '') === 'list' && $entries['announce-list']['value']) {
+    $entries['announce-list']['value'][] = array('type' => 'list', 'value' => array($announce));
+    unset($entries['announce-list']['string']);
+} else {
+    $entries['announce'] = $announce;
+}
+ksort($entries, SORT_STRING);
+$payload = 'd';
+foreach ($entries as $key => $entry) {
+    // The info hash is computed over the stored bencoded bytes, not a re-encoding.
+    $payload .= benc_str((string) $key) . ($entry['string'] ?? benc($entry));
+}
+$payload .= 'e';
 
 header ("Expires: Tue, 1 Jan 1980 00:00:00 GMT");
 header ("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
@@ -94,10 +105,10 @@ header ("Pragma: no-cache");
 header ("Accept-Ranges: bytes");
 header ("Connection: close");
 header ("Content-Transfer-Encoding: binary");
-header ("Content-Disposition: attachment; filename=\"".$name."\"");
+header('Content-Disposition: attachment; filename="' . str_replace('"', '', $name) . '"');
 header ("Content-Type: application/x-bittorrent");
 ob_implicit_flush(true);
 
-print(BEncode($dict));
+print($payload);
 
 ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -40,6 +40,6 @@ print("<p align=center><img src=\"torrents/images/$pic\"></p>\n");
 
 <h3 align=center><a href="javascript: history.go(-1)">Назад</a></h3>
 
-<?
+<?php
 stdfoot();
 ?>

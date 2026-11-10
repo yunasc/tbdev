@@ -1,4 +1,4 @@
-<?
+<?php
   // ---------------------------------------------------------------------------------------------------------
 
   //-------- Begins a main frame
@@ -73,7 +73,7 @@
 
     print("<tr><td class=\"colhead\">Написание</td><td class=\"colhead\">Смайл</td></tr>\n");
 
-    while (list($code, $url) = each($smilies))
+    foreach ($smilies as $code => $url)
       print("<tr><td>$code</td><td><img src=\"$DEFAULTBASEURL/pic/smilies/$url\"></td>\n");
 
     end_table();

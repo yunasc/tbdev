@@ -1,3 +1,6 @@
+SET NAMES cp1251;
+SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';
+
 #
 # Structure for the `avps` table :
 #

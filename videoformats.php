@@ -227,6 +227,6 @@ again without proper reason.<br />
 </td></tr></table>
 </td></tr></table>
 <br />
-<?
+<?php
 stdfoot();
 ?>

@@ -8,8 +8,8 @@ global $CURUSER, $tracker_lang, $ss_uri;
 
   // Get current poll
   $res = sql_query("SELECT * FROM polls ORDER BY added DESC LIMIT 1") or sqlerr(__FILE__, __LINE__);
-  if($pollok=(mysql_num_rows($res))) {
-          $arr = mysql_fetch_assoc($res);
+  if($pollok=(mysqli_num_rows($res))) {
+          $arr = mysqli_fetch_assoc($res);
           $pollid = $arr["id"];
           $userid = $CURUSER["id"];
           $question = $arr["question"];
@@ -20,7 +20,7 @@ global $CURUSER, $tracker_lang, $ss_uri;
 
   // Check if user has already voted
           $res = sql_query("SELECT * FROM pollanswers WHERE pollid=$pollid AND userid=$userid") or sqlerr(__FILE__, __LINE__);
-          $arr2 = mysql_fetch_assoc($res);
+          $arr2 = mysqli_fetch_assoc($res);
   }
 
   $blocktitle = $tracker_lang['poll'].(get_user_class() >= UC_MODERATOR ? "<font class=\"small\"> - [<a class=\"altlink\" href=\"makepoll.php?returnto=main\"><b>".$tracker_lang['create']."</b></a>]".($pollok ? " - [<a class=\"altlink\" href=\"makepoll.php?action=edit&pollid=$arr[id]&returnto=main\"><b>Редактировать</b></a>] - [<a class=\"altlink\" href=\"polls.php?action=delete&pollid=$arr[id]&returnto=main\"><b>Удалить</b></a>]" : "")."</font>" : "");
@@ -37,13 +37,13 @@ global $CURUSER, $tracker_lang, $ss_uri;
                         // we reserve 255 for blank vote.
             $res = sql_query("SELECT selection FROM pollanswers WHERE pollid=$pollid AND selection < 20") or sqlerr(__FILE__, __LINE__);
 
-            $tvotes = mysql_num_rows($res);
+            $tvotes = mysqli_num_rows($res);
 
             $vs = array(); // array of
             $os = array();
 
             // Count votes
-            while ($arr2 = mysql_fetch_row($res))
+            while ($arr2 = mysqli_fetch_row($res))
               $vs[$arr2[0]] += 1;
 
             reset($o);

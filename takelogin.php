@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -36,7 +36,7 @@ dbconn();
 // ponytail: per-IP throttle only; a botnet spreads guesses across IPs, add a per-account delay if that shows up.
 $login_window = time() - 900;
 $login_ip = getip();
-list($login_failures) = mysql_fetch_row(sql_query("SELECT COUNT(*) FROM login_failures WHERE ip = " . sqlesc($login_ip) . " AND added > $login_window"));
+list($login_failures) = mysqli_fetch_row(sql_query("SELECT COUNT(*) FROM login_failures WHERE ip = " . sqlesc($login_ip) . " AND added > $login_window"));
 if ($login_failures >= 10)
 	stderr($tracker_lang['error'], "Too many failed login attempts. Try again in 15 minutes.");
 
@@ -49,7 +49,7 @@ function bark($text = "Имя пользователя или пароль неверны")
 }
 
 $res = sql_query("SELECT id, passhash, secret, enabled, status, ip FROM users WHERE username = " . sqlesc($username));
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 
 if (!$row)
 	bark("Вы не зарегистрированы в системе.");
@@ -57,21 +57,22 @@ if (!$row)
 if ($row["status"] == 'pending')
 	bark("Вы еще не активировали свой аккаунт! Активируйте ваш аккаунт и попробуйте снова.");
 
-if (!password_matches($password, $row['secret'], $row['passhash']))
-	bark();
+$matched_password = matching_password($password, $row['secret'], $row['passhash']);
+if ($matched_password === null)
+    bark();
 
 if ($row["enabled"] == "no")
 	bark("Этот аккаунт отключен.");
 
 $peers = sql_query("SELECT COUNT(id) FROM peers WHERE userid = $row[id]");
-$num = mysql_fetch_row($peers);
+$num = mysqli_fetch_row($peers);
 $ip = getip();
 if ($num[0] > 0 && $row["ip"] != $ip && $row["ip"])
 	bark("Этот пользователь на данный момент активен с другого IP. Вход невозможен.");
 
-if (strncmp($row['passhash'], '$2y$', 4) != 0) { // legacy md5, bare or bcrypt-wrapped: store plain bcrypt
-	$matched_password = password_matches_exact($password, $row['secret'], $row['passhash'])
-		? $password : trim($password);
+// Upgrade legacy hashes when the password fits bcrypt's input limits.
+if (strlen($matched_password) <= 72 && !str_contains($matched_password, "\0") &&
+    (!str_starts_with($row['passhash'], '$2y$') || !password_verify($matched_password, $row['passhash']))) {
 	$row['passhash'] = make_password_hash($matched_password);
 	sql_query('UPDATE users SET passhash = '.sqlesc($row['passhash']).' WHERE id = '.intval($row['id'])) or sqlerr(__FILE__, __LINE__);
 }

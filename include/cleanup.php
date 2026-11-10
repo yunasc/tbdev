@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -39,7 +39,7 @@ function docleanup() {
 	do {
 		$res = sql_query("SELECT id FROM torrents") or sqlerr(__FILE__,__LINE__);
 		$ar = array();
-		while ($row = mysql_fetch_array($res)) {
+		while ($row = mysqli_fetch_array($res)) {
 			$id = $row[0];
 			$ar[$id] = 1;
 		}
@@ -79,7 +79,7 @@ function docleanup() {
 
 		$res = sql_query("SELECT torrent FROM peers GROUP BY torrent") or sqlerr(__FILE__,__LINE__);
 		$delids = array();
-		while ($row = mysql_fetch_array($res)) {
+		while ($row = mysqli_fetch_array($res)) {
 			$id = $row[0];
 			if (isset($ar[$id]) && $ar[$id])
 				continue;
@@ -90,7 +90,7 @@ function docleanup() {
 
 		$res = sql_query("SELECT torrent FROM files GROUP BY torrent") or sqlerr(__FILE__,__LINE__);
 		$delids = array();
-		while ($row = mysql_fetch_array($res)) {
+		while ($row = mysqli_fetch_array($res)) {
 			$id = $row[0];
 			if ($ar[$id])
 				continue;
@@ -111,7 +111,7 @@ function docleanup() {
 
 	$torrents = array();
 	$res = sql_query("SELECT torrent, seeder, COUNT(*) AS c FROM peers GROUP BY torrent, seeder") or sqlerr(__FILE__,__LINE__);
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		if ($row["seeder"] == "yes")
 			$key = "seeders";
 		else
@@ -120,13 +120,13 @@ function docleanup() {
 	}
 
 	$res = sql_query("SELECT torrent, COUNT(*) AS c FROM comments GROUP BY torrent") or sqlerr(__FILE__,__LINE__);
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		$torrents[$row["torrent"]]["comments"] = $row["c"];
 	}
 
 	$fields = explode(":", "comments:leechers:seeders");
 	$res = sql_query("SELECT id, seeders, leechers, comments FROM torrents") or sqlerr(__FILE__,__LINE__);
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		$id = $row["id"];
 		$torr = $torrents[$id];
 		foreach ($fields as $field) {
@@ -147,7 +147,7 @@ function docleanup() {
 		$dt = sqlesc(get_date_time(gmtime() - $secs));
 		$maxclass = UC_POWER_USER;
 		$res = sql_query("SELECT id FROM users WHERE parked='no' AND status='confirmed' AND class <= $maxclass AND last_access < $dt AND last_access <> '0000-00-00 00:00:00'") or sqlerr(__FILE__,__LINE__);
-		while ($arr = mysql_fetch_assoc($res)) {
+		while ($arr = mysqli_fetch_assoc($res)) {
 			sql_query("DELETE FROM users WHERE id = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM messages WHERE receiver = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM friends WHERE userid = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
@@ -167,8 +167,8 @@ function docleanup() {
        $dt = sqlesc(get_date_time(gmtime() - $secs));
        $maxclass = UC_POWER_USER;
        $res = sql_query("SELECT id FROM users WHERE parked='yes' AND status='confirmed' AND class <= $maxclass AND last_access < $dt");
-       if (mysql_num_rows($res) > 0) {
-       	while ($arr = mysql_fetch_array($res)) {
+       if (mysqli_num_rows($res) > 0) {
+		while ($arr = mysqli_fetch_array($res)) {
 			sql_query("DELETE FROM users WHERE id = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM messages WHERE receiver = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
 			sql_query("DELETE FROM friends WHERE userid = ".sqlesc($arr["id"])) or sqlerr(__FILE__,__LINE__);
@@ -187,8 +187,8 @@ function docleanup() {
 	// delete unconfirmed users if timeout.
 	$deadtime = TIMENOW - $signup_timeout;
 	$res = sql_query("SELECT id FROM users WHERE status = 'pending' AND added < FROM_UNIXTIME($deadtime) AND last_login < FROM_UNIXTIME($deadtime) AND last_access < FROM_UNIXTIME($deadtime)") or sqlerr(__FILE__,__LINE__);
-	if (mysql_num_rows($res) > 0) {
-		while ($arr = mysql_fetch_array($res)) {
+	if (mysqli_num_rows($res) > 0) {
+		while ($arr = mysqli_fetch_array($res)) {
 			sql_query("DELETE FROM users WHERE id = ".sqlesc($arr["id"]));
 		}
 	}
@@ -232,7 +232,7 @@ function docleanup() {
 	if ($use_ttl) {
 		$dt = sqlesc(get_date_time(gmtime() - ($ttl_days * 86400)));
 		$res = sql_query("SELECT id, name, image1, image2, image3, image4, image5 FROM torrents WHERE added < $dt") or sqlerr(__FILE__,__LINE__);
-		while ($arr = mysql_fetch_assoc($res)) {
+		while ($arr = mysqli_fetch_assoc($res)) {
 			unlink("$torrent_dir/$arr[id].torrent");
 			for ($x=1; $x <= 5; $x++) {
 				if ($arr['image' . $x] != "")

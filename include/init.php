@@ -30,6 +30,8 @@
 if(!defined('IN_TRACKER') && !defined('IN_ANNOUNCE'))
   die("Hacking attempt!");
 
+ini_set('default_charset', 'Windows-1251');
+
 if (!function_exists("htmlspecialchars_uni")) {
 	function htmlspecialchars_uni($message) {
 		// Fix & but allow unicode: keep only non-ASCII numeric refs (>= 128); ASCII ones like &#60; decode back into markup

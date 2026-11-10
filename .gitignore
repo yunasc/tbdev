@@ -1,1 +1,7 @@
 .envrc
+/include/*.local.php
+/install/install.enabled
+/install/install.used
+/torrents/*.torrent
+
+/tests/__pycache__/

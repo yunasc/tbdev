@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -40,7 +40,7 @@ if (is_valid_id($remove))
 {
   csrf_require_post();
   $res = sql_query("SELECT first, last FROM bans WHERE id=$remove") or sqlerr(__FILE__, __LINE__);
-  $ip = mysql_fetch_array($res);
+  $ip = mysqli_fetch_array($res);
   $first = long2ip($ip["first"]);
   $last = long2ip($ip["last"]);
   sql_query("DELETE FROM bans WHERE id=$remove") or sqlerr(__FILE__, __LINE__);
@@ -85,7 +85,7 @@ $res = sql_query("SELECT bans.*, users.username FROM bans LEFT JOIN users ON ban
 
 stdhead($tracker_lang['bans']);
 
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
   print("<p align=\"center\"><b>".$tracker_lang['nothing_found']."</b></p>\n");
 else
 {
@@ -95,7 +95,7 @@ else
   print("<tr><td class=\"colhead\">Добавлен</td><td class=\"colhead\" align=\"left\">Первый IP</td><td class=\"colhead\" align=\"left\">Последний IP</td>".
     "<td class=\"colhead\" align=\"left\">Кем</td><td class=\"colhead\" align=\"left\">Комментарий</td><td class=\"colhead\">Снять бан</td></tr>\n");
 
-  while ($arr = mysql_fetch_assoc($res))
+  while ($arr = mysqli_fetch_assoc($res))
   {
 	$arr["first"] = long2ip($arr["first"]);
 	$arr["last"] = long2ip($arr["last"]);

@@ -30,6 +30,7 @@
 if(!defined('IN_TRACKER'))
   die('Hacking attempt!');
 
+require_once __DIR__ . '/db.php';
 require_once($rootpath . 'include/functions_global.php');
 require_once($rootpath . 'include/functions_torrenttable.php');
 require_once($rootpath . 'include/functions_commenttable.php');
@@ -124,66 +125,18 @@ function select_theme() {
 	return $theme;
 }
 
-function decode_to_utf8($int = 0) {
-	$t = '';
-	if ( $int < 0 ) {
-		return chr(0);
-	} else if ( $int <= 0x007f ) {
-		$t .= chr($int);
-	} else if ( $int <= 0x07ff ) {
-		$t .= chr(0xc0 | ($int >> 6));
-		$t .= chr(0x80 | ($int & 0x003f));
-	} else if ( $int <= 0xffff ) {
-		$t .= chr(0xe0 | ($int  >> 12));
-		$t .= chr(0x80 | (($int >> 6) & 0x003f));
-		$t .= chr(0x80 | ($int  & 0x003f));
-	} else if ( $int <= 0x10ffff ) {
-		$t .= chr(0xf0 | ($int  >> 18));
-		$t .= chr(0x80 | (($int >> 12) & 0x3f));
-		$t .= chr(0x80 | (($int >> 6) & 0x3f));
-		$t .= chr(0x80 | ($int  &  0x3f));
-	} else {
-		return chr(0);
-	}
-	return $t;
-}
-
-function convert_unicode($t, $to = 'windows-1251') {
-	$to = strtolower($to);
-	if ($to == 'utf-8') {
-		$t = preg_replace( '#%u([0-9A-F]{1,4})#ie', "decode_to_utf8(hexdec('\\1'))", utf8_encode($t) );
-		$t = urldecode ($t);
-	} else {
-		$t = preg_replace( '#%u([0-9A-F]{1,4})#ie', "'&#' . hexdec('\\1') . ';'", $t );
-		$t = urldecode ($t);
-		$t = @html_entity_decode($t, ENT_NOQUOTES, $to);
-	}
-	return $t;
-}
-
-function strip_magic_quotes($arr) {
-	foreach ($arr as $k => $v) {
-		if (is_array($v)) {
-			$arr[$k] = strip_magic_quotes($v);
-			} else {
-			$arr[$k] = stripslashes($v);
-			}
-	}
-	return $arr;
-}
-
 function local_user() {
 	return $_SERVER["SERVER_ADDR"] == $_SERVER["REMOTE_ADDR"];
 }
 
 function sql_query($query) {
 	global $queries, $query_stat, $querytime;
-	$queries++;
+	$queries = ($queries ?? 0) + 1;
 	$query_start_time = timer(); // Start time
-	$result = mysql_query($query);
+	$result = db_query($query);
 	$query_end_time = timer(); // End time
 	$query_time = ($query_end_time - $query_start_time);
-	$querytime = $querytime + $query_time;
+	$querytime = ($querytime ?? 0) + $query_time;
 	$query_stat[] = array("seconds" => $query_time, "query" => $query);
 	return $result;
 }
@@ -191,20 +144,13 @@ function sql_query($query) {
 function dbconn($autoclean = false, $lightmode = false) {
 	global $mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset;
 
-	if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+	if (!db_connect($mysql_host, $mysql_user, $mysql_pass, $mysql_db, $mysql_charset))
 		die('Database unavailable.');
-
-	mysql_select_db($mysql_db)
-		or die('Database unavailable.');
-
-	mysql_query("SET NAMES $mysql_charset");
 
 	userlogin($lightmode);
 
 	if (basename($_SERVER['SCRIPT_FILENAME']) == 'index.php')
 		register_shutdown_function("autoclean");
-
-	register_shutdown_function("mysql_close");
 
 }
 
@@ -223,8 +169,8 @@ function userlogin($lightmode = false) {
 
 	if ($use_ipbans && !$lightmode) {
 		$res = sql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-		if (mysql_num_rows($res) > 0) {
-			$comment = mysql_fetch_assoc($res);
+		if (mysqli_num_rows($res) > 0) {
+			$comment = mysqli_fetch_assoc($res);
 			$comment = $comment["comment"];
 			header("HTTP/1.0 403 Forbidden");
 			print("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
@@ -241,10 +187,10 @@ function userlogin($lightmode = false) {
 		$token_hash = hash('sha256', $c_pass);
 		$token_res = sql_query('SELECT passhash_fingerprint FROM auth_tokens WHERE token_hash = '.sqlesc($token_hash).
 			' AND uid = '.$id.' AND expires > '.time().' LIMIT 1') or sqlerr(__FILE__, __LINE__);
-		$token_row = mysql_fetch_assoc($token_res);
+		$token_row = mysqli_fetch_assoc($token_res);
 		if ($token_row) {
 			$res = sql_query('SELECT * FROM users WHERE id = '.$id) or sqlerr(__FILE__, __LINE__);
-			$candidate = mysql_fetch_assoc($res);
+			$candidate = mysqli_fetch_assoc($res);
 			if ($candidate && hash('sha256', $candidate['passhash']) === $token_row['passhash_fingerprint'])
 				$row = $candidate;
 		}
@@ -276,7 +222,7 @@ function userlogin($lightmode = false) {
 
 	if ($row['enabled'] == 'no') {
 		$GLOBALS['use_blocks'] = 0;
-		list($reason, $disuntil) = mysql_fetch_row(sql_query('SELECT reason, disuntil FROM users_ban WHERE userid = '.$row['id']));
+		list($reason, $disuntil) = mysqli_fetch_row(sql_query('SELECT reason, disuntil FROM users_ban WHERE userid = '.$row['id']));
 		stderr($tracker_lang['error'], 'Вы забанены на трекере.' . ($disuntil != '0000-00-00 00:00:00' ? '<br />Дата снятия бана: '.$disuntil : '<br />Дата снятия бана: никогда') . '<br />Причина: '.$reason);
 	}
 
@@ -286,28 +232,11 @@ function userlogin($lightmode = false) {
 }
 
 function get_server_load() {
-	global $tracker_lang, $phpver;
-	if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
-		return 0;
-	} elseif (@file_exists("/proc/loadavg")) {
-		$load = @file_get_contents("/proc/loadavg");
-		$serverload = explode(" ", $load);
-		$serverload[0] = round($serverload[0], 4);
-		if(!$serverload) {
-			$load = @exec("uptime");
-			$load = @split("load averages?: ", $load);
-			$serverload = explode(",", $load[1]);
-		}
-	} else {
-		$load = @exec("uptime");
-		$load = @split("load averages?: ", $load);
-		$serverload = explode(",", $load[1]);
-	}
-	$returnload = trim($serverload[0]);
-	if(!$returnload) {
-		$returnload = $tracker_lang['unknown'];
-	}
-	return $returnload;
+    if (!function_exists('sys_getloadavg'))
+        return null;
+
+    $averages = sys_getloadavg();
+    return $averages === false ? null : round($averages[0], 4);
 }
 
 function user_session() {
@@ -352,15 +281,13 @@ function user_session() {
 	$updateset[] = "useragent = ".sqlesc($agent);
 	if (count($updateset))
 		sql_query("UPDATE sessions SET ".implode(", ", $updateset)." WHERE ".implode(" AND ", $where)) or sqlerr(__FILE__,__LINE__);
-	if (mysql_modified_rows() < 1)
+	if (db_modified_rows() < 1)
 		sql_query("INSERT INTO sessions (sid, uid, username, class, ip, time, url, useragent) VALUES (".implode(", ", array_map("sqlesc",
 									array($sid, $uid, $username, $class, $ip, $ctime, $url, $agent))).")") or sqlerr(__FILE__,__LINE__);
 }
 
 function unesc($x) {
-	if (get_magic_quotes_gpc())
-		return stripslashes($x);
-	return $x;
+    return $x;
 }
 
 function gzip() {
@@ -424,7 +351,7 @@ function autoclean() {
 	$docleanup = 0;
 
 	$res = sql_query("SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
-	$row = mysql_fetch_array($res);
+	$row = mysqli_fetch_array($res);
 	if (!$row) {
 		sql_query("INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
 		return;
@@ -437,7 +364,7 @@ function autoclean() {
 		return;
 	}
 	sql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
-	if (!mysql_affected_rows())
+	if (!db_affected_rows())
 		return;
 
 	require_once($rootpath . 'include/cleanup.php');
@@ -572,7 +499,7 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 	$headers .= "Message-ID: <$mid.thesystem@$name>".$eol;
 	$headers .= "X-Mailer: PHP v".phpversion().$eol;
     $headers .= "MIME-Version: 1.0".$eol;
-    $headers .= "Content-type: text/plain; charset=windows-1251".$eol;
+    $headers .= "Content-type: text/plain; charset=Windows-1251".$eol;
     $headers .= "X-Sender: PHP".$eol;
     if ($multiple)
     	$headers .= "Bcc: $multiplemail.$eol";
@@ -583,12 +510,12 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 			ini_set('sendmail_from', $smtp_from);
 		}
 
-    	@mail($to, $subject, $body, $headers) or $result = false;
+		@mail($to, mb_encode_mimeheader($subject, 'Windows-1251'), $body, $headers) or $result = false;
 
-    	ini_restore(SMTP);
-		ini_restore(smtp_port);
+		ini_restore('SMTP');
+		ini_restore('smtp_port');
 		if ($windows)
-			ini_restore(sendmail_from);
+			ini_restore('sendmail_from');
 	} elseif ($smtptype == 'external') {
 		require_once($rootpath . 'include/smtp/smtp.lib.php');
 		$mail = new smtp;
@@ -609,19 +536,15 @@ function sent_mail($to,$fromname,$fromemail,$subject,$body,$multiple=false,$mult
 }
 
 function sqlesc($value, $force = false) {
-    // Stripslashes
-    /*if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }*/
     // Quote if not a number or a numeric string
     if (!is_numeric($value) || $force) {
-        $value = "'" . mysql_real_escape_string($value) . "'";
+        $value = "'" . db_real_escape_string($value) . "'";
     }
     return $value;
 }
 
 function sqlwildcardesc($x) {
-	return str_replace(array("%","_"), array("\\%","\\_"), mysql_real_escape_string($x));
+	return str_replace(array("%","_"), array("\\%","\\_"), db_real_escape_string($x));
 }
 
 function urlparse($m) {
@@ -657,9 +580,10 @@ function stdhead($title = "", $msgalert = true) {
 
 	$ss_uri = select_theme();
 
+	$unread = 0;
 	if ($msgalert && $CURUSER) {
 		$res = sql_query('SELECT COUNT(*) FROM messages WHERE receiver = ' . $CURUSER['id'] . ' AND unread="yes"') or die('OopppsY!');
-		$arr = mysql_fetch_row($res);
+		$arr = mysqli_fetch_row($res);
 		$unread = $arr[0];
 	}
 
@@ -756,9 +680,18 @@ function post_link($action, $fields, $label_html, $confirm = '') {
 }
 
 function password_matches($password, $secret, $hash) {
+    return matching_password($password, $secret, $hash) !== null;
+}
+
+function matching_password($password, $secret, $hash) {
     if (!is_string($password) || !is_string($hash))
-        return false;
-    return password_matches_exact($password, $secret, $hash) || password_matches_exact(trim($password), $secret, $hash);
+        return null;
+    $candidates = array_unique([$password, trim($password)]);
+    foreach ($candidates as $candidate) {
+        if (password_matches_exact($candidate, $secret, $hash))
+            return $candidate;
+    }
+    return null;
 }
 
 // Legacy hashes are md5(secret.password.secret), stored bare or wrapped in bcrypt as "md5:<bcrypt>"
@@ -851,7 +784,7 @@ function loggedinorreturn($nowarn = false) {
 
 function deletetorrent($id) {
 	global $torrent_dir;
-	$images = mysql_fetch_array(sql_query('SELECT image1, image2, image3, image4, image5 FROM torrents WHERE id = '.$id));
+	$images = mysqli_fetch_array(sql_query('SELECT image1, image2, image3, image4, image5 FROM torrents WHERE id = '.$id));
 	if ($images) { for ($x=1; $x <= 5; $x++) {
 			if ($images['image' . $x] != '' && file_exists('torrents/images/' . $images['image' . $x]))
 				unlink('torrents/images/' . $images['image' . $x]);
@@ -952,7 +885,7 @@ function downloaderdata($res) {
 	$rows = array();
 	$ids = array();
 	$peerdata = array();
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysqli_fetch_assoc($res)) {
 		$rows[] = $row;
 		$id = $row["id"];
 		$ids[] = $id;
@@ -962,7 +895,7 @@ function downloaderdata($res) {
 	if (count($ids)) {
 		$allids = implode(",", $ids);
 		$res = sql_query("SELECT COUNT(*) AS c, torrent, seeder FROM peers WHERE torrent IN ($allids) GROUP BY torrent, seeder");
-		while ($row = mysql_fetch_assoc($res)) {
+		while ($row = mysqli_fetch_assoc($res)) {
 			if ($row["seeder"] == "yes")
 				$key = "seeders";
 			else
@@ -970,7 +903,7 @@ function downloaderdata($res) {
 			$peerdata[$row["torrent"]][$key] = $row["c"];
 		}
 		$res = sql_query("SELECT COUNT(*) AS c, torrent FROM comments WHERE torrent IN ($allids) GROUP BY torrent");
-		while ($row = mysql_fetch_assoc($res)) {
+		while ($row = mysqli_fetch_assoc($res)) {
 			$peerdata[$row["torrent"]]["comments"] = $row["c"];
 		}
 	}
@@ -981,7 +914,7 @@ function downloaderdata($res) {
 function genrelist() {
 	$ret = array();
 	$res = sql_query('SELECT id, name FROM categories ORDER BY sort ASC');
-	while ($row = mysql_fetch_array($res))
+	while ($row = mysqli_fetch_array($res))
 		$ret[] = $row;
 	return $ret;
 }
@@ -1007,7 +940,7 @@ function writecomment($userid, $comment) {
     if (!$userid)
         throw new Exception(E_FATAL_ERROR, 'User ID cannot be 0 or null');
 	/*$res = sql_query("SELECT modcomment FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
-	$arr = mysql_fetch_assoc($res);
+	$arr = mysqli_fetch_assoc($res);
 
 	$modcomment = date('d-m-Y') . ' - ' . $comment . '' . ($arr['modcomment'] != '' ? "\n" : "") . $arr['modcomment'];
 	$modcom = sqlesc($modcomment);
@@ -1040,17 +973,17 @@ function get_user_icons($arr, $big = false) {
 				$pics .= $arr["warned"] == "yes" ? "<img src=pic/$warnedpic alt=\"Warned\" border=0 $style>" : "";
 		else
 				$pics .= "<img src=\"pic/$disabledpic\" alt=\"Disabled\" border=\"0\" $style>\n";
-		$pics .= $arr["parked"] == "yes" ? "<img src=pic/$parkedpic alt=\"Parked\" border=\"0\" $style>" : "";
+		$pics .= ($arr["parked"] ?? "no") === "yes" ? "<img src=pic/$parkedpic alt=\"Parked\" border=\"0\" $style>" : "";
 		return $pics;
 }
 
 function parked() {
 	   global $CURUSER;
-	   if ($CURUSER['parked'] == 'yes')
+	   if (($CURUSER['parked'] ?? 'no') === 'yes')
 		  stderr($tracker_lang['error'], 'Ваш аккаунт припаркован.');
 }
 
-function magnet($html = true, $info_hash, $name, $size, $announces = array()) {
+function magnet($html, $info_hash, $name, $size, $announces = array()) {
 	$ampersand = $html ? '&amp;' : '&';
 	return sprintf('magnet:?xt=urn:btih:%2$s%1$sdn=%3$s%1$sxl=%4$d%1$str=%5$s', $ampersand, $info_hash, urlencode($name), $size, implode($ampersand . 'tr=', $announces));
 }
@@ -1060,11 +993,11 @@ define ('VERSION', '');
 define ('NUM_VERSION', '2.1.18');
 define ('TBVERSION', 'Powered by <a href="http://www.tbdev.net" target="_blank" style="cursor: help;" title="Бесплатная OpenSource база" class="copyright">TBDev</a> v'.NUM_VERSION.' <a href="http://bit-torrent.kiev.ua" target="_blank" style="cursor: help;" title="Сайт разработчика движка" class="copyright">Yuna Scatari Edition</a> '.VERSION.' Copyright &copy; 2001-'.date('Y'));
 
-function mysql_modified_rows () {
-	$info_str = mysql_info();
-	$a_rows = mysql_affected_rows();
+function db_modified_rows() {
+	$info_str = $GLOBALS['db_connection']->info ?? '';
+	$a_rows = db_affected_rows();
 	preg_match("/Rows matched: ([0-9]*)/", $info_str, $r_matched);
-	return ($a_rows < 1)?($r_matched[1]?$r_matched[1]:0):$a_rows;
+	return ($a_rows < 1)?($r_matched[1] ?? 0):$a_rows;
 }
 
 ?>

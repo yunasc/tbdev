@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -44,7 +44,7 @@ if (!is_valid_id($id))
 	bark($tracker_lang['torrent_not_selected']);
 
 $res = sql_query("SELECT name FROM torrents WHERE id = $id") or sqlerr(__FILE__, __LINE__);
-$arr = mysql_fetch_array($res);
+$arr = mysqli_fetch_array($res);
 
 if ((get_row_count("bookmarks", "WHERE userid = $CURUSER[id] AND torrentid = $id")) > 0)
        bark($tracker_lang['torrent']." \"".$arr['name']."\"".$tracker_lang['already_bookmarked']);

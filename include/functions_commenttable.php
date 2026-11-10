@@ -82,7 +82,7 @@ function commenttable($rows, $redaktor = "comment") {
 	}
 
 	if ($row["editedby"]) {
-	       //$res = mysql_fetch_assoc(sql_query("SELECT * FROM users WHERE id = $row[editedby]")) or sqlerr(__FILE__,__LINE__);
+	       //$res = mysqli_fetch_assoc(sql_query("SELECT * FROM users WHERE id = $row[editedby]")) or sqlerr(__FILE__,__LINE__);
 	       $text .= "<p><font size=1 class=small>Последний раз редактировалось <a href=userdetails.php?id=$row[editedby]><b>$row[editedbyname]</b></a> в $row[editedat]</font></p>\n";
 	 }
 		print("</td></tr>");

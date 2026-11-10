@@ -33,13 +33,13 @@ define("DB_FETCH_ALL_VECTOR", 3);
  * Столбцы возвращаются как массив вида "поле" => "значение".
  * Используется в методе {@link CMySQL::fetch_row()}.
  */
-define("DB_FETCH_ASSOC", MYSQL_ASSOC);
+define("DB_FETCH_ASSOC", MYSQLI_ASSOC);
 
 /**
  * Столбцы возвращаются как массив значений с числовыми ключами.
  * Используется в методе {@link CMySQL::fetch_row()}.
  */
-define("DB_FETCH_NUM", MYSQL_NUM);
+define("DB_FETCH_NUM", MYSQLI_NUM);
 ///////////////////////////////////////////////////////
 
 /**
@@ -170,53 +170,53 @@ class mysql {
 ///////////////////////////////////////////////////////////////////////////////////
     function __connect($host, $user, $passwd, $dbname=null)
     {
-        return @mysql_connect($host, $user, $passwd, true);
+        return db_open($host, $user, $passwd, $dbname, $this->_charset ?: 'cp1251');
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __select_db($db_name, $link)
     {
-        return @mysql_select_db($db_name, $link);
+        return $link->select_db($db_name);
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __close($link)
     {
-        return @mysql_close($link);
+        return $link->close();
     }
     ///////////////////////////////////////////////////////////////////////////////
-    function &__query($query, $link = null)
+    function __query($query, $link = null)
     {
-        return @mysql_query($query, $link);
+        return $link->query($query);
     }
     ///////////////////////////////////////////////////////////////////////////////
-    function &__fetch_assoc(&$res)
+    function __fetch_assoc(&$res)
     {
-        return mysql_fetch_assoc($res);
+        return mysqli_fetch_assoc($res);
     }
     ///////////////////////////////////////////////////////////////////////////////
-    function &__fetch_num(&$res)
+    function __fetch_num(&$res)
     {
-        return mysql_fetch_row($res);
+        return mysqli_fetch_row($res);
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __error($link = null)
     {
-        return @mysql_error($link);
+        return $link ? $link->error : mysqli_connect_error();
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __free_result(&$res)
     {
-        return mysql_free_result($res);
+        return mysqli_free_result($res);
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __escape_string($value)
     {
-        return mysql_escape_string($value); 
+        return $this->_db_link->real_escape_string((string) $value);
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __data_seek(&$res, $pos)
     {
         if ($this->__num_rows($res) > 0) {
-            return mysql_data_seek($res, $pos);
+            return mysqli_data_seek($res, $pos);
         } else {
             return true;
         }
@@ -224,12 +224,12 @@ class mysql {
     ///////////////////////////////////////////////////////////////////////////////
     function __num_rows(&$res)
     {
-        return mysql_num_rows($res);
+        return mysqli_num_rows($res);
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __affected_rows()
     {
-        return mysql_affected_rows($this->_db_link);
+        return $this->_db_link->affected_rows;
     }
     ///////////////////////////////////////////////////////////////////////////////
     function __log_connect($db_host, $db_user)
@@ -380,7 +380,7 @@ class mysql {
      * Конструктор.
      * Не требует вызова на прямую (используйте {@link get_instance()}).
      */
-    function MySQL($host, $port, $user, $passwd, $db_names, $charset = '')
+    function __construct($host, $port, $user, $passwd, $db_names, $charset = '')
     {
         $this->_db_host = $host;
         $this->_db_port = $port;
@@ -439,10 +439,6 @@ class mysql {
                 $instance[$connect_name]->connect();
                 $db_keys = array_keys($connect_data["db_names"]);
                 $instance[$connect_name]->select_db($db_keys[0]);
-                $charset = $connect_data["charset"];
-                if (!empty($charset))
-                	if (!function_exists('mysql_set_charset') || !mysql_set_charset($charset))
-						$instance[$connect_name]->query("SET NAMES $charset");
             } else {
                 return false;
             }
@@ -561,11 +557,11 @@ class mysql {
         ///////////////////////////////////////////////////////////////////////////////
 
         if (!$this->_db_link) {
-            $link = @mysql_connect($this->_db_host . ":" . $this->_db_port, $this->_db_user, $this->_db_password);
+            $link = db_open($this->_db_host, $this->_db_user, $this->_db_password, null, $this->_charset ?: 'cp1251', (int) $this->_db_port);
             if ($link) {
                 $this->_db_link = $link;
             } else {
-                $this->_error("Unable to connect to MySQL server: ".mysql_error(), E_USER_ERROR);
+                $this->_error("Unable to connect to MySQL server: ".mysqli_connect_error(), E_USER_ERROR);
                 return false;
             }
         }
@@ -1105,7 +1101,7 @@ class mysql {
      */
     function &get_vector($query, $params = null, $db_name = null)
     {
-        if (is_resource($query)) {
+        if (($query instanceof mysqli_result)) {
             $res =& $query;
         } else {
             $res =& $this->query($query, $params, $db_name);
@@ -1115,7 +1111,7 @@ class mysql {
             return false;
         }
         $ret =& $this->fetch_all($res, DB_FETCH_ALL_VECTOR);
-        if (!is_resource($query)) {
+        if (!($query instanceof mysqli_result)) {
             $this->__free_result($res);
         }
         return $ret;
@@ -1132,7 +1128,7 @@ class mysql {
      */
     function &get_list($query, $params = null, $db_name = null)
     {
-        if (is_resource($query)) {
+        if (($query instanceof mysqli_result)) {
             $res =& $query;
         } else {
             $res =& $this->query($query, $params, $db_name);
@@ -1142,7 +1138,7 @@ class mysql {
             return false;
         }
         $ret =& $this->fetch_all($res, DB_FETCH_ALL_INDEX_KEYS);
-        if (!is_resource($query)) {
+        if (!($query instanceof mysqli_result)) {
             $this->__free_result($res);
         }
         return $ret;
@@ -1161,7 +1157,7 @@ class mysql {
      */
     function &get_key_list($query, $params = null, $key_field = null, $db_name = null)
     {
-        if (is_resource($query)) {
+        if (($query instanceof mysqli_result)) {
             $res =& $query;
         } else {
             $res =& $this->query($query, $params, $db_name);
@@ -1171,7 +1167,7 @@ class mysql {
             return false;
         }
         $ret =& $this->fetch_all($res, DB_FETCH_ALL_VALUE_KEYS, $key_field);
-        if (!is_resource($query)) {
+        if (!($query instanceof mysqli_result)) {
             $this->__free_result($res);
         }
         return $ret;
@@ -1421,7 +1417,7 @@ class mysql {
      */
     function get_one($query, $params = null, $db_name = null)
     {
-        if (is_resource($query)) {
+        if (($query instanceof mysqli_result)) {
             $res =& $query;
         } else {
             $res =& $this->query($query, $params, $db_name);
@@ -1431,7 +1427,7 @@ class mysql {
             return false;
         } else {
             $row = $this->fetch_row($res, DB_FETCH_NUM);
-            if (!is_resource($query)) {
+            if (!($query instanceof mysqli_result)) {
                 $this->__free_result($res);
             }
             return $row[0];
@@ -1570,7 +1566,7 @@ class mysql {
     function insert_id()
     {
         //$last_id = $this->get_one("SELECT LAST_INSERT_ID()");
-        $last_id = mysql_insert_id($this->_db_link); 
+        $last_id = $this->_db_link->insert_id;
         return $last_id;
     }
 /**#@-*/
@@ -1617,8 +1613,9 @@ class mysql {
 			else {
 				$query .= $line;
 				if (preg_match("/;\s?$/", $query)) {
-					$this->query($query);
-					$total++;
+					if ($this->query($query) === false)
+                        throw new RuntimeException('Database import failed.');
+                    $total++;
 					$query = '';
 				}
 			}

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -44,7 +44,7 @@ $mode = $_GET["mode"];
 if ($mode == "delete" && !empty($_POST['delete'])) {
 	$res = sql_query("SELECT id, name FROM torrents WHERE id IN (" . implode(", ", array_map("sqlesc", $_POST["delete"])) . ")");
 	echo "Следующие торренты удалены:<br><br>";
-	while ($row = mysql_fetch_array($res)) {
+	while ($row = mysqli_fetch_array($res)) {
 		echo "ID: $row[id] - $row[name]<br>";
 		$reasonstr = "Старый или не подходил под правила.";
 		$text = "Торрент $row[id] ($row[name]) был удален пользователем $CURUSER[username]. Причина: $reasonstr\n";

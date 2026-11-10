@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -47,7 +47,7 @@ if ($id == 0) {
 
 $res = sql_query("SELECT invites FROM users WHERE id = $id") or sqlerr(__FILE__,__LINE__);
 
-$inv = mysql_fetch_assoc($res);
+$inv = mysqli_fetch_assoc($res);
 
 if ($inv["invites"] != 1) {
 	$_s = "ний";
@@ -74,11 +74,11 @@ if ($type == 'new') {
     if ($id != $CURUSER["id"] && get_user_class() < UC_ADMINISTRATOR)
         stderr($tracker_lang["error"], $tracker_lang["access_denied"]);
     $ret = sql_query("SELECT inviter FROM invites WHERE invite = ".sqlesc($invite)) or sqlerr(__FILE__, __LINE__);
-    $num = mysql_fetch_assoc($ret);
+    $num = mysqli_fetch_assoc($ret);
     if (!$num || $num["inviter"] != $id)
         stderr($tracker_lang["error"], "Invitation not found for this user.");
     sql_query("DELETE FROM invites WHERE invite = ".sqlesc($invite)." AND inviter = $id") or sqlerr(__FILE__, __LINE__);
-    if (mysql_affected_rows() != 1)
+    if (db_affected_rows() != 1)
         stderr($tracker_lang["error"], "Invitation no longer exists.");
     sql_query("UPDATE users SET invites = invites + 1 WHERE id = $id") or sqlerr(__FILE__, __LINE__);
     header("Location: invite.php?id=$id");
@@ -91,11 +91,11 @@ if ($type == 'new') {
     stdhead();
 
 	$rel = sql_query("SELECT COUNT(*) FROM users WHERE invitedby = $id") or sqlerr(__FILE__,__LINE__);
-	$arro = mysql_fetch_row($rel);
+	$arro = mysqli_fetch_row($rel);
 	$number = $arro[0];
 
 	$ret = sql_query("SELECT id, username, class, email, uploaded, downloaded, status, warned, enabled, donor, email FROM users WHERE invitedby = $id") or sqlerr(__FILE__,__LINE__);
-	$num = mysql_num_rows($ret);
+	$num = mysqli_num_rows($ret);
 
 	print("<form method=post action=takeconfirm.php?id=$id><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><table border=1 width=100% cellspacing=0 cellpadding=5>".
 	"<tr class=tabletitle><td colspan=7><b>Статус приглашенных вами</b> ($number)</td></tr>");
@@ -104,12 +104,12 @@ if ($type == 'new') {
 		print("<tr class=tableb><td colspan=7>Еще никто вами не приглашен.</tr>");
 	} else {
 		print("<tr class=tableb><td><b>Пользователь</b></td><td><b>Email</b></td><td><b>Раздал</b></td><td><b>Скачал</b></td><td><b>Рейтинг</b></td><td><b>Статус</b></td>");
-		if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP)
+		if ($CURUSER['id'] == $id || get_user_class() >= UC_SYSOP)
 			print("<td align=center><b>Подтвердить</b></td>");
 		print("</tr>");
 		for ($i = 0; $i < $num; ++$i) {
-			$arr = mysql_fetch_assoc($ret);
-			if ($arr[status] == 'pending')
+			$arr = mysqli_fetch_assoc($ret);
+			if ($arr['status'] == 'pending')
 				$user = "<td align=left>$arr[username]</td>";
 			else
 		  		$user = "<td align=left><a href=userdetails.php?id=$arr[id]>" . get_user_class_color($arr["class"], "$arr[username]") . "</a>" . ($arr["warned"]  == "yes" ? "&nbsp;<img src=pic/warned.gif border=0 alt='Warned'>" : "") . ($arr["enabled"] == "no" ? "&nbsp;<img src=pic/disabled.gif border=0 alt='Disabled'>" : "") . ($arr["donor"]  == "yes" ? "&nbsp;<img src=pic/star.gif border=0 alt='Donor'>" : "")."</td>";
@@ -128,28 +128,28 @@ if ($type == 'new') {
 			else
 				$status = "<font color=red>Не подтвержден</font>";
 
-			print("<tr class=tableb>$user<td>" . htmlspecialchars_uni($arr["email"]) . "</td><td>" . mksize($arr[uploaded]) . "</td><td>" . mksize($arr[downloaded]) . "</td><td>$ratio</td><td>$status</td>");
+			print("<tr class=tableb>$user<td>" . htmlspecialchars_uni($arr["email"]) . "</td><td>" . mksize($arr['uploaded']) . "</td><td>" . mksize($arr['downloaded']) . "</td><td>$ratio</td><td>$status</td>");
 
-			if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP) {
+			if ($CURUSER['id'] == $id || get_user_class() >= UC_SYSOP) {
 				print("<td align=center>");
-				if ($arr[status] == 'pending')
-					print("<input type=\"checkbox\" name=\"conusr[]\" value=\"" . $arr[id] . "\" />");
+				if ($arr['status'] == 'pending')
+					print("<input type=\"checkbox\" name=\"conusr[]\" value=\"" . $arr['id'] . "\" />");
 				print("</td>");
 			}
 			print("</tr>");
 		}
 	}
-	if ($CURUSER[id] == $id || get_user_class() >= UC_SYSOP) {
+	if ($CURUSER['id'] == $id || get_user_class() >= UC_SYSOP) {
 		print("<input type=hidden name=email value=\"" . htmlspecialchars_uni($arr["email"]) . "\">");
 		print("<tr class=tableb><td colspan=7 align=right><input type=submit value=\"Подтвердить пользователей\"></form></td></tr>");
 	}
 	print("</table><br>");
 
 	$rul = sql_query("SELECT COUNT(*) FROM invites WHERE inviter = $id") or sqlerr(__FILE__,__LINE__);
-	$arre = mysql_fetch_row($rul);
+	$arre = mysqli_fetch_row($rul);
 	$number1 = $arre[0];
 	$rer = sql_query("SELECT inviteid, invite, time_invited FROM invites WHERE inviter = $id AND confirmed='no'") or sqlerr(__FILE__,__LINE__);
-	$num1 = mysql_num_rows($rer);
+	$num1 = mysqli_num_rows($rer);
 
 	print("<table border=1 width=100% cellspacing=0 cellpadding=5>".
 	"<tr class=tabletitle><td colspan=6><b>Статус созданых приглашений</b> ($number1)</td></tr>");
@@ -159,7 +159,7 @@ if ($type == 'new') {
 	} else {
 		print("<tr class=tableb><td><b>Код приглашения</b></td><td><b>Дата создания</b></td><td></td></tr>");
 		for ($i = 0; $i < $num1; ++$i) {
-			$arr1 = mysql_fetch_assoc($rer);
+			$arr1 = mysqli_fetch_assoc($rer);
 			print("<tr class=tableb><td>$arr1[invite]</td><td>$arr1[time_invited]</td>");
 			print ("<td><form method=\"post\" action=\"invite.php\"><input type=\"hidden\" name=\"type\" value=\"del\"><input type=\"hidden\" name=\"id\" value=\"$id\"><input type=\"hidden\" name=\"invite\" value=\"".htmlspecialchars_uni($arr1["invite"])."\"><input type=\"hidden\" name=\"csrf_token\" value=\"".csrf_token()."\"><input type=\"submit\" value=\"Delete invitation\"></form></td></tr>");
 		}

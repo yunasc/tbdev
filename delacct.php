@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -39,15 +39,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   if (!$username || !$password)
     stderr($tracker_lang['error'], "Заполните форму корректно.");
   $res = sql_query("SELECT * FROM users WHERE username=" . sqlesc($username)) or sqlerr(__FILE__, __LINE__);
-  if (mysql_num_rows($res) != 1)
+  if (mysqli_num_rows($res) != 1)
     stderr($tracker_lang['error'], "Неверное имя пользователя или пароль. Проверьте введеную информацию.");
-  $arr = mysql_fetch_assoc($res);
+  $arr = mysqli_fetch_assoc($res);
   if (!password_matches($password, $arr["secret"], $arr["passhash"]))
     stderr($tracker_lang['error'], "Invalid username or password.");
 
   $id = $arr['id'];
   $res = sql_query("DELETE FROM users WHERE id = $id") or sqlerr(__FILE__, __LINE__);
-  $deleted_user = mysql_affected_rows();
+  $deleted_user = db_affected_rows();
   sql_query("DELETE FROM auth_tokens WHERE uid = $id") or sqlerr(__FILE__, __LINE__);
   sql_query("DELETE FROM messages WHERE receiver = $id") or sqlerr(__FILE__,__LINE__);
   sql_query("DELETE FROM friends WHERE userid = $id") or sqlerr(__FILE__,__LINE__);
@@ -77,6 +77,6 @@ stdhead("Удалить аккаунт");
 <tr><td colspan="2" align="center"><input type="submit" class="btn" value="Удалить"></td></tr>
 </form>
 </table>
-<?
+<?php
 stdfoot();
 ?>

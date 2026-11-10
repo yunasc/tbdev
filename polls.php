@@ -55,7 +55,7 @@
   }
 
   $rows = sql_query("SELECT COUNT(*) FROM polls") or sqlerr(__FILE__, __LINE__);
-  $row = mysql_fetch_row($rows);
+  $row = mysqli_fetch_row($rows);
   $pollcount = $row[0];
   if ($pollcount == 0)
   	stderr("Извиниет", "Нет опросов!");
@@ -70,7 +70,7 @@
       return 0;
     }
 
-  while ($poll = mysql_fetch_assoc($polls))
+  while ($poll = mysqli_fetch_assoc($polls))
   {
     $o = array($poll["option0"], $poll["option1"], $poll["option2"], $poll["option3"], $poll["option4"],
     $poll["option5"], $poll["option6"], $poll["option7"], $poll["option8"], $poll["option9"],
@@ -100,13 +100,13 @@
 
     $pollanswers = sql_query("SELECT selection FROM pollanswers WHERE pollid=" . $poll["id"] . " AND  selection < 20") or sqlerr(__FILE__, __LINE__);
 
-    $tvotes = mysql_num_rows($pollanswers);
+    $tvotes = mysqli_num_rows($pollanswers);
 
     $vs = array(); // count for each option ([0]..[19])
     $os = array(); // votes and options: array(array(123, "Option 1"), array(45, "Option 2"))
 
     // Count votes
-    while ($pollanswer = mysql_fetch_row($pollanswers))
+    while ($pollanswer = mysqli_fetch_row($pollanswers))
       $vs[$pollanswer[0]] += 1;
 
     reset($o);

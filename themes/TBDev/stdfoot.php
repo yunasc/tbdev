@@ -6,11 +6,11 @@ if (!defined('UC_SYSOP'))
 	show_blocks('d');
 ?>
 <td valign="top" width="155">
-<?
+<?php
 	show_blocks('r');
 ?>
 </td>
-<?
+<?php
 
 // Variables for End Time
 $seconds = (timer() - $tstart);

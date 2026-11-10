@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -35,7 +35,7 @@ loggedinorreturn();
 stdhead($tracker_lang['bookmarks']);
 
 $res = sql_query("SELECT COUNT(id) FROM bookmarks WHERE userid = ".sqlesc($CURUSER["id"]));
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $count = $row[0];
 
 if (!$count) {
@@ -44,7 +44,7 @@ if (!$count) {
 ?>
 <table class="embedded" cellspacing="0" cellpadding="5" width="100%">
 <tr><td class="colhead" align="center" colspan="12">Список закладок</td></tr>
-<?
+<?php
 
 $perpage = 25;
 

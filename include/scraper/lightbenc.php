@@ -141,7 +141,7 @@ class lightbenc {
 				if (is_string($value)) {
 					$ret.=strlen($value).":".$value;
 				} elseif (is_int($value)){
-					$ret.="i${value}e";
+					$ret.="i{$value}e";
 				} else {
 					$ret.=self::bencode ($value);
 				}
@@ -150,7 +150,7 @@ class lightbenc {
 		} elseif (is_string($d)) // fallback if we're given a single bencoded string or int
 			return strlen($d).":".$d;
 		elseif (is_int($d))
-			return "i${d}e";
+			return "i{$d}e";
 		else 
 			return null;
 	}

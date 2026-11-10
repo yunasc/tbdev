@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -37,7 +37,7 @@ begin_frame("Не подтвержденные пользователи");
 if (get_user_class() < UC_ADMINISTRATOR)
 die;
 $res = sql_query("SELECT * FROM users WHERE status='pending' ORDER BY username" ) or sqlerr(__FILE__, __LINE__);
-if( mysql_num_rows($res) != 0 )
+if( mysqli_num_rows($res) != 0 )
 {
 print'<br /><table width=100% border=1 cellspacing=0 cellpadding=5>';
 print'<tr>';
@@ -47,7 +47,7 @@ print'<td class=rowhead><center>Зарегистрирован</center></td>';
 print'<td class=rowhead><center>Статус</center></td>';
 print'<td class=rowhead><center>Подтвердить</center></td>';
 print'</tr>';
-while( $row = mysql_fetch_assoc($res) )
+while( $row = mysqli_fetch_assoc($res) )
 {
 $id = $row['id'];
 print'<tr><form method=post action=modtask.php>';

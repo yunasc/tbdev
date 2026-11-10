@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -118,7 +118,7 @@ $page = $_GET['page'];
 $perpage = 100;
 
 $res = sql_query("SELECT COUNT(*) FROM users WHERE $query") or sqlerr(__FILE__, __LINE__);
-$arr = mysql_fetch_row($res);
+$arr = mysqli_fetch_row($res);
 $pages = floor($arr[0] / $perpage);
 if ($pages * $perpage < $arr[0])
 ++$pages;
@@ -152,13 +152,13 @@ print("<p>$browsemenu<br />$pagemenu</p>");
 $offset = ($page * $perpage) - $perpage;
 
 $res = sql_query("SELECT u.*, c.name, c.flagpic FROM users AS u LEFT JOIN countries AS c ON c.id = u.country WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr(__FILE__, __LINE__);
-$num = mysql_num_rows($res);
+$num = mysqli_num_rows($res);
 
 print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
 print("<tr><td class=\"colhead\" align=\"left\">Имя</td><td class=\"colhead\">Зарегестрирован</td><td class=\"colhead\">Последний вход</td><td class=\"colhead\">Рейтинг</td><td class=\"colhead\">Пол</td><td class=\"colhead\" align=\"left\">Уровень</td><td class=\"colhead\">Страна</td></tr>\n");
 for ($i = 0; $i < $num; ++$i)
 {
-$arr = mysql_fetch_assoc($res);
+$arr = mysqli_fetch_assoc($res);
 if ($arr['country'] > 0) {
 $country = "<td style=\"padding: 0px\" align=\"center\"><img src=\"pic/flag/$arr[flagpic]\" alt=\"$arr[name]\" title=\"$arr[name]\"></td>";
 }

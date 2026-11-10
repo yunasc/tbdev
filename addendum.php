@@ -184,6 +184,6 @@ be working in sub optimal conditions.
 <br />
 </td></tr></table>
 </td></tr></table>
-<?
+<?php
 stdfoot();
 ?>

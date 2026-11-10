@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 // +--------------------------------------------------------------------------+
@@ -52,10 +52,10 @@ if ($deny_signup && $allow_invite_signup) {
         stderr($tracker_lang['error'], "Вы ввели не правильный код приглашения");
     // true - to decline bug-abusers: there was a bug, if 32 0-s were sent as invite code - this could cause usage of someones invite.
     // now forcing to escape as string all times.
-    list($inviter) = mysql_fetch_row(sql_query("SELECT inviter FROM invites WHERE invite = " . sqlesc($_POST["invite"], true)));
+    list($inviter) = mysqli_fetch_row(sql_query("SELECT inviter FROM invites WHERE invite = " . sqlesc($_POST["invite"], true)));
     if (!$inviter)
         stderr($tracker_lang['error'], "Код приглашения введенный вами не рабочий");
-    list($invitedroot) = mysql_fetch_row(sql_query("SELECT invitedroot FROM users WHERE id = $inviter"));
+    list($invitedroot) = mysqli_fetch_row(sql_query("SELECT invitedroot FROM users WHERE id = $inviter"));
 }
 
 function bark($msg) {
@@ -173,7 +173,7 @@ if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ag
     stderr($tracker_lang['error'], "Извините, вы не подходите для того что-бы стать членом этого сайта.");
 
 // check if email addy is already in use
-/*$a = (@mysql_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or sqlerr(__FILE__, __LINE__);
+/*$a = (@mysqli_fetch_row(@sql_query("SELECT COUNT(*) FROM users WHERE email=".sqlesc($email)))) or sqlerr(__FILE__, __LINE__);
 if ($a[0] != 0)
 	bark("E-mail адрес ".htmlspecialchars_uni($email)." уже зарегистрирован в системе.");*/
 
@@ -195,14 +195,14 @@ $ip = getip();
 if (isset($_COOKIE[COOKIE_UID]) && is_numeric($_COOKIE[COOKIE_UID]) && $users && $enable_adv_antidreg) {
     $cid = intval($_COOKIE[COOKIE_UID]);
     $c = sql_query("SELECT enabled FROM users WHERE id = $cid ORDER BY id DESC LIMIT 1");
-    $co = mysql_fetch_row($c);
+    $co = mysqli_fetch_row($c);
     if ($co[0] == 'no') {
         sql_query("UPDATE users SET ip = '$ip', last_access = NOW() WHERE id = $cid");
         bark("Ваш IP забанен на этом трекере. Регистрация невозможна.");
     } else
         bark("Регистрация невозможна!");
 } else {
-    $b = (mysql_fetch_row(sql_query("SELECT enabled, id FROM users WHERE ip = '$ip' ORDER BY last_access DESC LIMIT 1")));
+    $b = (mysqli_fetch_row(sql_query("SELECT enabled, id FROM users WHERE ip = '$ip' ORDER BY last_access DESC LIMIT 1")));
     if ($b[0] == 'no') {
         $banned_id = $b[1];
         setcookie(COOKIE_UID, $banned_id, "0x7fffffff", "/");
@@ -224,12 +224,12 @@ $ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, gen
 // or sqlerr(__FILE__, __LINE__);
 
 if (!$ret) {
-    if (mysql_errno() == 1062)
+    if (db_errno() == 1062)
         bark("Пользователь $wantusername уже зарегистрирован!");
     bark('Database error.');
 }
 
-$id = mysql_insert_id();
+$id = db_insert_id();
 
 sql_query("DELETE FROM invites WHERE invite = " . sqlesc($_POST["invite"]));
 

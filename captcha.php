@@ -40,14 +40,15 @@ $max_size = 32;
 $min_angle = -30;
 $max_angle = 30;
 
-if($_GET['imagehash'] == "test" || strlen($_GET['imagehash']) != 32) {
+$imagehash = $_GET['imagehash'] ?? "";
+if (!is_string($imagehash) || strlen($imagehash) !== 32) {
 	$imagestring = "Yuna";
 } else {
-	$query = sql_query("SELECT * FROM captcha WHERE imagehash=".sqlesc($_GET['imagehash'])." LIMIT 1");
+	$query = sql_query("SELECT * FROM captcha WHERE imagehash=".sqlesc($imagehash, true)." LIMIT 1");
 	if (!$query)
 		die('Something bad hapened...');
-	$regimage = mysql_fetch_array($query);
-	$imagestring = $regimage['imagestring'];
+	$regimage = mysqli_fetch_array($query);
+	$imagestring = $regimage['imagestring'] ?? '';
 	if (!$imagestring)
 		$imagestring = 'ERROR';
 }
@@ -162,12 +163,11 @@ imagerectangle($im, 0, 0, $img_width-1, $img_height-1, $border_color);
 header("Content-type: image/png");
 header('Cache-control: max-age=31536000');
 header('Expires: ' . gmdate('D, d M Y H:i:s', (TIMENOW + 31536000)) . ' GMT');
-header('Content-disposition: inline; filename=' . $imageinfo['filename']);
+header('Content-Disposition: inline; filename=captcha.png');
 header('Content-transfer-encoding: binary');
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s', TIMENOW) . ' GMT');
 header('ETag: "' . TIMENOW . '-' . session_id() . '"');
 imagepng($im);
-imagedestroy($im);
 exit;
 
 function file_extension($filename) {
@@ -295,10 +295,10 @@ function draw_string(&$im, $string) {
 			$shadow_x = rand(-3, 3) + $pos_x;
 			$shadow_y = rand(-3, 3) + $pos_y;
 			$shadow_color = imagecolorallocate($im, $r+20, $g+20, $b+20);
-			imagefttext($im, $font_size, $rotation, $shadow_x, $shadow_y, $shadow_color, $font, $string[$i], array());
+			imagefttext($im, $font_size, $rotation, (int) $shadow_x, (int) $shadow_y, $shadow_color, $font, $string[$i], array());
 			
 			// Write the character to the image
-			imagefttext($im, $font_size, $rotation, $pos_x, $pos_y, $color, $font, $string[$i], array());
+			imagefttext($im, $font_size, $rotation, (int) $pos_x, (int) $pos_y, $color, $font, $string[$i], array());
 		} else {
 			// Get width/height of the character
 			$string_width = imagefontwidth(5);
@@ -333,8 +333,8 @@ function draw_string(&$im, $string) {
 			imagestring($temp_im, 5, 1, 1, $string[$i], $color);
 			
 			// Copy to main image
-			imagecopyresized($im, $temp_im, $pos_x, $pos_y, 0, 0, 40, 55, 15, 20);
-			imagedestroy($temp_im);
+			imagecopyresized($im, $temp_im, (int) $pos_x, (int) $pos_y, 0, 0, 40, 55, 15, 20);
+			unset($temp_im);
 		}
 	}
 }
